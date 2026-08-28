@@ -36,6 +36,7 @@ import { Route as AccountingJournalEntriesRouteImport } from './routes/accountin
 import { Route as AccountingPaymentsRouteImport } from './routes/accounting/payments'
 import { Route as AccountingPayrollJournalRouteImport } from './routes/accounting/payroll-journal'
 import { Route as AccountingPeriodClosingRouteImport } from './routes/accounting/period-closing'
+import { Route as AccountingPurchaseOrdersRouteImport } from './routes/accounting/purchase-orders'
 import { Route as AccountingSalesB2bRouteImport } from './routes/accounting/sales-b2b'
 import { Route as AccountingSalesB2cRouteImport } from './routes/accounting/sales-b2c'
 import { Route as AccountingStockBalanceRouteImport } from './routes/accounting/stock-balance'
@@ -191,6 +192,12 @@ const AccountingPeriodClosingRoute = AccountingPeriodClosingRouteImport.update({
   path: '/period-closing',
   getParentRoute: () => AccountingRoute,
 } as any)
+const AccountingPurchaseOrdersRoute =
+  AccountingPurchaseOrdersRouteImport.update({
+    id: '/purchase-orders',
+    path: '/purchase-orders',
+    getParentRoute: () => AccountingRoute,
+  } as any)
 const AccountingSalesB2bRoute = AccountingSalesB2bRouteImport.update({
   id: '/sales-b2b',
   path: '/sales-b2b',
@@ -278,6 +285,7 @@ export interface FileRoutesByFullPath {
   '/accounting/payments': typeof AccountingPaymentsRoute
   '/accounting/payroll-journal': typeof AccountingPayrollJournalRoute
   '/accounting/period-closing': typeof AccountingPeriodClosingRoute
+  '/accounting/purchase-orders': typeof AccountingPurchaseOrdersRoute
   '/accounting/sales-b2b': typeof AccountingSalesB2bRoute
   '/accounting/sales-b2c': typeof AccountingSalesB2cRoute
   '/accounting/stock-balance': typeof AccountingStockBalanceRoute
@@ -317,6 +325,7 @@ export interface FileRoutesByTo {
   '/accounting/payments': typeof AccountingPaymentsRoute
   '/accounting/payroll-journal': typeof AccountingPayrollJournalRoute
   '/accounting/period-closing': typeof AccountingPeriodClosingRoute
+  '/accounting/purchase-orders': typeof AccountingPurchaseOrdersRoute
   '/accounting/sales-b2b': typeof AccountingSalesB2bRoute
   '/accounting/sales-b2c': typeof AccountingSalesB2cRoute
   '/accounting/stock-balance': typeof AccountingStockBalanceRoute
@@ -358,6 +367,7 @@ export interface FileRoutesById {
   '/accounting/payments': typeof AccountingPaymentsRoute
   '/accounting/payroll-journal': typeof AccountingPayrollJournalRoute
   '/accounting/period-closing': typeof AccountingPeriodClosingRoute
+  '/accounting/purchase-orders': typeof AccountingPurchaseOrdersRoute
   '/accounting/sales-b2b': typeof AccountingSalesB2bRoute
   '/accounting/sales-b2c': typeof AccountingSalesB2cRoute
   '/accounting/stock-balance': typeof AccountingStockBalanceRoute
@@ -400,6 +410,7 @@ export interface FileRouteTypes {
     | '/accounting/payments'
     | '/accounting/payroll-journal'
     | '/accounting/period-closing'
+    | '/accounting/purchase-orders'
     | '/accounting/sales-b2b'
     | '/accounting/sales-b2c'
     | '/accounting/stock-balance'
@@ -439,6 +450,7 @@ export interface FileRouteTypes {
     | '/accounting/payments'
     | '/accounting/payroll-journal'
     | '/accounting/period-closing'
+    | '/accounting/purchase-orders'
     | '/accounting/sales-b2b'
     | '/accounting/sales-b2c'
     | '/accounting/stock-balance'
@@ -479,6 +491,7 @@ export interface FileRouteTypes {
     | '/accounting/payments'
     | '/accounting/payroll-journal'
     | '/accounting/period-closing'
+    | '/accounting/purchase-orders'
     | '/accounting/sales-b2b'
     | '/accounting/sales-b2c'
     | '/accounting/stock-balance'
@@ -689,6 +702,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AccountingPeriodClosingRouteImport
       parentRoute: typeof AccountingRoute
     }
+    '/accounting/purchase-orders': {
+      id: '/accounting/purchase-orders'
+      path: '/purchase-orders'
+      fullPath: '/accounting/purchase-orders'
+      preLoaderRoute: typeof AccountingPurchaseOrdersRouteImport
+      parentRoute: typeof AccountingRoute
+    }
     '/accounting/sales-b2b': {
       id: '/accounting/sales-b2b'
       path: '/sales-b2b'
@@ -794,6 +814,7 @@ interface AccountingRouteChildren {
   AccountingPaymentsRoute: typeof AccountingPaymentsRoute
   AccountingPayrollJournalRoute: typeof AccountingPayrollJournalRoute
   AccountingPeriodClosingRoute: typeof AccountingPeriodClosingRoute
+  AccountingPurchaseOrdersRoute: typeof AccountingPurchaseOrdersRoute
   AccountingSalesB2bRoute: typeof AccountingSalesB2bRoute
   AccountingSalesB2cRoute: typeof AccountingSalesB2cRoute
   AccountingStockBalanceRoute: typeof AccountingStockBalanceRoute
@@ -833,6 +854,7 @@ const AccountingRouteChildren: AccountingRouteChildren = {
   AccountingPaymentsRoute: AccountingPaymentsRoute,
   AccountingPayrollJournalRoute: AccountingPayrollJournalRoute,
   AccountingPeriodClosingRoute: AccountingPeriodClosingRoute,
+  AccountingPurchaseOrdersRoute: AccountingPurchaseOrdersRoute,
   AccountingSalesB2bRoute: AccountingSalesB2bRoute,
   AccountingSalesB2cRoute: AccountingSalesB2cRoute,
   AccountingStockBalanceRoute: AccountingStockBalanceRoute,
