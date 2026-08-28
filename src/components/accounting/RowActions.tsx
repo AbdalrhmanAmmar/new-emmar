@@ -30,7 +30,7 @@ export const RowActions = ({ children }: { children: React.ReactNode }) => {
             <Settings2 className="w-4 h-4" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="min-w-[9rem] p-1.5">
+        <DropdownMenuContent align="center" className="min-w-[9rem] p-1.5">
           <DropdownMenuLabel className="px-2 py-1 text-xs text-muted-foreground">
             الإجراءات
           </DropdownMenuLabel>
