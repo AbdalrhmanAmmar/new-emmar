@@ -16,7 +16,7 @@ const bucketClass: Record<string, string> = {
 const columns: ReportColumn<Row>[] = [
   { key: 'invoice_no', header: 'رقم الفاتورة' },
   { key: 'buyer_name', header: 'العميل' },
-  { key: 'issue_date', header: 'تاريخ الإصدار', render: (r) => new Date(r.issue_date).toLocaleDateString('ar-EG') },
+  { key: 'issue_date', header: 'تاريخ الإصدار', render: (r) => new Date(r.issue_date).toLocaleDateString('en-GB') },
   { key: 'invoice_total', header: 'قيمة الفاتورة', isNumber: true, footerSum: true },
   { key: 'paid_amount', header: 'المدفوع', isNumber: true, footerSum: true },
   { key: 'balance_due', header: 'المتبقي', isNumber: true, footerSum: true },

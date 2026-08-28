@@ -26,7 +26,7 @@ interface PnlRow {
   status: 'profit' | 'loss' | 'break_even';
 }
 
-const fmt = (n: number) => Number(n || 0).toLocaleString('ar-EG', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const fmt = (n: number) => Number(n || 0).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const now = new Date();
 
 const AccProjectPnlPage: React.FC = () => {

@@ -162,8 +162,8 @@ const AccPayrollJournalPage: React.FC = () => {
           <ExportPdfButton
             title="قيود الرواتب"
             headers={['المرجع', 'الفترة', 'الموظفين', 'الأساسي', 'البدلات', 'تأمينات', 'استقطاعات', 'الصافي', 'الحالة']}
-            rows={rows.map(r => [r.reference, `${monthNames[r.period_month - 1]} ${r.period_year}`, r.employees_count, Number(r.gross_salaries).toLocaleString('ar-EG', { minimumFractionDigits: 2 }), Number(r.allowances).toLocaleString('ar-EG', { minimumFractionDigits: 2 }), Number(r.gosi_employee).toLocaleString('ar-EG', { minimumFractionDigits: 2 }), (Number(r.loans_deductions) + Number(r.advances_deductions) + Number(r.absence_deductions) + Number(r.other_deductions)).toLocaleString('ar-EG', { minimumFractionDigits: 2 }), Number(r.net_pay).toLocaleString('ar-EG', { minimumFractionDigits: 2 }), statusLabels[r.status]])}
-            kpis={[{ label: 'إجمالي القيود', value: totals.count }, { label: 'مُرحّلة', value: totals.posted }, { label: 'إجمالي الأجور YTD', value: totals.ytdGross.toLocaleString('ar-EG', { minimumFractionDigits: 2 }) }, { label: 'صافي YTD', value: totals.ytdNet.toLocaleString('ar-EG', { minimumFractionDigits: 2 }) }]}
+            rows={rows.map(r => [r.reference, `${monthNames[r.period_month - 1]} ${r.period_year}`, r.employees_count, Number(r.gross_salaries).toLocaleString('en-GB', { minimumFractionDigits: 2 }), Number(r.allowances).toLocaleString('en-GB', { minimumFractionDigits: 2 }), Number(r.gosi_employee).toLocaleString('en-GB', { minimumFractionDigits: 2 }), (Number(r.loans_deductions) + Number(r.advances_deductions) + Number(r.absence_deductions) + Number(r.other_deductions)).toLocaleString('en-GB', { minimumFractionDigits: 2 }), Number(r.net_pay).toLocaleString('en-GB', { minimumFractionDigits: 2 }), statusLabels[r.status]])}
+            kpis={[{ label: 'إجمالي القيود', value: totals.count }, { label: 'مُرحّلة', value: totals.posted }, { label: 'إجمالي الأجور YTD', value: totals.ytdGross.toLocaleString('en-GB', { minimumFractionDigits: 2 }) }, { label: 'صافي YTD', value: totals.ytdNet.toLocaleString('en-GB', { minimumFractionDigits: 2 }) }]}
           />
           {canEdit && <Button onClick={openNew}><Plus className="w-4 h-4 ml-2" /> قيد رواتب</Button>}
         </div>
@@ -172,8 +172,8 @@ const AccPayrollJournalPage: React.FC = () => {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">إجمالي القيود</div><div className="text-2xl font-bold">{totals.count}</div></CardContent></Card>
         <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">مُرحّلة</div><div className="text-2xl font-bold text-emerald-600">{totals.posted}</div></CardContent></Card>
-        <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">إجمالي الأجور YTD</div><div className="text-lg font-bold">{totals.ytdGross.toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</div></CardContent></Card>
-        <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">صافي المدفوع YTD</div><div className="text-lg font-bold text-primary">{totals.ytdNet.toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</div></CardContent></Card>
+        <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">إجمالي الأجور YTD</div><div className="text-lg font-bold">{totals.ytdGross.toLocaleString('en-GB', { minimumFractionDigits: 2 })}</div></CardContent></Card>
+        <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">صافي المدفوع YTD</div><div className="text-lg font-bold text-primary">{totals.ytdNet.toLocaleString('en-GB', { minimumFractionDigits: 2 })}</div></CardContent></Card>
       </div>
 
       <Card>
@@ -200,11 +200,11 @@ const AccPayrollJournalPage: React.FC = () => {
                         <TableCell className="font-mono text-xs">{r.reference}</TableCell>
                         <TableCell>{monthNames[r.period_month - 1]} {r.period_year}</TableCell>
                         <TableCell className="text-center">{r.employees_count}</TableCell>
-                        <TableCell className="text-right font-mono">{Number(r.gross_salaries).toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</TableCell>
-                        <TableCell className="text-right font-mono text-xs">{Number(r.allowances).toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</TableCell>
-                        <TableCell className="text-right font-mono text-xs">{Number(r.gosi_employee).toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</TableCell>
-                        <TableCell className="text-right font-mono text-xs text-orange-600">{ded.toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</TableCell>
-                        <TableCell className="text-right font-mono font-bold text-primary">{Number(r.net_pay).toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</TableCell>
+                        <TableCell className="text-right font-mono">{Number(r.gross_salaries).toLocaleString('en-GB', { minimumFractionDigits: 2 })}</TableCell>
+                        <TableCell className="text-right font-mono text-xs">{Number(r.allowances).toLocaleString('en-GB', { minimumFractionDigits: 2 })}</TableCell>
+                        <TableCell className="text-right font-mono text-xs">{Number(r.gosi_employee).toLocaleString('en-GB', { minimumFractionDigits: 2 })}</TableCell>
+                        <TableCell className="text-right font-mono text-xs text-orange-600">{ded.toLocaleString('en-GB', { minimumFractionDigits: 2 })}</TableCell>
+                        <TableCell className="text-right font-mono font-bold text-primary">{Number(r.net_pay).toLocaleString('en-GB', { minimumFractionDigits: 2 })}</TableCell>
                         <TableCell><Badge className={statusColors[r.status]}>{statusLabels[r.status]}</Badge></TableCell>
                         <TableCell>
                           <RowActions>
@@ -251,7 +251,7 @@ const AccPayrollJournalPage: React.FC = () => {
             <div className="space-y-1.5"><Label>خصومات أخرى</Label><Input type="number" step="0.01" value={form.other_deductions ?? 0} onChange={e => setForm({ ...form, other_deductions: Number(e.target.value) })} /></div>
             <div className="md:col-span-3 space-y-1.5"><Label>ملاحظات</Label><Input value={form.notes || ''} onChange={e => setForm({ ...form, notes: e.target.value })} /></div>
           </div>
-          <div className="mt-3 flex justify-end text-primary text-lg font-bold">صافي المدفوع: <span className="font-mono mr-2">{calcNet(form).toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</span> ر.س</div>
+          <div className="mt-3 flex justify-end text-primary text-lg font-bold">صافي المدفوع: <span className="font-mono mr-2">{calcNet(form).toLocaleString('en-GB', { minimumFractionDigits: 2 })}</span> ج.م</div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setOpen(false)}>إلغاء</Button>
             <Button onClick={save}>حفظ</Button>

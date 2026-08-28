@@ -50,10 +50,10 @@ const empty = (): Partial<Guarantee> => ({
   issue_date: new Date().toISOString().slice(0, 10),
   expiry_date: new Date(Date.now() + 365 * 86400000).toISOString().slice(0, 10),
   guarantee_type: 'performance_bond', direction: 'issued',
-  beneficiary: '', bank_name: '', amount: 0, currency: 'SAR', commission_rate: 0, status: 'active',
+  beneficiary: '', bank_name: '', amount: 0, currency: 'EGP', commission_rate: 0, status: 'active',
 });
 
-const fmt = (n: number) => Number(n || 0).toLocaleString('ar-EG', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const fmt = (n: number) => Number(n || 0).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const daysUntil = (d: string) => Math.ceil((new Date(d).getTime() - Date.now()) / 86400000);
 
 const AccBankGuaranteesPage: React.FC = () => {
@@ -248,7 +248,7 @@ const AccBankGuaranteesPage: React.FC = () => {
             <div className="space-y-1.5"><Label>البنك المصدر *</Label><Input value={form.bank_name || ''} onChange={e => setForm({ ...form, bank_name: e.target.value })} /></div>
             <div className="space-y-1.5 md:col-span-2"><Label>المشروع</Label><Input value={form.project_name || ''} onChange={e => setForm({ ...form, project_name: e.target.value })} /></div>
             <div className="space-y-1.5"><Label>المبلغ *</Label><Input type="number" step="0.01" value={form.amount ?? 0} onChange={e => setForm({ ...form, amount: Number(e.target.value) })} /></div>
-            <div className="space-y-1.5"><Label>العملة</Label><Input value={form.currency || 'SAR'} onChange={e => setForm({ ...form, currency: e.target.value })} /></div>
+            <div className="space-y-1.5"><Label>العملة</Label><Input value={form.currency || 'EGP'} onChange={e => setForm({ ...form, currency: e.target.value })} /></div>
             <div className="space-y-1.5"><Label>تاريخ الإصدار</Label><Input type="date" value={form.issue_date || ''} onChange={e => setForm({ ...form, issue_date: e.target.value })} /></div>
             <div className="space-y-1.5"><Label>تاريخ الانتهاء *</Label><Input type="date" value={form.expiry_date || ''} onChange={e => setForm({ ...form, expiry_date: e.target.value })} /></div>
             <div className="space-y-1.5"><Label>نسبة العمولة السنوية %</Label><Input type="number" step="0.01" value={form.commission_rate ?? 0} onChange={e => setForm({ ...form, commission_rate: Number(e.target.value) })} /></div>

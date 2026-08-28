@@ -7,7 +7,7 @@
 export type Row = Record<string, any>;
 export type Tables = Record<string, Row[]>;
 
-const STORAGE_KEY = "acc_demo_db_v1";
+const STORAGE_KEY = "acc_demo_db_v2_egp";
 
 export const uid = () =>
   typeof crypto !== "undefined" && "randomUUID" in crypto
@@ -69,7 +69,7 @@ function buildCoa() {
       parent_id: null,
       is_group: a.is_group,
       is_active: true,
-      currency: "SAR",
+      currency: "EGP",
       vat_applicable: a.code === "1202" || a.code === "2102",
       notes: null,
     };
@@ -253,7 +253,7 @@ function seed(): Tables {
       total: subtotal + vat_total,
       paid_amount: status === "posted" ? subtotal : 0,
       balance: status === "posted" ? vat_total : subtotal + vat_total,
-      currency: "SAR",
+      currency: "EGP",
       device_id: null,
       status,
       issue_date,
@@ -323,8 +323,8 @@ function seed(): Tables {
         bank_name: "مصرف الراجحي",
         account_number: "1234567890",
         iban: "SA0380000000608010167519",
-        swift: "RJHISARI",
-        currency: "SAR",
+        swift: "NBEGEGCX",
+        currency: "EGP",
         opening_balance: 1500000,
         opening_date: d(1, 1),
         gl_account_code: "1102",
@@ -341,7 +341,7 @@ function seed(): Tables {
         account_number: "9988776655",
         iban: "SA4420000001234567891234",
         swift: "NCBKSAJE",
-        currency: "SAR",
+        currency: "EGP",
         opening_balance: 380000,
         opening_date: d(1, 1),
         gl_account_code: "1103",
@@ -353,7 +353,7 @@ function seed(): Tables {
         code: "CSH-001",
         name_ar: "الصندوق الرئيسي",
         account_type: "cash",
-        currency: "SAR",
+        currency: "EGP",
         opening_balance: 45000,
         opening_date: d(1, 1),
         gl_account_code: "1101",
@@ -395,7 +395,7 @@ function seed(): Tables {
         status: "posted",
         party_name: "شركة البناء الحديث",
         amount: 200000,
-        currency: "SAR",
+        currency: "EGP",
         reference_no: "TRF-88213",
         notes: null,
       },
@@ -408,7 +408,7 @@ function seed(): Tables {
         status: "posted",
         party_name: "مصنع الأسمنت الوطني",
         amount: 138000,
-        currency: "SAR",
+        currency: "EGP",
         reference_no: "TRF-88240",
         notes: null,
       },
@@ -421,7 +421,7 @@ function seed(): Tables {
         status: "draft",
         party_name: "عبدالله سعد",
         amount: 3500,
-        currency: "SAR",
+        currency: "EGP",
         reference_no: null,
         notes: "تحصيل نقدي",
       },
@@ -528,15 +528,15 @@ function seed(): Tables {
     acc_year_end_closings: [],
     acc_period_closing: [],
     acc_currencies: [
-      { id: uid(), code: "SAR", name: "ريال سعودي", symbol: "ر.س", decimals: 2, is_base: true, is_active: true },
+      { id: uid(), code: "EGP", name: "جنيه مصري", symbol: "ج.م", decimals: 2, is_base: true, is_active: true },
       { id: uid(), code: "USD", name: "دولار أمريكي", symbol: "$", decimals: 2, is_base: false, is_active: true },
       { id: uid(), code: "EUR", name: "يورو", symbol: "€", decimals: 2, is_base: false, is_active: true },
       { id: uid(), code: "AED", name: "درهم إماراتي", symbol: "د.إ", decimals: 2, is_base: false, is_active: true },
     ],
     acc_fx_rates: [
-      { id: uid(), rate_date: today(), from_currency: "USD", to_currency: "SAR", rate: 3.75, source: "SAMA", notes: null },
-      { id: uid(), rate_date: today(), from_currency: "EUR", to_currency: "SAR", rate: 4.08, source: "SAMA", notes: null },
-      { id: uid(), rate_date: today(), from_currency: "AED", to_currency: "SAR", rate: 1.02, source: "SAMA", notes: null },
+      { id: uid(), rate_date: today(), from_currency: "USD", to_currency: "EGP", rate: 48.50, source: "CBE", notes: null },
+      { id: uid(), rate_date: today(), from_currency: "EUR", to_currency: "EGP", rate: 52.30, source: "CBE", notes: null },
+      { id: uid(), rate_date: today(), from_currency: "AED", to_currency: "EGP", rate: 13.20, source: "CBE", notes: null },
     ],
     acc_cost_centers: [
       { id: uid(), code: "CC-100", name_ar: "الإدارة العامة", parent_id: null, is_active: true, notes: null },
@@ -544,8 +544,8 @@ function seed(): Tables {
       { id: uid(), code: "CC-300", name_ar: "مشروع جدة", parent_id: null, is_active: true, notes: null },
     ],
     acc_entities: [
-      { id: uid(), code: "E-01", name_ar: "الشركة الأم", currency: "SAR", ownership_pct: 100, is_active: true },
-      { id: uid(), code: "E-02", name_ar: "فرع جدة", currency: "SAR", ownership_pct: 100, is_active: true },
+      { id: uid(), code: "E-01", name_ar: "الشركة الأم", currency: "EGP", ownership_pct: 100, is_active: true },
+      { id: uid(), code: "E-02", name_ar: "فرع جدة", currency: "EGP", ownership_pct: 100, is_active: true },
     ],
     acc_consolidation_balances: [],
     acc_cheques: [
@@ -558,7 +558,7 @@ function seed(): Tables {
         issue_date: d(3, 5),
         due_date: d(4, 5),
         amount: 138000,
-        currency: "SAR",
+        currency: "EGP",
         status: "issued",
         notes: null,
       },
@@ -571,7 +571,7 @@ function seed(): Tables {
         issue_date: d(3, 10),
         due_date: d(4, 10),
         amount: 45000,
-        currency: "SAR",
+        currency: "EGP",
         status: "deposited",
         notes: null,
       },

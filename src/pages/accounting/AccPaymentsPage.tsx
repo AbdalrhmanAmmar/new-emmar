@@ -131,18 +131,18 @@ const AccPaymentsPage: React.FC = () => {
             headers={['رقم المستند', 'التاريخ', 'النوع', 'الطرف', 'الطريقة', 'العملة', 'المبلغ', 'الحالة']}
             rows={payments.map(p => [
               p.payment_no,
-              new Date(p.payment_date).toLocaleDateString('ar-EG'),
+              new Date(p.payment_date).toLocaleDateString('en-GB'),
               p.direction === 'inbound' ? 'تحصيل' : 'دفع',
               p.party_name,
               methodAr[p.method] ?? p.method,
               p.currency,
-              Number(p.amount).toLocaleString('ar-EG', { minimumFractionDigits: 2 }),
+              Number(p.amount).toLocaleString('en-GB', { minimumFractionDigits: 2 }),
               statusAr[p.status] ?? p.status,
             ])}
             kpis={[
               { label: 'عدد المستندات', value: payments.length },
-              { label: 'إجمالي التحصيلات', value: payments.filter(p => p.direction === 'inbound').reduce((s, p) => s + Number(p.amount || 0), 0).toLocaleString('ar-EG', { minimumFractionDigits: 2 }) },
-              { label: 'إجمالي المدفوعات', value: payments.filter(p => p.direction === 'outbound').reduce((s, p) => s + Number(p.amount || 0), 0).toLocaleString('ar-EG', { minimumFractionDigits: 2 }) },
+              { label: 'إجمالي التحصيلات', value: payments.filter(p => p.direction === 'inbound').reduce((s, p) => s + Number(p.amount || 0), 0).toLocaleString('en-GB', { minimumFractionDigits: 2 }) },
+              { label: 'إجمالي المدفوعات', value: payments.filter(p => p.direction === 'outbound').reduce((s, p) => s + Number(p.amount || 0), 0).toLocaleString('en-GB', { minimumFractionDigits: 2 }) },
             ]}
           />
           {canEdit && <Button onClick={() => { resetForm(); setDialogOpen(true); }}><Plus className="w-4 h-4 ml-2" /> مستند جديد</Button>}
@@ -152,17 +152,17 @@ const AccPaymentsPage: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card><CardContent className="pt-6 flex items-center justify-between">
           <div><div className="text-xs text-muted-foreground">إجمالي التحصيلات (معتمد)</div>
-            <div className="text-xl font-bold text-emerald-600">{totals.inbound.toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</div>
+            <div className="text-xl font-bold text-emerald-600">{totals.inbound.toLocaleString('en-GB', { minimumFractionDigits: 2 })}</div>
           </div><ArrowDownLeft className="w-8 h-8 text-emerald-500" />
         </CardContent></Card>
         <Card><CardContent className="pt-6 flex items-center justify-between">
           <div><div className="text-xs text-muted-foreground">إجمالي المدفوعات (معتمد)</div>
-            <div className="text-xl font-bold text-red-600">{totals.outbound.toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</div>
+            <div className="text-xl font-bold text-red-600">{totals.outbound.toLocaleString('en-GB', { minimumFractionDigits: 2 })}</div>
           </div><ArrowUpRight className="w-8 h-8 text-red-500" />
         </CardContent></Card>
         <Card><CardContent className="pt-6 flex items-center justify-between">
           <div><div className="text-xs text-muted-foreground">صافي الحركة</div>
-            <div className="text-xl font-bold">{(totals.inbound - totals.outbound).toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</div>
+            <div className="text-xl font-bold">{(totals.inbound - totals.outbound).toLocaleString('en-GB', { minimumFractionDigits: 2 })}</div>
           </div><Banknote className="w-8 h-8 text-primary" />
         </CardContent></Card>
       </div>
@@ -199,7 +199,7 @@ const AccPaymentsPage: React.FC = () => {
                 {filtered.map((p) => (
                   <TableRow key={p.id}>
                     <TableCell className="font-mono">{p.payment_no}</TableCell>
-                    <TableCell>{new Date(p.payment_date).toLocaleDateString('ar-EG')}</TableCell>
+                    <TableCell>{new Date(p.payment_date).toLocaleDateString('en-GB')}</TableCell>
                     <TableCell>
                       <Badge variant="outline" className={p.direction === 'inbound' ? 'text-emerald-700 border-emerald-300' : 'text-red-700 border-red-300'}>
                         {p.direction === 'inbound' ? 'تحصيل' : 'دفع'}
@@ -207,7 +207,7 @@ const AccPaymentsPage: React.FC = () => {
                     </TableCell>
                     <TableCell>{p.party_name}</TableCell>
                     <TableCell>{methodAr[p.method] ?? p.method}</TableCell>
-                    <TableCell className="text-right font-semibold">{Number(p.amount).toLocaleString('ar-EG', { minimumFractionDigits: 2 })} {p.currency}</TableCell>
+                    <TableCell className="text-right font-semibold">{Number(p.amount).toLocaleString('en-GB', { minimumFractionDigits: 2 })} {p.currency}</TableCell>
                     <TableCell><Badge className={statusColor[p.status]}>{statusAr[p.status]}</Badge></TableCell>
                     <TableCell>
                       <RowActions>

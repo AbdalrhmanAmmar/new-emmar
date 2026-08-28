@@ -192,7 +192,7 @@ const AccBankFeedsPage: React.FC = () => {
         <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">إجمالي القنوات</div><div className="text-2xl font-bold">{totals.count}</div></CardContent></Card>
         <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">متصلة</div><div className="text-2xl font-bold text-emerald-600">{totals.connected}</div></CardContent></Card>
         <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">تحتاج مراجعة</div><div className="text-2xl font-bold text-rose-600">{totals.errors}</div></CardContent></Card>
-        <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">حركات مستوردة</div><div className="text-2xl font-bold text-blue-600">{totals.imported.toLocaleString('ar-EG')}</div></CardContent></Card>
+        <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">حركات مستوردة</div><div className="text-2xl font-bold text-blue-600">{totals.imported.toLocaleString('en-GB')}</div></CardContent></Card>
       </div>
 
       <Card className="bg-amber-50/40 border-amber-200">
@@ -225,10 +225,10 @@ const AccBankFeedsPage: React.FC = () => {
                       <TableCell><Badge variant="outline">{freqLabels[r.sync_frequency]}</Badge></TableCell>
                       <TableCell><Badge className={statusColors[r.connection_status]}>{statusLabels[r.connection_status]}</Badge></TableCell>
                       <TableCell className="text-xs text-muted-foreground">
-                        {r.last_sync_at ? new Date(r.last_sync_at).toLocaleString('ar-EG') : '-'}
+                        {r.last_sync_at ? new Date(r.last_sync_at).toLocaleString('en-GB') : '-'}
                         {r.last_sync_message && <div className="text-[10px] mt-0.5">{r.last_sync_message}</div>}
                       </TableCell>
-                      <TableCell className="text-right font-mono">{Number(r.transactions_imported || 0).toLocaleString('ar-EG')}</TableCell>
+                      <TableCell className="text-right font-mono">{Number(r.transactions_imported || 0).toLocaleString('en-GB')}</TableCell>
                       <TableCell>{r.auto_reconcile ? <CheckCircle2 className="w-4 h-4 text-emerald-600" /> : <XCircle className="w-4 h-4 text-slate-400" />}</TableCell>
                       <TableCell>
                         <RowActions>

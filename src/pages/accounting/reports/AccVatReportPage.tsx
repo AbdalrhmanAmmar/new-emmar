@@ -6,7 +6,7 @@ interface Row {
   total_taxable: number; total_vat: number; total_with_vat: number;
 }
 const columns: ReportColumn<Row>[] = [
-  { key: 'period_month', header: 'الشهر', render: (r) => new Date(r.period_month).toLocaleDateString('ar-EG', { year: 'numeric', month: 'long' }) },
+  { key: 'period_month', header: 'الشهر', render: (r) => new Date(r.period_month).toLocaleDateString('en-GB', { year: 'numeric', month: 'long' }) },
   { key: 'invoice_type', header: 'نوع الفاتورة', render: (r) => r.invoice_type === 'standard' ? 'ضريبية (B2B)' : 'مبسّطة (B2C)' },
   { key: 'invoices_count', header: 'عدد الفواتير', align: 'center' },
   { key: 'total_taxable', header: 'الأساس الخاضع', isNumber: true, footerSum: true },

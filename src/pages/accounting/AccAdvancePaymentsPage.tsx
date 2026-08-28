@@ -41,11 +41,11 @@ const emptyAdv = (): Partial<Advance> => ({
   advance_number: `ADV-${Date.now().toString().slice(-6)}`,
   advance_date: new Date().toISOString().slice(0, 10),
   direction: 'received', party_type: 'customer', party_name: '',
-  amount: 0, currency: 'SAR', recovery_percent: 20, recovered_amount: 0, remaining_amount: 0,
+  amount: 0, currency: 'EGP', recovery_percent: 20, recovered_amount: 0, remaining_amount: 0,
   status: 'active',
 });
 
-const fmt = (n: number) => Number(n || 0).toLocaleString('ar-EG', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const fmt = (n: number) => Number(n || 0).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
 const AccAdvancePaymentsPage: React.FC = () => {
   const { user, isAdmin, hasPermission } = useAuth();
@@ -231,7 +231,7 @@ const AccAdvancePaymentsPage: React.FC = () => {
             <div className="space-y-1.5 md:col-span-2"><Label>اسم الطرف *</Label><Input value={form.party_name || ''} onChange={e => setForm({ ...form, party_name: e.target.value })} /></div>
             <div className="space-y-1.5 md:col-span-2"><Label>المشروع</Label><Input value={form.project_name || ''} onChange={e => setForm({ ...form, project_name: e.target.value })} /></div>
             <div className="space-y-1.5"><Label>المبلغ *</Label><Input type="number" step="0.01" value={form.amount ?? 0} onChange={e => setForm({ ...form, amount: Number(e.target.value) })} /></div>
-            <div className="space-y-1.5"><Label>العملة</Label><Input value={form.currency || 'SAR'} onChange={e => setForm({ ...form, currency: e.target.value })} /></div>
+            <div className="space-y-1.5"><Label>العملة</Label><Input value={form.currency || 'EGP'} onChange={e => setForm({ ...form, currency: e.target.value })} /></div>
             <div className="space-y-1.5"><Label>نسبة الاسترداد لكل مستخلص %</Label><Input type="number" step="0.01" value={form.recovery_percent ?? 20} onChange={e => setForm({ ...form, recovery_percent: Number(e.target.value) })} /></div>
             <div className="space-y-1.5"><Label>المسترد حتى الآن</Label><Input type="number" step="0.01" value={form.recovered_amount ?? 0} onChange={e => setForm({ ...form, recovered_amount: Number(e.target.value) })} /></div>
             <div className="space-y-1.5"><Label>طريقة الدفع</Label><Input value={form.payment_method || ''} onChange={e => setForm({ ...form, payment_method: e.target.value })} /></div>

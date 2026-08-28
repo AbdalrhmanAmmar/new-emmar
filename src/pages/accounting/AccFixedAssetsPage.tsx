@@ -113,7 +113,7 @@ const AccFixedAssetsPage: React.FC = () => {
     const accumulated_after = Number(r.accumulated_depreciation) + finalAmount;
     const net_book_value = Number(r.acquisition_cost) - accumulated_after;
 
-    if (!confirm(`ترحيل إهلاك شهر ${period_month}/${period_year} بمبلغ ${finalAmount.toLocaleString('ar-EG', { minimumFractionDigits: 2 })} ريال؟`)) return;
+    if (!confirm(`ترحيل إهلاك شهر ${period_month}/${period_year} بمبلغ ${finalAmount.toLocaleString('en-GB', { minimumFractionDigits: 2 })} جنيه؟`)) return;
     try {
       const { error: e1 } = await (supabase as any).from('acc_depreciation_entries').insert({
         fixed_asset_id: r.id, period_date: today.toISOString().slice(0, 10),
@@ -149,8 +149,8 @@ const AccFixedAssetsPage: React.FC = () => {
           <ExportPdfButton
             title="سجل الأصول الثابتة"
             headers={['الكود', 'الاسم', 'التصنيف', 'تاريخ الشراء', 'التكلفة', 'مجمع الإهلاك', 'صافي القيمة الدفترية', 'الحالة']}
-            rows={rows.map(r => [r.code, r.name_ar, r.category || '-', r.acquisition_date, Number(r.acquisition_cost).toLocaleString('ar-EG', { minimumFractionDigits: 2 }), Number(r.accumulated_depreciation).toLocaleString('ar-EG', { minimumFractionDigits: 2 }), (Number(r.acquisition_cost) - Number(r.accumulated_depreciation)).toLocaleString('ar-EG', { minimumFractionDigits: 2 }), statusLabels[r.status] || r.status])}
-            kpis={[{ label: 'العدد', value: totals.count }, { label: 'التكلفة', value: totals.cost.toLocaleString('ar-EG', { minimumFractionDigits: 2 }) }, { label: 'مجمع الإهلاك', value: totals.accum.toLocaleString('ar-EG', { minimumFractionDigits: 2 }) }, { label: 'صافي القيمة', value: totals.nbv.toLocaleString('ar-EG', { minimumFractionDigits: 2 }) }]}
+            rows={rows.map(r => [r.code, r.name_ar, r.category || '-', r.acquisition_date, Number(r.acquisition_cost).toLocaleString('en-GB', { minimumFractionDigits: 2 }), Number(r.accumulated_depreciation).toLocaleString('en-GB', { minimumFractionDigits: 2 }), (Number(r.acquisition_cost) - Number(r.accumulated_depreciation)).toLocaleString('en-GB', { minimumFractionDigits: 2 }), statusLabels[r.status] || r.status])}
+            kpis={[{ label: 'العدد', value: totals.count }, { label: 'التكلفة', value: totals.cost.toLocaleString('en-GB', { minimumFractionDigits: 2 }) }, { label: 'مجمع الإهلاك', value: totals.accum.toLocaleString('en-GB', { minimumFractionDigits: 2 }) }, { label: 'صافي القيمة', value: totals.nbv.toLocaleString('en-GB', { minimumFractionDigits: 2 }) }]}
           />
           {canEdit && <Button onClick={openNew}><Plus className="w-4 h-4 ml-2" /> أصل جديد</Button>}
         </div>
@@ -158,9 +158,9 @@ const AccFixedAssetsPage: React.FC = () => {
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">عدد الأصول</div><div className="text-2xl font-bold">{totals.count}</div></CardContent></Card>
-        <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">التكلفة الإجمالية</div><div className="text-lg font-bold">{totals.cost.toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</div></CardContent></Card>
-        <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">مجمع الإهلاك</div><div className="text-lg font-bold text-orange-600">{totals.accum.toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</div></CardContent></Card>
-        <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">صافي القيمة الدفترية</div><div className="text-lg font-bold text-primary">{totals.nbv.toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</div></CardContent></Card>
+        <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">التكلفة الإجمالية</div><div className="text-lg font-bold">{totals.cost.toLocaleString('en-GB', { minimumFractionDigits: 2 })}</div></CardContent></Card>
+        <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">مجمع الإهلاك</div><div className="text-lg font-bold text-orange-600">{totals.accum.toLocaleString('en-GB', { minimumFractionDigits: 2 })}</div></CardContent></Card>
+        <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">صافي القيمة الدفترية</div><div className="text-lg font-bold text-primary">{totals.nbv.toLocaleString('en-GB', { minimumFractionDigits: 2 })}</div></CardContent></Card>
       </div>
 
       <Card>
@@ -186,10 +186,10 @@ const AccFixedAssetsPage: React.FC = () => {
                         <TableCell className="font-medium">{r.name_ar}</TableCell>
                         <TableCell>{r.category || '-'}</TableCell>
                         <TableCell className="font-mono text-xs">{r.acquisition_date}</TableCell>
-                        <TableCell className="text-right font-mono">{Number(r.acquisition_cost).toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</TableCell>
-                        <TableCell className="text-right font-mono text-orange-600">{Number(r.accumulated_depreciation).toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</TableCell>
-                        <TableCell className="text-right font-mono text-primary">{nbv.toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</TableCell>
-                        <TableCell className="text-right font-mono text-xs">{monthlyDepreciation(r).toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</TableCell>
+                        <TableCell className="text-right font-mono">{Number(r.acquisition_cost).toLocaleString('en-GB', { minimumFractionDigits: 2 })}</TableCell>
+                        <TableCell className="text-right font-mono text-orange-600">{Number(r.accumulated_depreciation).toLocaleString('en-GB', { minimumFractionDigits: 2 })}</TableCell>
+                        <TableCell className="text-right font-mono text-primary">{nbv.toLocaleString('en-GB', { minimumFractionDigits: 2 })}</TableCell>
+                        <TableCell className="text-right font-mono text-xs">{monthlyDepreciation(r).toLocaleString('en-GB', { minimumFractionDigits: 2 })}</TableCell>
                         <TableCell>{r.status === 'in_use' ? <Badge className="bg-emerald-100 text-emerald-700">{statusLabels[r.status]}</Badge> : <Badge variant="secondary">{statusLabels[r.status] || r.status}</Badge>}</TableCell>
                         <TableCell>
                           <RowActions>

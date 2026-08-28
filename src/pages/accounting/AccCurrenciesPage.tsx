@@ -30,10 +30,10 @@ interface FxRate {
 const emptyC = (): Partial<Currency> => ({ code: '', name: '', symbol: '', decimals: 2, is_base: false, is_active: true });
 const emptyR = (): Partial<FxRate> => ({
   rate_date: new Date().toISOString().slice(0, 10),
-  from_currency: 'USD', to_currency: 'SAR', rate: 0, source: 'SAMA',
+  from_currency: 'USD', to_currency: 'EGP', rate: 0, source: 'SAMA',
 });
 
-const fmt = (n: number, d = 6) => Number(n || 0).toLocaleString('ar-EG', { minimumFractionDigits: 2, maximumFractionDigits: d });
+const fmt = (n: number, d = 6) => Number(n || 0).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: d });
 
 const AccCurrenciesPage: React.FC = () => {
   const { user, isAdmin, hasPermission } = useAuth();
@@ -232,8 +232,8 @@ const AccCurrenciesPage: React.FC = () => {
         <DialogContent className="max-w-lg">
           <DialogHeader><DialogTitle>{cForm.id ? `تعديل ${cForm.code}` : 'عملة جديدة'}</DialogTitle></DialogHeader>
           <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-1.5"><Label>الكود (ISO) *</Label><Input value={cForm.code || ''} onChange={e => setCForm({ ...cForm, code: e.target.value.toUpperCase() })} placeholder="USD, EUR, SAR..." /></div>
-            <div className="space-y-1.5"><Label>الرمز</Label><Input value={cForm.symbol || ''} onChange={e => setCForm({ ...cForm, symbol: e.target.value })} placeholder="$, €, ر.س" /></div>
+            <div className="space-y-1.5"><Label>الكود (ISO) *</Label><Input value={cForm.code || ''} onChange={e => setCForm({ ...cForm, code: e.target.value.toUpperCase() })} placeholder="USD, EUR, EGP..." /></div>
+            <div className="space-y-1.5"><Label>الرمز</Label><Input value={cForm.symbol || ''} onChange={e => setCForm({ ...cForm, symbol: e.target.value })} placeholder="$, €, ج.م" /></div>
             <div className="col-span-2 space-y-1.5"><Label>الاسم *</Label><Input value={cForm.name || ''} onChange={e => setCForm({ ...cForm, name: e.target.value })} /></div>
             <div className="space-y-1.5"><Label>الخانات العشرية</Label><Input type="number" value={cForm.decimals ?? 2} onChange={e => setCForm({ ...cForm, decimals: Number(e.target.value) })} /></div>
             <div className="space-y-1.5 flex items-end gap-3"><Switch checked={!!cForm.is_active} onCheckedChange={v => setCForm({ ...cForm, is_active: v })} /><Label>نشطة</Label></div>
@@ -260,7 +260,7 @@ const AccCurrenciesPage: React.FC = () => {
               </Select>
             </div>
             <div className="space-y-1.5"><Label>إلى عملة</Label>
-              <Select value={rForm.to_currency || 'SAR'} onValueChange={v => setRForm({ ...rForm, to_currency: v })}>
+              <Select value={rForm.to_currency || 'EGP'} onValueChange={v => setRForm({ ...rForm, to_currency: v })}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>{currencies.map(c => <SelectItem key={c.code} value={c.code}>{c.code} — {c.name}</SelectItem>)}</SelectContent>
               </Select>

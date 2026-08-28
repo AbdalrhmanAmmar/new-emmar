@@ -53,10 +53,10 @@ const emptyForm = (): Partial<IPC> => ({
   prev_cumulative_amount: 0, current_period_amount: 0, cumulative_amount: 0,
   retention_rate: 10, retention_amount: 0, advance_recovery: 0, penalties: 0, adjustments: 0,
   net_before_vat: 0, vat_rate: 15, vat_amount: 0, grand_total: 0,
-  currency: 'SAR', status: 'draft',
+  currency: 'EGP', status: 'draft',
 });
 
-const fmt = (n: number) => Number(n || 0).toLocaleString('ar-EG', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const fmt = (n: number) => Number(n || 0).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
 const AccProgressBillingPage: React.FC = () => {
   const { user, isAdmin, hasPermission } = useAuth();
@@ -274,7 +274,7 @@ const AccProgressBillingPage: React.FC = () => {
             <div className="space-y-1.5"><Label>غرامات التأخير</Label><Input type="number" step="0.01" value={form.penalties ?? 0} onChange={e => updateHeader({ penalties: Number(e.target.value) })} /></div>
             <div className="space-y-1.5"><Label>تعديلات (+/-)</Label><Input type="number" step="0.01" value={form.adjustments ?? 0} onChange={e => updateHeader({ adjustments: Number(e.target.value) })} /></div>
             <div className="space-y-1.5"><Label>نسبة الضريبة %</Label><Input type="number" step="0.01" value={form.vat_rate ?? 15} onChange={e => updateHeader({ vat_rate: Number(e.target.value) })} /></div>
-            <div className="space-y-1.5"><Label>العملة</Label><Input value={form.currency || 'SAR'} onChange={e => setForm({ ...form, currency: e.target.value })} /></div>
+            <div className="space-y-1.5"><Label>العملة</Label><Input value={form.currency || 'EGP'} onChange={e => setForm({ ...form, currency: e.target.value })} /></div>
             <div className="space-y-1.5 md:col-span-4"><Label>ملاحظات</Label><Textarea value={form.notes || ''} onChange={e => setForm({ ...form, notes: e.target.value })} rows={2} /></div>
           </div>
 

@@ -112,8 +112,8 @@ const AccBankReconciliationPage: React.FC = () => {
             title="التسويات البنكية"
             subtitle={accounts.find(a => a.id === accountId)?.name_ar || ''}
             headers={['التاريخ', 'المرجع', 'الوصف', 'مدين', 'دائن', 'الحالة']}
-            rows={txs.map(t => [t.tx_date, t.reference || '-', t.description || '-', Number(t.debit).toLocaleString('ar-EG', { minimumFractionDigits: 2 }), Number(t.credit).toLocaleString('ar-EG', { minimumFractionDigits: 2 }), t.reconciled ? 'مُطابق' : 'غير مطابق'])}
-            kpis={[{ label: 'رصيد الدفاتر', value: totals.bookBalance.toLocaleString('ar-EG', { minimumFractionDigits: 2 }) }, { label: 'رصيد البنك', value: statementBalance.toLocaleString('ar-EG', { minimumFractionDigits: 2 }) }, { label: 'الفرق', value: totals.diff.toLocaleString('ar-EG', { minimumFractionDigits: 2 }) }]}
+            rows={txs.map(t => [t.tx_date, t.reference || '-', t.description || '-', Number(t.debit).toLocaleString('en-GB', { minimumFractionDigits: 2 }), Number(t.credit).toLocaleString('en-GB', { minimumFractionDigits: 2 }), t.reconciled ? 'مُطابق' : 'غير مطابق'])}
+            kpis={[{ label: 'رصيد الدفاتر', value: totals.bookBalance.toLocaleString('en-GB', { minimumFractionDigits: 2 }) }, { label: 'رصيد البنك', value: statementBalance.toLocaleString('en-GB', { minimumFractionDigits: 2 }) }, { label: 'الفرق', value: totals.diff.toLocaleString('en-GB', { minimumFractionDigits: 2 }) }]}
             disabled={!accountId}
           />
           {canEdit && <Button onClick={() => setAddOpen(true)} disabled={!accountId}><Plus className="w-4 h-4 ml-2" /> معاملة يدوية</Button>}
@@ -139,9 +139,9 @@ const AccBankReconciliationPage: React.FC = () => {
       {accountId && (
         <>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">رصيد الدفاتر</div><div className="text-lg font-bold">{totals.bookBalance.toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</div></CardContent></Card>
-            <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">رصيد كشف البنك</div><div className="text-lg font-bold">{statementBalance.toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</div></CardContent></Card>
-            <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">الفرق</div><div className={`text-lg font-bold ${Math.abs(totals.diff) < 0.01 ? 'text-emerald-600' : 'text-destructive'}`}>{totals.diff.toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</div></CardContent></Card>
+            <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">رصيد الدفاتر</div><div className="text-lg font-bold">{totals.bookBalance.toLocaleString('en-GB', { minimumFractionDigits: 2 })}</div></CardContent></Card>
+            <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">رصيد كشف البنك</div><div className="text-lg font-bold">{statementBalance.toLocaleString('en-GB', { minimumFractionDigits: 2 })}</div></CardContent></Card>
+            <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">الفرق</div><div className={`text-lg font-bold ${Math.abs(totals.diff) < 0.01 ? 'text-emerald-600' : 'text-destructive'}`}>{totals.diff.toLocaleString('en-GB', { minimumFractionDigits: 2 })}</div></CardContent></Card>
             <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">مُطابق / إجمالي</div><div className="text-lg font-bold">{totals.reconciledCount} / {totals.count}</div></CardContent></Card>
           </div>
 
@@ -172,8 +172,8 @@ const AccBankReconciliationPage: React.FC = () => {
                           <TableCell className="font-mono text-xs">{t.tx_date}</TableCell>
                           <TableCell className="font-mono text-xs">{t.reference || '-'}</TableCell>
                           <TableCell>{t.description || '-'}</TableCell>
-                          <TableCell className="text-right font-mono">{Number(t.debit).toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</TableCell>
-                          <TableCell className="text-right font-mono">{Number(t.credit).toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</TableCell>
+                          <TableCell className="text-right font-mono">{Number(t.debit).toLocaleString('en-GB', { minimumFractionDigits: 2 })}</TableCell>
+                          <TableCell className="text-right font-mono">{Number(t.credit).toLocaleString('en-GB', { minimumFractionDigits: 2 })}</TableCell>
                           <TableCell>{t.reconciled ? <Badge className="bg-emerald-100 text-emerald-700">مُطابق</Badge> : <Badge variant="secondary">غير مطابق</Badge>}</TableCell>
                         </TableRow>
                       ))}

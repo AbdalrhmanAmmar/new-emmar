@@ -111,8 +111,8 @@ const PartyMasterPage: React.FC<Props> = ({ table, title, subtitle, typeField, m
           <ExportPdfButton
             title={title}
             headers={['الكود', 'الاسم', 'النوع', 'الرقم الضريبي', 'الجوال', 'المدينة', 'شروط السداد', 'الرصيد الافتتاحي', 'الحالة']}
-            rows={filtered.map(r => [r.code, r.name_ar, typeLabels[r[typeField]] || '-', r.vat_number || '-', r.phone || '-', r.city || '-', r.payment_terms_days ? `${r.payment_terms_days} يوم` : '-', Number(r.opening_balance).toLocaleString('ar-EG', { minimumFractionDigits: 2 }), r.status === 'active' ? 'نشط' : r.status === 'blocked' ? 'محظور' : 'موقوف'])}
-            kpis={[{ label: 'العدد', value: totals.count }, { label: 'نشط', value: totals.active }, { label: 'إجمالي الأرصدة', value: totals.balance.toLocaleString('ar-EG', { minimumFractionDigits: 2 }) }]}
+            rows={filtered.map(r => [r.code, r.name_ar, typeLabels[r[typeField]] || '-', r.vat_number || '-', r.phone || '-', r.city || '-', r.payment_terms_days ? `${r.payment_terms_days} يوم` : '-', Number(r.opening_balance).toLocaleString('en-GB', { minimumFractionDigits: 2 }), r.status === 'active' ? 'نشط' : r.status === 'blocked' ? 'محظور' : 'موقوف'])}
+            kpis={[{ label: 'العدد', value: totals.count }, { label: 'نشط', value: totals.active }, { label: 'إجمالي الأرصدة', value: totals.balance.toLocaleString('en-GB', { minimumFractionDigits: 2 }) }]}
           />
           {canEdit && <Button onClick={openNew}><Plus className="w-4 h-4 ml-2" /> إضافة</Button>}
         </div>
@@ -121,7 +121,7 @@ const PartyMasterPage: React.FC<Props> = ({ table, title, subtitle, typeField, m
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">إجمالي</div><div className="text-2xl font-bold">{totals.count}</div></CardContent></Card>
         <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">نشط</div><div className="text-2xl font-bold text-emerald-600">{totals.active}</div></CardContent></Card>
-        <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">إجمالي الأرصدة الافتتاحية (SAR)</div><div className="text-2xl font-bold text-primary">{totals.balance.toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</div></CardContent></Card>
+        <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">إجمالي الأرصدة الافتتاحية (EGP)</div><div className="text-2xl font-bold text-primary">{totals.balance.toLocaleString('en-GB', { minimumFractionDigits: 2 })}</div></CardContent></Card>
       </div>
 
       <Card>
@@ -148,7 +148,7 @@ const PartyMasterPage: React.FC<Props> = ({ table, title, subtitle, typeField, m
                       <TableCell className="font-mono text-xs">{r.vat_number || '-'}</TableCell>
                       <TableCell>{r.phone || '-'}</TableCell>
                       <TableCell>{r.payment_terms_days ? `${r.payment_terms_days} يوم` : '-'}</TableCell>
-                      <TableCell className="text-right font-mono">{Number(r.opening_balance).toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</TableCell>
+                      <TableCell className="text-right font-mono">{Number(r.opening_balance).toLocaleString('en-GB', { minimumFractionDigits: 2 })}</TableCell>
                       <TableCell>{r.status === 'active' ? <Badge className="bg-emerald-100 text-emerald-700">نشط</Badge> : r.status === 'blocked' ? <Badge variant="destructive">محظور</Badge> : <Badge variant="secondary">موقوف</Badge>}</TableCell>
                       <TableCell>
                         {canEdit && (

@@ -156,8 +156,8 @@ export const exportToPDF = async ({
   const yieldUI = () => new Promise(r => setTimeout(r, 0));
   onProgress?.(3, 'بدء التصدير...');
   const now = new Date();
-  const dateStr = now.toLocaleDateString('ar-SA', { year: 'numeric', month: 'long', day: 'numeric' });
-  const timeStr = now.toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' });
+  const dateStr = now.toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
+  const timeStr = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
 
   const filteredHeaderIndices = selectedHeaders ?? headers.map((_, i) => i);
   const filteredHeaders = filteredHeaderIndices.map(i => headers[i]);

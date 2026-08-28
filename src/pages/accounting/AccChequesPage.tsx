@@ -42,7 +42,7 @@ const emptyForm = (): Partial<Cheque> => ({
   beneficiary_name: '',
   issue_date: new Date().toISOString().slice(0, 10),
   due_date: new Date().toISOString().slice(0, 10),
-  amount: 0, currency: 'SAR', status: 'pending',
+  amount: 0, currency: 'EGP', status: 'pending',
 });
 
 const AccChequesPage: React.FC = () => {
@@ -145,8 +145,8 @@ const AccChequesPage: React.FC = () => {
           <ExportPdfButton
             title="سجل الشيكات"
             headers={['الرقم', 'النوع', 'المستفيد', 'البنك المسحوب عليه', 'تاريخ الإصدار', 'الاستحقاق', 'المبلغ', 'الحالة']}
-            rows={filtered.map(r => [r.cheque_number, typeLabels[r.cheque_type], r.beneficiary_name, r.drawer_bank || '-', r.issue_date, r.due_date, Number(r.amount).toLocaleString('ar-EG', { minimumFractionDigits: 2 }), statusLabels[r.status] || r.status])}
-            kpis={[{ label: 'صادرة', value: totals.issuedCount }, { label: 'واردة', value: totals.receivedCount }, { label: 'مبلغ الصادرة', value: totals.issuedAmount.toLocaleString('ar-EG', { minimumFractionDigits: 2 }) }, { label: 'مبلغ الواردة', value: totals.receivedAmount.toLocaleString('ar-EG', { minimumFractionDigits: 2 }) }]}
+            rows={filtered.map(r => [r.cheque_number, typeLabels[r.cheque_type], r.beneficiary_name, r.drawer_bank || '-', r.issue_date, r.due_date, Number(r.amount).toLocaleString('en-GB', { minimumFractionDigits: 2 }), statusLabels[r.status] || r.status])}
+            kpis={[{ label: 'صادرة', value: totals.issuedCount }, { label: 'واردة', value: totals.receivedCount }, { label: 'مبلغ الصادرة', value: totals.issuedAmount.toLocaleString('en-GB', { minimumFractionDigits: 2 }) }, { label: 'مبلغ الواردة', value: totals.receivedAmount.toLocaleString('en-GB', { minimumFractionDigits: 2 }) }]}
           />
           {canEdit && <Button onClick={openNew}><Plus className="w-4 h-4 ml-2" /> شيك جديد</Button>}
         </div>
@@ -155,8 +155,8 @@ const AccChequesPage: React.FC = () => {
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
         <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">شيكات صادرة</div><div className="text-2xl font-bold text-blue-600">{totals.issuedCount}</div></CardContent></Card>
         <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">شيكات واردة</div><div className="text-2xl font-bold text-emerald-600">{totals.receivedCount}</div></CardContent></Card>
-        <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">مبلغ الصادرة</div><div className="text-lg font-bold">{totals.issuedAmount.toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</div></CardContent></Card>
-        <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">مبلغ الواردة</div><div className="text-lg font-bold">{totals.receivedAmount.toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</div></CardContent></Card>
+        <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">مبلغ الصادرة</div><div className="text-lg font-bold">{totals.issuedAmount.toLocaleString('en-GB', { minimumFractionDigits: 2 })}</div></CardContent></Card>
+        <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">مبلغ الواردة</div><div className="text-lg font-bold">{totals.receivedAmount.toLocaleString('en-GB', { minimumFractionDigits: 2 })}</div></CardContent></Card>
         <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">تستحق خلال 7 أيام</div><div className="text-2xl font-bold text-amber-600">{totals.dueSoonCount}</div></CardContent></Card>
       </div>
 
@@ -199,7 +199,7 @@ const AccChequesPage: React.FC = () => {
                       <TableCell className="text-xs">{r.drawer_bank || '-'}</TableCell>
                       <TableCell className="font-mono text-xs">{r.issue_date}</TableCell>
                       <TableCell className="font-mono text-xs">{r.due_date}</TableCell>
-                      <TableCell className="text-right font-mono">{Number(r.amount).toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</TableCell>
+                      <TableCell className="text-right font-mono">{Number(r.amount).toLocaleString('en-GB', { minimumFractionDigits: 2 })}</TableCell>
                       <TableCell><Badge className={statusColors[r.status]}>{statusLabels[r.status] || r.status}</Badge></TableCell>
                       <TableCell>
                         <RowActions>
@@ -254,7 +254,7 @@ const AccChequesPage: React.FC = () => {
             <div className="space-y-1.5"><Label>تاريخ الإصدار</Label><Input type="date" value={form.issue_date || ''} onChange={e => setForm({ ...form, issue_date: e.target.value })} /></div>
             <div className="space-y-1.5"><Label>تاريخ الاستحقاق</Label><Input type="date" value={form.due_date || ''} onChange={e => setForm({ ...form, due_date: e.target.value })} /></div>
             <div className="space-y-1.5"><Label>المبلغ</Label><Input type="number" step="0.01" value={form.amount ?? 0} onChange={e => setForm({ ...form, amount: Number(e.target.value) })} /></div>
-            <div className="space-y-1.5"><Label>العملة</Label><Input value={form.currency || 'SAR'} onChange={e => setForm({ ...form, currency: e.target.value })} /></div>
+            <div className="space-y-1.5"><Label>العملة</Label><Input value={form.currency || 'EGP'} onChange={e => setForm({ ...form, currency: e.target.value })} /></div>
             <div className="space-y-1.5"><Label>الحالة</Label>
               <Select value={form.status || 'pending'} onValueChange={v => setForm({ ...form, status: v })}>
                 <SelectTrigger><SelectValue /></SelectTrigger>

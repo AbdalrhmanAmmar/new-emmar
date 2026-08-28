@@ -39,7 +39,7 @@ const empty = (): Partial<CostCenter> => ({
   code: '', name: '', level: 1, cc_type: 'cost', annual_budget: 0, actual_ytd: 0, commitments: 0, is_active: true,
 });
 
-const fmt = (n: number) => Number(n || 0).toLocaleString('ar-EG', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const fmt = (n: number) => Number(n || 0).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
 const AccCostCentersPage: React.FC = () => {
   const { user, isAdmin, hasPermission } = useAuth();

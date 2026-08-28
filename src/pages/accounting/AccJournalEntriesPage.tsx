@@ -200,17 +200,17 @@ const AccJournalEntriesPage: React.FC = () => {
             headers={['رقم القيد', 'التاريخ', 'البيان', 'المصدر', 'مدين', 'دائن', 'الحالة']}
             rows={entries.map(e => [
               e.entry_no,
-              new Date(e.entry_date).toLocaleDateString('ar-EG'),
+              new Date(e.entry_date).toLocaleDateString('en-GB'),
               e.description || '',
               e.source,
-              Number(e.total_debit).toLocaleString('ar-EG', { minimumFractionDigits: 2 }),
-              Number(e.total_credit).toLocaleString('ar-EG', { minimumFractionDigits: 2 }),
+              Number(e.total_debit).toLocaleString('en-GB', { minimumFractionDigits: 2 }),
+              Number(e.total_credit).toLocaleString('en-GB', { minimumFractionDigits: 2 }),
               statusAr[e.status] ?? e.status,
             ])}
             kpis={[
               { label: 'عدد القيود', value: entries.length },
-              { label: 'إجمالي المدين', value: entries.reduce((s, e) => s + Number(e.total_debit || 0), 0).toLocaleString('ar-EG', { minimumFractionDigits: 2 }) },
-              { label: 'إجمالي الدائن', value: entries.reduce((s, e) => s + Number(e.total_credit || 0), 0).toLocaleString('ar-EG', { minimumFractionDigits: 2 }) },
+              { label: 'إجمالي المدين', value: entries.reduce((s, e) => s + Number(e.total_debit || 0), 0).toLocaleString('en-GB', { minimumFractionDigits: 2 }) },
+              { label: 'إجمالي الدائن', value: entries.reduce((s, e) => s + Number(e.total_credit || 0), 0).toLocaleString('en-GB', { minimumFractionDigits: 2 }) },
             ]}
           />
           {canEdit && <Button onClick={openNew}><Plus className="w-4 h-4 ml-2" /> قيد جديد</Button>}
@@ -239,11 +239,11 @@ const AccJournalEntriesPage: React.FC = () => {
                 {entries.map((e) => (
                   <TableRow key={e.id}>
                     <TableCell className="font-mono">{e.entry_no}</TableCell>
-                    <TableCell>{new Date(e.entry_date).toLocaleDateString('ar-EG')}</TableCell>
+                    <TableCell>{new Date(e.entry_date).toLocaleDateString('en-GB')}</TableCell>
                     <TableCell className="max-w-xs truncate">{e.description}</TableCell>
                     <TableCell><Badge variant="outline" className="text-xs">{e.source}</Badge></TableCell>
-                    <TableCell className="text-right">{Number(e.total_debit).toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</TableCell>
-                    <TableCell className="text-right">{Number(e.total_credit).toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</TableCell>
+                    <TableCell className="text-right">{Number(e.total_debit).toLocaleString('en-GB', { minimumFractionDigits: 2 })}</TableCell>
+                    <TableCell className="text-right">{Number(e.total_credit).toLocaleString('en-GB', { minimumFractionDigits: 2 })}</TableCell>
                     <TableCell><Badge className={statusColor[e.status]}>{statusAr[e.status] ?? e.status}</Badge></TableCell>
                     <TableCell>
                       <RowActions>
@@ -324,8 +324,8 @@ const AccJournalEntriesPage: React.FC = () => {
                 <tfoot>
                   <tr className="bg-muted/60 font-semibold">
                     <td colSpan={3} className="p-3 text-right">الإجمالي</td>
-                    <td className="p-3 text-right">{totals.debit.toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</td>
-                    <td className="p-3 text-right">{totals.credit.toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</td>
+                    <td className="p-3 text-right">{totals.debit.toLocaleString('en-GB', { minimumFractionDigits: 2 })}</td>
+                    <td className="p-3 text-right">{totals.credit.toLocaleString('en-GB', { minimumFractionDigits: 2 })}</td>
                     <td />
                   </tr>
                 </tfoot>
@@ -333,7 +333,7 @@ const AccJournalEntriesPage: React.FC = () => {
             </div>
 
             <div className={`text-sm rounded-md px-3 py-2 ${balanced ? 'bg-emerald-50 text-emerald-800' : 'bg-amber-50 text-amber-800'}`}>
-              {balanced ? '✓ القيد متوازن' : `الفرق: ${(totals.debit - totals.credit).toLocaleString('ar-EG', { minimumFractionDigits: 2 })} — أدخل مبالغ متساوية على الطرفين`}
+              {balanced ? '✓ القيد متوازن' : `الفرق: ${(totals.debit - totals.credit).toLocaleString('en-GB', { minimumFractionDigits: 2 })} — أدخل مبالغ متساوية على الطرفين`}
             </div>
           </div>
 
@@ -350,7 +350,7 @@ const AccJournalEntriesPage: React.FC = () => {
         <DialogContent className="max-w-3xl" dir="rtl">
           <DialogHeader><DialogTitle>القيد {viewEntry?.entry_no}</DialogTitle></DialogHeader>
           <div className="grid grid-cols-3 gap-3 text-sm">
-            <div><div className="text-muted-foreground text-xs">التاريخ</div><div>{viewEntry && new Date(viewEntry.entry_date).toLocaleDateString('ar-EG')}</div></div>
+            <div><div className="text-muted-foreground text-xs">التاريخ</div><div>{viewEntry && new Date(viewEntry.entry_date).toLocaleDateString('en-GB')}</div></div>
             <div><div className="text-muted-foreground text-xs">الحالة</div><Badge className={statusColor[viewEntry?.status ?? 'draft']}>{statusAr[viewEntry?.status ?? ''] ?? viewEntry?.status}</Badge></div>
             <div><div className="text-muted-foreground text-xs">المصدر</div><div>{viewEntry?.source}</div></div>
             <div className="col-span-3"><div className="text-muted-foreground text-xs">البيان</div><div>{viewEntry?.description}</div></div>
@@ -366,8 +366,8 @@ const AccJournalEntriesPage: React.FC = () => {
                   <TableCell>{l.line_no}</TableCell>
                   <TableCell>{l.account_code}</TableCell>
                   <TableCell>{l.description}</TableCell>
-                  <TableCell className="text-right">{Number(l.debit).toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</TableCell>
-                  <TableCell className="text-right">{Number(l.credit).toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</TableCell>
+                  <TableCell className="text-right">{Number(l.debit).toLocaleString('en-GB', { minimumFractionDigits: 2 })}</TableCell>
+                  <TableCell className="text-right">{Number(l.credit).toLocaleString('en-GB', { minimumFractionDigits: 2 })}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

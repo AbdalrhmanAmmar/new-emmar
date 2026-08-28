@@ -218,7 +218,7 @@ const AccPeriodClosingPage: React.FC = () => {
                           </div>
                         </TableCell>
                         <TableCell><Badge className={statusColors[r.status]}>{statusLabels[r.status]}</Badge></TableCell>
-                        <TableCell className="text-xs">{r.closed_at ? new Date(r.closed_at).toLocaleDateString('ar-EG') : '-'}</TableCell>
+                        <TableCell className="text-xs">{r.closed_at ? new Date(r.closed_at).toLocaleDateString('en-GB') : '-'}</TableCell>
                         <TableCell>
                           <RowActions>
                             {canEdit && r.status === 'open' && <Button size="sm" variant="ghost" title="إرسال للمراجعة" onClick={() => toReview(r)}><CheckCircle2 className="w-3.5 h-3.5 text-amber-600" /></Button>}

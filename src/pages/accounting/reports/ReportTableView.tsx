@@ -117,7 +117,7 @@ export function ReportTableView<T extends Record<string, any>>({
         columns.map((c) => {
           const raw = (row as any)[c.key];
           if (c.isNumber) {
-            return Number(raw ?? 0).toLocaleString('ar-EG', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            return Number(raw ?? 0).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
           }
           // If render exists and returns a primitive, use it; else stringify raw
           if (c.render) {
@@ -133,7 +133,7 @@ export function ReportTableView<T extends Record<string, any>>({
         .filter((c) => c.footerSum)
         .map((c) => ({
           label: `إجمالي ${c.header}`,
-          value: totals[c.key].toLocaleString('ar-EG', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+          value: totals[c.key].toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
         }));
       await exportToPDF({
         title,
@@ -220,7 +220,7 @@ export function ReportTableView<T extends Record<string, any>>({
                     <TableRow key={i}>
                       {columns.map((c) => {
                         const raw = (row as any)[c.key];
-                        const val = c.render ? c.render(row) : c.isNumber ? Number(raw ?? 0).toLocaleString('ar-EG', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : raw;
+                        const val = c.render ? c.render(row) : c.isNumber ? Number(raw ?? 0).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : raw;
                         return (
                           <TableCell key={c.key} className={`${c.align === 'left' ? 'text-left' : c.align === 'center' ? 'text-center' : 'text-right'} ${c.className ?? ''}`}>
                             {val}
@@ -235,7 +235,7 @@ export function ReportTableView<T extends Record<string, any>>({
                     <tr className="border-t-2 font-semibold bg-muted/50">
                       {columns.map((c, idx) => (
                         <td key={c.key} className={`p-3 ${c.align === 'left' ? 'text-left' : c.align === 'center' ? 'text-center' : 'text-right'}`}>
-                          {idx === 0 && !c.footerSum ? 'الإجمالي' : c.footerSum ? totals[c.key].toLocaleString('ar-EG', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : ''}
+                          {idx === 0 && !c.footerSum ? 'الإجمالي' : c.footerSum ? totals[c.key].toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : ''}
                         </td>
                       ))}
                     </tr>

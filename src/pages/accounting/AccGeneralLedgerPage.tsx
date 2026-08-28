@@ -80,17 +80,17 @@ const AccGeneralLedgerPage: React.FC = () => {
             headers={['رقم القيد', 'التاريخ', 'الحساب', 'البيان', 'مدين', 'دائن', 'الرصيد التراكمي']}
             rows={rows.map(r => [
               r.entry_no,
-              new Date(r.entry_date).toLocaleDateString('ar-EG'),
+              new Date(r.entry_date).toLocaleDateString('en-GB'),
               `${r.account_code} - ${r.account_name_ar}`,
               r.line_description ?? '',
-              Number(r.debit || 0).toLocaleString('ar-EG', { minimumFractionDigits: 2 }),
-              Number(r.credit || 0).toLocaleString('ar-EG', { minimumFractionDigits: 2 }),
-              Number(r.running_balance || 0).toLocaleString('ar-EG', { minimumFractionDigits: 2 }),
+              Number(r.debit || 0).toLocaleString('en-GB', { minimumFractionDigits: 2 }),
+              Number(r.credit || 0).toLocaleString('en-GB', { minimumFractionDigits: 2 }),
+              Number(r.running_balance || 0).toLocaleString('en-GB', { minimumFractionDigits: 2 }),
             ])}
             kpis={[
               { label: 'عدد الحركات', value: rows.length },
-              { label: 'إجمالي مدين', value: totals.debit.toLocaleString('ar-EG', { minimumFractionDigits: 2 }) },
-              { label: 'إجمالي دائن', value: totals.credit.toLocaleString('ar-EG', { minimumFractionDigits: 2 }) },
+              { label: 'إجمالي مدين', value: totals.debit.toLocaleString('en-GB', { minimumFractionDigits: 2 }) },
+              { label: 'إجمالي دائن', value: totals.credit.toLocaleString('en-GB', { minimumFractionDigits: 2 }) },
             ]}
           />
         </div>
@@ -155,12 +155,12 @@ const AccGeneralLedgerPage: React.FC = () => {
                   {rows.map((r) => (
                     <TableRow key={r.line_id}>
                       <TableCell className="font-mono text-xs">{r.entry_no}</TableCell>
-                      <TableCell>{new Date(r.entry_date).toLocaleDateString('ar-EG')}</TableCell>
+                      <TableCell>{new Date(r.entry_date).toLocaleDateString('en-GB')}</TableCell>
                       <TableCell>{r.account_code} - {r.account_name_ar}</TableCell>
                       <TableCell className="text-sm text-muted-foreground">{r.line_description}</TableCell>
-                      <TableCell className="text-right">{Number(r.debit || 0).toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</TableCell>
-                      <TableCell className="text-right">{Number(r.credit || 0).toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</TableCell>
-                      <TableCell className="text-right font-semibold">{Number(r.running_balance || 0).toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</TableCell>
+                      <TableCell className="text-right">{Number(r.debit || 0).toLocaleString('en-GB', { minimumFractionDigits: 2 })}</TableCell>
+                      <TableCell className="text-right">{Number(r.credit || 0).toLocaleString('en-GB', { minimumFractionDigits: 2 })}</TableCell>
+                      <TableCell className="text-right font-semibold">{Number(r.running_balance || 0).toLocaleString('en-GB', { minimumFractionDigits: 2 })}</TableCell>
                       <TableCell><Badge variant="outline" className="text-xs">{r.source}</Badge></TableCell>
                     </TableRow>
                   ))}
@@ -168,8 +168,8 @@ const AccGeneralLedgerPage: React.FC = () => {
                 <tfoot>
                   <tr className="border-t-2 font-semibold bg-muted/50">
                     <td colSpan={4} className="p-3 text-right">الإجمالي</td>
-                    <td className="p-3 text-right">{totals.debit.toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</td>
-                    <td className="p-3 text-right">{totals.credit.toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</td>
+                    <td className="p-3 text-right">{totals.debit.toLocaleString('en-GB', { minimumFractionDigits: 2 })}</td>
+                    <td className="p-3 text-right">{totals.credit.toLocaleString('en-GB', { minimumFractionDigits: 2 })}</td>
                     <td colSpan={2} />
                   </tr>
                 </tfoot>
