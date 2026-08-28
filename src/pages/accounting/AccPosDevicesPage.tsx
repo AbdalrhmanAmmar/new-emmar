@@ -141,8 +141,8 @@ const AccPosDevicesPage: React.FC = () => {
                   <TableCell className="font-medium">{d.name}</TableCell>
                   <TableCell className="font-mono text-xs">{d.serial_number}</TableCell>
                   <TableCell className="font-mono text-xs">
-                    <button onClick={() => copyUuid(d.device_uuid)} className="flex items-center gap-1 hover:text-primary">
-                      {d.device_uuid.slice(0, 8)}... <Copy className="w-3 h-3" />
+                    <button onClick={() => copyUuid(d.device_uuid ?? d.id)} className="flex items-center gap-1 hover:text-primary">
+                      {String(d.device_uuid ?? d.id ?? '').slice(0, 8)}... <Copy className="w-3 h-3" />
                     </button>
                   </TableCell>
                   <TableCell>{d.branch || '-'}</TableCell>
