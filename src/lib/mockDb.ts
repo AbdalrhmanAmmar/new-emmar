@@ -364,6 +364,39 @@ function seed(): Tables {
 
   });
 
+  const acc_customers = [
+      party("C-001", "شركة الدلتا لمزارع الدواجن", "512-345-678", "القاهرة", 120000, { customer_type: "company" }),
+      party("C-002", "مزارع النيل للألبان", "478-902-116", "الإسكندرية", 42000, { customer_type: "company" }),
+      party("C-003", "جمعية منتجي الدواجن", "633-118-540", "القاهرة", 0, { customer_type: "government" }),
+      party("C-004", "محمد عبد الرحمن", "", "طنطا", 3500, { customer_type: "individual" }),
+    ]
+  ];
+  const acc_vendors = [
+      party("V-001", "مصنع الشرق لاستخلاص الزيوت (كسب صويا)", "380-664-201", "القاهرة", 138000, {
+        vendor_type: "company",
+        bank_name: "البنك الأهلي المصري",
+        bank_account: "1234567890",
+        iban: "EG380003000123456789012345",
+      }),
+      party("V-002", "الوادي لتجارة الذرة الصفراء", "291-773-908", "الإسكندرية", 64000, { vendor_type: "company" }),
+      party("V-003", "النقل السريع للشحن", "845-110-332", "القاهرة", 12000, { vendor_type: "company" }),
+    ]
+  ];
+  const cycles = buildCycles({
+    items: feedItems as any,
+    warehouses,
+    customers: acc_customers,
+    vendors: acc_vendors,
+    d,
+    today,
+  });
+  const cycleTables: Tables = { ...cycles.tables };
+  const cycleInvoices = cycleTables["__cycle_invoices"] ?? [];
+  const cycleInvoiceLines = cycleTables["__cycle_invoice_lines"] ?? [];
+  delete cycleTables["__cycle_invoices"];
+  delete cycleTables["__cycle_invoice_lines"];
+  const allStockMoves = [...stockMoves, ...cycles.stockMoves];
+
   return {
     acc_chart_of_accounts: coa,
     acc_company_profile: [
@@ -388,22 +421,8 @@ function seed(): Tables {
     ],
     acc_journal_entries,
     acc_ledger_lines,
-    acc_customers: [
-      party("C-001", "شركة الدلتا لمزارع الدواجن", "512-345-678", "القاهرة", 120000, { customer_type: "company" }),
-      party("C-002", "مزارع النيل للألبان", "478-902-116", "الإسكندرية", 42000, { customer_type: "company" }),
-      party("C-003", "جمعية منتجي الدواجن", "633-118-540", "القاهرة", 0, { customer_type: "government" }),
-      party("C-004", "محمد عبد الرحمن", "", "طنطا", 3500, { customer_type: "individual" }),
-    ],
-    acc_vendors: [
-      party("V-001", "مصنع الشرق لاستخلاص الزيوت (كسب صويا)", "380-664-201", "القاهرة", 138000, {
-        vendor_type: "company",
-        bank_name: "البنك الأهلي المصري",
-        bank_account: "1234567890",
-        iban: "EG380003000123456789012345",
-      }),
-      party("V-002", "الوادي لتجارة الذرة الصفراء", "291-773-908", "الإسكندرية", 64000, { vendor_type: "company" }),
-      party("V-003", "النقل السريع للشحن", "845-110-332", "القاهرة", 12000, { vendor_type: "company" }),
-    ],
+    acc_customers,
+    acc_vendors,
     acc_bank_accounts: [
       {
         id: uid(),
@@ -517,8 +536,8 @@ function seed(): Tables {
         notes: "تحصيل نقدي",
       },
     ],
-    acc_sales_invoices,
-    acc_sales_invoice_lines,
+    acc_sales_invoices: [...acc_sales_invoices, ...cycleInvoices],
+    acc_sales_invoice_lines: [...acc_sales_invoice_lines, ...cycleInvoiceLines],
     acc_credit_debit_notes: [
       {
         id: uid(),
@@ -718,11 +737,9 @@ function seed(): Tables {
     ],
     acc_items: feedItems,
     acc_warehouses: warehouses,
-    acc_stock_moves: stockMoves,
-    acc_purchase_orders: purchaseOrders,
-    acc_purchase_order_lines: purchaseOrderLines,
+    acc_stock_moves: allStockMoves,
     acc_inventory_valuation: feedItems.map((it) => {
-      const qty = stockMoves
+      const qty = allStockMoves
         .filter((m) => m.item_id === it.id)
         .reduce((s, m) => s + (m.move_type === "out" ? -num(m.quantity_kg) : num(m.quantity_kg)), 0);
       return {
@@ -738,6 +755,7 @@ function seed(): Tables {
       };
     }),
 
+    ...cycleTables,
     acc_bank_feeds: [
       {
         id: uid(),
@@ -943,6 +961,16 @@ export const UNIQUE_KEYS: Record<string, string[][]> = {
   acc_warehouses: [["code"], ["name_ar"]],
   acc_stock_moves: [["move_no"]],
   acc_purchase_orders: [["po_no"]],
+  acc_rfqs: [["rfq_no"]],
+  acc_rfq_quotes: [["rfq_id", "vendor_id"]],
+  acc_goods_receipts: [["grn_no"]],
+  acc_landed_costs: [["cost_no"]],
+  acc_vendor_bills: [["bill_no"], ["vendor_id", "vendor_ref"]],
+  acc_purchase_returns: [["return_no"]],
+  acc_sales_quotations: [["quote_no"]],
+  acc_sales_orders: [["so_no"]],
+  acc_deliveries: [["do_no"]],
+  acc_sales_returns: [["return_no"]],
 
 };
 
