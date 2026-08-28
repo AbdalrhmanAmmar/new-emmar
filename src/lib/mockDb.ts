@@ -369,7 +369,6 @@ function seed(): Tables {
       party("C-002", "مزارع النيل للألبان", "478-902-116", "الإسكندرية", 42000, { customer_type: "company" }),
       party("C-003", "جمعية منتجي الدواجن", "633-118-540", "القاهرة", 0, { customer_type: "government" }),
       party("C-004", "محمد عبد الرحمن", "", "طنطا", 3500, { customer_type: "individual" }),
-    ]
   ];
   const acc_vendors = [
       party("V-001", "مصنع الشرق لاستخلاص الزيوت (كسب صويا)", "380-664-201", "القاهرة", 138000, {
@@ -380,7 +379,6 @@ function seed(): Tables {
       }),
       party("V-002", "الوادي لتجارة الذرة الصفراء", "291-773-908", "الإسكندرية", 64000, { vendor_type: "company" }),
       party("V-003", "النقل السريع للشحن", "845-110-332", "القاهرة", 12000, { vendor_type: "company" }),
-    ]
   ];
   const cycles = buildCycles({
     items: feedItems as any,
