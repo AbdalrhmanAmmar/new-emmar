@@ -168,19 +168,26 @@ export function onHandKg(itemId: string, warehouseId?: string | null) {
 }
 
 /** الكمية المحجوزة على أوامر البيع المعتمدة ولم تُسلَّم بعد. */
-export function reservedKg(itemId: string, warehouseId?: string | null) {
+export function reservedKg(itemId: string, warehouseId?: string | null, excludeSoId?: string | null) {
   const orders = getTable("acc_sales_orders");
   const openIds = new Set(
-    orders.filter((o) => o.status === "confirmed" || o.status === "partially_delivered").map((o) => o.id),
+    orders
+      .filter((o) => (o.status === "confirmed" || o.status === "partially_delivered") && o.id !== excludeSoId)
+      .map((o) => o.id),
   );
   return getTable("acc_sales_order_lines")
     .filter((l) => openIds.has(l.so_id) && l.item_id === itemId && (!warehouseId || l.warehouse_id === warehouseId))
     .reduce((s, l) => s + Math.max(0, num(l.quantity_kg) - num(l.delivered_kg)), 0);
 }
 
-export function availableKg(itemId: string, warehouseId?: string | null) {
-  return onHandKg(itemId, warehouseId) - reservedKg(itemId, warehouseId);
+/**
+ * المتاح للبيع = الرصيد الفعلي − المحجوز على أوامر أخرى.
+ * عند التسليم لأمر بيع قائم نستثني حجز الأمر نفسه حتى لا يُخصم مرتين.
+ */
+export function availableKg(itemId: string, warehouseId?: string | null, excludeSoId?: string | null) {
+  return onHandKg(itemId, warehouseId) - reservedKg(itemId, warehouseId, excludeSoId);
 }
+
 
 /** متوسط التكلفة المرجح للصنف (يشمل مصاريف الوصول المُحمّلة). */
 export function weightedCost(itemId: string) {
