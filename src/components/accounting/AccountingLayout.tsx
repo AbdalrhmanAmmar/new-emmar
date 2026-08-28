@@ -26,7 +26,7 @@ export function AccountingLayout({ children }: { children: ReactNode }) {
           <span className="grid h-9 w-9 place-items-center rounded-lg bg-primary text-primary-foreground">
             <Wallet className="h-5 w-5" />
           </span>
-          <span className="text-lg font-bold">موديول الحسابات</span>
+          <span className="text-lg font-bold">برنامج إعمار المحاسبى</span>
         </Link>
         <span className="ms-auto hidden text-xs text-muted-foreground sm:inline">
           الوضع الافتراضي — بيانات تجريبية محلية
