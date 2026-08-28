@@ -82,6 +82,95 @@ function buildCoa() {
   return rows;
 }
 
+/* ============ بيانات الأعلاف والمخزون (شركة تجارة أعلاف) ============ */
+
+type FeedItem = {
+  id: string; code: string; name_ar: string; category: string; unit: string;
+  pack_weight_kg: number; cost_price: number; sale_price: number;
+  reorder_level_kg: number; vat_applicable: boolean; is_active: boolean; notes: string | null;
+};
+
+const itemDefs: Array<[string, string, string, number, number, number, number]> = [
+  // code, name, category, pack kg, cost/kg, sale/kg, reorder kg
+  ["FD-1001", "ذرة صفراء مستوردة", "خامة علفية", 1000, 12.5, 14.2, 50000],
+  ["FD-1002", "كسب صويا 46%", "خامة علفية", 1000, 24.0, 27.5, 40000],
+  ["FD-1003", "رجيع كون (بروتين 16%)", "خامة علفية", 50, 9.8, 11.4, 30000],
+  ["FD-1004", "دريس برسيم مضغوط", "خامة علفية", 25, 7.2, 8.9, 20000],
+  ["FD-2001", "علف بادي دواجن 23%", "علف مصنّع", 25, 18.6, 21.8, 15000],
+  ["FD-2002", "علف نامي دواجن 21%", "علف مصنّع", 25, 17.4, 20.4, 15000],
+  ["FD-2003", "علف ناهي دواجن 19%", "علف مصنّع", 25, 16.5, 19.3, 15000],
+  ["FD-3001", "علف مركز ألبان 21%", "علف مصنّع", 50, 15.8, 18.6, 25000],
+  ["FD-3002", "علف تسمين عجول 16%", "علف مصنّع", 50, 14.2, 16.9, 25000],
+  ["FD-4001", "بريمكس فيتامينات ومعادن", "إضافات", 25, 68.0, 82.0, 2000],
+  ["FD-4002", "حجر جيري مطحون", "إضافات", 50, 1.6, 2.4, 10000],
+  ["FD-4003", "ميثيونين DL", "إضافات", 25, 110.0, 132.0, 1000],
+];
+
+const feedItems: FeedItem[] = itemDefs.map(([code, name, cat, pack, cost, sale, reorder]) => ({
+  id: uid(), code, name_ar: name, category: cat, unit: "كجم",
+  pack_weight_kg: pack, cost_price: cost, sale_price: sale,
+  reorder_level_kg: reorder, vat_applicable: cat !== "خامة علفية", is_active: true, notes: null,
+}));
+
+const warehouses = [
+  { id: uid(), code: "WH-01", name_ar: "المخزن الرئيسي — العاشر من رمضان", location: "الشرقية", manager: "محمود عبد العال", capacity_ton: 2500, is_active: true },
+  { id: uid(), code: "WH-02", name_ar: "مخزن المصنع — السادات", location: "المنوفية", manager: "سيد رشاد", capacity_ton: 1500, is_active: true },
+  { id: uid(), code: "WH-03", name_ar: "مخزن التوزيع — المنيا", location: "المنيا", manager: "ناصر فتحي", capacity_ton: 700, is_active: true },
+];
+
+const stockMoves: Row[] = (() => {
+  const rows: Row[] = [];
+  let seq = 1;
+  const push = (
+    item: FeedItem, whIdx: number, type: "in" | "out",
+    qty: number, unitCost: number, month: number, day: number, refType: string, refNo: string,
+  ) => {
+    const wh = warehouses[whIdx];
+    rows.push({
+      id: uid(),
+      move_no: `${type === "in" ? "IN" : "OUT"}-${String(seq++).padStart(5, "0")}`,
+      move_date: d(month, day),
+      move_type: type,
+      item_id: item.id,
+      item_code: item.code,
+      item_name: item.name_ar,
+      warehouse_id: wh.id,
+      warehouse_name: wh.name_ar,
+      quantity_kg: qty,
+      unit_cost: unitCost,
+      total_cost: Math.round(qty * unitCost * 100) / 100,
+      batch_no: `B-${month}${String(day).padStart(2, "0")}-${item.code.slice(-4)}`,
+      ref_type: refType,
+      ref_no: refNo,
+      notes: null,
+    });
+  };
+  feedItems.forEach((it, i) => {
+    push(it, i % 3, "in", (i % 3 === 0 ? 120000 : 60000) + i * 1500, it.cost_price, 1, 12 + (i % 10), "purchase", `PO-${String(1000 + i)}`);
+    push(it, i % 3, "in", 45000 + i * 800, Math.round(it.cost_price * 1.03 * 100) / 100, 2, 8 + (i % 15), "purchase", `PO-${String(1050 + i)}`);
+    push(it, i % 3, "out", 38000 + i * 600, it.cost_price, 2, 20 + (i % 7), "sale", `INV-${String(2000 + i)}`);
+    push(it, i % 3, "out", 21000 + i * 400, it.cost_price, 3, 5 + (i % 12), "sale", `INV-${String(2050 + i)}`);
+  });
+  return rows;
+})();
+
+const purchaseOrders: Row[] = [
+  { id: uid(), po_no: "PO-2101", vendor_name: "شركة الدلتا لتجارة الحاصلات الزراعية", order_date: d(3, 2), expected_date: d(3, 12), warehouse_name: warehouses[0].name_ar, subtotal: 1250000, vat_total: 0, total: 1250000, currency: "EGP", status: "received", notes: "ذرة صفراء — 100 طن" },
+  { id: uid(), po_no: "PO-2102", vendor_name: "مطاحن مصر الوسطى", order_date: d(3, 6), expected_date: d(3, 16), warehouse_name: warehouses[1].name_ar, subtotal: 980000, vat_total: 137200, total: 1117200, currency: "EGP", status: "approved", notes: "رجيع كون" },
+  { id: uid(), po_no: "PO-2103", vendor_name: "النيل للإضافات العلفية", order_date: d(3, 10), expected_date: d(3, 24), warehouse_name: warehouses[0].name_ar, subtotal: 340000, vat_total: 47600, total: 387600, currency: "EGP", status: "draft", notes: "بريمكس وميثيونين" },
+];
+
+const purchaseOrderLines: Row[] = [
+  { id: uid(), po_id: purchaseOrders[0].id, po_no: "PO-2101", item_code: "FD-1001", item_name: "ذرة صفراء مستوردة", quantity_kg: 100000, unit_price: 12.5, vat_rate: 0, line_total: 1250000 },
+  { id: uid(), po_id: purchaseOrders[1].id, po_no: "PO-2102", item_code: "FD-1003", item_name: "رجيع كون (بروتين 16%)", quantity_kg: 100000, unit_price: 9.8, vat_rate: 14, line_total: 980000 },
+  { id: uid(), po_id: purchaseOrders[2].id, po_no: "PO-2103", item_code: "FD-4001", item_name: "بريمكس فيتامينات ومعادن", quantity_kg: 5000, unit_price: 68, vat_rate: 14, line_total: 340000 },
+];
+
+function seedFeedNumber(v: any) {
+  return Number(v ?? 0);
+}
+
+
 function seed(): Tables {
   const coa = buildCoa();
   const idOf = (code: string) => coa.find((a) => a.code === code)?.id ?? null;
