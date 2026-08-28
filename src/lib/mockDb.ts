@@ -7,7 +7,7 @@
 export type Row = Record<string, any>;
 export type Tables = Record<string, Row[]>;
 
-const STORAGE_KEY = "acc_demo_db_v1";
+const STORAGE_KEY = "acc_demo_db_v2_egp";
 
 export const uid = () =>
   typeof crypto !== "undefined" && "randomUUID" in crypto
