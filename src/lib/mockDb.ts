@@ -882,16 +882,29 @@ function buildView(name: string, db: Tables): Row[] | null {
   switch (name) {
     case "v_acc_trial_balance":
       return trial();
-    case "v_acc_general_ledger":
-      return lines.map((l) => {
-        const account = coa.find((a) => a.id === l.account_id || a.code === l.account_code);
-        return {
-          ...l,
-          account_code: account?.code ?? l.account_code,
-          account_name: account?.name_ar ?? l.account_name,
-          account_type: account?.account_type ?? null,
-        };
-      });
+    case "v_acc_general_ledger": {
+      const running = new Map<string, number>();
+      return [...lines]
+        .sort((a, b) => String(a.entry_date).localeCompare(String(b.entry_date)))
+        .map((l) => {
+          const account = coa.find((a) => a.id === l.account_id || a.code === l.account_code);
+          const code = account?.code ?? l.account_code ?? "—";
+          const prev = running.get(code) ?? 0;
+          const balance = prev + num(l.debit) - num(l.credit);
+          running.set(code, balance);
+          return {
+            ...l,
+            line_id: l.id,
+            account_code: code,
+            account_name: account?.name_ar ?? l.account_name,
+            account_name_ar: account?.name_ar ?? l.account_name,
+            account_type: account?.account_type ?? null,
+            line_description: l.description ?? null,
+            running_balance: balance,
+          };
+        });
+    }
+
     case "v_acc_profit_loss":
       return trial()
         .filter((r) => r.account_type === "revenue" || r.account_type === "expense")
