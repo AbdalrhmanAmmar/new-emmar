@@ -100,75 +100,49 @@ const AccCreditDebitNotesPage: React.FC = () => {
 
   const submit = async () => {
     if (!source) return toast.error('اختر الفاتورة الأصل');
-    if (!company?.vat_number) return toast.error('أكمل بيانات المنشأة أولاً');
     if (!reasonCode || !reasonText) return toast.error('حدّد سبب الإشعار');
+    if (!(ratio > 0 && ratio <= 100)) return toast.error('نسبة الإشعار يجب أن تكون بين 1 و 100');
     setSubmitting(true);
     try {
-      // 1) sequential ICV on same device as source
-      const { data: icvRes, error: icvErr } = await (supabase as any)
-        .rpc('acc_next_device_icv', { _device_id: source.device_id });
-      if (icvErr) throw icvErr;
-      const icv = Number(icvRes);
+      const { data: existing } = await (supabase as any).from('acc_credit_debit_notes').select('*');
+      const all = (existing ?? []) as Note[];
       const prefix = noteType === 'credit' ? 'CN' : 'DN';
-      const noteNumber = `${prefix}-${String(icv).padStart(6, '0')}`;
-      const uuid = newUuidV4();
-      const now = new Date();
-      const issueDate = now.toISOString().slice(0, 10);
-      const issueTime = now.toTimeString().slice(0, 8);
+      const seq = all.filter((n) => n.note_type === noteType).length + 1;
+      const noteNumber = `${prefix}-${String(seq).padStart(6, '0')}`;
 
-      const totals = computeInvoiceTotals([{
-        description: `${noteType === 'credit' ? 'إشعار دائن' : 'إشعار مدين'} — ${source.invoice_number} (${reasonText})`,
-        quantity: 1,
-        unitPrice: (preview?.subtotal ?? 0),
-        vatRate: 15,
-        vatCategory: 'S',
-      }]);
+      // لا يجوز أن يتجاوز مجموع الإشعارات الدائنة قيمة الفاتورة الأصل
+      const issuedCredit = all
+        .filter((n) => n.source_invoice_id === source.id && n.note_type === 'credit')
+        .reduce((s, n) => s + Number(n.total || 0), 0);
+      if (noteType === 'credit' && issuedCredit + (preview?.total ?? 0) > Number(source.total) + 0.01) {
+        setSubmitting(false);
+        return toast.error(
+          `لا يمكن الإصدار: إجمالي الإشعارات الدائنة سيتجاوز قيمة الفاتورة الأصل (المتاح ${(Number(source.total) - issuedCredit).toFixed(2)} ج.م)`,
+        );
+      }
 
-      const xml = buildUblInvoiceXml({
-        invoiceNumber: noteNumber, uuid, issueDate, issueTime,
-        invoiceTypeCode: noteType === 'credit' ? '381' : '383',
-        isSimplified: source.invoice_type === 'simplified',
-        icv,
-        seller: { name: company.legal_name_ar, vat: company.vat_number, city: company.city, postal: company.postal_code, street: company.street, country: company.country_code ?? 'SA' },
-        buyer: source.buyer_vat_number ? { name: source.buyer_name ?? '', vat: source.buyer_vat_number } : undefined,
-        totals,
+      const issueDate = new Date().toISOString().slice(0, 10);
+      const { error: insErr } = await (supabase as any).from('acc_credit_debit_notes').insert({
+        user_id: user?.id ?? null,
+        source_invoice_id: source.id,
+        source_invoice_number: source.invoice_number,
+        note_type: noteType,
+        note_number: noteNumber,
+        reason_code: reasonCode,
+        reason_text: reasonText,
+        issue_date: issueDate,
+        subtotal: preview?.subtotal ?? 0,
+        vat_total: preview?.vat ?? 0,
+        total: preview?.total ?? 0,
+        currency: 'EGP',
+        status: 'issued',
       });
-      const xmlB64 = xmlToBase64(xml);
-      const hashB64 = await sha256Base64(xml);
-      const qrB64 = buildZatcaQrBase64({
-        sellerName: company.legal_name_ar, sellerVat: company.vat_number,
-        timestampIso: `${issueDate}T${issueTime}Z`,
-        totalWithVat: totals.total, vatTotal: totals.vatTotal, invoiceHashBase64: hashB64,
-      });
-
-      const { data: ins, error: insErr } = await (supabase as any).from('acc_credit_debit_notes').insert({
-        user_id: user!.id, device_id: source.device_id, source_invoice_id: source.id,
-        note_type: noteType, note_number: noteNumber, icv, uuid, invoice_hash: hashB64,
-        reason_code: reasonCode, reason_text: reasonText,
-        issue_date: issueDate, issue_time: issueTime,
-        subtotal: totals.subtotal, vat_total: totals.vatTotal, total: totals.total,
-        status: 'draft', qr_code: qrB64, signed_xml: xmlB64,
-        lines: totals.lines,
-      }).select('id').single();
       if (insErr) throw insErr;
 
-      const { data: resp, error: fnErr } = await (supabase as any).functions.invoke('zatca-submit-invoice', {
-        body: {
-          device_id: source.device_id, invoice_uuid: uuid,
-          invoice_hash_base64: hashB64, signed_xml_base64: xmlB64,
-          invoice_type: source.invoice_type,
-        },
-      });
-      const st = resp?.status ?? 'unknown';
-      await (supabase as any).from('acc_credit_debit_notes').update({
-        status: st === 'success' ? (source.invoice_type === 'standard' ? 'cleared' : 'reported')
-              : st === 'warning' ? 'reported' : 'rejected',
-        zatca_submission_id: resp?.submission_id ?? null,
-      }).eq('id', ins.id);
-      if (fnErr) toast.warning(`تم الحفظ لكن الإرسال أخفق: ${fnErr.message}`);
-      else toast.success(`تم إصدار الإشعار — ZATCA: ${st}`);
+      toast.success(`تم إصدار ${noteType === 'credit' ? 'الإشعار الدائن' : 'الإشعار المدين'} ${noteNumber}`);
       qc.invalidateQueries({ queryKey: ['acc_credit_debit_notes'] });
       refetch();
+
     } catch (e: any) {
       toast.error(e?.message ?? 'فشل الإصدار');
     } finally {
