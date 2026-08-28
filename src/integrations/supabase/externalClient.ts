@@ -269,16 +269,6 @@ export const supabase = {
         return Promise.resolve({ data: nextNumber("acc_journal_entries", "entry_number", "JV"), error: null });
       case "acc_next_payment_no":
         return Promise.resolve({ data: nextNumber("acc_payments", "payment_number", "PMT"), error: null });
-      case "acc_next_device_icv": {
-        const devices = getTable("acc_pos_devices");
-        const target = devices.find((d) => d.id === params?.["p_device_id"]) ?? devices[0];
-        const icv = Number(target?.icv ?? 0) + 1;
-        if (target) {
-          target.icv = icv;
-          writeTable("acc_pos_devices", devices);
-        }
-        return Promise.resolve({ data: icv, error: null });
-      }
       case "acc_close_fiscal_period": {
         const periods = getTable("acc_fiscal_periods");
         const target = periods.find((p) => p.id === params?.["p_period_id"]);

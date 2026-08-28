@@ -82,6 +82,95 @@ function buildCoa() {
   return rows;
 }
 
+/* ============ بيانات الأعلاف والمخزون (شركة تجارة أعلاف) ============ */
+
+type FeedItem = {
+  id: string; code: string; name_ar: string; category: string; unit: string;
+  pack_weight_kg: number; cost_price: number; sale_price: number;
+  reorder_level_kg: number; vat_applicable: boolean; is_active: boolean; notes: string | null;
+};
+
+const itemDefs: Array<[string, string, string, number, number, number, number]> = [
+  // code, name, category, pack kg, cost/kg, sale/kg, reorder kg
+  ["FD-1001", "ذرة صفراء مستوردة", "خامة علفية", 1000, 12.5, 14.2, 50000],
+  ["FD-1002", "كسب صويا 46%", "خامة علفية", 1000, 24.0, 27.5, 40000],
+  ["FD-1003", "رجيع كون (بروتين 16%)", "خامة علفية", 50, 9.8, 11.4, 30000],
+  ["FD-1004", "دريس برسيم مضغوط", "خامة علفية", 25, 7.2, 8.9, 20000],
+  ["FD-2001", "علف بادي دواجن 23%", "علف مصنّع", 25, 18.6, 21.8, 15000],
+  ["FD-2002", "علف نامي دواجن 21%", "علف مصنّع", 25, 17.4, 20.4, 15000],
+  ["FD-2003", "علف ناهي دواجن 19%", "علف مصنّع", 25, 16.5, 19.3, 15000],
+  ["FD-3001", "علف مركز ألبان 21%", "علف مصنّع", 50, 15.8, 18.6, 25000],
+  ["FD-3002", "علف تسمين عجول 16%", "علف مصنّع", 50, 14.2, 16.9, 25000],
+  ["FD-4001", "بريمكس فيتامينات ومعادن", "إضافات", 25, 68.0, 82.0, 2000],
+  ["FD-4002", "حجر جيري مطحون", "إضافات", 50, 1.6, 2.4, 10000],
+  ["FD-4003", "ميثيونين DL", "إضافات", 25, 110.0, 132.0, 1000],
+];
+
+const feedItems: FeedItem[] = itemDefs.map(([code, name, cat, pack, cost, sale, reorder]) => ({
+  id: uid(), code, name_ar: name, category: cat, unit: "كجم",
+  pack_weight_kg: pack, cost_price: cost, sale_price: sale,
+  reorder_level_kg: reorder, vat_applicable: cat !== "خامة علفية", is_active: true, notes: null,
+}));
+
+const warehouses = [
+  { id: uid(), code: "WH-01", name_ar: "المخزن الرئيسي — العاشر من رمضان", location: "الشرقية", manager: "محمود عبد العال", capacity_ton: 2500, is_active: true },
+  { id: uid(), code: "WH-02", name_ar: "مخزن المصنع — السادات", location: "المنوفية", manager: "سيد رشاد", capacity_ton: 1500, is_active: true },
+  { id: uid(), code: "WH-03", name_ar: "مخزن التوزيع — المنيا", location: "المنيا", manager: "ناصر فتحي", capacity_ton: 700, is_active: true },
+];
+
+const stockMoves: Row[] = (() => {
+  const rows: Row[] = [];
+  let seq = 1;
+  const push = (
+    item: FeedItem, whIdx: number, type: "in" | "out",
+    qty: number, unitCost: number, month: number, day: number, refType: string, refNo: string,
+  ) => {
+    const wh = warehouses[whIdx];
+    rows.push({
+      id: uid(),
+      move_no: `${type === "in" ? "IN" : "OUT"}-${String(seq++).padStart(5, "0")}`,
+      move_date: d(month, day),
+      move_type: type,
+      item_id: item.id,
+      item_code: item.code,
+      item_name: item.name_ar,
+      warehouse_id: wh.id,
+      warehouse_name: wh.name_ar,
+      quantity_kg: qty,
+      unit_cost: unitCost,
+      total_cost: Math.round(qty * unitCost * 100) / 100,
+      batch_no: `B-${month}${String(day).padStart(2, "0")}-${item.code.slice(-4)}`,
+      ref_type: refType,
+      ref_no: refNo,
+      notes: null,
+    });
+  };
+  feedItems.forEach((it, i) => {
+    push(it, i % 3, "in", (i % 3 === 0 ? 120000 : 60000) + i * 1500, it.cost_price, 1, 12 + (i % 10), "purchase", `PO-${String(1000 + i)}`);
+    push(it, i % 3, "in", 45000 + i * 800, Math.round(it.cost_price * 1.03 * 100) / 100, 2, 8 + (i % 15), "purchase", `PO-${String(1050 + i)}`);
+    push(it, i % 3, "out", 38000 + i * 600, it.cost_price, 2, 20 + (i % 7), "sale", `INV-${String(2000 + i)}`);
+    push(it, i % 3, "out", 21000 + i * 400, it.cost_price, 3, 5 + (i % 12), "sale", `INV-${String(2050 + i)}`);
+  });
+  return rows;
+})();
+
+const purchaseOrders: Row[] = [
+  { id: uid(), po_no: "PO-2101", vendor_name: "شركة الدلتا لتجارة الحاصلات الزراعية", order_date: d(3, 2), expected_date: d(3, 12), warehouse_name: warehouses[0].name_ar, subtotal: 1250000, vat_total: 0, total: 1250000, currency: "EGP", status: "received", notes: "ذرة صفراء — 100 طن" },
+  { id: uid(), po_no: "PO-2102", vendor_name: "مطاحن مصر الوسطى", order_date: d(3, 6), expected_date: d(3, 16), warehouse_name: warehouses[1].name_ar, subtotal: 980000, vat_total: 137200, total: 1117200, currency: "EGP", status: "approved", notes: "رجيع كون" },
+  { id: uid(), po_no: "PO-2103", vendor_name: "النيل للإضافات العلفية", order_date: d(3, 10), expected_date: d(3, 24), warehouse_name: warehouses[0].name_ar, subtotal: 340000, vat_total: 47600, total: 387600, currency: "EGP", status: "draft", notes: "بريمكس وميثيونين" },
+];
+
+const purchaseOrderLines: Row[] = [
+  { id: uid(), po_id: purchaseOrders[0].id, po_no: "PO-2101", item_code: "FD-1001", item_name: "ذرة صفراء مستوردة", quantity_kg: 100000, unit_price: 12.5, vat_rate: 0, line_total: 1250000 },
+  { id: uid(), po_id: purchaseOrders[1].id, po_no: "PO-2102", item_code: "FD-1003", item_name: "رجيع كون (بروتين 16%)", quantity_kg: 100000, unit_price: 9.8, vat_rate: 14, line_total: 980000 },
+  { id: uid(), po_id: purchaseOrders[2].id, po_no: "PO-2103", item_code: "FD-4001", item_name: "بريمكس فيتامينات ومعادن", quantity_kg: 5000, unit_price: 68, vat_rate: 14, line_total: 340000 },
+];
+
+function seedFeedNumber(v: any) {
+  return Number(v ?? 0);
+}
+
+
 function seed(): Tables {
   const coa = buildCoa();
   const idOf = (code: string) => coa.find((a) => a.code === code)?.id ?? null;
@@ -262,17 +351,22 @@ function seed(): Tables {
       due_date: issue_date,
       notes: null,
     });
+    const li = feedItems[idx % feedItems.length];
+    const qty = Math.round(subtotal / Number(li.sale_price));
     acc_sales_invoice_lines.push({
       id: uid(),
       invoice_id: id,
       line_no: 1,
-      description: "أعمال إنشائية على المستخلص",
-      quantity: 1,
-      unit_price: subtotal,
+      item_code: li.code,
+      description: li.name_ar,
+      quantity: qty,
+      unit: "كجم",
+      unit_price: li.sale_price,
       vat_rate: 14,
       vat_amount: vat_total,
       line_total: subtotal + vat_total,
     });
+
   });
 
   return {
@@ -627,168 +721,28 @@ function seed(): Tables {
       { id: uid(), budget_id: null, account_code: "5102", account_name: "أجور ورواتب", amount: 2200000, actual: 210000 },
       { id: uid(), budget_id: null, account_code: "5105", account_name: "مصروفات عمومية", amount: 500000, actual: 8600 },
     ],
-    acc_progress_billings: [
-      {
+    acc_items: feedItems,
+    acc_warehouses: warehouses,
+    acc_stock_moves: stockMoves,
+    acc_purchase_orders: purchaseOrders,
+    acc_purchase_order_lines: purchaseOrderLines,
+    acc_inventory_valuation: feedItems.map((it) => {
+      const qty = stockMoves
+        .filter((m) => m.item_id === it.id)
+        .reduce((s, m) => s + (m.move_type === "out" ? -num(m.quantity_kg) : num(m.quantity_kg)), 0);
+      return {
         id: uid(),
-        billing_no: "PB-0001",
-        project_name: "مشروع القاهرة - المرحلة الأولى",
-        billing_date: d(3, 15),
-        contract_value: 12000000,
-        completed_pct: 34,
-        current_value: 4080000,
-        previous_value: 2600000,
-        retention_pct: 10,
-        retention_amount: 148000,
-        net_amount: 1332000,
-        status: "approved",
-      },
-    ],
-    acc_progress_billing_lines: [],
-    acc_retention_entries: [
-      {
-        id: uid(),
-        project_name: "مشروع القاهرة - المرحلة الأولى",
-        billing_no: "PB-0001",
-        retention_amount: 148000,
-        released_amount: 0,
-        balance: 148000,
-        due_date: d(12, 31),
-        status: "held",
-      },
-    ],
-    acc_advance_payments: [
-      {
-        id: uid(),
-        project_name: "مشروع الإسكندرية",
-        payment_no: "ADV-0001",
-        payment_date: d(2, 20),
-        amount: 900000,
-        recovered_amount: 180000,
-        balance: 720000,
-        recovery_pct: 20,
-        status: "active",
-      },
-    ],
-    acc_advance_recoveries: [],
-    acc_wip_poc: [
-      {
-        id: uid(),
-        project_name: "مشروع القاهرة - المرحلة الأولى",
-        contract_value: 12000000,
-        cost_to_date: 3900000,
-        estimated_total_cost: 10200000,
-        completed_pct: 38.24,
-        revenue_recognized: 4588000,
-        billed_to_date: 4080000,
-        wip_amount: 508000,
-        period: d(3, 1),
-      },
-    ],
-    acc_project_pnl: [],
-    acc_bank_guarantees: [
-      {
-        id: uid(),
-        guarantee_no: "LG-77120",
-        guarantee_type: "performance",
-        bank_name: "مصرف البنك الأهلي المصري",
-        beneficiary: "جمعية منتجي الدواجن",
-        amount: 600000,
-        issue_date: d(1, 10),
-        expiry_date: d(12, 31),
-        status: "active",
-        notes: null,
-      },
-    ],
-    acc_inventory_valuation: [
-      {
-        id: uid(),
-        item_code: "MAT-001",
-        item_name: "أسمنت مقاوم (طن)",
-        warehouse: "مستودع القاهرة",
-        quantity: 1200,
-        unit_cost: 320,
-        total_value: 384000,
+        item_code: it.code,
+        item_name: `${it.name_ar} (كجم)`,
+        warehouse: warehouses[0].name_ar,
+        quantity: qty,
+        unit_cost: it.cost_price,
+        total_value: Math.round(qty * num(it.cost_price) * 100) / 100,
         method: "weighted_average",
         as_of_date: today(),
-      },
-      {
-        id: uid(),
-        item_code: "MAT-002",
-        item_name: "حديد تسليح 16مم (طن)",
-        warehouse: "مستودع القاهرة",
-        quantity: 85,
-        unit_cost: 2750,
-        total_value: 233750,
-        method: "weighted_average",
-        as_of_date: today(),
-      },
-    ],
-    acc_pos_devices: [
-      {
-        id: uid(),
-        name: "كاشير الفرع الرئيسي",
-        device_name: "كاشير الفرع الرئيسي",
-        serial_number: "POS-001-RYD",
-        device_serial: "POS-001-RYD",
-        device_uuid: uid(),
-        branch: "القاهرة",
-        location: "القاهرة",
-        cashier_name: "أحمد المصري",
-        environment: "production",
-        csid_status: "onboarded",
-        status: "onboarded",
-        is_active: true,
-        icv: 3,
-        csid: "DEMO-CSID-001",
-        last_submission_at: d(3, 18),
-        notes: null,
-      },
-      {
-        id: uid(),
-        name: "كاشير فرع الإسكندرية",
-        device_name: "كاشير فرع الإسكندرية",
-        serial_number: "POS-002-JED",
-        device_serial: "POS-002-JED",
-        device_uuid: uid(),
-        branch: "الإسكندرية",
-        location: "الإسكندرية",
-        cashier_name: "سالم العتيبي",
-        environment: "sandbox",
-        csid_status: "pending",
-        status: "pending",
-        is_active: true,
-        icv: 0,
-        csid: null,
-        last_submission_at: null,
-        notes: null,
-      },
-    ],
-    acc_zatca_submissions: [
-      {
-        id: uid(),
-        invoice_number: "INV-2001",
-        invoice_type: "b2b",
-        submission_type: "clearance",
-        status: "cleared",
-        submitted_at: d(2, 12),
-        response_code: "200",
-        warnings: null,
-        errors: null,
-        uuid: uid(),
-      },
-      {
-        id: uid(),
-        invoice_number: "INV-2003",
-        invoice_type: "b2c",
-        submission_type: "reporting",
-        status: "reported",
-        submitted_at: d(3, 18),
-        response_code: "202",
-        warnings: "قيمة الضريبة مقربة",
-        errors: null,
-        uuid: uid(),
-      },
-    ],
+      };
+    }),
+
     acc_bank_feeds: [
       {
         id: uid(),
@@ -979,7 +933,6 @@ export const UNIQUE_KEYS: Record<string, string[][]> = {
   acc_customers: [["code"], ["tax_number"]],
   acc_vendors: [["code"], ["tax_number"]],
   acc_bank_accounts: [["account_number"]],
-  acc_pos_devices: [["device_uuid"], ["serial_number"]],
   acc_journal_entries: [["journal_no"]],
   acc_sales_invoices: [["invoice_number"]],
   acc_credit_debit_notes: [["note_number"]],
@@ -991,7 +944,11 @@ export const UNIQUE_KEYS: Record<string, string[][]> = {
   acc_fiscal_periods: [["name"]],
   acc_budgets: [["fiscal_year", "account_id", "cost_center_id"]],
   acc_expense_claims: [["claim_no"]],
-  acc_bank_guarantees: [["guarantee_no"]],
+  acc_items: [["code"], ["name_ar"]],
+  acc_warehouses: [["code"], ["name_ar"]],
+  acc_stock_moves: [["move_no"]],
+  acc_purchase_orders: [["po_no"]],
+
 };
 
 const keyValue = (row: Row, cols: string[]) =>
