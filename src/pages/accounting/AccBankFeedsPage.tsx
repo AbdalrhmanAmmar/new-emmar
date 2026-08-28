@@ -15,6 +15,7 @@ import { Switch } from '@/components/ui/switch';
 import { Plus, Pencil, Trash2, Link2, RefreshCw, CheckCircle2, XCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import ExportPdfButton from '@/components/accounting/ExportPdfButton';
+import { RowActions } from "@/components/accounting/RowActions";
 
 interface Feed {
   id: string; feed_name: string; bank_account_id?: string | null; bank_account_name?: string | null;
@@ -230,12 +231,12 @@ const AccBankFeedsPage: React.FC = () => {
                       <TableCell className="text-right font-mono">{Number(r.transactions_imported || 0).toLocaleString('ar-EG')}</TableCell>
                       <TableCell>{r.auto_reconcile ? <CheckCircle2 className="w-4 h-4 text-emerald-600" /> : <XCircle className="w-4 h-4 text-slate-400" />}</TableCell>
                       <TableCell>
-                        <div className="flex gap-1">
+                        <RowActions>
                           {canEdit && <Button size="sm" variant="ghost" title="اختبار الاتصال" onClick={() => testConnection(r)}><Link2 className="w-3.5 h-3.5 text-blue-600" /></Button>}
                           {canEdit && r.connection_status === 'connected' && <Button size="sm" variant="ghost" title="مزامنة الآن" onClick={() => triggerSync(r)}><RefreshCw className="w-3.5 h-3.5 text-emerald-600" /></Button>}
                           {canEdit && <Button size="sm" variant="ghost" onClick={() => openEdit(r)}><Pencil className="w-3.5 h-3.5" /></Button>}
                           {canDelete && <Button size="sm" variant="ghost" onClick={() => del(r)}><Trash2 className="w-3.5 h-3.5 text-destructive" /></Button>}
-                        </div>
+                        </RowActions>
                       </TableCell>
                     </TableRow>
                   ))}

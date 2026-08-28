@@ -15,6 +15,7 @@ import { Switch } from '@/components/ui/switch';
 import { Plus, Pencil, Trash2, Layers, ChevronRight } from 'lucide-react';
 import { toast } from 'sonner';
 import ExportPdfButton from '@/components/accounting/ExportPdfButton';
+import { RowActions } from "@/components/accounting/RowActions";
 
 interface CostCenter {
   id: string; code: string; name: string; name_en?: string | null;
@@ -186,11 +187,11 @@ const AccCostCentersPage: React.FC = () => {
                         <TableCell className={`text-right font-bold ${pct > 100 ? 'text-rose-600' : pct > 80 ? 'text-amber-600' : 'text-emerald-600'}`}>{pct}%</TableCell>
                         <TableCell>{r.is_active ? <Badge className="bg-emerald-100 text-emerald-700">نشط</Badge> : <Badge variant="outline">موقوف</Badge>}</TableCell>
                         <TableCell>
-                          <div className="flex gap-1">
+                          <RowActions>
                             {canEdit && <Button size="sm" variant="ghost" title="إضافة فرعي" onClick={() => openNew(r)}><Plus className="w-3.5 h-3.5 text-primary" /></Button>}
                             {canEdit && <Button size="sm" variant="ghost" onClick={() => openEdit(r)}><Pencil className="w-3.5 h-3.5" /></Button>}
                             {canDelete && <Button size="sm" variant="ghost" onClick={() => del(r)}><Trash2 className="w-3.5 h-3.5 text-destructive" /></Button>}
-                          </div>
+                          </RowActions>
                         </TableCell>
                       </TableRow>
                     );

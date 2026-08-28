@@ -14,6 +14,7 @@ import { Badge } from '@/components/ui/badge';
 import { Plus, Pencil, Trash2, HardDrive, CheckCircle2 } from 'lucide-react';
 import { toast } from 'sonner';
 import ExportPdfButton from '@/components/accounting/ExportPdfButton';
+import { RowActions } from "@/components/accounting/RowActions";
 
 interface Disposal {
   id: string; disposal_number: string; disposal_date: string;
@@ -216,11 +217,11 @@ const AccAssetDisposalPage: React.FC = () => {
                       <TableCell className={`text-right font-mono font-bold ${Number(r.gain_loss) >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>{fmt(r.gain_loss)}</TableCell>
                       <TableCell><Badge className={statusColors[r.status]}>{statusLabels[r.status]}</Badge></TableCell>
                       <TableCell>
-                        <div className="flex gap-1">
+                        <RowActions>
                           {canEdit && r.status === 'draft' && <Button size="sm" variant="ghost" title="ترحيل" onClick={() => post(r)}><CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /></Button>}
                           {canEdit && r.status !== 'posted' && <Button size="sm" variant="ghost" onClick={() => openEdit(r)}><Pencil className="w-3.5 h-3.5" /></Button>}
                           {canDelete && r.status !== 'posted' && <Button size="sm" variant="ghost" onClick={() => del(r)}><Trash2 className="w-3.5 h-3.5 text-destructive" /></Button>}
-                        </div>
+                        </RowActions>
                       </TableCell>
                     </TableRow>
                   ))}

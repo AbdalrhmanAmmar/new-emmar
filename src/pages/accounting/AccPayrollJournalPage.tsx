@@ -13,6 +13,7 @@ import { Badge } from '@/components/ui/badge';
 import { Plus, Pencil, Trash2, Users, CheckCircle2, Undo2 } from 'lucide-react';
 import { toast } from 'sonner';
 import ExportPdfButton from '@/components/accounting/ExportPdfButton';
+import { RowActions } from "@/components/accounting/RowActions";
 
 interface Payroll {
   id: string; reference: string; period_month: number; period_year: number;
@@ -206,12 +207,12 @@ const AccPayrollJournalPage: React.FC = () => {
                         <TableCell className="text-right font-mono font-bold text-primary">{Number(r.net_pay).toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</TableCell>
                         <TableCell><Badge className={statusColors[r.status]}>{statusLabels[r.status]}</Badge></TableCell>
                         <TableCell>
-                          <div className="flex gap-1">
+                          <RowActions>
                             {canEdit && r.status === 'draft' && <Button size="sm" variant="ghost" title="ترحيل" onClick={() => post(r)}><CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /></Button>}
                             {canEdit && r.status === 'posted' && <Button size="sm" variant="ghost" title="إلغاء الترحيل" onClick={() => reverse(r)}><Undo2 className="w-3.5 h-3.5 text-amber-600" /></Button>}
                             {canEdit && r.status !== 'posted' && <Button size="sm" variant="ghost" onClick={() => openEdit(r)}><Pencil className="w-3.5 h-3.5" /></Button>}
                             {canDelete && <Button size="sm" variant="ghost" onClick={() => del(r)}><Trash2 className="w-3.5 h-3.5 text-destructive" /></Button>}
-                          </div>
+                          </RowActions>
                         </TableCell>
                       </TableRow>
                     );

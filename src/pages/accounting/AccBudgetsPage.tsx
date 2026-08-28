@@ -13,6 +13,7 @@ import { Badge } from '@/components/ui/badge';
 import { Plus, Pencil, Trash2, Target, CheckCircle2, Lock, FileEdit } from 'lucide-react';
 import { toast } from 'sonner';
 import ExportPdfButton from '@/components/accounting/ExportPdfButton';
+import { RowActions } from "@/components/accounting/RowActions";
 
 interface Budget {
   id: string; name: string; fiscal_year: number;
@@ -192,13 +193,13 @@ const AccBudgetsPage: React.FC = () => {
                       <TableCell className="text-right font-mono font-bold">{Number(r.total_amount).toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</TableCell>
                       <TableCell><Badge className={statusColors[r.status]}>{statusLabels[r.status]}</Badge></TableCell>
                       <TableCell>
-                        <div className="flex gap-1">
+                        <RowActions>
                           {canApprove && r.status === 'draft' && <Button size="sm" variant="ghost" title="اعتماد" onClick={() => setStatus(r, 'approved', { approved_by: user?.id, approved_at: new Date().toISOString() })}><CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /></Button>}
                           {canApprove && r.status === 'approved' && <Button size="sm" variant="ghost" title="قفل الموازنة" onClick={() => setStatus(r, 'locked')}><Lock className="w-3.5 h-3.5 text-blue-600" /></Button>}
                           {canApprove && r.status === 'locked' && <Button size="sm" variant="ghost" title="فتح للتعديل" onClick={() => setStatus(r, 'approved')}><FileEdit className="w-3.5 h-3.5 text-amber-600" /></Button>}
                           {canEdit && r.status !== 'locked' && <Button size="sm" variant="ghost" onClick={() => openEdit(r)}><Pencil className="w-3.5 h-3.5" /></Button>}
                           {canDelete && <Button size="sm" variant="ghost" onClick={() => del(r)}><Trash2 className="w-3.5 h-3.5 text-destructive" /></Button>}
-                        </div>
+                        </RowActions>
                       </TableCell>
                     </TableRow>
                   ))}

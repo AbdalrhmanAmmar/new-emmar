@@ -13,6 +13,7 @@ import { Badge } from '@/components/ui/badge';
 import { Plus, Pencil, Trash2, Search } from 'lucide-react';
 import { toast } from 'sonner';
 import ExportPdfButton from '@/components/accounting/ExportPdfButton';
+import { RowActions } from "@/components/accounting/RowActions";
 
 interface Party {
   id: string; code: string; name_ar: string; name_en?: string | null;
@@ -151,10 +152,10 @@ const PartyMasterPage: React.FC<Props> = ({ table, title, subtitle, typeField, m
                       <TableCell>{r.status === 'active' ? <Badge className="bg-emerald-100 text-emerald-700">نشط</Badge> : r.status === 'blocked' ? <Badge variant="destructive">محظور</Badge> : <Badge variant="secondary">موقوف</Badge>}</TableCell>
                       <TableCell>
                         {canEdit && (
-                          <div className="flex gap-1">
+                          <RowActions>
                             <Button size="sm" variant="ghost" onClick={() => openEdit(r)}><Pencil className="w-3.5 h-3.5" /></Button>
                             {canDelete && <Button size="sm" variant="ghost" onClick={() => del(r)}><Trash2 className="w-3.5 h-3.5 text-destructive" /></Button>}
-                          </div>
+                          </RowActions>
                         )}
                       </TableCell>
                     </TableRow>
