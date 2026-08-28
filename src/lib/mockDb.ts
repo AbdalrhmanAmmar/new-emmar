@@ -323,7 +323,7 @@ function seed(): Tables {
         bank_name: "مصرف الراجحي",
         account_number: "1234567890",
         iban: "SA0380000000608010167519",
-        swift: "RJHIEGPI",
+        swift: "NBEGEGCX",
         currency: "EGP",
         opening_balance: 1500000,
         opening_date: d(1, 1),
@@ -534,9 +534,9 @@ function seed(): Tables {
       { id: uid(), code: "AED", name: "درهم إماراتي", symbol: "د.إ", decimals: 2, is_base: false, is_active: true },
     ],
     acc_fx_rates: [
-      { id: uid(), rate_date: today(), from_currency: "USD", to_currency: "EGP", rate: 3.75, source: "SAMA", notes: null },
-      { id: uid(), rate_date: today(), from_currency: "EUR", to_currency: "EGP", rate: 4.08, source: "SAMA", notes: null },
-      { id: uid(), rate_date: today(), from_currency: "AED", to_currency: "EGP", rate: 1.02, source: "SAMA", notes: null },
+      { id: uid(), rate_date: today(), from_currency: "USD", to_currency: "EGP", rate: 48.50, source: "CBE", notes: null },
+      { id: uid(), rate_date: today(), from_currency: "EUR", to_currency: "EGP", rate: 52.30, source: "CBE", notes: null },
+      { id: uid(), rate_date: today(), from_currency: "AED", to_currency: "EGP", rate: 13.20, source: "CBE", notes: null },
     ],
     acc_cost_centers: [
       { id: uid(), code: "CC-100", name_ar: "الإدارة العامة", parent_id: null, is_active: true, notes: null },
