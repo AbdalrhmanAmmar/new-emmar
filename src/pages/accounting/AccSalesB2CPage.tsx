@@ -4,8 +4,8 @@ import InvoiceEditorPage from './InvoiceEditorPage';
 const AccSalesB2CPage: React.FC = () => (
   <InvoiceEditorPage
     mode="b2c"
-    pageTitle="فاتورة مبسطة (B2C)"
-    pageDescription="نقطة بيع سريعة — تُطبع مباشرة مع QR وتُبلَّغ للهيئة (Reporting) خلال 24 ساعة."
+    pageTitle="فاتورة بيع نقدي (كاش)"
+    pageDescription="بيع مباشر للمزارع والعملاء النقديين — يُصرف المخزون فوراً وتُسجَّل الضريبة 14%."
   />
 );
 export default AccSalesB2CPage;
