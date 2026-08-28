@@ -56,7 +56,7 @@ const Table = React.forwardRef<HTMLTableElement, TableProps>(
             {...props}
           />
         </div>
-        {paginate && total > 0 && (
+        {paginate && total > 1 && (
           <div className="mt-3 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-3">
             <div className="flex items-center gap-1.5">
               {PAGE_SIZES.map((size) => (
