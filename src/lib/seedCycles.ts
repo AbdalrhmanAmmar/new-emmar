@@ -5,7 +5,22 @@
  * Quotation → Sales order → Delivery → Invoice → Collection.
  */
 import { uid, type Row, type Tables } from "@/lib/mockDb";
-import { DEFAULT_SETTINGS } from "@/lib/docFlow";
+
+/** Kept local (not imported from docFlow) to avoid a circular module graph. */
+const SETTINGS_SEED = {
+  id: "settings",
+  vat_rate: 14,
+  weight_tolerance_pct: 1,
+  price_tolerance_pct: 2,
+  wht_purchase_pct: 1,
+  wht_sales_pct: 0,
+  wht_threshold: 300,
+  stamp_enabled: false,
+  stamp_pct: 0.1,
+  einvoice_fields_enabled: true,
+  enforce_credit_limit: true,
+  block_over_receipt: true,
+};
 
 type Item = { id: string; code: string; name_ar: string; cost_price: number; sale_price: number; vat_applicable: boolean };
 type Wh = { id: string; name_ar: string };
@@ -338,7 +353,7 @@ export function buildCycles(input: {
 
   return {
     tables: {
-      acc_doc_settings: [{ ...DEFAULT_SETTINGS }],
+      acc_doc_settings: [{ ...SETTINGS_SEED }],
       acc_rfqs,
       acc_rfq_lines,
       acc_rfq_quotes,
