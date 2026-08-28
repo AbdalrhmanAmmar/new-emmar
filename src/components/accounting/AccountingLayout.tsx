@@ -252,7 +252,11 @@ export function AccountingLayout({ children }: { children: ReactNode }) {
           />
         )}
 
-        <main className="min-w-0 flex-1 p-4 lg:p-6">{children}</main>
+        <main className="min-w-0 flex-1 p-4 lg:p-6">
+          <div key={pathname} className="page-transition">
+            {children}
+          </div>
+        </main>
       </div>
     </div>
   );
