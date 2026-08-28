@@ -953,3 +953,48 @@ function buildView(name: string, db: Tables): Row[] | null {
       return null;
   }
 }
+
+/**
+ * Business unique keys — تمنع تكرار البيانات أو تداخلها.
+ * Any insert/upsert/update that would create a second row with the same value
+ * for one of these keys is rejected by the data client.
+ */
+export const UNIQUE_KEYS: Record<string, string[][]> = {
+  acc_chart_of_accounts: [["code"]],
+  acc_customers: [["code"], ["tax_number"]],
+  acc_vendors: [["code"], ["tax_number"]],
+  acc_bank_accounts: [["account_number"]],
+  acc_pos_devices: [["device_uuid"], ["serial_number"]],
+  acc_journal_entries: [["journal_no"]],
+  acc_sales_invoices: [["invoice_number"]],
+  acc_credit_debit_notes: [["note_number"]],
+  acc_payments: [["payment_no"]],
+  acc_cheques: [["cheque_no", "bank_account_id"]],
+  acc_fixed_assets: [["asset_code"]],
+  acc_cost_centers: [["code"]],
+  acc_currencies: [["code"]],
+  acc_fiscal_periods: [["name"]],
+  acc_budgets: [["fiscal_year", "account_id", "cost_center_id"]],
+  acc_expense_claims: [["claim_no"]],
+  acc_bank_guarantees: [["guarantee_no"]],
+};
+
+const keyValue = (row: Row, cols: string[]) =>
+  cols.map((c) => String(row[c] ?? "").trim().toLowerCase()).join("§");
+
+/** Returns an Arabic error message when `candidate` duplicates an existing row. */
+export function findDuplicate(table: string, candidate: Row, existing: Row[]): string | null {
+  const keys = UNIQUE_KEYS[table];
+  if (!keys) return null;
+  for (const cols of keys) {
+    if (cols.some((c) => candidate[c] === undefined || candidate[c] === null || candidate[c] === "")) continue;
+    const val = keyValue(candidate, cols);
+    const clash = existing.find((r) => r.id !== candidate.id && keyValue(r, cols) === val);
+    if (clash) {
+      return `لا يمكن الحفظ: يوجد سجل بنفس (${cols.join(" + ")}) = ${cols
+        .map((c) => candidate[c])
+        .join(" + ")} — تم منع التكرار.`;
+    }
+  }
+  return null;
+}
