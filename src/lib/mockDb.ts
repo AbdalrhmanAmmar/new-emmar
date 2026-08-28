@@ -351,17 +351,22 @@ function seed(): Tables {
       due_date: issue_date,
       notes: null,
     });
+    const li = feedItems[idx % feedItems.length];
+    const qty = Math.round(subtotal / Number(li.sale_price));
     acc_sales_invoice_lines.push({
       id: uid(),
       invoice_id: id,
       line_no: 1,
-      description: "أعمال إنشائية على المستخلص",
-      quantity: 1,
-      unit_price: subtotal,
+      item_code: li.code,
+      description: li.name_ar,
+      quantity: qty,
+      unit: "كجم",
+      unit_price: li.sale_price,
       vat_rate: 14,
       vat_amount: vat_total,
       line_total: subtotal + vat_total,
     });
+
   });
 
   return {
