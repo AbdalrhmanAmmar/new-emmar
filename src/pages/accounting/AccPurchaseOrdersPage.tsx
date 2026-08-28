@@ -98,7 +98,7 @@ const AccPurchaseOrdersPage: React.FC = () => {
       const wh = warehouses.find((w) => w.id === warehouseId);
       const poNo = `PO-${2100 + orders.length + 1}`;
       const { data: ins, error } = await (supabase as any).from('acc_purchase_orders').insert({
-        po_no: poNo, vendor_id: vendorId, vendor_name: vendor?.name ?? vendor?.vendor_name ?? '',
+        po_no: poNo, vendor_id: vendorId, vendor_name: vendor?.name_ar ?? vendor?.name ?? '',
         order_date: orderDate, expected_date: expectedDate,
         warehouse_id: warehouseId, warehouse_name: wh?.name_ar ?? null,
         subtotal: totals.subtotal, vat_total: totals.vat, total: totals.total,
@@ -181,7 +181,7 @@ const AccPurchaseOrdersPage: React.FC = () => {
               <Select value={vendorId} onValueChange={setVendorId}>
                 <SelectTrigger><SelectValue placeholder="اختر المورد" /></SelectTrigger>
                 <SelectContent>
-                  {vendors.map((v) => <SelectItem key={v.id} value={v.id}>{v.name ?? v.vendor_name}</SelectItem>)}
+                  {vendors.map((v) => <SelectItem key={v.id} value={v.id}>{v.name_ar ?? v.name}</SelectItem>)}
                 </SelectContent>
               </Select>
             </div>

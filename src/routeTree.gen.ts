@@ -25,22 +25,35 @@ import { Route as AccountingCostCentersRouteImport } from './routes/accounting/c
 import { Route as AccountingCreditDebitNotesRouteImport } from './routes/accounting/credit-debit-notes'
 import { Route as AccountingCurrenciesRouteImport } from './routes/accounting/currencies'
 import { Route as AccountingCustomersRouteImport } from './routes/accounting/customers'
+import { Route as AccountingDeliveriesRouteImport } from './routes/accounting/deliveries'
+import { Route as AccountingDocSettingsRouteImport } from './routes/accounting/doc-settings'
 import { Route as AccountingExpenseClaimsRouteImport } from './routes/accounting/expense-claims'
 import { Route as AccountingFiscalPeriodsRouteImport } from './routes/accounting/fiscal-periods'
 import { Route as AccountingFixedAssetsRouteImport } from './routes/accounting/fixed-assets'
 import { Route as AccountingGeneralLedgerRouteImport } from './routes/accounting/general-ledger'
+import { Route as AccountingGoodsReceiptsRouteImport } from './routes/accounting/goods-receipts'
 import { Route as AccountingInventoryValuationRouteImport } from './routes/accounting/inventory-valuation'
 import { Route as AccountingInvoiceBalancesRouteImport } from './routes/accounting/invoice-balances'
 import { Route as AccountingItemsRouteImport } from './routes/accounting/items'
 import { Route as AccountingJournalEntriesRouteImport } from './routes/accounting/journal-entries'
+import { Route as AccountingLandedCostsRouteImport } from './routes/accounting/landed-costs'
 import { Route as AccountingPaymentsRouteImport } from './routes/accounting/payments'
 import { Route as AccountingPayrollJournalRouteImport } from './routes/accounting/payroll-journal'
 import { Route as AccountingPeriodClosingRouteImport } from './routes/accounting/period-closing'
+import { Route as AccountingPurchaseCycleRouteImport } from './routes/accounting/purchase-cycle'
 import { Route as AccountingPurchaseOrdersRouteImport } from './routes/accounting/purchase-orders'
+import { Route as AccountingPurchaseReturnsRouteImport } from './routes/accounting/purchase-returns'
+import { Route as AccountingRfqsRouteImport } from './routes/accounting/rfqs'
 import { Route as AccountingSalesB2bRouteImport } from './routes/accounting/sales-b2b'
 import { Route as AccountingSalesB2cRouteImport } from './routes/accounting/sales-b2c'
+import { Route as AccountingSalesBillingRouteImport } from './routes/accounting/sales-billing'
+import { Route as AccountingSalesCycleRouteImport } from './routes/accounting/sales-cycle'
+import { Route as AccountingSalesOrdersRouteImport } from './routes/accounting/sales-orders'
+import { Route as AccountingSalesQuotationsRouteImport } from './routes/accounting/sales-quotations'
+import { Route as AccountingSalesReturnsRouteImport } from './routes/accounting/sales-returns'
 import { Route as AccountingStockBalanceRouteImport } from './routes/accounting/stock-balance'
 import { Route as AccountingStockMovesRouteImport } from './routes/accounting/stock-moves'
+import { Route as AccountingVendorBillsRouteImport } from './routes/accounting/vendor-bills'
 import { Route as AccountingVendorsRouteImport } from './routes/accounting/vendors'
 import { Route as AccountingWarehousesRouteImport } from './routes/accounting/warehouses'
 import { Route as AccountingReportsArAgingRouteImport } from './routes/accounting/reports/ar-aging'
@@ -133,6 +146,16 @@ const AccountingCustomersRoute = AccountingCustomersRouteImport.update({
   path: '/customers',
   getParentRoute: () => AccountingRoute,
 } as any)
+const AccountingDeliveriesRoute = AccountingDeliveriesRouteImport.update({
+  id: '/deliveries',
+  path: '/deliveries',
+  getParentRoute: () => AccountingRoute,
+} as any)
+const AccountingDocSettingsRoute = AccountingDocSettingsRouteImport.update({
+  id: '/doc-settings',
+  path: '/doc-settings',
+  getParentRoute: () => AccountingRoute,
+} as any)
 const AccountingExpenseClaimsRoute = AccountingExpenseClaimsRouteImport.update({
   id: '/expense-claims',
   path: '/expense-claims',
@@ -151,6 +174,11 @@ const AccountingFixedAssetsRoute = AccountingFixedAssetsRouteImport.update({
 const AccountingGeneralLedgerRoute = AccountingGeneralLedgerRouteImport.update({
   id: '/general-ledger',
   path: '/general-ledger',
+  getParentRoute: () => AccountingRoute,
+} as any)
+const AccountingGoodsReceiptsRoute = AccountingGoodsReceiptsRouteImport.update({
+  id: '/goods-receipts',
+  path: '/goods-receipts',
   getParentRoute: () => AccountingRoute,
 } as any)
 const AccountingInventoryValuationRoute =
@@ -176,6 +204,11 @@ const AccountingJournalEntriesRoute =
     path: '/journal-entries',
     getParentRoute: () => AccountingRoute,
   } as any)
+const AccountingLandedCostsRoute = AccountingLandedCostsRouteImport.update({
+  id: '/landed-costs',
+  path: '/landed-costs',
+  getParentRoute: () => AccountingRoute,
+} as any)
 const AccountingPaymentsRoute = AccountingPaymentsRouteImport.update({
   id: '/payments',
   path: '/payments',
@@ -192,12 +225,28 @@ const AccountingPeriodClosingRoute = AccountingPeriodClosingRouteImport.update({
   path: '/period-closing',
   getParentRoute: () => AccountingRoute,
 } as any)
+const AccountingPurchaseCycleRoute = AccountingPurchaseCycleRouteImport.update({
+  id: '/purchase-cycle',
+  path: '/purchase-cycle',
+  getParentRoute: () => AccountingRoute,
+} as any)
 const AccountingPurchaseOrdersRoute =
   AccountingPurchaseOrdersRouteImport.update({
     id: '/purchase-orders',
     path: '/purchase-orders',
     getParentRoute: () => AccountingRoute,
   } as any)
+const AccountingPurchaseReturnsRoute =
+  AccountingPurchaseReturnsRouteImport.update({
+    id: '/purchase-returns',
+    path: '/purchase-returns',
+    getParentRoute: () => AccountingRoute,
+  } as any)
+const AccountingRfqsRoute = AccountingRfqsRouteImport.update({
+  id: '/rfqs',
+  path: '/rfqs',
+  getParentRoute: () => AccountingRoute,
+} as any)
 const AccountingSalesB2bRoute = AccountingSalesB2bRouteImport.update({
   id: '/sales-b2b',
   path: '/sales-b2b',
@@ -208,6 +257,32 @@ const AccountingSalesB2cRoute = AccountingSalesB2cRouteImport.update({
   path: '/sales-b2c',
   getParentRoute: () => AccountingRoute,
 } as any)
+const AccountingSalesBillingRoute = AccountingSalesBillingRouteImport.update({
+  id: '/sales-billing',
+  path: '/sales-billing',
+  getParentRoute: () => AccountingRoute,
+} as any)
+const AccountingSalesCycleRoute = AccountingSalesCycleRouteImport.update({
+  id: '/sales-cycle',
+  path: '/sales-cycle',
+  getParentRoute: () => AccountingRoute,
+} as any)
+const AccountingSalesOrdersRoute = AccountingSalesOrdersRouteImport.update({
+  id: '/sales-orders',
+  path: '/sales-orders',
+  getParentRoute: () => AccountingRoute,
+} as any)
+const AccountingSalesQuotationsRoute =
+  AccountingSalesQuotationsRouteImport.update({
+    id: '/sales-quotations',
+    path: '/sales-quotations',
+    getParentRoute: () => AccountingRoute,
+  } as any)
+const AccountingSalesReturnsRoute = AccountingSalesReturnsRouteImport.update({
+  id: '/sales-returns',
+  path: '/sales-returns',
+  getParentRoute: () => AccountingRoute,
+} as any)
 const AccountingStockBalanceRoute = AccountingStockBalanceRouteImport.update({
   id: '/stock-balance',
   path: '/stock-balance',
@@ -216,6 +291,11 @@ const AccountingStockBalanceRoute = AccountingStockBalanceRouteImport.update({
 const AccountingStockMovesRoute = AccountingStockMovesRouteImport.update({
   id: '/stock-moves',
   path: '/stock-moves',
+  getParentRoute: () => AccountingRoute,
+} as any)
+const AccountingVendorBillsRoute = AccountingVendorBillsRouteImport.update({
+  id: '/vendor-bills',
+  path: '/vendor-bills',
   getParentRoute: () => AccountingRoute,
 } as any)
 const AccountingVendorsRoute = AccountingVendorsRouteImport.update({
@@ -274,22 +354,35 @@ export interface FileRoutesByFullPath {
   '/accounting/credit-debit-notes': typeof AccountingCreditDebitNotesRoute
   '/accounting/currencies': typeof AccountingCurrenciesRoute
   '/accounting/customers': typeof AccountingCustomersRoute
+  '/accounting/deliveries': typeof AccountingDeliveriesRoute
+  '/accounting/doc-settings': typeof AccountingDocSettingsRoute
   '/accounting/expense-claims': typeof AccountingExpenseClaimsRoute
   '/accounting/fiscal-periods': typeof AccountingFiscalPeriodsRoute
   '/accounting/fixed-assets': typeof AccountingFixedAssetsRoute
   '/accounting/general-ledger': typeof AccountingGeneralLedgerRoute
+  '/accounting/goods-receipts': typeof AccountingGoodsReceiptsRoute
   '/accounting/inventory-valuation': typeof AccountingInventoryValuationRoute
   '/accounting/invoice-balances': typeof AccountingInvoiceBalancesRoute
   '/accounting/items': typeof AccountingItemsRoute
   '/accounting/journal-entries': typeof AccountingJournalEntriesRoute
+  '/accounting/landed-costs': typeof AccountingLandedCostsRoute
   '/accounting/payments': typeof AccountingPaymentsRoute
   '/accounting/payroll-journal': typeof AccountingPayrollJournalRoute
   '/accounting/period-closing': typeof AccountingPeriodClosingRoute
+  '/accounting/purchase-cycle': typeof AccountingPurchaseCycleRoute
   '/accounting/purchase-orders': typeof AccountingPurchaseOrdersRoute
+  '/accounting/purchase-returns': typeof AccountingPurchaseReturnsRoute
+  '/accounting/rfqs': typeof AccountingRfqsRoute
   '/accounting/sales-b2b': typeof AccountingSalesB2bRoute
   '/accounting/sales-b2c': typeof AccountingSalesB2cRoute
+  '/accounting/sales-billing': typeof AccountingSalesBillingRoute
+  '/accounting/sales-cycle': typeof AccountingSalesCycleRoute
+  '/accounting/sales-orders': typeof AccountingSalesOrdersRoute
+  '/accounting/sales-quotations': typeof AccountingSalesQuotationsRoute
+  '/accounting/sales-returns': typeof AccountingSalesReturnsRoute
   '/accounting/stock-balance': typeof AccountingStockBalanceRoute
   '/accounting/stock-moves': typeof AccountingStockMovesRoute
+  '/accounting/vendor-bills': typeof AccountingVendorBillsRoute
   '/accounting/vendors': typeof AccountingVendorsRoute
   '/accounting/warehouses': typeof AccountingWarehousesRoute
   '/accounting/': typeof AccountingIndexRoute
@@ -314,22 +407,35 @@ export interface FileRoutesByTo {
   '/accounting/credit-debit-notes': typeof AccountingCreditDebitNotesRoute
   '/accounting/currencies': typeof AccountingCurrenciesRoute
   '/accounting/customers': typeof AccountingCustomersRoute
+  '/accounting/deliveries': typeof AccountingDeliveriesRoute
+  '/accounting/doc-settings': typeof AccountingDocSettingsRoute
   '/accounting/expense-claims': typeof AccountingExpenseClaimsRoute
   '/accounting/fiscal-periods': typeof AccountingFiscalPeriodsRoute
   '/accounting/fixed-assets': typeof AccountingFixedAssetsRoute
   '/accounting/general-ledger': typeof AccountingGeneralLedgerRoute
+  '/accounting/goods-receipts': typeof AccountingGoodsReceiptsRoute
   '/accounting/inventory-valuation': typeof AccountingInventoryValuationRoute
   '/accounting/invoice-balances': typeof AccountingInvoiceBalancesRoute
   '/accounting/items': typeof AccountingItemsRoute
   '/accounting/journal-entries': typeof AccountingJournalEntriesRoute
+  '/accounting/landed-costs': typeof AccountingLandedCostsRoute
   '/accounting/payments': typeof AccountingPaymentsRoute
   '/accounting/payroll-journal': typeof AccountingPayrollJournalRoute
   '/accounting/period-closing': typeof AccountingPeriodClosingRoute
+  '/accounting/purchase-cycle': typeof AccountingPurchaseCycleRoute
   '/accounting/purchase-orders': typeof AccountingPurchaseOrdersRoute
+  '/accounting/purchase-returns': typeof AccountingPurchaseReturnsRoute
+  '/accounting/rfqs': typeof AccountingRfqsRoute
   '/accounting/sales-b2b': typeof AccountingSalesB2bRoute
   '/accounting/sales-b2c': typeof AccountingSalesB2cRoute
+  '/accounting/sales-billing': typeof AccountingSalesBillingRoute
+  '/accounting/sales-cycle': typeof AccountingSalesCycleRoute
+  '/accounting/sales-orders': typeof AccountingSalesOrdersRoute
+  '/accounting/sales-quotations': typeof AccountingSalesQuotationsRoute
+  '/accounting/sales-returns': typeof AccountingSalesReturnsRoute
   '/accounting/stock-balance': typeof AccountingStockBalanceRoute
   '/accounting/stock-moves': typeof AccountingStockMovesRoute
+  '/accounting/vendor-bills': typeof AccountingVendorBillsRoute
   '/accounting/vendors': typeof AccountingVendorsRoute
   '/accounting/warehouses': typeof AccountingWarehousesRoute
   '/accounting': typeof AccountingIndexRoute
@@ -356,22 +462,35 @@ export interface FileRoutesById {
   '/accounting/credit-debit-notes': typeof AccountingCreditDebitNotesRoute
   '/accounting/currencies': typeof AccountingCurrenciesRoute
   '/accounting/customers': typeof AccountingCustomersRoute
+  '/accounting/deliveries': typeof AccountingDeliveriesRoute
+  '/accounting/doc-settings': typeof AccountingDocSettingsRoute
   '/accounting/expense-claims': typeof AccountingExpenseClaimsRoute
   '/accounting/fiscal-periods': typeof AccountingFiscalPeriodsRoute
   '/accounting/fixed-assets': typeof AccountingFixedAssetsRoute
   '/accounting/general-ledger': typeof AccountingGeneralLedgerRoute
+  '/accounting/goods-receipts': typeof AccountingGoodsReceiptsRoute
   '/accounting/inventory-valuation': typeof AccountingInventoryValuationRoute
   '/accounting/invoice-balances': typeof AccountingInvoiceBalancesRoute
   '/accounting/items': typeof AccountingItemsRoute
   '/accounting/journal-entries': typeof AccountingJournalEntriesRoute
+  '/accounting/landed-costs': typeof AccountingLandedCostsRoute
   '/accounting/payments': typeof AccountingPaymentsRoute
   '/accounting/payroll-journal': typeof AccountingPayrollJournalRoute
   '/accounting/period-closing': typeof AccountingPeriodClosingRoute
+  '/accounting/purchase-cycle': typeof AccountingPurchaseCycleRoute
   '/accounting/purchase-orders': typeof AccountingPurchaseOrdersRoute
+  '/accounting/purchase-returns': typeof AccountingPurchaseReturnsRoute
+  '/accounting/rfqs': typeof AccountingRfqsRoute
   '/accounting/sales-b2b': typeof AccountingSalesB2bRoute
   '/accounting/sales-b2c': typeof AccountingSalesB2cRoute
+  '/accounting/sales-billing': typeof AccountingSalesBillingRoute
+  '/accounting/sales-cycle': typeof AccountingSalesCycleRoute
+  '/accounting/sales-orders': typeof AccountingSalesOrdersRoute
+  '/accounting/sales-quotations': typeof AccountingSalesQuotationsRoute
+  '/accounting/sales-returns': typeof AccountingSalesReturnsRoute
   '/accounting/stock-balance': typeof AccountingStockBalanceRoute
   '/accounting/stock-moves': typeof AccountingStockMovesRoute
+  '/accounting/vendor-bills': typeof AccountingVendorBillsRoute
   '/accounting/vendors': typeof AccountingVendorsRoute
   '/accounting/warehouses': typeof AccountingWarehousesRoute
   '/accounting/': typeof AccountingIndexRoute
@@ -399,22 +518,35 @@ export interface FileRouteTypes {
     | '/accounting/credit-debit-notes'
     | '/accounting/currencies'
     | '/accounting/customers'
+    | '/accounting/deliveries'
+    | '/accounting/doc-settings'
     | '/accounting/expense-claims'
     | '/accounting/fiscal-periods'
     | '/accounting/fixed-assets'
     | '/accounting/general-ledger'
+    | '/accounting/goods-receipts'
     | '/accounting/inventory-valuation'
     | '/accounting/invoice-balances'
     | '/accounting/items'
     | '/accounting/journal-entries'
+    | '/accounting/landed-costs'
     | '/accounting/payments'
     | '/accounting/payroll-journal'
     | '/accounting/period-closing'
+    | '/accounting/purchase-cycle'
     | '/accounting/purchase-orders'
+    | '/accounting/purchase-returns'
+    | '/accounting/rfqs'
     | '/accounting/sales-b2b'
     | '/accounting/sales-b2c'
+    | '/accounting/sales-billing'
+    | '/accounting/sales-cycle'
+    | '/accounting/sales-orders'
+    | '/accounting/sales-quotations'
+    | '/accounting/sales-returns'
     | '/accounting/stock-balance'
     | '/accounting/stock-moves'
+    | '/accounting/vendor-bills'
     | '/accounting/vendors'
     | '/accounting/warehouses'
     | '/accounting/'
@@ -439,22 +571,35 @@ export interface FileRouteTypes {
     | '/accounting/credit-debit-notes'
     | '/accounting/currencies'
     | '/accounting/customers'
+    | '/accounting/deliveries'
+    | '/accounting/doc-settings'
     | '/accounting/expense-claims'
     | '/accounting/fiscal-periods'
     | '/accounting/fixed-assets'
     | '/accounting/general-ledger'
+    | '/accounting/goods-receipts'
     | '/accounting/inventory-valuation'
     | '/accounting/invoice-balances'
     | '/accounting/items'
     | '/accounting/journal-entries'
+    | '/accounting/landed-costs'
     | '/accounting/payments'
     | '/accounting/payroll-journal'
     | '/accounting/period-closing'
+    | '/accounting/purchase-cycle'
     | '/accounting/purchase-orders'
+    | '/accounting/purchase-returns'
+    | '/accounting/rfqs'
     | '/accounting/sales-b2b'
     | '/accounting/sales-b2c'
+    | '/accounting/sales-billing'
+    | '/accounting/sales-cycle'
+    | '/accounting/sales-orders'
+    | '/accounting/sales-quotations'
+    | '/accounting/sales-returns'
     | '/accounting/stock-balance'
     | '/accounting/stock-moves'
+    | '/accounting/vendor-bills'
     | '/accounting/vendors'
     | '/accounting/warehouses'
     | '/accounting'
@@ -480,22 +625,35 @@ export interface FileRouteTypes {
     | '/accounting/credit-debit-notes'
     | '/accounting/currencies'
     | '/accounting/customers'
+    | '/accounting/deliveries'
+    | '/accounting/doc-settings'
     | '/accounting/expense-claims'
     | '/accounting/fiscal-periods'
     | '/accounting/fixed-assets'
     | '/accounting/general-ledger'
+    | '/accounting/goods-receipts'
     | '/accounting/inventory-valuation'
     | '/accounting/invoice-balances'
     | '/accounting/items'
     | '/accounting/journal-entries'
+    | '/accounting/landed-costs'
     | '/accounting/payments'
     | '/accounting/payroll-journal'
     | '/accounting/period-closing'
+    | '/accounting/purchase-cycle'
     | '/accounting/purchase-orders'
+    | '/accounting/purchase-returns'
+    | '/accounting/rfqs'
     | '/accounting/sales-b2b'
     | '/accounting/sales-b2c'
+    | '/accounting/sales-billing'
+    | '/accounting/sales-cycle'
+    | '/accounting/sales-orders'
+    | '/accounting/sales-quotations'
+    | '/accounting/sales-returns'
     | '/accounting/stock-balance'
     | '/accounting/stock-moves'
+    | '/accounting/vendor-bills'
     | '/accounting/vendors'
     | '/accounting/warehouses'
     | '/accounting/'
@@ -625,6 +783,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AccountingCustomersRouteImport
       parentRoute: typeof AccountingRoute
     }
+    '/accounting/deliveries': {
+      id: '/accounting/deliveries'
+      path: '/deliveries'
+      fullPath: '/accounting/deliveries'
+      preLoaderRoute: typeof AccountingDeliveriesRouteImport
+      parentRoute: typeof AccountingRoute
+    }
+    '/accounting/doc-settings': {
+      id: '/accounting/doc-settings'
+      path: '/doc-settings'
+      fullPath: '/accounting/doc-settings'
+      preLoaderRoute: typeof AccountingDocSettingsRouteImport
+      parentRoute: typeof AccountingRoute
+    }
     '/accounting/expense-claims': {
       id: '/accounting/expense-claims'
       path: '/expense-claims'
@@ -651,6 +823,13 @@ declare module '@tanstack/react-router' {
       path: '/general-ledger'
       fullPath: '/accounting/general-ledger'
       preLoaderRoute: typeof AccountingGeneralLedgerRouteImport
+      parentRoute: typeof AccountingRoute
+    }
+    '/accounting/goods-receipts': {
+      id: '/accounting/goods-receipts'
+      path: '/goods-receipts'
+      fullPath: '/accounting/goods-receipts'
+      preLoaderRoute: typeof AccountingGoodsReceiptsRouteImport
       parentRoute: typeof AccountingRoute
     }
     '/accounting/inventory-valuation': {
@@ -681,6 +860,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AccountingJournalEntriesRouteImport
       parentRoute: typeof AccountingRoute
     }
+    '/accounting/landed-costs': {
+      id: '/accounting/landed-costs'
+      path: '/landed-costs'
+      fullPath: '/accounting/landed-costs'
+      preLoaderRoute: typeof AccountingLandedCostsRouteImport
+      parentRoute: typeof AccountingRoute
+    }
     '/accounting/payments': {
       id: '/accounting/payments'
       path: '/payments'
@@ -702,11 +888,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AccountingPeriodClosingRouteImport
       parentRoute: typeof AccountingRoute
     }
+    '/accounting/purchase-cycle': {
+      id: '/accounting/purchase-cycle'
+      path: '/purchase-cycle'
+      fullPath: '/accounting/purchase-cycle'
+      preLoaderRoute: typeof AccountingPurchaseCycleRouteImport
+      parentRoute: typeof AccountingRoute
+    }
     '/accounting/purchase-orders': {
       id: '/accounting/purchase-orders'
       path: '/purchase-orders'
       fullPath: '/accounting/purchase-orders'
       preLoaderRoute: typeof AccountingPurchaseOrdersRouteImport
+      parentRoute: typeof AccountingRoute
+    }
+    '/accounting/purchase-returns': {
+      id: '/accounting/purchase-returns'
+      path: '/purchase-returns'
+      fullPath: '/accounting/purchase-returns'
+      preLoaderRoute: typeof AccountingPurchaseReturnsRouteImport
+      parentRoute: typeof AccountingRoute
+    }
+    '/accounting/rfqs': {
+      id: '/accounting/rfqs'
+      path: '/rfqs'
+      fullPath: '/accounting/rfqs'
+      preLoaderRoute: typeof AccountingRfqsRouteImport
       parentRoute: typeof AccountingRoute
     }
     '/accounting/sales-b2b': {
@@ -723,6 +930,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AccountingSalesB2cRouteImport
       parentRoute: typeof AccountingRoute
     }
+    '/accounting/sales-billing': {
+      id: '/accounting/sales-billing'
+      path: '/sales-billing'
+      fullPath: '/accounting/sales-billing'
+      preLoaderRoute: typeof AccountingSalesBillingRouteImport
+      parentRoute: typeof AccountingRoute
+    }
+    '/accounting/sales-cycle': {
+      id: '/accounting/sales-cycle'
+      path: '/sales-cycle'
+      fullPath: '/accounting/sales-cycle'
+      preLoaderRoute: typeof AccountingSalesCycleRouteImport
+      parentRoute: typeof AccountingRoute
+    }
+    '/accounting/sales-orders': {
+      id: '/accounting/sales-orders'
+      path: '/sales-orders'
+      fullPath: '/accounting/sales-orders'
+      preLoaderRoute: typeof AccountingSalesOrdersRouteImport
+      parentRoute: typeof AccountingRoute
+    }
+    '/accounting/sales-quotations': {
+      id: '/accounting/sales-quotations'
+      path: '/sales-quotations'
+      fullPath: '/accounting/sales-quotations'
+      preLoaderRoute: typeof AccountingSalesQuotationsRouteImport
+      parentRoute: typeof AccountingRoute
+    }
+    '/accounting/sales-returns': {
+      id: '/accounting/sales-returns'
+      path: '/sales-returns'
+      fullPath: '/accounting/sales-returns'
+      preLoaderRoute: typeof AccountingSalesReturnsRouteImport
+      parentRoute: typeof AccountingRoute
+    }
     '/accounting/stock-balance': {
       id: '/accounting/stock-balance'
       path: '/stock-balance'
@@ -735,6 +977,13 @@ declare module '@tanstack/react-router' {
       path: '/stock-moves'
       fullPath: '/accounting/stock-moves'
       preLoaderRoute: typeof AccountingStockMovesRouteImport
+      parentRoute: typeof AccountingRoute
+    }
+    '/accounting/vendor-bills': {
+      id: '/accounting/vendor-bills'
+      path: '/vendor-bills'
+      fullPath: '/accounting/vendor-bills'
+      preLoaderRoute: typeof AccountingVendorBillsRouteImport
       parentRoute: typeof AccountingRoute
     }
     '/accounting/vendors': {
@@ -803,22 +1052,35 @@ interface AccountingRouteChildren {
   AccountingCreditDebitNotesRoute: typeof AccountingCreditDebitNotesRoute
   AccountingCurrenciesRoute: typeof AccountingCurrenciesRoute
   AccountingCustomersRoute: typeof AccountingCustomersRoute
+  AccountingDeliveriesRoute: typeof AccountingDeliveriesRoute
+  AccountingDocSettingsRoute: typeof AccountingDocSettingsRoute
   AccountingExpenseClaimsRoute: typeof AccountingExpenseClaimsRoute
   AccountingFiscalPeriodsRoute: typeof AccountingFiscalPeriodsRoute
   AccountingFixedAssetsRoute: typeof AccountingFixedAssetsRoute
   AccountingGeneralLedgerRoute: typeof AccountingGeneralLedgerRoute
+  AccountingGoodsReceiptsRoute: typeof AccountingGoodsReceiptsRoute
   AccountingInventoryValuationRoute: typeof AccountingInventoryValuationRoute
   AccountingInvoiceBalancesRoute: typeof AccountingInvoiceBalancesRoute
   AccountingItemsRoute: typeof AccountingItemsRoute
   AccountingJournalEntriesRoute: typeof AccountingJournalEntriesRoute
+  AccountingLandedCostsRoute: typeof AccountingLandedCostsRoute
   AccountingPaymentsRoute: typeof AccountingPaymentsRoute
   AccountingPayrollJournalRoute: typeof AccountingPayrollJournalRoute
   AccountingPeriodClosingRoute: typeof AccountingPeriodClosingRoute
+  AccountingPurchaseCycleRoute: typeof AccountingPurchaseCycleRoute
   AccountingPurchaseOrdersRoute: typeof AccountingPurchaseOrdersRoute
+  AccountingPurchaseReturnsRoute: typeof AccountingPurchaseReturnsRoute
+  AccountingRfqsRoute: typeof AccountingRfqsRoute
   AccountingSalesB2bRoute: typeof AccountingSalesB2bRoute
   AccountingSalesB2cRoute: typeof AccountingSalesB2cRoute
+  AccountingSalesBillingRoute: typeof AccountingSalesBillingRoute
+  AccountingSalesCycleRoute: typeof AccountingSalesCycleRoute
+  AccountingSalesOrdersRoute: typeof AccountingSalesOrdersRoute
+  AccountingSalesQuotationsRoute: typeof AccountingSalesQuotationsRoute
+  AccountingSalesReturnsRoute: typeof AccountingSalesReturnsRoute
   AccountingStockBalanceRoute: typeof AccountingStockBalanceRoute
   AccountingStockMovesRoute: typeof AccountingStockMovesRoute
+  AccountingVendorBillsRoute: typeof AccountingVendorBillsRoute
   AccountingVendorsRoute: typeof AccountingVendorsRoute
   AccountingWarehousesRoute: typeof AccountingWarehousesRoute
   AccountingIndexRoute: typeof AccountingIndexRoute
@@ -843,22 +1105,35 @@ const AccountingRouteChildren: AccountingRouteChildren = {
   AccountingCreditDebitNotesRoute: AccountingCreditDebitNotesRoute,
   AccountingCurrenciesRoute: AccountingCurrenciesRoute,
   AccountingCustomersRoute: AccountingCustomersRoute,
+  AccountingDeliveriesRoute: AccountingDeliveriesRoute,
+  AccountingDocSettingsRoute: AccountingDocSettingsRoute,
   AccountingExpenseClaimsRoute: AccountingExpenseClaimsRoute,
   AccountingFiscalPeriodsRoute: AccountingFiscalPeriodsRoute,
   AccountingFixedAssetsRoute: AccountingFixedAssetsRoute,
   AccountingGeneralLedgerRoute: AccountingGeneralLedgerRoute,
+  AccountingGoodsReceiptsRoute: AccountingGoodsReceiptsRoute,
   AccountingInventoryValuationRoute: AccountingInventoryValuationRoute,
   AccountingInvoiceBalancesRoute: AccountingInvoiceBalancesRoute,
   AccountingItemsRoute: AccountingItemsRoute,
   AccountingJournalEntriesRoute: AccountingJournalEntriesRoute,
+  AccountingLandedCostsRoute: AccountingLandedCostsRoute,
   AccountingPaymentsRoute: AccountingPaymentsRoute,
   AccountingPayrollJournalRoute: AccountingPayrollJournalRoute,
   AccountingPeriodClosingRoute: AccountingPeriodClosingRoute,
+  AccountingPurchaseCycleRoute: AccountingPurchaseCycleRoute,
   AccountingPurchaseOrdersRoute: AccountingPurchaseOrdersRoute,
+  AccountingPurchaseReturnsRoute: AccountingPurchaseReturnsRoute,
+  AccountingRfqsRoute: AccountingRfqsRoute,
   AccountingSalesB2bRoute: AccountingSalesB2bRoute,
   AccountingSalesB2cRoute: AccountingSalesB2cRoute,
+  AccountingSalesBillingRoute: AccountingSalesBillingRoute,
+  AccountingSalesCycleRoute: AccountingSalesCycleRoute,
+  AccountingSalesOrdersRoute: AccountingSalesOrdersRoute,
+  AccountingSalesQuotationsRoute: AccountingSalesQuotationsRoute,
+  AccountingSalesReturnsRoute: AccountingSalesReturnsRoute,
   AccountingStockBalanceRoute: AccountingStockBalanceRoute,
   AccountingStockMovesRoute: AccountingStockMovesRoute,
+  AccountingVendorBillsRoute: AccountingVendorBillsRoute,
   AccountingVendorsRoute: AccountingVendorsRoute,
   AccountingWarehousesRoute: AccountingWarehousesRoute,
   AccountingIndexRoute: AccountingIndexRoute,

@@ -10,7 +10,7 @@ import { buildCycles } from "@/lib/seedCycles";
 export type Row = Record<string, any>;
 export type Tables = Record<string, Row[]>;
 
-const STORAGE_KEY = "acc_demo_db_v4_cycles_eg";
+const STORAGE_KEY = "acc_demo_db_v6_cycles_eg";
 
 export const uid = () =>
   typeof crypto !== "undefined" && "randomUUID" in crypto
@@ -153,11 +153,14 @@ const stockMoves: Row[] = (() => {
     });
   };
   feedItems.forEach((it, i) => {
+    // رصيد افتتاحي لكل صنف في كل مخزن حتى لا يظهر رصيد سالب في أي فرع
+    warehouses.forEach((_, w) => push(it, w, "in", 150000 + w * 10000, it.cost_price, 1, 1, "opening", "OB-2026"));
     push(it, i % 3, "in", (i % 3 === 0 ? 120000 : 60000) + i * 1500, it.cost_price, 1, 12 + (i % 10), "purchase", `PO-${String(1000 + i)}`);
     push(it, i % 3, "in", 45000 + i * 800, Math.round(it.cost_price * 1.03 * 100) / 100, 2, 8 + (i % 15), "purchase", `PO-${String(1050 + i)}`);
     push(it, i % 3, "out", 38000 + i * 600, it.cost_price, 2, 20 + (i % 7), "sale", `INV-${String(2000 + i)}`);
     push(it, i % 3, "out", 21000 + i * 400, it.cost_price, 3, 5 + (i % 12), "sale", `INV-${String(2050 + i)}`);
   });
+
   return rows;
 })();
 
