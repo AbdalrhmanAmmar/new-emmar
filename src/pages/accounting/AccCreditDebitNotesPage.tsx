@@ -12,18 +12,15 @@ import { Badge } from '@/components/ui/badge';
 import { Loader2, Send } from 'lucide-react';
 import { toast } from 'sonner';
 import ExportPdfButton from '@/components/accounting/ExportPdfButton';
-import {
-  buildUblInvoiceXml, buildZatcaQrBase64, computeInvoiceTotals,
-  newUuidV4, sha256Base64, xmlToBase64,
-} from '@/lib/zatca';
 
 const REASONS = [
-  { code: '1', text: 'إلغاء أو تعليق التوريدات بعد وقوعها كلياً أو جزئياً' },
-  { code: '2', text: 'تغيير جوهري أو تعديل التوريدات بعد وقوعها' },
-  { code: '3', text: 'تغيير المبلغ المتفق عليه بين الأطراف' },
-  { code: '4', text: 'إرجاع السلع أو الخدمات كلياً أو جزئياً' },
+  { code: '1', text: 'مرتجع أعلاف من العميل (كلي أو جزئي)' },
+  { code: '2', text: 'فرق وزن عند التسليم' },
+  { code: '3', text: 'تغيير السعر المتفق عليه' },
+  { code: '4', text: 'خصم تجاري لاحق للفاتورة' },
   { code: '5', text: 'أخرى' },
 ];
+
 
 interface Invoice {
   id: string; invoice_number: string; icv: number; buyer_name?: string; buyer_vat_number?: string;
