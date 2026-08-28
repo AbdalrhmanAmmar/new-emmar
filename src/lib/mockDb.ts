@@ -7,7 +7,7 @@
 export type Row = Record<string, any>;
 export type Tables = Record<string, Row[]>;
 
-const STORAGE_KEY = "acc_demo_db_v2_egp";
+const STORAGE_KEY = "acc_demo_db_v3_feed_eg";
 
 export const uid = () =>
   typeof crypto !== "undefined" && "randomUUID" in crypto
@@ -29,7 +29,7 @@ const coaDefs = [
   acc("1", "الأصول", "asset", true),
   acc("11", "الأصول المتداولة", "asset", true, "1"),
   acc("1101", "النقدية بالصندوق", "asset", false, "11"),
-  acc("1102", "النقدية بالبنك - الراجحي", "asset", false, "11"),
+  acc("1102", "النقدية بالبنك - البنك الأهلي المصري", "asset", false, "11"),
   acc("1103", "النقدية بالبنك - الأهلي", "asset", false, "11"),
   acc("1201", "العملاء (المدينون)", "asset", false, "11"),
   acc("1202", "ضريبة القيمة المضافة - مدخلات", "asset", false, "11"),
@@ -108,25 +108,25 @@ function seed(): Tables {
     {
       no: "JV-000002",
       date: d(2, 12),
-      desc: "فاتورة مبيعات مشروع الرياض",
+      desc: "فاتورة مبيعات أعلاف - مزارع دواجن",
       status: "posted",
       source: "sales",
       lines: [
-        ["1201", "العميل - شركة البناء الحديث", 345000, 0],
-        ["4101", "إيراد مقاولات", 0, 300000],
-        ["2102", "ضريبة مخرجات 15%", 0, 45000],
+        ["1201", "العميل - شركة الدلتا لمزارع الدواجن", 345000, 0],
+        ["4101", "إيرادات بيع أعلاف", 0, 300000],
+        ["2102", "ضريبة مخرجات 14%", 0, 45000],
       ],
     },
     {
       no: "JV-000003",
       date: d(2, 25),
-      desc: "مشتريات مواد بناء",
+      desc: "مشتريات خامات أعلاف (ذرة وصويا)",
       status: "posted",
       source: "purchase",
       lines: [
-        ["5101", "مواد بناء", 120000, 0],
-        ["1202", "ضريبة مدخلات 15%", 18000, 0],
-        ["2101", "مورد - مصنع الأسمنت", 0, 138000],
+        ["5101", "خامات أعلاف", 120000, 0],
+        ["1202", "ضريبة مدخلات 14%", 18000, 0],
+        ["2101", "مورد - مصنع الشرق للزيوت", 0, 138000],
       ],
     },
     {
@@ -195,6 +195,7 @@ function seed(): Tables {
         entry_date: j.date,
         entry_no: j.no,
         status: j.status,
+        source: j.source,
       });
     });
   });
@@ -213,10 +214,11 @@ function seed(): Tables {
     name_en: null,
     vat_number: vat,
     cr_number: "10102" + code.replace(/\D/g, ""),
-    email: `${code.toLowerCase()}@example.sa`,
-    phone: "05" + Math.floor(10000000 + Math.random() * 8999999),
+    email: `${code.toLowerCase()}@example.com.eg`,
+    phone: "010" + String(20000000 + Number(code.replace(/\D/g, "")) * 137).slice(0, 8),
     city,
-    contact_person: "أ. محمد العتيبي",
+    contact_person: "أ. محمود السيد",
+
     payment_terms_days: 30,
     credit_limit: 500000,
     opening_balance: balance,
@@ -229,10 +231,10 @@ function seed(): Tables {
   });
 
   const invDefs = [
-    ["INV-2001", "شركة البناء الحديث", "300000000000003", 300000, "b2b", "posted", d(2, 12)],
-    ["INV-2002", "مؤسسة الإعمار", "300000000000011", 82000, "b2b", "posted", d(3, 4)],
+    ["INV-2001", "شركة الدلتا لمزارع الدواجن", "512-345-678", 300000, "b2b", "posted", d(2, 12)],
+    ["INV-2002", "مزارع النيل للألبان", "478-902-116", 82000, "b2b", "posted", d(3, 4)],
     ["INV-2003", "عميل نقدي", "", 4300, "b2c", "posted", d(3, 18)],
-    ["INV-2004", "شركة الطرق السريعة", "300000000000029", 156000, "b2b", "draft", today()],
+    ["INV-2004", "شركة مصر للدواجن", "745-220-118", 156000, "b2b", "draft", today()],
   ] as const;
 
   const acc_sales_invoices: Row[] = [];
@@ -240,7 +242,7 @@ function seed(): Tables {
   invDefs.forEach((v, idx) => {
     const [invoice_number, buyer_name, buyer_vat_number, subtotal, invoice_type, status, issue_date] = v;
     const id = uid();
-    const vat_total = Math.round(subtotal * 0.15 * 100) / 100;
+    const vat_total = Math.round(subtotal * 0.14 * 100) / 100;
     acc_sales_invoices.push({
       id,
       invoice_number,
@@ -267,7 +269,7 @@ function seed(): Tables {
       description: "أعمال إنشائية على المستخلص",
       quantity: 1,
       unit_price: subtotal,
-      vat_rate: 15,
+      vat_rate: 14,
       vat_amount: vat_total,
       line_total: subtotal + vat_total,
     });
@@ -280,13 +282,13 @@ function seed(): Tables {
         id: uid(),
         legal_name_ar: "شركة الإنشاءات المتقدمة للمقاولات",
         legal_name_en: "Advanced Construction Co.",
-        vat_number: "300000000000003",
+        vat_number: "512-345-678",
         cr_number: "1010123456",
         short_address: "RRRD2929",
         building_number: "2929",
         street: "طريق الملك فهد",
         district: "العليا",
-        city: "الرياض",
+        city: "القاهرة",
         postal_code: "12211",
         additional_number: "8228",
         country_code: "SA",
@@ -298,31 +300,31 @@ function seed(): Tables {
     acc_journal_entries,
     acc_ledger_lines,
     acc_customers: [
-      party("C-001", "شركة البناء الحديث", "300000000000003", "الرياض", 120000, { customer_type: "company" }),
-      party("C-002", "مؤسسة الإعمار", "300000000000011", "جدة", 42000, { customer_type: "company" }),
-      party("C-003", "أمانة منطقة الرياض", "300000000000037", "الرياض", 0, { customer_type: "government" }),
-      party("C-004", "عبدالله سعد", "", "الدمام", 3500, { customer_type: "individual" }),
+      party("C-001", "شركة الدلتا لمزارع الدواجن", "512-345-678", "القاهرة", 120000, { customer_type: "company" }),
+      party("C-002", "مزارع النيل للألبان", "478-902-116", "الإسكندرية", 42000, { customer_type: "company" }),
+      party("C-003", "جمعية منتجي الدواجن", "633-118-540", "القاهرة", 0, { customer_type: "government" }),
+      party("C-004", "محمد عبد الرحمن", "", "طنطا", 3500, { customer_type: "individual" }),
     ],
     acc_vendors: [
-      party("V-001", "مصنع الأسمنت الوطني", "300000000000045", "الرياض", 138000, {
+      party("V-001", "مصنع الشرق لاستخلاص الزيوت (كسب صويا)", "380-664-201", "القاهرة", 138000, {
         vendor_type: "company",
-        bank_name: "الراجحي",
+        bank_name: "البنك الأهلي المصري",
         bank_account: "1234567890",
-        iban: "SA0380000000608010167519",
+        iban: "EG380003000123456789012345",
       }),
-      party("V-002", "مؤسسة الحديد التجارية", "300000000000052", "جدة", 64000, { vendor_type: "company" }),
-      party("V-003", "شركة النقل السريع", "300000000000060", "الرياض", 12000, { vendor_type: "company" }),
+      party("V-002", "الوادي لتجارة الذرة الصفراء", "291-773-908", "الإسكندرية", 64000, { vendor_type: "company" }),
+      party("V-003", "النقل السريع للشحن", "845-110-332", "القاهرة", 12000, { vendor_type: "company" }),
     ],
     acc_bank_accounts: [
       {
         id: uid(),
         code: "BNK-001",
-        name_ar: "الراجحي - الحساب الجاري",
+        name_ar: "البنك الأهلي المصري - الحساب الجاري",
         name_en: "Alrajhi current",
         account_type: "bank",
-        bank_name: "مصرف الراجحي",
+        bank_name: "مصرف البنك الأهلي المصري",
         account_number: "1234567890",
-        iban: "SA0380000000608010167519",
+        iban: "EG380003000123456789012345",
         swift: "NBEGEGCX",
         currency: "EGP",
         opening_balance: 1500000,
@@ -339,7 +341,7 @@ function seed(): Tables {
         account_type: "bank",
         bank_name: "البنك الأهلي",
         account_number: "9988776655",
-        iban: "SA4420000001234567891234",
+        iban: "EG440002000765432109876543",
         swift: "NCBKSAJE",
         currency: "EGP",
         opening_balance: 380000,
@@ -366,7 +368,7 @@ function seed(): Tables {
         id: uid(),
         bank_account_id: null,
         txn_date: d(3, 2),
-        description: "تحويل من عميل - شركة البناء الحديث",
+        description: "تحويل من عميل - شركة الدلتا لمزارع الدواجن",
         reference_no: "TRF-88213",
         amount: 200000,
         direction: "inbound",
@@ -377,7 +379,7 @@ function seed(): Tables {
         id: uid(),
         bank_account_id: null,
         txn_date: d(3, 9),
-        description: "سداد مورد - مصنع الأسمنت",
+        description: "سداد مورد - مصنع الشرق للزيوت",
         reference_no: "TRF-88240",
         amount: 138000,
         direction: "outbound",
@@ -393,7 +395,7 @@ function seed(): Tables {
         direction: "inbound",
         method: "bank_transfer",
         status: "posted",
-        party_name: "شركة البناء الحديث",
+        party_name: "شركة الدلتا لمزارع الدواجن",
         amount: 200000,
         currency: "EGP",
         reference_no: "TRF-88213",
@@ -406,7 +408,7 @@ function seed(): Tables {
         direction: "outbound",
         method: "bank_transfer",
         status: "posted",
-        party_name: "مصنع الأسمنت الوطني",
+        party_name: "مصنع الشرق لاستخلاص الزيوت (كسب صويا)",
         amount: 138000,
         currency: "EGP",
         reference_no: "TRF-88240",
@@ -419,7 +421,7 @@ function seed(): Tables {
         direction: "inbound",
         method: "cash",
         status: "draft",
-        party_name: "عبدالله سعد",
+        party_name: "محمد عبد الرحمن",
         amount: 3500,
         currency: "EGP",
         reference_no: null,
@@ -434,7 +436,7 @@ function seed(): Tables {
         note_number: "CN-0001",
         note_type: "credit",
         issue_date: d(3, 12),
-        buyer_name: "مؤسسة الإعمار",
+        buyer_name: "مزارع النيل للألبان",
         original_invoice_number: "INV-2002",
         reason: "خصم كمية",
         subtotal: 5000,
@@ -455,7 +457,7 @@ function seed(): Tables {
         useful_life_months: 120,
         depreciation_method: "straight",
         declining_rate: null,
-        location: "مشروع الرياض",
+        location: "مشروع القاهرة",
         serial_number: "CAT320-99182",
         supplier: "الزاهد للمعدات",
         status: "in_use",
@@ -540,12 +542,12 @@ function seed(): Tables {
     ],
     acc_cost_centers: [
       { id: uid(), code: "CC-100", name_ar: "الإدارة العامة", parent_id: null, is_active: true, notes: null },
-      { id: uid(), code: "CC-200", name_ar: "مشروع الرياض", parent_id: null, is_active: true, notes: null },
-      { id: uid(), code: "CC-300", name_ar: "مشروع جدة", parent_id: null, is_active: true, notes: null },
+      { id: uid(), code: "CC-200", name_ar: "مشروع القاهرة", parent_id: null, is_active: true, notes: null },
+      { id: uid(), code: "CC-300", name_ar: "مشروع الإسكندرية", parent_id: null, is_active: true, notes: null },
     ],
     acc_entities: [
       { id: uid(), code: "E-01", name_ar: "الشركة الأم", currency: "EGP", ownership_pct: 100, is_active: true },
-      { id: uid(), code: "E-02", name_ar: "فرع جدة", currency: "EGP", ownership_pct: 100, is_active: true },
+      { id: uid(), code: "E-02", name_ar: "فرع الإسكندرية", currency: "EGP", ownership_pct: 100, is_active: true },
     ],
     acc_consolidation_balances: [],
     acc_cheques: [
@@ -553,8 +555,8 @@ function seed(): Tables {
         id: uid(),
         cheque_no: "CHQ-4410",
         direction: "outbound",
-        party_name: "مصنع الأسمنت الوطني",
-        bank_name: "مصرف الراجحي",
+        party_name: "مصنع الشرق لاستخلاص الزيوت (كسب صويا)",
+        bank_name: "مصرف البنك الأهلي المصري",
         issue_date: d(3, 5),
         due_date: d(4, 5),
         amount: 138000,
@@ -566,7 +568,7 @@ function seed(): Tables {
         id: uid(),
         cheque_no: "CHQ-9921",
         direction: "inbound",
-        party_name: "شركة البناء الحديث",
+        party_name: "شركة الدلتا لمزارع الدواجن",
         bank_name: "البنك الأهلي",
         issue_date: d(3, 10),
         due_date: d(4, 10),
@@ -629,7 +631,7 @@ function seed(): Tables {
       {
         id: uid(),
         billing_no: "PB-0001",
-        project_name: "مشروع الرياض - المرحلة الأولى",
+        project_name: "مشروع القاهرة - المرحلة الأولى",
         billing_date: d(3, 15),
         contract_value: 12000000,
         completed_pct: 34,
@@ -645,7 +647,7 @@ function seed(): Tables {
     acc_retention_entries: [
       {
         id: uid(),
-        project_name: "مشروع الرياض - المرحلة الأولى",
+        project_name: "مشروع القاهرة - المرحلة الأولى",
         billing_no: "PB-0001",
         retention_amount: 148000,
         released_amount: 0,
@@ -657,7 +659,7 @@ function seed(): Tables {
     acc_advance_payments: [
       {
         id: uid(),
-        project_name: "مشروع جدة",
+        project_name: "مشروع الإسكندرية",
         payment_no: "ADV-0001",
         payment_date: d(2, 20),
         amount: 900000,
@@ -671,7 +673,7 @@ function seed(): Tables {
     acc_wip_poc: [
       {
         id: uid(),
-        project_name: "مشروع الرياض - المرحلة الأولى",
+        project_name: "مشروع القاهرة - المرحلة الأولى",
         contract_value: 12000000,
         cost_to_date: 3900000,
         estimated_total_cost: 10200000,
@@ -688,8 +690,8 @@ function seed(): Tables {
         id: uid(),
         guarantee_no: "LG-77120",
         guarantee_type: "performance",
-        bank_name: "مصرف الراجحي",
-        beneficiary: "أمانة منطقة الرياض",
+        bank_name: "مصرف البنك الأهلي المصري",
+        beneficiary: "جمعية منتجي الدواجن",
         amount: 600000,
         issue_date: d(1, 10),
         expiry_date: d(12, 31),
@@ -702,7 +704,7 @@ function seed(): Tables {
         id: uid(),
         item_code: "MAT-001",
         item_name: "أسمنت مقاوم (طن)",
-        warehouse: "مستودع الرياض",
+        warehouse: "مستودع القاهرة",
         quantity: 1200,
         unit_cost: 320,
         total_value: 384000,
@@ -713,7 +715,7 @@ function seed(): Tables {
         id: uid(),
         item_code: "MAT-002",
         item_name: "حديد تسليح 16مم (طن)",
-        warehouse: "مستودع الرياض",
+        warehouse: "مستودع القاهرة",
         quantity: 85,
         unit_cost: 2750,
         total_value: 233750,
@@ -729,8 +731,8 @@ function seed(): Tables {
         serial_number: "POS-001-RYD",
         device_serial: "POS-001-RYD",
         device_uuid: uid(),
-        branch: "الرياض",
-        location: "الرياض",
+        branch: "القاهرة",
+        location: "القاهرة",
         cashier_name: "أحمد المصري",
         environment: "production",
         csid_status: "onboarded",
@@ -743,13 +745,13 @@ function seed(): Tables {
       },
       {
         id: uid(),
-        name: "كاشير فرع جدة",
-        device_name: "كاشير فرع جدة",
+        name: "كاشير فرع الإسكندرية",
+        device_name: "كاشير فرع الإسكندرية",
         serial_number: "POS-002-JED",
         device_serial: "POS-002-JED",
         device_uuid: uid(),
-        branch: "جدة",
-        location: "جدة",
+        branch: "الإسكندرية",
+        location: "الإسكندرية",
         cashier_name: "سالم العتيبي",
         environment: "sandbox",
         csid_status: "pending",
@@ -791,7 +793,7 @@ function seed(): Tables {
       {
         id: uid(),
         provider: "Alrajhi API",
-        bank_name: "مصرف الراجحي",
+        bank_name: "مصرف البنك الأهلي المصري",
         status: "connected",
         last_sync_at: d(3, 20),
         notes: "مزامنة يومية 02:00",
@@ -882,16 +884,29 @@ function buildView(name: string, db: Tables): Row[] | null {
   switch (name) {
     case "v_acc_trial_balance":
       return trial();
-    case "v_acc_general_ledger":
-      return lines.map((l) => {
-        const account = coa.find((a) => a.id === l.account_id || a.code === l.account_code);
-        return {
-          ...l,
-          account_code: account?.code ?? l.account_code,
-          account_name: account?.name_ar ?? l.account_name,
-          account_type: account?.account_type ?? null,
-        };
-      });
+    case "v_acc_general_ledger": {
+      const running = new Map<string, number>();
+      return [...lines]
+        .sort((a, b) => String(a.entry_date).localeCompare(String(b.entry_date)))
+        .map((l) => {
+          const account = coa.find((a) => a.id === l.account_id || a.code === l.account_code);
+          const code = account?.code ?? l.account_code ?? "—";
+          const prev = running.get(code) ?? 0;
+          const balance = prev + num(l.debit) - num(l.credit);
+          running.set(code, balance);
+          return {
+            ...l,
+            line_id: l.id,
+            account_code: code,
+            account_name: account?.name_ar ?? l.account_name,
+            account_name_ar: account?.name_ar ?? l.account_name,
+            account_type: account?.account_type ?? null,
+            line_description: l.description ?? null,
+            running_balance: balance,
+          };
+        });
+    }
+
     case "v_acc_profit_loss":
       return trial()
         .filter((r) => r.account_type === "revenue" || r.account_type === "expense")
@@ -952,4 +967,49 @@ function buildView(name: string, db: Tables): Row[] | null {
     default:
       return null;
   }
+}
+
+/**
+ * Business unique keys — تمنع تكرار البيانات أو تداخلها.
+ * Any insert/upsert/update that would create a second row with the same value
+ * for one of these keys is rejected by the data client.
+ */
+export const UNIQUE_KEYS: Record<string, string[][]> = {
+  acc_chart_of_accounts: [["code"]],
+  acc_customers: [["code"], ["tax_number"]],
+  acc_vendors: [["code"], ["tax_number"]],
+  acc_bank_accounts: [["account_number"]],
+  acc_pos_devices: [["device_uuid"], ["serial_number"]],
+  acc_journal_entries: [["journal_no"]],
+  acc_sales_invoices: [["invoice_number"]],
+  acc_credit_debit_notes: [["note_number"]],
+  acc_payments: [["payment_no"]],
+  acc_cheques: [["cheque_no", "bank_account_id"]],
+  acc_fixed_assets: [["asset_code"]],
+  acc_cost_centers: [["code"]],
+  acc_currencies: [["code"]],
+  acc_fiscal_periods: [["name"]],
+  acc_budgets: [["fiscal_year", "account_id", "cost_center_id"]],
+  acc_expense_claims: [["claim_no"]],
+  acc_bank_guarantees: [["guarantee_no"]],
+};
+
+const keyValue = (row: Row, cols: string[]) =>
+  cols.map((c) => String(row[c] ?? "").trim().toLowerCase()).join("§");
+
+/** Returns an Arabic error message when `candidate` duplicates an existing row. */
+export function findDuplicate(table: string, candidate: Row, existing: Row[]): string | null {
+  const keys = UNIQUE_KEYS[table];
+  if (!keys) return null;
+  for (const cols of keys) {
+    if (cols.some((c) => candidate[c] === undefined || candidate[c] === null || candidate[c] === "")) continue;
+    const val = keyValue(candidate, cols);
+    const clash = existing.find((r) => r.id !== candidate.id && keyValue(r, cols) === val);
+    if (clash) {
+      return `لا يمكن الحفظ: يوجد سجل بنفس (${cols.join(" + ")}) = ${cols
+        .map((c) => candidate[c])
+        .join(" + ")} — تم منع التكرار.`;
+    }
+  }
+  return null;
 }

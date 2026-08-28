@@ -5,7 +5,9 @@
  * module uses, backed by the local mock database in `@/lib/mockDb`.
  * No network calls, no external backend.
  */
-import { getTable, writeTable, uid, type Row } from "@/lib/mockDb";
+import { getTable, writeTable, uid, findDuplicate, type Row } from "@/lib/mockDb";
+import { recordOperation } from "@/lib/offline";
+
 
 type Result<T = any> = { data: T; error: null | { message: string } };
 
@@ -162,27 +164,41 @@ class Query implements PromiseLike<Result> {
           ...p,
         }));
         const next = [...rows];
-        created.forEach((row) => {
+        for (const row of created) {
+          const dup = findDuplicate(this.table, row, next);
+          if (dup) return { data: null, error: { message: dup } };
           const idx = next.findIndex((r) => r.id === row.id);
           if (idx >= 0) next[idx] = { ...next[idx], ...row };
           else next.push(row);
-        });
+        }
         writeTable(this.table, next);
+        recordOperation({
+          table: this.table,
+          mode: this.mode,
+          rowIds: created.map((r) => String(r.id)),
+        });
         return this.shape(created);
       }
 
       if (this.mode === "update") {
         const patch = this.payload[0] ?? {};
         const touched: Row[] = [];
-        const next = rows.map((r) => {
-          if (this.filters.every((f) => f(r))) {
-            const merged = { ...r, ...patch, updated_at: new Date().toISOString() };
-            touched.push(merged);
-            return merged;
-          }
-          return r;
-        });
+        const next = [...rows];
+        for (let i = 0; i < next.length; i += 1) {
+          const r = next[i];
+          if (!this.filters.every((f) => f(r))) continue;
+          const merged = { ...r, ...patch, updated_at: new Date().toISOString() };
+          const dup = findDuplicate(this.table, merged, next);
+          if (dup) return { data: null, error: { message: dup } };
+          next[i] = merged;
+          touched.push(merged);
+        }
         writeTable(this.table, next);
+        recordOperation({
+          table: this.table,
+          mode: "update",
+          rowIds: touched.map((r) => String(r.id)),
+        });
         return this.shape(touched);
       }
 
@@ -192,8 +208,14 @@ class Query implements PromiseLike<Result> {
           this.table,
           rows.filter((r) => !removed.includes(r)),
         );
+        recordOperation({
+          table: this.table,
+          mode: "delete",
+          rowIds: removed.map((r) => String(r.id)),
+        });
         return this.shape(removed);
       }
+
 
       let out = this.matches(rows);
       if (this.orderBy) {

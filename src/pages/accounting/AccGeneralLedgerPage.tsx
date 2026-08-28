@@ -152,8 +152,9 @@ const AccGeneralLedgerPage: React.FC = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {rows.map((r) => (
-                    <TableRow key={r.line_id}>
+                  {rows.map((r, i) => (
+                    <TableRow key={r.line_id ?? i}>
+
                       <TableCell className="font-mono text-xs">{r.entry_no}</TableCell>
                       <TableCell>{new Date(r.entry_date).toLocaleDateString('en-GB')}</TableCell>
                       <TableCell>{r.account_code} - {r.account_name_ar}</TableCell>
