@@ -341,7 +341,7 @@ function seed(): Tables {
         account_type: "bank",
         bank_name: "البنك الأهلي",
         account_number: "9988776655",
-        iban: "SA4420000001234567891234",
+        iban: "EG440002000765432109876543",
         swift: "NCBKSAJE",
         currency: "EGP",
         opening_balance: 380000,
