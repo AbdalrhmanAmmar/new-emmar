@@ -35,10 +35,10 @@ const CHECKLIST_ITEMS = [
   { key: 'depreciation_posted', label: 'ترحيل قيود الإهلاك الشهرية' },
   { key: 'payroll_posted', label: 'ترحيل قيود الرواتب' },
   { key: 'accruals_prepaid', label: 'تسوية المستحقات والمصروفات المدفوعة مقدماً' },
-  { key: 'wip_poc_posted', label: 'تحديث WIP / POC للمشاريع' },
-  { key: 'retention_reviewed', label: 'مراجعة ضمانات حسن التنفيذ' },
+  { key: 'stock_count', label: 'جرد المخازن ومطابقة الأوزان الفعلية' },
+  { key: 'shrinkage_reviewed', label: 'مراجعة الفاقد والهالك في الأعلاف' },
   { key: 'vat_return_filed', label: 'إعداد إقرار ضريبة القيمة المضافة' },
-  { key: 'zatca_submissions', label: 'التحقق من إرسال جميع الفواتير لهيئة الزكاة' },
+  { key: 'invoices_reviewed', label: 'مراجعة فواتير البيع والمرتجعات' },
   { key: 'trial_balance_reviewed', label: 'مراجعة ميزان المراجعة' },
   { key: 'management_reports', label: 'إصدار تقارير الإدارة (P&L، Balance Sheet)' },
 ];

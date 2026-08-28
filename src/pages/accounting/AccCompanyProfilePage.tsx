@@ -94,7 +94,7 @@ const AccCompanyProfilePage: React.FC = () => {
         <h1 className="text-2xl font-bold">بيانات المنشأة</h1>
       </div>
       <p className="text-sm text-muted-foreground">
-        هذه البيانات تُستخدم في كل الفواتير المُرسلة لهيئة الزكاة والضريبة والجمارك (ZATCA). تأكد أنها مطابقة تمامًا لبيانات التسجيل في بوابة "فاتورة".
+        هذه البيانات تظهر على فواتير البيع وأوامر الشراء والتقارير الرسمية — تأكد من مطابقتها للسجل التجاري والبطاقة الضريبية المصرية.
       </p>
 
       <Card>
@@ -102,7 +102,7 @@ const AccCompanyProfilePage: React.FC = () => {
         <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Field label="الاسم القانوني (عربي) *"><Input value={form.legal_name_ar} onChange={e => set('legal_name_ar', e.target.value)} disabled={!canEdit} /></Field>
           <Field label="الاسم القانوني (إنجليزي)"><Input value={form.legal_name_en || ''} onChange={e => set('legal_name_en', e.target.value)} disabled={!canEdit} /></Field>
-          <Field label="الرقم الضريبي (15 رقم) *"><Input value={form.vat_number} onChange={e => set('vat_number', e.target.value)} disabled={!canEdit} placeholder="3xxxxxxxxxxxxx3" /></Field>
+          <Field label="الرقم الضريبي (البطاقة الضريبية) *"><Input value={form.vat_number} onChange={e => set('vat_number', e.target.value)} disabled={!canEdit} placeholder="123-456-789" /></Field>
           <Field label="رقم السجل التجاري *"><Input value={form.cr_number} onChange={e => set('cr_number', e.target.value)} disabled={!canEdit} /></Field>
           <Field label="رقم العنوان الوطني (Short)"><Input value={form.short_address || ''} onChange={e => set('short_address', e.target.value)} disabled={!canEdit} placeholder="RQYS3421" /></Field>
           <Field label="رقم إضافي"><Input value={form.additional_number || ''} onChange={e => set('additional_number', e.target.value)} disabled={!canEdit} /></Field>

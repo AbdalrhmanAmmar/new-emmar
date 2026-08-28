@@ -156,7 +156,7 @@ const AccCreditDebitNotesPage: React.FC = () => {
         <div>
           <h1 className="text-2xl font-bold">الإشعارات الدائنة والمدينة</h1>
           <p className="text-sm text-muted-foreground mt-1">
-            يجب أن يُصدَر كل إشعار مقابل فاتورة أصل — لا يمكن تعديل الفواتير بعد إرسالها للهيئة.
+            يجب أن يُصدَر كل إشعار مقابل فاتورة أصل — ولا يتجاوز مجموع الإشعارات الدائنة قيمة الفاتورة.
           </p>
         </div>
         <ExportPdfButton
@@ -239,7 +239,7 @@ const AccCreditDebitNotesPage: React.FC = () => {
           <div className="flex justify-end">
             <Button onClick={submit} disabled={!canEdit || !sourceInvoiceId || submitting}>
               {submitting ? <Loader2 className="h-4 w-4 animate-spin me-1" /> : <Send className="h-4 w-4 me-1" />}
-              إصدار + إرسال ZATCA
+              إصدار الإشعار
             </Button>
           </div>
         </CardContent>
