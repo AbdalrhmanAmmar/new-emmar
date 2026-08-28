@@ -206,12 +206,12 @@ const AccItemsPage: React.FC = () => {
                     </TableCell>
                     <TableCell>
                       <RowActions>
-                        <Button variant="ghost" size="sm" disabled={!canEdit}
+                        <Button variant="ghost" size="icon" title="تعديل" disabled={!canEdit}
                           onClick={() => { setForm(i); setEditingId(i.id); setOpen(true); }}>
-                          <Pencil className="h-4 w-4 me-2" /> تعديل
+                          <Pencil className="h-4 w-4" />
                         </Button>
-                        <Button variant="ghost" size="sm" disabled={!canEdit} onClick={() => remove(i)}>
-                          <Trash2 className="h-4 w-4 me-2 text-destructive" /> حذف
+                        <Button variant="ghost" size="icon" title="حذف" disabled={!canEdit} onClick={() => remove(i)}>
+                          <Trash2 className="h-4 w-4 text-destructive" />
                         </Button>
                       </RowActions>
                     </TableCell>
