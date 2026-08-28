@@ -29,7 +29,7 @@ const coaDefs = [
   acc("1", "الأصول", "asset", true),
   acc("11", "الأصول المتداولة", "asset", true, "1"),
   acc("1101", "النقدية بالصندوق", "asset", false, "11"),
-  acc("1102", "النقدية بالبنك - الراجحي", "asset", false, "11"),
+  acc("1102", "النقدية بالبنك - البنك الأهلي المصري", "asset", false, "11"),
   acc("1103", "النقدية بالبنك - الأهلي", "asset", false, "11"),
   acc("1201", "العملاء (المدينون)", "asset", false, "11"),
   acc("1202", "ضريبة القيمة المضافة - مدخلات", "asset", false, "11"),
@@ -229,10 +229,10 @@ function seed(): Tables {
   });
 
   const invDefs = [
-    ["INV-2001", "شركة الدلتا لمزارع الدواجن", "300000000000003", 300000, "b2b", "posted", d(2, 12)],
-    ["INV-2002", "مزارع النيل للألبان", "300000000000011", 82000, "b2b", "posted", d(3, 4)],
+    ["INV-2001", "شركة الدلتا لمزارع الدواجن", "512-345-678", 300000, "b2b", "posted", d(2, 12)],
+    ["INV-2002", "مزارع النيل للألبان", "478-902-116", 82000, "b2b", "posted", d(3, 4)],
     ["INV-2003", "عميل نقدي", "", 4300, "b2c", "posted", d(3, 18)],
-    ["INV-2004", "شركة الطرق السريعة", "300000000000029", 156000, "b2b", "draft", today()],
+    ["INV-2004", "شركة مصر للدواجن", "745-220-118", 156000, "b2b", "draft", today()],
   ] as const;
 
   const acc_sales_invoices: Row[] = [];
@@ -280,7 +280,7 @@ function seed(): Tables {
         id: uid(),
         legal_name_ar: "شركة الإنشاءات المتقدمة للمقاولات",
         legal_name_en: "Advanced Construction Co.",
-        vat_number: "300000000000003",
+        vat_number: "512-345-678",
         cr_number: "1010123456",
         short_address: "RRRD2929",
         building_number: "2929",
@@ -298,31 +298,31 @@ function seed(): Tables {
     acc_journal_entries,
     acc_ledger_lines,
     acc_customers: [
-      party("C-001", "شركة الدلتا لمزارع الدواجن", "300000000000003", "القاهرة", 120000, { customer_type: "company" }),
-      party("C-002", "مزارع النيل للألبان", "300000000000011", "الإسكندرية", 42000, { customer_type: "company" }),
-      party("C-003", "جمعية منتجي الدواجن", "300000000000037", "القاهرة", 0, { customer_type: "government" }),
+      party("C-001", "شركة الدلتا لمزارع الدواجن", "512-345-678", "القاهرة", 120000, { customer_type: "company" }),
+      party("C-002", "مزارع النيل للألبان", "478-902-116", "الإسكندرية", 42000, { customer_type: "company" }),
+      party("C-003", "جمعية منتجي الدواجن", "633-118-540", "القاهرة", 0, { customer_type: "government" }),
       party("C-004", "محمد عبد الرحمن", "", "طنطا", 3500, { customer_type: "individual" }),
     ],
     acc_vendors: [
-      party("V-001", "مصنع الشرق لاستخلاص الزيوت (كسب صويا)", "300000000000045", "القاهرة", 138000, {
+      party("V-001", "مصنع الشرق لاستخلاص الزيوت (كسب صويا)", "380-664-201", "القاهرة", 138000, {
         vendor_type: "company",
-        bank_name: "الراجحي",
+        bank_name: "البنك الأهلي المصري",
         bank_account: "1234567890",
-        iban: "SA0380000000608010167519",
+        iban: "EG380003000123456789012345",
       }),
-      party("V-002", "الوادي لتجارة الذرة الصفراء", "300000000000052", "الإسكندرية", 64000, { vendor_type: "company" }),
-      party("V-003", "النقل السريع للشحن", "300000000000060", "القاهرة", 12000, { vendor_type: "company" }),
+      party("V-002", "الوادي لتجارة الذرة الصفراء", "291-773-908", "الإسكندرية", 64000, { vendor_type: "company" }),
+      party("V-003", "النقل السريع للشحن", "845-110-332", "القاهرة", 12000, { vendor_type: "company" }),
     ],
     acc_bank_accounts: [
       {
         id: uid(),
         code: "BNK-001",
-        name_ar: "الراجحي - الحساب الجاري",
+        name_ar: "البنك الأهلي المصري - الحساب الجاري",
         name_en: "Alrajhi current",
         account_type: "bank",
-        bank_name: "مصرف الراجحي",
+        bank_name: "مصرف البنك الأهلي المصري",
         account_number: "1234567890",
-        iban: "SA0380000000608010167519",
+        iban: "EG380003000123456789012345",
         swift: "NBEGEGCX",
         currency: "EGP",
         opening_balance: 1500000,
@@ -554,7 +554,7 @@ function seed(): Tables {
         cheque_no: "CHQ-4410",
         direction: "outbound",
         party_name: "مصنع الشرق لاستخلاص الزيوت (كسب صويا)",
-        bank_name: "مصرف الراجحي",
+        bank_name: "مصرف البنك الأهلي المصري",
         issue_date: d(3, 5),
         due_date: d(4, 5),
         amount: 138000,
@@ -688,7 +688,7 @@ function seed(): Tables {
         id: uid(),
         guarantee_no: "LG-77120",
         guarantee_type: "performance",
-        bank_name: "مصرف الراجحي",
+        bank_name: "مصرف البنك الأهلي المصري",
         beneficiary: "جمعية منتجي الدواجن",
         amount: 600000,
         issue_date: d(1, 10),
@@ -791,7 +791,7 @@ function seed(): Tables {
       {
         id: uid(),
         provider: "Alrajhi API",
-        bank_name: "مصرف الراجحي",
+        bank_name: "مصرف البنك الأهلي المصري",
         status: "connected",
         last_sync_at: d(3, 20),
         notes: "مزامنة يومية 02:00",
