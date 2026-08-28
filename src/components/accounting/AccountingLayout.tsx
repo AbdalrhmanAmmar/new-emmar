@@ -28,8 +28,9 @@ import { resetDb } from "@/lib/mockDb";
 const groupIcons: Record<string, typeof Wallet> = {
   "الإعداد": Settings,
   "الأعلاف والمخزون": Boxes,
-  "المشتريات": ShoppingCart,
-  "المبيعات والفوترة": FileText,
+  "دورة المشتريات": ShoppingCart,
+  "دورة المبيعات": Truck,
+  "الفوترة السريعة": FileText,
   "الخزينة والبنوك": Landmark,
   "القيود والدفاتر": Banknote,
   "الأصول": Truck,
@@ -40,36 +41,39 @@ const groupIcons: Record<string, typeof Wallet> = {
 
 
 const WIDTH_KEY = "acc_sidebar_width";
-const OPEN_GROUPS_KEY = "acc_sidebar_groups";
 const MIN_W = 200;
 const MAX_W = 420;
+
+/** المجموعة التي تحتوي الصفحة الحالية. */
+function groupOfPath(pathname: string) {
+  const exact = accountingNav.find((g) => g.items.some((i) => i.path === pathname));
+  if (exact) return exact.title;
+  const prefixed = accountingNav.find((g) => g.items.some((i) => pathname.startsWith(`${i.path}/`)));
+  return prefixed?.title ?? null;
+}
 
 export function AccountingLayout({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [mobileOpen, setMobileOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const [width, setWidth] = useState(288);
-  const [openGroups, setOpenGroups] = useState<string[]>(accountingNav.map((g) => g.title));
+  // موديول واحد مفتوح فقط: موديول الصفحة الحالية
+  const [openGroup, setOpenGroup] = useState<string | null>(() => groupOfPath(pathname));
 
   // restore saved layout preferences after hydration
   useEffect(() => {
     const w = Number(window.localStorage.getItem(WIDTH_KEY));
     if (w >= MIN_W && w <= MAX_W) setWidth(w);
-    try {
-      const g = JSON.parse(window.localStorage.getItem(OPEN_GROUPS_KEY) ?? "null");
-      if (Array.isArray(g)) setOpenGroups(g as string[]);
-    } catch {
-      /* ignore */
-    }
   }, []);
 
-  const persistGroups = (next: string[]) => {
-    setOpenGroups(next);
-    window.localStorage.setItem(OPEN_GROUPS_KEY, JSON.stringify(next));
-  };
+  // عند تغيير الصفحة: افتح موديولها واقفل ما عداه
+  useEffect(() => {
+    const g = groupOfPath(pathname);
+    if (g) setOpenGroup(g);
+  }, [pathname]);
 
-  const toggleGroup = (title: string) =>
-    persistGroups(openGroups.includes(title) ? openGroups.filter((t) => t !== title) : [...openGroups, title]);
+  const toggleGroup = (title: string) => setOpenGroup((cur) => (cur === title ? null : title));
+
 
   const startResize = (e: React.MouseEvent) => {
     e.preventDefault();
