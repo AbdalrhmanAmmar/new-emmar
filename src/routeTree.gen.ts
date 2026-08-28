@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AccountingRouteImport } from './routes/accounting'
+import { Route as AccountingIndexRouteImport } from './routes/accounting/index'
 import { Route as AccountingAdvancesRouteImport } from './routes/accounting/advances'
 import { Route as AccountingAssetDisposalRouteImport } from './routes/accounting/asset-disposal'
 import { Route as AccountingBankAccountsRouteImport } from './routes/accounting/bank-accounts'
@@ -61,6 +62,11 @@ const AccountingRoute = AccountingRouteImport.update({
   id: '/accounting',
   path: '/accounting',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AccountingIndexRoute = AccountingIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AccountingRoute,
 } as any)
 const AccountingAdvancesRoute = AccountingAdvancesRouteImport.update({
   id: '/advances',
@@ -317,6 +323,7 @@ export interface FileRoutesByFullPath {
   '/accounting/wip-poc': typeof AccountingWipPocRoute
   '/accounting/zatca-onboarding': typeof AccountingZatcaOnboardingRoute
   '/accounting/zatca-submissions': typeof AccountingZatcaSubmissionsRoute
+  '/accounting/': typeof AccountingIndexRoute
   '/accounting/reports/ar-aging': typeof AccountingReportsArAgingRoute
   '/accounting/reports/balance-sheet': typeof AccountingReportsBalanceSheetRoute
   '/accounting/reports/profit-loss': typeof AccountingReportsProfitLossRoute
@@ -325,7 +332,6 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/accounting': typeof AccountingRouteWithChildren
   '/accounting/advances': typeof AccountingAdvancesRoute
   '/accounting/asset-disposal': typeof AccountingAssetDisposalRoute
   '/accounting/bank-accounts': typeof AccountingBankAccountsRoute
@@ -361,6 +367,7 @@ export interface FileRoutesByTo {
   '/accounting/wip-poc': typeof AccountingWipPocRoute
   '/accounting/zatca-onboarding': typeof AccountingZatcaOnboardingRoute
   '/accounting/zatca-submissions': typeof AccountingZatcaSubmissionsRoute
+  '/accounting': typeof AccountingIndexRoute
   '/accounting/reports/ar-aging': typeof AccountingReportsArAgingRoute
   '/accounting/reports/balance-sheet': typeof AccountingReportsBalanceSheetRoute
   '/accounting/reports/profit-loss': typeof AccountingReportsProfitLossRoute
@@ -406,6 +413,7 @@ export interface FileRoutesById {
   '/accounting/wip-poc': typeof AccountingWipPocRoute
   '/accounting/zatca-onboarding': typeof AccountingZatcaOnboardingRoute
   '/accounting/zatca-submissions': typeof AccountingZatcaSubmissionsRoute
+  '/accounting/': typeof AccountingIndexRoute
   '/accounting/reports/ar-aging': typeof AccountingReportsArAgingRoute
   '/accounting/reports/balance-sheet': typeof AccountingReportsBalanceSheetRoute
   '/accounting/reports/profit-loss': typeof AccountingReportsProfitLossRoute
@@ -452,6 +460,7 @@ export interface FileRouteTypes {
     | '/accounting/wip-poc'
     | '/accounting/zatca-onboarding'
     | '/accounting/zatca-submissions'
+    | '/accounting/'
     | '/accounting/reports/ar-aging'
     | '/accounting/reports/balance-sheet'
     | '/accounting/reports/profit-loss'
@@ -460,7 +469,6 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/accounting'
     | '/accounting/advances'
     | '/accounting/asset-disposal'
     | '/accounting/bank-accounts'
@@ -496,6 +504,7 @@ export interface FileRouteTypes {
     | '/accounting/wip-poc'
     | '/accounting/zatca-onboarding'
     | '/accounting/zatca-submissions'
+    | '/accounting'
     | '/accounting/reports/ar-aging'
     | '/accounting/reports/balance-sheet'
     | '/accounting/reports/profit-loss'
@@ -540,6 +549,7 @@ export interface FileRouteTypes {
     | '/accounting/wip-poc'
     | '/accounting/zatca-onboarding'
     | '/accounting/zatca-submissions'
+    | '/accounting/'
     | '/accounting/reports/ar-aging'
     | '/accounting/reports/balance-sheet'
     | '/accounting/reports/profit-loss'
@@ -567,6 +577,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/accounting'
       preLoaderRoute: typeof AccountingRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/accounting/': {
+      id: '/accounting/'
+      path: '/'
+      fullPath: '/accounting/'
+      preLoaderRoute: typeof AccountingIndexRouteImport
+      parentRoute: typeof AccountingRoute
     }
     '/accounting/advances': {
       id: '/accounting/advances'
@@ -887,6 +904,7 @@ interface AccountingRouteChildren {
   AccountingWipPocRoute: typeof AccountingWipPocRoute
   AccountingZatcaOnboardingRoute: typeof AccountingZatcaOnboardingRoute
   AccountingZatcaSubmissionsRoute: typeof AccountingZatcaSubmissionsRoute
+  AccountingIndexRoute: typeof AccountingIndexRoute
   AccountingReportsArAgingRoute: typeof AccountingReportsArAgingRoute
   AccountingReportsBalanceSheetRoute: typeof AccountingReportsBalanceSheetRoute
   AccountingReportsProfitLossRoute: typeof AccountingReportsProfitLossRoute
@@ -930,6 +948,7 @@ const AccountingRouteChildren: AccountingRouteChildren = {
   AccountingWipPocRoute: AccountingWipPocRoute,
   AccountingZatcaOnboardingRoute: AccountingZatcaOnboardingRoute,
   AccountingZatcaSubmissionsRoute: AccountingZatcaSubmissionsRoute,
+  AccountingIndexRoute: AccountingIndexRoute,
   AccountingReportsArAgingRoute: AccountingReportsArAgingRoute,
   AccountingReportsBalanceSheetRoute: AccountingReportsBalanceSheetRoute,
   AccountingReportsProfitLossRoute: AccountingReportsProfitLossRoute,
