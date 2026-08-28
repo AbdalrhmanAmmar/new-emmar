@@ -5,7 +5,9 @@
  * module uses, backed by the local mock database in `@/lib/mockDb`.
  * No network calls, no external backend.
  */
-import { getTable, writeTable, uid, type Row } from "@/lib/mockDb";
+import { getTable, writeTable, uid, findDuplicate, type Row } from "@/lib/mockDb";
+import { recordOperation } from "@/lib/offline";
+
 
 type Result<T = any> = { data: T; error: null | { message: string } };
 
