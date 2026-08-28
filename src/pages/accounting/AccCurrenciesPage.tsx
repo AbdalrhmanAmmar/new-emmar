@@ -15,6 +15,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Plus, Pencil, Trash2, Coins, Star } from 'lucide-react';
 import { toast } from 'sonner';
 import ExportPdfButton from '@/components/accounting/ExportPdfButton';
+import { RowActions } from "@/components/accounting/RowActions";
 
 interface Currency {
   id: string; code: string; name: string; symbol?: string | null;
@@ -167,10 +168,10 @@ const AccCurrenciesPage: React.FC = () => {
                         <TableCell>{c.is_base ? <Badge className="bg-amber-100 text-amber-700"><Star className="w-3 h-3 ml-1" /> أساسية</Badge> : '-'}</TableCell>
                         <TableCell>{c.is_active ? <Badge className="bg-emerald-100 text-emerald-700">نشطة</Badge> : <Badge variant="outline">موقوفة</Badge>}</TableCell>
                         <TableCell>
-                          <div className="flex gap-1">
+                          <RowActions>
                             {canEdit && <Button size="sm" variant="ghost" onClick={() => { setCForm(c); setCOpen(true); }}><Pencil className="w-3.5 h-3.5" /></Button>}
                             {canDelete && <Button size="sm" variant="ghost" onClick={() => delC(c)}><Trash2 className="w-3.5 h-3.5 text-destructive" /></Button>}
-                          </div>
+                          </RowActions>
                         </TableCell>
                       </TableRow>
                     ))}
@@ -213,10 +214,10 @@ const AccCurrenciesPage: React.FC = () => {
                         <TableCell className="text-xs">{r.source || '-'}</TableCell>
                         <TableCell className="text-xs text-muted-foreground">{r.notes || '-'}</TableCell>
                         <TableCell>
-                          <div className="flex gap-1">
+                          <RowActions>
                             {canEdit && <Button size="sm" variant="ghost" onClick={() => { setRForm(r); setROpen(true); }}><Pencil className="w-3.5 h-3.5" /></Button>}
                             {canDelete && <Button size="sm" variant="ghost" onClick={() => delR(r)}><Trash2 className="w-3.5 h-3.5 text-destructive" /></Button>}
-                          </div>
+                          </RowActions>
                         </TableCell>
                       </TableRow>
                     ))}

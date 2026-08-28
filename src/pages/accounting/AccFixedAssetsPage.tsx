@@ -13,6 +13,7 @@ import { Badge } from '@/components/ui/badge';
 import { Plus, Pencil, Trash2, Building2, Play } from 'lucide-react';
 import { toast } from 'sonner';
 import ExportPdfButton from '@/components/accounting/ExportPdfButton';
+import { RowActions } from "@/components/accounting/RowActions";
 
 interface Asset {
   id: string; code: string; name_ar: string; category?: string | null;
@@ -191,13 +192,13 @@ const AccFixedAssetsPage: React.FC = () => {
                         <TableCell className="text-right font-mono text-xs">{monthlyDepreciation(r).toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</TableCell>
                         <TableCell>{r.status === 'in_use' ? <Badge className="bg-emerald-100 text-emerald-700">{statusLabels[r.status]}</Badge> : <Badge variant="secondary">{statusLabels[r.status] || r.status}</Badge>}</TableCell>
                         <TableCell>
-                          <div className="flex gap-1">
+                          <RowActions>
                             {canEdit && r.status === 'in_use' && (
                               <Button size="sm" variant="ghost" title="ترحيل إهلاك الشهر" onClick={() => runDepreciation(r)}><Play className="w-3.5 h-3.5 text-emerald-600" /></Button>
                             )}
                             {canEdit && <Button size="sm" variant="ghost" onClick={() => openEdit(r)}><Pencil className="w-3.5 h-3.5" /></Button>}
                             {canDelete && <Button size="sm" variant="ghost" onClick={() => del(r)}><Trash2 className="w-3.5 h-3.5 text-destructive" /></Button>}
-                          </div>
+                          </RowActions>
                         </TableCell>
                       </TableRow>
                     );

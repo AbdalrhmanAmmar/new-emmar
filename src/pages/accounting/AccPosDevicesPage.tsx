@@ -13,6 +13,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { Plus, Pencil, Trash2, Monitor, Copy } from 'lucide-react';
 import { toast } from 'sonner';
+import { RowActions } from "@/components/accounting/RowActions";
 
 interface PosDevice {
   id: string;
@@ -152,10 +153,10 @@ const AccPosDevicesPage: React.FC = () => {
                   <TableCell>{d.is_active ? <Badge className="bg-emerald-100 text-emerald-700">نشط</Badge> : <Badge variant="destructive">موقوف</Badge>}</TableCell>
                   <TableCell>
                     {canEdit && (
-                      <div className="flex gap-1">
+                      <RowActions>
                         <Button size="sm" variant="ghost" onClick={() => openEdit(d)}><Pencil className="w-3.5 h-3.5" /></Button>
                         {canDelete && <Button size="sm" variant="ghost" onClick={() => handleDelete(d)}><Trash2 className="w-3.5 h-3.5 text-destructive" /></Button>}
-                      </div>
+                      </RowActions>
                     )}
                   </TableCell>
                 </TableRow>

@@ -15,6 +15,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Plus, CheckCircle2, Trash2, Wallet, Banknote, ArrowUpRight, ArrowDownLeft } from 'lucide-react';
 import { toast } from 'sonner';
 import ExportPdfButton from '@/components/accounting/ExportPdfButton';
+import { RowActions } from "@/components/accounting/RowActions";
 
 interface Payment {
   id: string; payment_no: string; payment_date: string; direction: 'inbound' | 'outbound';
@@ -209,14 +210,14 @@ const AccPaymentsPage: React.FC = () => {
                     <TableCell className="text-right font-semibold">{Number(p.amount).toLocaleString('ar-EG', { minimumFractionDigits: 2 })} {p.currency}</TableCell>
                     <TableCell><Badge className={statusColor[p.status]}>{statusAr[p.status]}</Badge></TableCell>
                     <TableCell>
-                      <div className="flex gap-1">
+                      <RowActions>
                         {canEdit && p.status === 'draft' && (
                           <>
                             <Button size="icon" variant="ghost" onClick={() => post(p)} title="اعتماد"><CheckCircle2 className="w-4 h-4 text-emerald-600" /></Button>
                             <Button size="icon" variant="ghost" onClick={() => del(p)}><Trash2 className="w-4 h-4 text-red-600" /></Button>
                           </>
                         )}
-                      </div>
+                      </RowActions>
                     </TableCell>
                   </TableRow>
                 ))}

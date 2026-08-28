@@ -13,6 +13,7 @@ import { Badge } from '@/components/ui/badge';
 import { ChevronDown, ChevronRight, Plus, Pencil, Trash2, BookOpen } from 'lucide-react';
 import { toast } from 'sonner';
 import ExportPdfButton from '@/components/accounting/ExportPdfButton';
+import { RowActions } from "@/components/accounting/RowActions";
 
 type AccountType = 'asset' | 'liability' | 'equity' | 'revenue' | 'expense';
 interface Account {
@@ -152,11 +153,11 @@ const AccChartOfAccountsPage: React.FC = () => {
           {!a.is_active && <Badge variant="destructive" className="text-xs">غير نشط</Badge>}
           {a.is_group && <Badge variant="secondary" className="text-xs">مجموعة</Badge>}
           {canEdit && (
-            <div className="flex gap-1">
+            <RowActions>
               <Button size="sm" variant="ghost" onClick={() => openNew(a)} title="إضافة حساب فرعي"><Plus className="w-3.5 h-3.5" /></Button>
               <Button size="sm" variant="ghost" onClick={() => openEdit(a)}><Pencil className="w-3.5 h-3.5" /></Button>
               {canDelete && <Button size="sm" variant="ghost" onClick={() => handleDelete(a)}><Trash2 className="w-3.5 h-3.5 text-destructive" /></Button>}
-            </div>
+            </RowActions>
           )}
         </div>
         {isOpen && children.map(c => renderNode(c, depth + 1))}

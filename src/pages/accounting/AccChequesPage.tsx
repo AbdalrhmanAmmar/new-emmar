@@ -13,6 +13,7 @@ import { Badge } from '@/components/ui/badge';
 import { Plus, Pencil, Trash2, ScrollText, CheckCircle2, XCircle, ArrowDownToLine } from 'lucide-react';
 import { toast } from 'sonner';
 import ExportPdfButton from '@/components/accounting/ExportPdfButton';
+import { RowActions } from "@/components/accounting/RowActions";
 
 interface Cheque {
   id: string; cheque_number: string; cheque_type: 'issued' | 'received';
@@ -201,7 +202,7 @@ const AccChequesPage: React.FC = () => {
                       <TableCell className="text-right font-mono">{Number(r.amount).toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</TableCell>
                       <TableCell><Badge className={statusColors[r.status]}>{statusLabels[r.status] || r.status}</Badge></TableCell>
                       <TableCell>
-                        <div className="flex gap-1">
+                        <RowActions>
                           {canEdit && ['pending', 'postdated', 'handed_over'].includes(r.status) && r.cheque_type === 'received' &&
                             <Button size="sm" variant="ghost" title="إيداع" onClick={() => setStatus(r, 'deposited')}><ArrowDownToLine className="w-3.5 h-3.5 text-blue-600" /></Button>}
                           {canEdit && ['pending', 'deposited', 'postdated', 'handed_over'].includes(r.status) &&
@@ -210,7 +211,7 @@ const AccChequesPage: React.FC = () => {
                             <Button size="sm" variant="ghost" title="ارتداد" onClick={() => { const reason = prompt('سبب الارتداد:'); if (reason) setStatus(r, 'bounced', { bounced_date: new Date().toISOString().slice(0, 10), bounce_reason: reason }); }}><XCircle className="w-3.5 h-3.5 text-red-600" /></Button>}
                           {canEdit && <Button size="sm" variant="ghost" onClick={() => openEdit(r)}><Pencil className="w-3.5 h-3.5" /></Button>}
                           {canDelete && <Button size="sm" variant="ghost" onClick={() => del(r)}><Trash2 className="w-3.5 h-3.5 text-destructive" /></Button>}
-                        </div>
+                        </RowActions>
                       </TableCell>
                     </TableRow>
                   ))}

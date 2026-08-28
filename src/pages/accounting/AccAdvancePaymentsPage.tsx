@@ -14,6 +14,7 @@ import { Badge } from '@/components/ui/badge';
 import { Plus, Pencil, Trash2, CircleDollarSign, MinusCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import ExportPdfButton from '@/components/accounting/ExportPdfButton';
+import { RowActions } from "@/components/accounting/RowActions";
 
 interface Advance {
   id: string; advance_number: string; advance_date: string;
@@ -196,11 +197,11 @@ const AccAdvancePaymentsPage: React.FC = () => {
                       <TableCell className="text-right font-mono font-bold text-primary">{fmt(r.remaining_amount)}</TableCell>
                       <TableCell><Badge className={statusColors[r.status]}>{statusLabels[r.status]}</Badge></TableCell>
                       <TableCell>
-                        <div className="flex gap-1">
+                        <RowActions>
                           {canEdit && r.status === 'active' && Number(r.remaining_amount || 0) > 0 && <Button size="sm" variant="ghost" title="استرداد جزئي" onClick={() => openRecover(r)}><MinusCircle className="w-3.5 h-3.5 text-orange-600" /></Button>}
                           {canEdit && <Button size="sm" variant="ghost" onClick={() => openEdit(r)}><Pencil className="w-3.5 h-3.5" /></Button>}
                           {canDelete && <Button size="sm" variant="ghost" onClick={() => del(r)}><Trash2 className="w-3.5 h-3.5 text-destructive" /></Button>}
-                        </div>
+                        </RowActions>
                       </TableCell>
                     </TableRow>
                   ))}

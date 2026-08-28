@@ -14,6 +14,7 @@ import { Badge } from '@/components/ui/badge';
 import { Plus, Pencil, Trash2, ShieldCheck, AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
 import ExportPdfButton from '@/components/accounting/ExportPdfButton';
+import { RowActions } from "@/components/accounting/RowActions";
 
 interface Guarantee {
   id: string; guarantee_number: string; issue_date: string; expiry_date: string;
@@ -202,7 +203,7 @@ const AccBankGuaranteesPage: React.FC = () => {
                         <TableCell className={`text-xs ${expiring ? 'font-bold text-amber-700' : ''}`}>{r.expiry_date}{expiring && <div className="text-[10px]">({dl} يوم)</div>}</TableCell>
                         <TableCell><Badge className={statusColors[r.status]}>{statusLabels[r.status]}</Badge></TableCell>
                         <TableCell>
-                          <div className="flex gap-1">
+                          <RowActions>
                             {canEdit && r.status === 'active' && (
                               <Select onValueChange={(v) => changeStatus(r, v)}>
                                 <SelectTrigger className="w-24 h-8 text-xs"><SelectValue placeholder="إجراء" /></SelectTrigger>
@@ -216,7 +217,7 @@ const AccBankGuaranteesPage: React.FC = () => {
                             )}
                             {canEdit && <Button size="sm" variant="ghost" onClick={() => openEdit(r)}><Pencil className="w-3.5 h-3.5" /></Button>}
                             {canDelete && <Button size="sm" variant="ghost" onClick={() => del(r)}><Trash2 className="w-3.5 h-3.5 text-destructive" /></Button>}
-                          </div>
+                          </RowActions>
                         </TableCell>
                       </TableRow>
                     );

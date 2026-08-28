@@ -16,6 +16,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Plus, Pencil, Trash2, Building2, Combine } from 'lucide-react';
 import { toast } from 'sonner';
 import ExportPdfButton from '@/components/accounting/ExportPdfButton';
+import { RowActions } from "@/components/accounting/RowActions";
 
 interface Entity {
   id: string; code: string; name: string; name_en?: string | null;
@@ -278,10 +279,10 @@ const AccConsolidationPage: React.FC = () => {
                       <TableCell className={`text-right font-mono font-bold ${Number(b.net_profit) >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>{fmt(b.net_profit)}</TableCell>
                       <TableCell><Badge className={statusColors[b.status]}>{statusLabels[b.status]}</Badge></TableCell>
                       <TableCell>
-                        <div className="flex gap-1">
+                        <RowActions>
                           {canEdit && <Button size="sm" variant="ghost" onClick={() => { setBForm(b); setBOpen(true); }}><Pencil className="w-3.5 h-3.5" /></Button>}
                           {canDelete && <Button size="sm" variant="ghost" onClick={() => delB(b)}><Trash2 className="w-3.5 h-3.5 text-destructive" /></Button>}
-                        </div>
+                        </RowActions>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -314,10 +315,10 @@ const AccConsolidationPage: React.FC = () => {
                       <TableCell>{e.is_consolidated ? <Badge className="bg-emerald-100 text-emerald-700">نعم</Badge> : <Badge variant="outline">لا</Badge>}</TableCell>
                       <TableCell>{e.is_active ? <Badge className="bg-blue-100 text-blue-700">نشطة</Badge> : <Badge variant="outline">موقوفة</Badge>}</TableCell>
                       <TableCell>
-                        <div className="flex gap-1">
+                        <RowActions>
                           {canEdit && <Button size="sm" variant="ghost" onClick={() => { setEForm(e); setEOpen(true); }}><Pencil className="w-3.5 h-3.5" /></Button>}
                           {canDelete && <Button size="sm" variant="ghost" onClick={() => delE(e)}><Trash2 className="w-3.5 h-3.5 text-destructive" /></Button>}
-                        </div>
+                        </RowActions>
                       </TableCell>
                     </TableRow>
                   ))}

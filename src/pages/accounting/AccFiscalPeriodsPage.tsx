@@ -13,6 +13,7 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Plus, Lock, Unlock, CalendarDays, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { RowActions } from "@/components/accounting/RowActions";
 
 interface Period {
   id: string; name: string; start_date: string; end_date: string; status: string;
@@ -143,7 +144,7 @@ const AccFiscalPeriodsPage: React.FC = () => {
                       <TableCell><Badge className={statusColor[p.status]}>{statusAr[p.status] ?? p.status}</Badge></TableCell>
                       <TableCell>{closing ? Number(closing.net_income).toLocaleString('ar-EG', { minimumFractionDigits: 2 }) : '—'}</TableCell>
                       <TableCell>
-                        <div className="flex gap-1">
+                        <RowActions>
                           {canEdit && p.status === 'open' && (
                             <>
                               <Button size="sm" variant="outline" onClick={() => runClosing(p)}>
@@ -157,7 +158,7 @@ const AccFiscalPeriodsPage: React.FC = () => {
                               <Unlock className="w-3 h-3 ml-1" /> إعادة فتح
                             </Button>
                           )}
-                        </div>
+                        </RowActions>
                       </TableCell>
                     </TableRow>
                   );

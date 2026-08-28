@@ -15,6 +15,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Plus, Trash2, ClipboardList, CheckCircle2, XCircle, Eye, Pencil } from 'lucide-react';
 import { toast } from 'sonner';
 import ExportPdfButton from '@/components/accounting/ExportPdfButton';
+import { RowActions } from "@/components/accounting/RowActions";
 
 interface Line { id?: string; line_no: number; account_id: string; account_code?: string; description?: string; debit: number; credit: number; }
 interface Entry {
@@ -245,7 +246,7 @@ const AccJournalEntriesPage: React.FC = () => {
                     <TableCell className="text-right">{Number(e.total_credit).toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</TableCell>
                     <TableCell><Badge className={statusColor[e.status]}>{statusAr[e.status] ?? e.status}</Badge></TableCell>
                     <TableCell>
-                      <div className="flex gap-1">
+                      <RowActions>
                         <Button size="icon" variant="ghost" onClick={() => setViewEntry(e)}><Eye className="w-4 h-4" /></Button>
                         {canEdit && e.status === 'draft' && (
                           <>
@@ -254,7 +255,7 @@ const AccJournalEntriesPage: React.FC = () => {
                             <Button size="icon" variant="ghost" onClick={() => deleteEntry(e)}><Trash2 className="w-4 h-4 text-red-600" /></Button>
                           </>
                         )}
-                      </div>
+                      </RowActions>
                     </TableCell>
                   </TableRow>
                 ))}
