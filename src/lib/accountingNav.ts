@@ -32,15 +32,34 @@ export const accountingNav: NavGroup[] = [
     ],
   },
   {
-    title: "المشتريات",
-    items: [{ path: "/accounting/purchase-orders", label: "أوامر الشراء والاستلام", file: "AccPurchaseOrdersPage" }],
+    title: "دورة المشتريات",
+    items: [
+      { path: "/accounting/rfqs", label: "1. طلبات عروض الأسعار", file: "AccRfqsPage" },
+      { path: "/accounting/purchase-orders", label: "2. أوامر الشراء", file: "AccPurchaseOrdersPage" },
+      { path: "/accounting/goods-receipts", label: "3. إذون الاستلام (بالميزان)", file: "AccGoodsReceiptsPage" },
+      { path: "/accounting/landed-costs", label: "مصاريف الوصول والنولون", file: "AccLandedCostsPage" },
+      { path: "/accounting/vendor-bills", label: "4. فواتير الموردين والسداد", file: "AccVendorBillsPage" },
+      { path: "/accounting/purchase-returns", label: "مرتجعات المشتريات", file: "AccPurchaseReturnsPage" },
+      { path: "/accounting/purchase-cycle", label: "متابعة دورة المشتريات", file: "AccPurchaseCyclePage" },
+    ],
   },
   {
-    title: "المبيعات والفوترة",
+    title: "دورة المبيعات",
+    items: [
+      { path: "/accounting/sales-quotations", label: "1. عروض أسعار العملاء", file: "AccSalesQuotationsPage" },
+      { path: "/accounting/sales-orders", label: "2. أوامر البيع", file: "AccSalesOrdersPage" },
+      { path: "/accounting/deliveries", label: "3. إذون التسليم", file: "AccDeliveriesPage" },
+      { path: "/accounting/sales-billing", label: "4. الفوترة والتحصيل", file: "AccSalesBillingPage" },
+      { path: "/accounting/sales-returns", label: "مرتجعات المبيعات", file: "AccSalesReturnsPage" },
+      { path: "/accounting/sales-cycle", label: "متابعة دورة المبيعات", file: "AccSalesCyclePage" },
+    ],
+  },
+  {
+    title: "الفوترة السريعة",
     items: [
       { path: "/accounting/sales-b2c", label: "فاتورة نقدية (تجزئة)", file: "AccSalesB2CPage" },
       { path: "/accounting/sales-b2b", label: "فاتورة ضريبية (مزارع/شركات)", file: "AccSalesB2BPage" },
-      { path: "/accounting/credit-debit-notes", label: "إشعارات دائنة/مدينة (مرتجعات)", file: "AccCreditDebitNotesPage" },
+      { path: "/accounting/credit-debit-notes", label: "إشعارات دائنة/مدينة", file: "AccCreditDebitNotesPage" },
       { path: "/accounting/invoice-balances", label: "أرصدة الفواتير", file: "AccInvoiceBalancesPage" },
     ],
   },
@@ -92,6 +111,7 @@ export const accountingNav: NavGroup[] = [
       { path: "/accounting/cost-centers", label: "مراكز التكلفة", file: "AccCostCentersPage" },
       { path: "/accounting/currencies", label: "العملات وأسعار الصرف", file: "AccCurrenciesPage" },
       { path: "/accounting/consolidation", label: "توحيد القوائم المالية", file: "AccConsolidationPage" },
+      { path: "/accounting/doc-settings", label: "إعدادات دورتي الشراء والبيع", file: "AccDocSettingsPage" },
     ],
   },
 ];
