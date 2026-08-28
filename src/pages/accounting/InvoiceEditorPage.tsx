@@ -194,7 +194,7 @@ const InvoiceEditorPage: React.FC<Props> = ({ mode, pageTitle, pageDescription }
           buyer_phone: buyer.phone || null,
           buyer_email: buyer.email || null,
           issue_date: issueDate, issue_time: issueTime,
-          currency: 'SAR',
+          currency: 'EGP',
           subtotal: totals.subtotal,
           discount_total: totals.discountTotal,
           vat_total: totals.vatTotal,
@@ -390,10 +390,10 @@ const InvoiceEditorPage: React.FC<Props> = ({ mode, pageTitle, pageDescription }
           </Table>
 
           <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
-            <div className="p-3 rounded bg-muted"><div className="text-muted-foreground">الصافي</div><div className="font-bold">{totals.subtotal.toFixed(2)} SAR</div></div>
-            <div className="p-3 rounded bg-muted"><div className="text-muted-foreground">إجمالي الخصم</div><div className="font-bold">{totals.discountTotal.toFixed(2)} SAR</div></div>
-            <div className="p-3 rounded bg-muted"><div className="text-muted-foreground">ضريبة القيمة المضافة</div><div className="font-bold">{totals.vatTotal.toFixed(2)} SAR</div></div>
-            <div className="p-3 rounded bg-primary/10 border border-primary/30"><div className="text-muted-foreground">الإجمالي المستحق</div><div className="font-bold text-primary">{totals.total.toFixed(2)} SAR</div></div>
+            <div className="p-3 rounded bg-muted"><div className="text-muted-foreground">الصافي</div><div className="font-bold">{totals.subtotal.toFixed(2)} EGP</div></div>
+            <div className="p-3 rounded bg-muted"><div className="text-muted-foreground">إجمالي الخصم</div><div className="font-bold">{totals.discountTotal.toFixed(2)} EGP</div></div>
+            <div className="p-3 rounded bg-muted"><div className="text-muted-foreground">ضريبة القيمة المضافة</div><div className="font-bold">{totals.vatTotal.toFixed(2)} EGP</div></div>
+            <div className="p-3 rounded bg-primary/10 border border-primary/30"><div className="text-muted-foreground">الإجمالي المستحق</div><div className="font-bold text-primary">{totals.total.toFixed(2)} EGP</div></div>
           </div>
 
           <div className="mt-4 flex gap-2 justify-end">

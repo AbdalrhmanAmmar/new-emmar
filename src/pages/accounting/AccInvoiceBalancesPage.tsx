@@ -8,14 +8,14 @@ interface Row {
 }
 const columns: ReportColumn<Row>[] = [
   { key: 'invoice_no', header: 'رقم الفاتورة' },
-  { key: 'issue_date', header: 'التاريخ', render: (r) => new Date(r.issue_date).toLocaleDateString('ar-EG') },
+  { key: 'issue_date', header: 'التاريخ', render: (r) => new Date(r.issue_date).toLocaleDateString('en-GB') },
   { key: 'buyer_name', header: 'العميل' },
   { key: 'invoice_total', header: 'إجمالي الفاتورة', isNumber: true, footerSum: true },
   { key: 'paid_amount', header: 'المسدّد', isNumber: true, footerSum: true },
   { key: 'balance_due', header: 'المتبقي', isNumber: true, footerSum: true,
     render: (r) => (
       <Badge variant={Number(r.balance_due) <= 0 ? 'secondary' : 'default'} className={Number(r.balance_due) <= 0 ? 'bg-emerald-100 text-emerald-800' : ''}>
-        {Number(r.balance_due).toLocaleString('ar-EG', { minimumFractionDigits: 2 })}
+        {Number(r.balance_due).toLocaleString('en-GB', { minimumFractionDigits: 2 })}
       </Badge>
     ) },
 ];

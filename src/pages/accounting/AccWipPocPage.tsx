@@ -38,7 +38,7 @@ const empty = (): Partial<WipRow> => ({
   cost_to_date: 0, billed_to_date: 0, collected_to_date: 0, status: 'draft',
 });
 
-const fmt = (n: number) => Number(n || 0).toLocaleString('ar-EG', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const fmt = (n: number) => Number(n || 0).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
 const calcDerived = (f: Partial<WipRow>) => {
   const contract = Number(f.contract_value || 0);

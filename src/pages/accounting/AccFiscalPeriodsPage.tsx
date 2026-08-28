@@ -139,10 +139,10 @@ const AccFiscalPeriodsPage: React.FC = () => {
                   return (
                     <TableRow key={p.id}>
                       <TableCell className="font-semibold">{p.name}</TableCell>
-                      <TableCell>{new Date(p.start_date).toLocaleDateString('ar-EG')}</TableCell>
-                      <TableCell>{new Date(p.end_date).toLocaleDateString('ar-EG')}</TableCell>
+                      <TableCell>{new Date(p.start_date).toLocaleDateString('en-GB')}</TableCell>
+                      <TableCell>{new Date(p.end_date).toLocaleDateString('en-GB')}</TableCell>
                       <TableCell><Badge className={statusColor[p.status]}>{statusAr[p.status] ?? p.status}</Badge></TableCell>
-                      <TableCell>{closing ? Number(closing.net_income).toLocaleString('ar-EG', { minimumFractionDigits: 2 }) : '—'}</TableCell>
+                      <TableCell>{closing ? Number(closing.net_income).toLocaleString('en-GB', { minimumFractionDigits: 2 }) : '—'}</TableCell>
                       <TableCell>
                         <RowActions>
                           {canEdit && p.status === 'open' && (

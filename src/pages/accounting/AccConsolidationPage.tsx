@@ -35,12 +35,12 @@ interface Balance {
   status: string;
 }
 
-const emptyE = (): Partial<Entity> => ({ code: '', name: '', base_currency: 'SAR', ownership_percent: 100, is_consolidated: true, is_active: true });
+const emptyE = (): Partial<Entity> => ({ code: '', name: '', base_currency: 'EGP', ownership_percent: 100, is_consolidated: true, is_active: true });
 const emptyB = (): Partial<Balance> => ({
   period_year: new Date().getFullYear(), period_month: new Date().getMonth() + 1,
   entity_id: '', entity_code: '', total_assets: 0, total_liabilities: 0, total_equity: 0,
   total_revenue: 0, total_expenses: 0, intercompany_eliminations: 0,
-  currency: 'SAR', fx_rate_to_base: 1, status: 'draft',
+  currency: 'EGP', fx_rate_to_base: 1, status: 'draft',
 });
 
 const statusLabels: Record<string, string> = { draft: 'مسودة', posted: 'مرحّل', consolidated: 'مُدمج' };
@@ -48,7 +48,7 @@ const statusColors: Record<string, string> = {
   draft: 'bg-slate-100 text-slate-700', posted: 'bg-blue-100 text-blue-700', consolidated: 'bg-emerald-100 text-emerald-700',
 };
 
-const fmt = (n: number) => Number(n || 0).toLocaleString('ar-EG', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const fmt = (n: number) => Number(n || 0).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
 const AccConsolidationPage: React.FC = () => {
   const { user, isAdmin, hasPermission } = useAuth();
@@ -334,7 +334,7 @@ const AccConsolidationPage: React.FC = () => {
           <DialogHeader><DialogTitle>{eForm.id ? `تعديل ${eForm.code}` : 'جهة جديدة'}</DialogTitle></DialogHeader>
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5"><Label>الكود *</Label><Input value={eForm.code || ''} onChange={e => setEForm({ ...eForm, code: e.target.value })} /></div>
-            <div className="space-y-1.5"><Label>العملة الأساسية</Label><Input value={eForm.base_currency || 'SAR'} onChange={e => setEForm({ ...eForm, base_currency: e.target.value.toUpperCase() })} /></div>
+            <div className="space-y-1.5"><Label>العملة الأساسية</Label><Input value={eForm.base_currency || 'EGP'} onChange={e => setEForm({ ...eForm, base_currency: e.target.value.toUpperCase() })} /></div>
             <div className="col-span-2 space-y-1.5"><Label>الاسم *</Label><Input value={eForm.name || ''} onChange={e => setEForm({ ...eForm, name: e.target.value })} /></div>
             <div className="col-span-2 space-y-1.5"><Label>الاسم الإنجليزي</Label><Input value={eForm.name_en || ''} onChange={e => setEForm({ ...eForm, name_en: e.target.value })} /></div>
             <div className="space-y-1.5"><Label>نسبة الملكية %</Label><Input type="number" step="0.01" value={eForm.ownership_percent ?? 100} onChange={e => setEForm({ ...eForm, ownership_percent: Number(e.target.value) })} /></div>
@@ -366,12 +366,12 @@ const AccConsolidationPage: React.FC = () => {
             <div className="space-y-1.5"><Label>السنة</Label><Input type="number" value={bForm.period_year ?? fYear} onChange={e => setBForm({ ...bForm, period_year: Number(e.target.value) })} /></div>
             <div className="space-y-1.5"><Label>الشهر</Label><Input type="number" min="1" max="12" value={bForm.period_month ?? fMonth} onChange={e => setBForm({ ...bForm, period_month: Number(e.target.value) })} /></div>
             <div className="space-y-1.5"><Label>الجهة *</Label>
-              <Select value={bForm.entity_id || ''} onValueChange={v => setBForm({ ...bForm, entity_id: v, entity_code: entMap.get(v)?.code || '', currency: entMap.get(v)?.base_currency || 'SAR' })}>
+              <Select value={bForm.entity_id || ''} onValueChange={v => setBForm({ ...bForm, entity_id: v, entity_code: entMap.get(v)?.code || '', currency: entMap.get(v)?.base_currency || 'EGP' })}>
                 <SelectTrigger><SelectValue placeholder="اختر" /></SelectTrigger>
                 <SelectContent>{entities.map(e => <SelectItem key={e.id} value={e.id}>{e.code} — {e.name}</SelectItem>)}</SelectContent>
               </Select>
             </div>
-            <div className="space-y-1.5"><Label>العملة</Label><Input value={bForm.currency || 'SAR'} onChange={e => setBForm({ ...bForm, currency: e.target.value.toUpperCase() })} /></div>
+            <div className="space-y-1.5"><Label>العملة</Label><Input value={bForm.currency || 'EGP'} onChange={e => setBForm({ ...bForm, currency: e.target.value.toUpperCase() })} /></div>
             <div className="space-y-1.5"><Label>سعر التحويل للعملة الأساسية</Label><Input type="number" step="0.000001" value={bForm.fx_rate_to_base ?? 1} onChange={e => setBForm({ ...bForm, fx_rate_to_base: Number(e.target.value) })} /></div>
             <div className="space-y-1.5"><Label>الحالة</Label>
               <Select value={bForm.status || 'draft'} onValueChange={v => setBForm({ ...bForm, status: v })}>

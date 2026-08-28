@@ -24,7 +24,7 @@ interface BankAccount {
 }
 
 const emptyForm = (): Partial<BankAccount> => ({
-  code: '', name_ar: '', account_type: 'bank', currency: 'SAR',
+  code: '', name_ar: '', account_type: 'bank', currency: 'EGP',
   opening_balance: 0, status: 'active',
 });
 
@@ -92,8 +92,8 @@ const AccBankAccountsPage: React.FC = () => {
           <ExportPdfButton
             title="البنوك والصناديق"
             headers={['الكود', 'الاسم', 'النوع', 'البنك', 'رقم الحساب / IBAN', 'العملة', 'الرصيد الافتتاحي', 'الحالة']}
-            rows={rows.map(r => [r.code, r.name_ar, typeLabels[r.account_type] || '-', r.bank_name || '-', r.iban || r.account_number || '-', r.currency, Number(r.opening_balance).toLocaleString('ar-EG', { minimumFractionDigits: 2 }), r.status === 'active' ? 'نشط' : 'موقوف'])}
-            kpis={[{ label: 'عدد الحسابات', value: rows.length }, { label: 'إجمالي الأرصدة', value: totalBalance.toLocaleString('ar-EG', { minimumFractionDigits: 2 }) }]}
+            rows={rows.map(r => [r.code, r.name_ar, typeLabels[r.account_type] || '-', r.bank_name || '-', r.iban || r.account_number || '-', r.currency, Number(r.opening_balance).toLocaleString('en-GB', { minimumFractionDigits: 2 }), r.status === 'active' ? 'نشط' : 'موقوف'])}
+            kpis={[{ label: 'عدد الحسابات', value: rows.length }, { label: 'إجمالي الأرصدة', value: totalBalance.toLocaleString('en-GB', { minimumFractionDigits: 2 }) }]}
           />
           {canEdit && <Button onClick={openNew}><Plus className="w-4 h-4 ml-2" /> حساب جديد</Button>}
         </div>
@@ -102,7 +102,7 @@ const AccBankAccountsPage: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">إجمالي الحسابات</div><div className="text-2xl font-bold">{rows.length}</div></CardContent></Card>
         <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">حسابات بنكية</div><div className="text-2xl font-bold">{rows.filter(r => r.account_type === 'bank').length}</div></CardContent></Card>
-        <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">إجمالي الأرصدة الافتتاحية (SAR)</div><div className="text-2xl font-bold text-primary">{totalBalance.toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</div></CardContent></Card>
+        <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">إجمالي الأرصدة الافتتاحية (EGP)</div><div className="text-2xl font-bold text-primary">{totalBalance.toLocaleString('en-GB', { minimumFractionDigits: 2 })}</div></CardContent></Card>
       </div>
 
       <Card>
@@ -128,7 +128,7 @@ const AccBankAccountsPage: React.FC = () => {
                       <TableCell>{r.bank_name || '-'}</TableCell>
                       <TableCell className="font-mono text-xs">{r.iban || r.account_number || '-'}</TableCell>
                       <TableCell>{r.currency}</TableCell>
-                      <TableCell className="text-right font-mono">{Number(r.opening_balance).toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</TableCell>
+                      <TableCell className="text-right font-mono">{Number(r.opening_balance).toLocaleString('en-GB', { minimumFractionDigits: 2 })}</TableCell>
                       <TableCell>{r.status === 'active' ? <Badge className="bg-emerald-100 text-emerald-700">نشط</Badge> : <Badge variant="secondary">موقوف</Badge>}</TableCell>
                       <TableCell>
                         {canEdit && (
@@ -161,7 +161,7 @@ const AccBankAccountsPage: React.FC = () => {
             <div className="space-y-1.5"><Label>رقم الحساب</Label><Input value={form.account_number || ''} onChange={e => setForm({ ...form, account_number: e.target.value })} /></div>
             <div className="space-y-1.5"><Label>IBAN</Label><Input value={form.iban || ''} onChange={e => setForm({ ...form, iban: e.target.value })} /></div>
             <div className="space-y-1.5"><Label>SWIFT</Label><Input value={form.swift || ''} onChange={e => setForm({ ...form, swift: e.target.value })} /></div>
-            <div className="space-y-1.5"><Label>العملة</Label><Input value={form.currency || 'SAR'} onChange={e => setForm({ ...form, currency: e.target.value })} /></div>
+            <div className="space-y-1.5"><Label>العملة</Label><Input value={form.currency || 'EGP'} onChange={e => setForm({ ...form, currency: e.target.value })} /></div>
             <div className="space-y-1.5"><Label>الرصيد الافتتاحي</Label><Input type="number" step="0.01" value={form.opening_balance ?? 0} onChange={e => setForm({ ...form, opening_balance: Number(e.target.value) })} /></div>
             <div className="space-y-1.5"><Label>تاريخ الرصيد الافتتاحي</Label><Input type="date" value={form.opening_date || ''} onChange={e => setForm({ ...form, opening_date: e.target.value })} /></div>
             <div className="space-y-1.5"><Label>كود حساب دفتر الأستاذ (اختياري)</Label><Input value={form.gl_account_code || ''} onChange={e => setForm({ ...form, gl_account_code: e.target.value })} /></div>

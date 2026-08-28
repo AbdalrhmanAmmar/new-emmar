@@ -93,7 +93,7 @@ const AccChartOfAccountsPage: React.FC = () => {
       code: '', name_ar: '', name_en: '',
       account_type: parent?.account_type || 'asset',
       parent_id: parent?.id || null,
-      is_group: false, is_active: true, currency: 'SAR', vat_applicable: false,
+      is_group: false, is_active: true, currency: 'EGP', vat_applicable: false,
     });
     setDialogOpen(true);
   };
@@ -107,7 +107,7 @@ const AccChartOfAccountsPage: React.FC = () => {
         code: editing.code, name_ar: editing.name_ar, name_en: editing.name_en,
         account_type: editing.account_type, parent_id: editing.parent_id || null,
         is_group: editing.is_group, is_active: editing.is_active,
-        currency: editing.currency || 'SAR', vat_applicable: editing.vat_applicable, notes: editing.notes,
+        currency: editing.currency || 'EGP', vat_applicable: editing.vat_applicable, notes: editing.notes,
       };
       const { error } = editing.id
         ? await (supabase as any).from('acc_chart_of_accounts').update(payload).eq('id', editing.id)
@@ -236,7 +236,7 @@ const AccChartOfAccountsPage: React.FC = () => {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="space-y-1.5"><Label>العملة</Label><Input value={editing.currency || 'SAR'} onChange={e => setEditing({ ...editing, currency: e.target.value })} /></div>
+              <div className="space-y-1.5"><Label>العملة</Label><Input value={editing.currency || 'EGP'} onChange={e => setEditing({ ...editing, currency: e.target.value })} /></div>
               <div className="flex items-center gap-3"><Switch checked={!!editing.is_group} onCheckedChange={v => setEditing({ ...editing, is_group: v })} /><Label>حساب تجميعي (لا يقبل قيود مباشرة)</Label></div>
               <div className="flex items-center gap-3"><Switch checked={!!editing.vat_applicable} onCheckedChange={v => setEditing({ ...editing, vat_applicable: v })} /><Label>خاضع للضريبة (VAT)</Label></div>
               <div className="flex items-center gap-3"><Switch checked={editing.is_active !== false} onCheckedChange={v => setEditing({ ...editing, is_active: v })} /><Label>نشط</Label></div>

@@ -38,7 +38,7 @@ const emptyLine = (n = 1): Line => ({ line_no: n, quantity: 1, unit_price: 0, am
 const emptyClaim = (): Partial<Claim> => ({
   claim_number: `EXP-${Date.now().toString().slice(-6)}`,
   claim_date: new Date().toISOString().slice(0, 10),
-  claimant_type: 'employee', claimant_name: '', currency: 'SAR', status: 'draft',
+  claimant_type: 'employee', claimant_name: '', currency: 'EGP', status: 'draft',
   total_amount: 0, vat_amount: 0, net_amount: 0,
 });
 
@@ -161,8 +161,8 @@ const AccExpenseClaimsPage: React.FC = () => {
           <ExportPdfButton
             title="مطالبات المصروفات المستحقة"
             headers={['الرقم', 'التاريخ', 'مقدم الطلب', 'النوع', 'الوصف', 'الإجمالي', 'الضريبة', 'الصافي', 'الحالة']}
-            rows={rows.map(r => [r.claim_number, r.claim_date, r.claimant_name, claimantLabels[r.claimant_type] || '-', r.description || '-', Number(r.total_amount).toLocaleString('ar-EG', { minimumFractionDigits: 2 }), Number(r.vat_amount).toLocaleString('ar-EG', { minimumFractionDigits: 2 }), Number(r.net_amount).toLocaleString('ar-EG', { minimumFractionDigits: 2 }), statusLabels[r.status] || r.status])}
-            kpis={[{ label: 'العدد', value: totals.count }, { label: 'قيد الاعتماد', value: totals.pending }, { label: 'مدفوعة', value: totals.paid }, { label: 'الإجمالي', value: totals.totalAmount.toLocaleString('ar-EG', { minimumFractionDigits: 2 }) }]}
+            rows={rows.map(r => [r.claim_number, r.claim_date, r.claimant_name, claimantLabels[r.claimant_type] || '-', r.description || '-', Number(r.total_amount).toLocaleString('en-GB', { minimumFractionDigits: 2 }), Number(r.vat_amount).toLocaleString('en-GB', { minimumFractionDigits: 2 }), Number(r.net_amount).toLocaleString('en-GB', { minimumFractionDigits: 2 }), statusLabels[r.status] || r.status])}
+            kpis={[{ label: 'العدد', value: totals.count }, { label: 'قيد الاعتماد', value: totals.pending }, { label: 'مدفوعة', value: totals.paid }, { label: 'الإجمالي', value: totals.totalAmount.toLocaleString('en-GB', { minimumFractionDigits: 2 }) }]}
           />
           {canEdit && <Button onClick={openNew}><Plus className="w-4 h-4 ml-2" /> مطالبة جديدة</Button>}
         </div>
@@ -172,7 +172,7 @@ const AccExpenseClaimsPage: React.FC = () => {
         <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">إجمالي المطالبات</div><div className="text-2xl font-bold">{totals.count}</div></CardContent></Card>
         <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">قيد الاعتماد</div><div className="text-2xl font-bold text-blue-600">{totals.pending}</div></CardContent></Card>
         <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">مدفوعة</div><div className="text-2xl font-bold text-emerald-600">{totals.paid}</div></CardContent></Card>
-        <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">إجمالي الصافي</div><div className="text-lg font-bold text-primary">{totals.totalAmount.toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</div></CardContent></Card>
+        <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">إجمالي الصافي</div><div className="text-lg font-bold text-primary">{totals.totalAmount.toLocaleString('en-GB', { minimumFractionDigits: 2 })}</div></CardContent></Card>
       </div>
 
       <Card>
@@ -196,9 +196,9 @@ const AccExpenseClaimsPage: React.FC = () => {
                       <TableCell className="font-mono text-xs">{r.claim_date}</TableCell>
                       <TableCell className="font-medium">{r.claimant_name}</TableCell>
                       <TableCell><Badge variant="outline">{claimantLabels[r.claimant_type]}</Badge></TableCell>
-                      <TableCell className="text-right font-mono">{Number(r.total_amount).toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</TableCell>
-                      <TableCell className="text-right font-mono text-xs">{Number(r.vat_amount).toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</TableCell>
-                      <TableCell className="text-right font-mono font-bold">{Number(r.net_amount).toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</TableCell>
+                      <TableCell className="text-right font-mono">{Number(r.total_amount).toLocaleString('en-GB', { minimumFractionDigits: 2 })}</TableCell>
+                      <TableCell className="text-right font-mono text-xs">{Number(r.vat_amount).toLocaleString('en-GB', { minimumFractionDigits: 2 })}</TableCell>
+                      <TableCell className="text-right font-mono font-bold">{Number(r.net_amount).toLocaleString('en-GB', { minimumFractionDigits: 2 })}</TableCell>
                       <TableCell><Badge className={statusColors[r.status]}>{statusLabels[r.status] || r.status}</Badge></TableCell>
                       <TableCell>
                         <RowActions>
@@ -232,7 +232,7 @@ const AccExpenseClaimsPage: React.FC = () => {
               </Select>
             </div>
             <div className="md:col-span-2 space-y-1.5"><Label>اسم مقدم الطلب *</Label><Input value={form.claimant_name || ''} onChange={e => setForm({ ...form, claimant_name: e.target.value })} /></div>
-            <div className="space-y-1.5"><Label>العملة</Label><Input value={form.currency || 'SAR'} onChange={e => setForm({ ...form, currency: e.target.value })} /></div>
+            <div className="space-y-1.5"><Label>العملة</Label><Input value={form.currency || 'EGP'} onChange={e => setForm({ ...form, currency: e.target.value })} /></div>
             <div className="md:col-span-3 space-y-1.5"><Label>الوصف</Label><Input value={form.description || ''} onChange={e => setForm({ ...form, description: e.target.value })} /></div>
           </div>
 
@@ -265,10 +265,10 @@ const AccExpenseClaimsPage: React.FC = () => {
                       <TableCell><Input value={l.gl_account_code || ''} onChange={e => updateLine(i, { gl_account_code: e.target.value })} className="h-8 font-mono text-xs" /></TableCell>
                       <TableCell><Input type="number" step="0.001" value={l.quantity} onChange={e => updateLine(i, { quantity: Number(e.target.value) })} className="h-8 text-right" /></TableCell>
                       <TableCell><Input type="number" step="0.01" value={l.unit_price} onChange={e => updateLine(i, { unit_price: Number(e.target.value) })} className="h-8 text-right" /></TableCell>
-                      <TableCell className="font-mono text-right text-xs">{l.amount.toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</TableCell>
+                      <TableCell className="font-mono text-right text-xs">{l.amount.toLocaleString('en-GB', { minimumFractionDigits: 2 })}</TableCell>
                       <TableCell><Input type="number" step="0.01" value={l.vat_rate} onChange={e => updateLine(i, { vat_rate: Number(e.target.value) })} className="h-8 text-right" /></TableCell>
-                      <TableCell className="font-mono text-right text-xs">{l.vat_amount.toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</TableCell>
-                      <TableCell className="font-mono text-right text-xs font-bold">{l.total.toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</TableCell>
+                      <TableCell className="font-mono text-right text-xs">{l.vat_amount.toLocaleString('en-GB', { minimumFractionDigits: 2 })}</TableCell>
+                      <TableCell className="font-mono text-right text-xs font-bold">{l.total.toLocaleString('en-GB', { minimumFractionDigits: 2 })}</TableCell>
                       <TableCell><Button size="sm" variant="ghost" onClick={() => removeLine(i)}><Trash2 className="w-3.5 h-3.5 text-destructive" /></Button></TableCell>
                     </TableRow>
                   ))}
@@ -276,9 +276,9 @@ const AccExpenseClaimsPage: React.FC = () => {
               </Table>
             </div>
             <div className="mt-3 flex justify-end gap-6 text-sm">
-              <div>الإجمالي: <span className="font-mono font-bold">{totalsPreview.total_amount.toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</span></div>
-              <div>الضريبة: <span className="font-mono font-bold">{totalsPreview.vat_amount.toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</span></div>
-              <div className="text-primary">الصافي: <span className="font-mono font-bold text-lg">{totalsPreview.net_amount.toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</span></div>
+              <div>الإجمالي: <span className="font-mono font-bold">{totalsPreview.total_amount.toLocaleString('en-GB', { minimumFractionDigits: 2 })}</span></div>
+              <div>الضريبة: <span className="font-mono font-bold">{totalsPreview.vat_amount.toLocaleString('en-GB', { minimumFractionDigits: 2 })}</span></div>
+              <div className="text-primary">الصافي: <span className="font-mono font-bold text-lg">{totalsPreview.net_amount.toLocaleString('en-GB', { minimumFractionDigits: 2 })}</span></div>
             </div>
           </div>
 

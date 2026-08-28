@@ -43,7 +43,7 @@ const empty = (): Partial<Row> => ({
   issues_qty: 0, issues_value: 0, valuation_method: 'WAC', status: 'draft',
 });
 
-const fmt = (n: number) => Number(n || 0).toLocaleString('ar-EG', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const fmt = (n: number) => Number(n || 0).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
 const calc = (f: Partial<Row>) => {
   const oq = Number(f.opening_qty || 0), ov = Number(f.opening_value || 0);

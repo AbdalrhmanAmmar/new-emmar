@@ -130,7 +130,7 @@ export default function AccZatcaOnboardingPage() {
                       : <Badge variant="outline">لا يوجد</Badge>}
                   </TableCell>
                   <TableCell className="text-xs">
-                    {d.certificate_expiry ? new Date(d.certificate_expiry).toLocaleDateString('ar-SA') : '—'}
+                    {d.certificate_expiry ? new Date(d.certificate_expiry).toLocaleDateString('en-GB') : '—'}
                   </TableCell>
                   <TableCell className="space-x-1 rtl:space-x-reverse">
                     <Button size="sm" variant="outline" onClick={() => open(d, 'compliance')}>

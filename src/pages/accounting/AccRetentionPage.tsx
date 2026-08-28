@@ -41,10 +41,10 @@ const statusColors: Record<string, string> = {
 const emptyEntry = (): Partial<Entry> => ({
   entry_number: `RET-${Date.now().toString().slice(-6)}`,
   entry_date: new Date().toISOString().slice(0, 10),
-  entry_type: 'withheld', project_name: '', amount: 0, currency: 'SAR', status: 'active',
+  entry_type: 'withheld', project_name: '', amount: 0, currency: 'EGP', status: 'active',
 });
 
-const fmt = (n: number) => Number(n || 0).toLocaleString('ar-EG', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const fmt = (n: number) => Number(n || 0).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
 const AccRetentionPage: React.FC = () => {
   const { user, isAdmin, hasPermission } = useAuth();
@@ -200,7 +200,7 @@ const AccRetentionPage: React.FC = () => {
             <div className="space-y-1.5 md:col-span-2"><Label>المشروع *</Label><Input value={form.project_name || ''} onChange={e => setForm({ ...form, project_name: e.target.value })} /></div>
             <div className="space-y-1.5"><Label>العميل</Label><Input value={form.customer_name || ''} onChange={e => setForm({ ...form, customer_name: e.target.value })} /></div>
             <div className="space-y-1.5"><Label>المبلغ *</Label><Input type="number" step="0.01" value={form.amount ?? 0} onChange={e => setForm({ ...form, amount: Number(e.target.value) })} /></div>
-            <div className="space-y-1.5"><Label>العملة</Label><Input value={form.currency || 'SAR'} onChange={e => setForm({ ...form, currency: e.target.value })} /></div>
+            <div className="space-y-1.5"><Label>العملة</Label><Input value={form.currency || 'EGP'} onChange={e => setForm({ ...form, currency: e.target.value })} /></div>
             <div className="space-y-1.5"><Label>الحالة</Label>
               <Select value={form.status || 'active'} onValueChange={v => setForm({ ...form, status: v })}>
                 <SelectTrigger><SelectValue /></SelectTrigger>

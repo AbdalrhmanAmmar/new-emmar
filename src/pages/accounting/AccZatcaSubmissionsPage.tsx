@@ -73,7 +73,7 @@ export default function AccZatcaSubmissionsPage() {
           title="سجل إرسالات ZATCA"
           headers={['التاريخ', 'النوع', 'البيئة', 'الحالة', 'HTTP', 'المدة (ms)', 'UUID', 'رسالة الخطأ']}
           rows={rows.map(r => [
-            new Date(r.created_at).toLocaleString('ar-EG'),
+            new Date(r.created_at).toLocaleString('en-GB'),
             typeLabels[r.submission_type] ?? r.submission_type,
             r.environment,
             r.status,
@@ -141,7 +141,7 @@ export default function AccZatcaSubmissionsPage() {
               )}
               {rows.map((s) => (
                 <TableRow key={s.id}>
-                  <TableCell className="text-xs">{new Date(s.created_at).toLocaleString('ar-SA')}</TableCell>
+                  <TableCell className="text-xs">{new Date(s.created_at).toLocaleString('en-GB')}</TableCell>
                   <TableCell>{typeLabels[s.submission_type] || s.submission_type}</TableCell>
                   <TableCell><Badge variant="outline">{s.environment}</Badge></TableCell>
                   <TableCell className="font-mono text-xs">{s.http_status ?? '—'}</TableCell>

@@ -194,15 +194,15 @@ const AccCreditDebitNotesPage: React.FC = () => {
           rows={notes.map(n => [
             n.note_number,
             n.note_type === 'credit' ? 'دائن' : 'مدين',
-            new Date(n.issue_date).toLocaleDateString('ar-EG'),
-            Number(n.total).toLocaleString('ar-EG', { minimumFractionDigits: 2 }),
-            Number(n.vat_total).toLocaleString('ar-EG', { minimumFractionDigits: 2 }),
+            new Date(n.issue_date).toLocaleDateString('en-GB'),
+            Number(n.total).toLocaleString('en-GB', { minimumFractionDigits: 2 }),
+            Number(n.vat_total).toLocaleString('en-GB', { minimumFractionDigits: 2 }),
             n.reason_text,
             n.status,
           ])}
           kpis={[
             { label: 'عدد الإشعارات', value: notes.length },
-            { label: 'إجمالي المبالغ', value: notes.reduce((s, n) => s + Number(n.total || 0), 0).toLocaleString('ar-EG', { minimumFractionDigits: 2 }) },
+            { label: 'إجمالي المبالغ', value: notes.reduce((s, n) => s + Number(n.total || 0), 0).toLocaleString('en-GB', { minimumFractionDigits: 2 }) },
           ]}
         />
       </div>
@@ -229,7 +229,7 @@ const AccCreditDebitNotesPage: React.FC = () => {
                 <SelectContent className="max-h-72">
                   {invoices.map((i) => (
                     <SelectItem key={i.id} value={i.id}>
-                      {i.invoice_number} — {Number(i.total).toFixed(2)} SAR — {i.buyer_name ?? 'B2C'}
+                      {i.invoice_number} — {Number(i.total).toFixed(2)} EGP — {i.buyer_name ?? 'B2C'}
                     </SelectItem>
                   ))}
                 </SelectContent>

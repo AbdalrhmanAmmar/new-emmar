@@ -51,7 +51,7 @@ const AccBudgetsPage: React.FC = () => {
   const canApprove = isAdmin || hasPermission('accounting_budgets' as any, 'approve' as any);
 
   const [open, setOpen] = useState(false);
-  const [form, setForm] = useState<Partial<Budget>>({ name: '', fiscal_year: new Date().getFullYear(), budget_type: 'annual', currency: 'SAR', status: 'draft', total_amount: 0 });
+  const [form, setForm] = useState<Partial<Budget>>({ name: '', fiscal_year: new Date().getFullYear(), budget_type: 'annual', currency: 'EGP', status: 'draft', total_amount: 0 });
   const [lines, setLines] = useState<BudgetLine[]>([emptyLine()]);
 
   const { data: rows = [], isLoading } = useQuery({
@@ -71,7 +71,7 @@ const AccBudgetsPage: React.FC = () => {
   }), [rows]);
 
   const openNew = () => {
-    setForm({ name: '', fiscal_year: new Date().getFullYear(), budget_type: 'annual', currency: 'SAR', status: 'draft', total_amount: 0 });
+    setForm({ name: '', fiscal_year: new Date().getFullYear(), budget_type: 'annual', currency: 'EGP', status: 'draft', total_amount: 0 });
     setLines([emptyLine()]);
     setOpen(true);
   };
@@ -158,8 +158,8 @@ const AccBudgetsPage: React.FC = () => {
           <ExportPdfButton
             title="الموازنات التقديرية"
             headers={['الاسم', 'السنة المالية', 'النوع', 'العملة', 'الإجمالي التقديري', 'الحالة']}
-            rows={rows.map(r => [r.name, r.fiscal_year, typeLabels[r.budget_type], r.currency, Number(r.total_amount).toLocaleString('ar-EG', { minimumFractionDigits: 2 }), statusLabels[r.status]])}
-            kpis={[{ label: 'العدد', value: totals.count }, { label: 'معتمدة', value: totals.approved }, { label: 'إجمالي هذا العام', value: totals.current.toLocaleString('ar-EG', { minimumFractionDigits: 2 }) }]}
+            rows={rows.map(r => [r.name, r.fiscal_year, typeLabels[r.budget_type], r.currency, Number(r.total_amount).toLocaleString('en-GB', { minimumFractionDigits: 2 }), statusLabels[r.status]])}
+            kpis={[{ label: 'العدد', value: totals.count }, { label: 'معتمدة', value: totals.approved }, { label: 'إجمالي هذا العام', value: totals.current.toLocaleString('en-GB', { minimumFractionDigits: 2 }) }]}
           />
           {canEdit && <Button onClick={openNew}><Plus className="w-4 h-4 ml-2" /> موازنة جديدة</Button>}
         </div>
@@ -168,7 +168,7 @@ const AccBudgetsPage: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">إجمالي الموازنات</div><div className="text-2xl font-bold">{totals.count}</div></CardContent></Card>
         <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">معتمدة / مُقفلة</div><div className="text-2xl font-bold text-emerald-600">{totals.approved}</div></CardContent></Card>
-        <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">إجمالي موازنات {new Date().getFullYear()}</div><div className="text-lg font-bold text-primary">{totals.current.toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</div></CardContent></Card>
+        <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">إجمالي موازنات {new Date().getFullYear()}</div><div className="text-lg font-bold text-primary">{totals.current.toLocaleString('en-GB', { minimumFractionDigits: 2 })}</div></CardContent></Card>
       </div>
 
       <Card>
@@ -190,7 +190,7 @@ const AccBudgetsPage: React.FC = () => {
                       <TableCell>{r.fiscal_year}</TableCell>
                       <TableCell><Badge variant="outline">{typeLabels[r.budget_type]}</Badge></TableCell>
                       <TableCell>{r.currency}</TableCell>
-                      <TableCell className="text-right font-mono font-bold">{Number(r.total_amount).toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</TableCell>
+                      <TableCell className="text-right font-mono font-bold">{Number(r.total_amount).toLocaleString('en-GB', { minimumFractionDigits: 2 })}</TableCell>
                       <TableCell><Badge className={statusColors[r.status]}>{statusLabels[r.status]}</Badge></TableCell>
                       <TableCell>
                         <RowActions>
@@ -220,7 +220,7 @@ const AccBudgetsPage: React.FC = () => {
                 <SelectContent>{Object.entries(typeLabels).map(([k, v]) => <SelectItem key={k} value={k}>{v}</SelectItem>)}</SelectContent>
               </Select>
             </div>
-            <div className="space-y-1.5"><Label>العملة</Label><Input value={form.currency || 'SAR'} onChange={e => setForm({ ...form, currency: e.target.value })} /></div>
+            <div className="space-y-1.5"><Label>العملة</Label><Input value={form.currency || 'EGP'} onChange={e => setForm({ ...form, currency: e.target.value })} /></div>
             <div className="md:col-span-3 space-y-1.5"><Label>ملاحظات</Label><Input value={form.notes || ''} onChange={e => setForm({ ...form, notes: e.target.value })} /></div>
           </div>
 
@@ -246,7 +246,7 @@ const AccBudgetsPage: React.FC = () => {
                       {monthKeys.map(k => (
                         <TableCell key={k}><Input type="number" step="0.01" value={l[k]} onChange={e => updateLine(i, { [k]: Number(e.target.value) } as any)} className="h-8 text-right font-mono text-xs" /></TableCell>
                       ))}
-                      <TableCell className="text-right font-mono font-bold">{Number(l.annual_total).toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</TableCell>
+                      <TableCell className="text-right font-mono font-bold">{Number(l.annual_total).toLocaleString('en-GB', { minimumFractionDigits: 2 })}</TableCell>
                       <TableCell>
                         <div className="flex flex-col gap-1">
                           <Button size="sm" variant="ghost" title="توزيع بالتساوي" onClick={() => distributeEvenly(i)}>÷12</Button>
@@ -258,7 +258,7 @@ const AccBudgetsPage: React.FC = () => {
                 </TableBody>
               </Table>
             </div>
-            <div className="mt-3 flex justify-end text-primary text-lg font-bold">الإجمالي الكلي: <span className="font-mono mr-2">{grandTotal.toLocaleString('ar-EG', { minimumFractionDigits: 2 })}</span></div>
+            <div className="mt-3 flex justify-end text-primary text-lg font-bold">الإجمالي الكلي: <span className="font-mono mr-2">{grandTotal.toLocaleString('en-GB', { minimumFractionDigits: 2 })}</span></div>
             <p className="text-xs text-muted-foreground mt-1">💡 أدخل الإجمالي السنوي في العمود الأخير من مبدئي، ثم اضغط «÷12» لتوزيعه بالتساوي على الشهور، أو أدخل قيم كل شهر يدويًا.</p>
           </div>
 

@@ -46,7 +46,7 @@ const empty = (): Partial<Disposal> => ({
   original_cost: 0, accumulated_depreciation: 0, disposal_proceeds: 0, status: 'draft',
 });
 
-const fmt = (n: number) => Number(n || 0).toLocaleString('ar-EG', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const fmt = (n: number) => Number(n || 0).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
 const calc = (f: Partial<Disposal>) => {
   const cost = Number(f.original_cost || 0);

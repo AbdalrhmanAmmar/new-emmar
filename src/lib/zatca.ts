@@ -159,7 +159,7 @@ export interface UblInvoiceParams {
  * Actual signing (XAdES + Certificate) MUST happen server-side.
  */
 export function buildUblInvoiceXml(p: UblInvoiceParams): string {
-  const cur = p.currency ?? 'SAR';
+  const cur = p.currency ?? 'EGP';
   const subtypeName = p.isSimplified
     ? (p.invoiceTypeCode === '388' ? '0200000' : '0200000')
     : (p.invoiceTypeCode === '388' ? '0100000' : '0100000');
