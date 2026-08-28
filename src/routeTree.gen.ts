@@ -10,33 +10,573 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AccountingAdvancesRouteImport } from './routes/accounting/advances'
+import { Route as AccountingAssetDisposalRouteImport } from './routes/accounting/asset-disposal'
+import { Route as AccountingBankAccountsRouteImport } from './routes/accounting/bank-accounts'
+import { Route as AccountingBankFeedsRouteImport } from './routes/accounting/bank-feeds'
+import { Route as AccountingBankGuaranteesRouteImport } from './routes/accounting/bank-guarantees'
+import { Route as AccountingBankReconciliationRouteImport } from './routes/accounting/bank-reconciliation'
+import { Route as AccountingBudgetsRouteImport } from './routes/accounting/budgets'
+import { Route as AccountingChartOfAccountsRouteImport } from './routes/accounting/chart-of-accounts'
+import { Route as AccountingChequesRouteImport } from './routes/accounting/cheques'
+import { Route as AccountingCompanyProfileRouteImport } from './routes/accounting/company-profile'
+import { Route as AccountingConsolidationRouteImport } from './routes/accounting/consolidation'
+import { Route as AccountingCostCentersRouteImport } from './routes/accounting/cost-centers'
+import { Route as AccountingCreditDebitNotesRouteImport } from './routes/accounting/credit-debit-notes'
+import { Route as AccountingCurrenciesRouteImport } from './routes/accounting/currencies'
+import { Route as AccountingCustomersRouteImport } from './routes/accounting/customers'
+import { Route as AccountingExpenseClaimsRouteImport } from './routes/accounting/expense-claims'
+import { Route as AccountingFiscalPeriodsRouteImport } from './routes/accounting/fiscal-periods'
+import { Route as AccountingFixedAssetsRouteImport } from './routes/accounting/fixed-assets'
+import { Route as AccountingGeneralLedgerRouteImport } from './routes/accounting/general-ledger'
+import { Route as AccountingInventoryValuationRouteImport } from './routes/accounting/inventory-valuation'
+import { Route as AccountingInvoiceBalancesRouteImport } from './routes/accounting/invoice-balances'
+import { Route as AccountingJournalEntriesRouteImport } from './routes/accounting/journal-entries'
+import { Route as AccountingPaymentsRouteImport } from './routes/accounting/payments'
+import { Route as AccountingPayrollJournalRouteImport } from './routes/accounting/payroll-journal'
+import { Route as AccountingPeriodClosingRouteImport } from './routes/accounting/period-closing'
+import { Route as AccountingPosDevicesRouteImport } from './routes/accounting/pos-devices'
+import { Route as AccountingProgressBillingRouteImport } from './routes/accounting/progress-billing'
+import { Route as AccountingProjectPnlRouteImport } from './routes/accounting/project-pnl'
+import { Route as AccountingRetentionRouteImport } from './routes/accounting/retention'
+import { Route as AccountingSalesB2bRouteImport } from './routes/accounting/sales-b2b'
+import { Route as AccountingSalesB2cRouteImport } from './routes/accounting/sales-b2c'
+import { Route as AccountingVendorsRouteImport } from './routes/accounting/vendors'
+import { Route as AccountingWipPocRouteImport } from './routes/accounting/wip-poc'
+import { Route as AccountingZatcaOnboardingRouteImport } from './routes/accounting/zatca-onboarding'
+import { Route as AccountingZatcaSubmissionsRouteImport } from './routes/accounting/zatca-submissions'
+import { Route as AccountingReportsArAgingRouteImport } from './routes/accounting/reports/ar-aging'
+import { Route as AccountingReportsBalanceSheetRouteImport } from './routes/accounting/reports/balance-sheet'
+import { Route as AccountingReportsProfitLossRouteImport } from './routes/accounting/reports/profit-loss'
+import { Route as AccountingReportsTrialBalanceRouteImport } from './routes/accounting/reports/trial-balance'
+import { Route as AccountingReportsVatRouteImport } from './routes/accounting/reports/vat'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AccountingAdvancesRoute = AccountingAdvancesRouteImport.update({
+  id: '/accounting/advances',
+  path: '/accounting/advances',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountingAssetDisposalRoute = AccountingAssetDisposalRouteImport.update({
+  id: '/accounting/asset-disposal',
+  path: '/accounting/asset-disposal',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountingBankAccountsRoute = AccountingBankAccountsRouteImport.update({
+  id: '/accounting/bank-accounts',
+  path: '/accounting/bank-accounts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountingBankFeedsRoute = AccountingBankFeedsRouteImport.update({
+  id: '/accounting/bank-feeds',
+  path: '/accounting/bank-feeds',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountingBankGuaranteesRoute =
+  AccountingBankGuaranteesRouteImport.update({
+    id: '/accounting/bank-guarantees',
+    path: '/accounting/bank-guarantees',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const AccountingBankReconciliationRoute =
+  AccountingBankReconciliationRouteImport.update({
+    id: '/accounting/bank-reconciliation',
+    path: '/accounting/bank-reconciliation',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const AccountingBudgetsRoute = AccountingBudgetsRouteImport.update({
+  id: '/accounting/budgets',
+  path: '/accounting/budgets',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountingChartOfAccountsRoute =
+  AccountingChartOfAccountsRouteImport.update({
+    id: '/accounting/chart-of-accounts',
+    path: '/accounting/chart-of-accounts',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const AccountingChequesRoute = AccountingChequesRouteImport.update({
+  id: '/accounting/cheques',
+  path: '/accounting/cheques',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountingCompanyProfileRoute =
+  AccountingCompanyProfileRouteImport.update({
+    id: '/accounting/company-profile',
+    path: '/accounting/company-profile',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const AccountingConsolidationRoute = AccountingConsolidationRouteImport.update({
+  id: '/accounting/consolidation',
+  path: '/accounting/consolidation',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountingCostCentersRoute = AccountingCostCentersRouteImport.update({
+  id: '/accounting/cost-centers',
+  path: '/accounting/cost-centers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountingCreditDebitNotesRoute =
+  AccountingCreditDebitNotesRouteImport.update({
+    id: '/accounting/credit-debit-notes',
+    path: '/accounting/credit-debit-notes',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const AccountingCurrenciesRoute = AccountingCurrenciesRouteImport.update({
+  id: '/accounting/currencies',
+  path: '/accounting/currencies',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountingCustomersRoute = AccountingCustomersRouteImport.update({
+  id: '/accounting/customers',
+  path: '/accounting/customers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountingExpenseClaimsRoute = AccountingExpenseClaimsRouteImport.update({
+  id: '/accounting/expense-claims',
+  path: '/accounting/expense-claims',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountingFiscalPeriodsRoute = AccountingFiscalPeriodsRouteImport.update({
+  id: '/accounting/fiscal-periods',
+  path: '/accounting/fiscal-periods',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountingFixedAssetsRoute = AccountingFixedAssetsRouteImport.update({
+  id: '/accounting/fixed-assets',
+  path: '/accounting/fixed-assets',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountingGeneralLedgerRoute = AccountingGeneralLedgerRouteImport.update({
+  id: '/accounting/general-ledger',
+  path: '/accounting/general-ledger',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountingInventoryValuationRoute =
+  AccountingInventoryValuationRouteImport.update({
+    id: '/accounting/inventory-valuation',
+    path: '/accounting/inventory-valuation',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const AccountingInvoiceBalancesRoute =
+  AccountingInvoiceBalancesRouteImport.update({
+    id: '/accounting/invoice-balances',
+    path: '/accounting/invoice-balances',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const AccountingJournalEntriesRoute =
+  AccountingJournalEntriesRouteImport.update({
+    id: '/accounting/journal-entries',
+    path: '/accounting/journal-entries',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const AccountingPaymentsRoute = AccountingPaymentsRouteImport.update({
+  id: '/accounting/payments',
+  path: '/accounting/payments',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountingPayrollJournalRoute =
+  AccountingPayrollJournalRouteImport.update({
+    id: '/accounting/payroll-journal',
+    path: '/accounting/payroll-journal',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const AccountingPeriodClosingRoute = AccountingPeriodClosingRouteImport.update({
+  id: '/accounting/period-closing',
+  path: '/accounting/period-closing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountingPosDevicesRoute = AccountingPosDevicesRouteImport.update({
+  id: '/accounting/pos-devices',
+  path: '/accounting/pos-devices',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountingProgressBillingRoute =
+  AccountingProgressBillingRouteImport.update({
+    id: '/accounting/progress-billing',
+    path: '/accounting/progress-billing',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const AccountingProjectPnlRoute = AccountingProjectPnlRouteImport.update({
+  id: '/accounting/project-pnl',
+  path: '/accounting/project-pnl',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountingRetentionRoute = AccountingRetentionRouteImport.update({
+  id: '/accounting/retention',
+  path: '/accounting/retention',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountingSalesB2bRoute = AccountingSalesB2bRouteImport.update({
+  id: '/accounting/sales-b2b',
+  path: '/accounting/sales-b2b',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountingSalesB2cRoute = AccountingSalesB2cRouteImport.update({
+  id: '/accounting/sales-b2c',
+  path: '/accounting/sales-b2c',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountingVendorsRoute = AccountingVendorsRouteImport.update({
+  id: '/accounting/vendors',
+  path: '/accounting/vendors',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountingWipPocRoute = AccountingWipPocRouteImport.update({
+  id: '/accounting/wip-poc',
+  path: '/accounting/wip-poc',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountingZatcaOnboardingRoute =
+  AccountingZatcaOnboardingRouteImport.update({
+    id: '/accounting/zatca-onboarding',
+    path: '/accounting/zatca-onboarding',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const AccountingZatcaSubmissionsRoute =
+  AccountingZatcaSubmissionsRouteImport.update({
+    id: '/accounting/zatca-submissions',
+    path: '/accounting/zatca-submissions',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const AccountingReportsArAgingRoute =
+  AccountingReportsArAgingRouteImport.update({
+    id: '/accounting/reports/ar-aging',
+    path: '/accounting/reports/ar-aging',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const AccountingReportsBalanceSheetRoute =
+  AccountingReportsBalanceSheetRouteImport.update({
+    id: '/accounting/reports/balance-sheet',
+    path: '/accounting/reports/balance-sheet',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const AccountingReportsProfitLossRoute =
+  AccountingReportsProfitLossRouteImport.update({
+    id: '/accounting/reports/profit-loss',
+    path: '/accounting/reports/profit-loss',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const AccountingReportsTrialBalanceRoute =
+  AccountingReportsTrialBalanceRouteImport.update({
+    id: '/accounting/reports/trial-balance',
+    path: '/accounting/reports/trial-balance',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const AccountingReportsVatRoute = AccountingReportsVatRouteImport.update({
+  id: '/accounting/reports/vat',
+  path: '/accounting/reports/vat',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/accounting/advances': typeof AccountingAdvancesRoute
+  '/accounting/asset-disposal': typeof AccountingAssetDisposalRoute
+  '/accounting/bank-accounts': typeof AccountingBankAccountsRoute
+  '/accounting/bank-feeds': typeof AccountingBankFeedsRoute
+  '/accounting/bank-guarantees': typeof AccountingBankGuaranteesRoute
+  '/accounting/bank-reconciliation': typeof AccountingBankReconciliationRoute
+  '/accounting/budgets': typeof AccountingBudgetsRoute
+  '/accounting/chart-of-accounts': typeof AccountingChartOfAccountsRoute
+  '/accounting/cheques': typeof AccountingChequesRoute
+  '/accounting/company-profile': typeof AccountingCompanyProfileRoute
+  '/accounting/consolidation': typeof AccountingConsolidationRoute
+  '/accounting/cost-centers': typeof AccountingCostCentersRoute
+  '/accounting/credit-debit-notes': typeof AccountingCreditDebitNotesRoute
+  '/accounting/currencies': typeof AccountingCurrenciesRoute
+  '/accounting/customers': typeof AccountingCustomersRoute
+  '/accounting/expense-claims': typeof AccountingExpenseClaimsRoute
+  '/accounting/fiscal-periods': typeof AccountingFiscalPeriodsRoute
+  '/accounting/fixed-assets': typeof AccountingFixedAssetsRoute
+  '/accounting/general-ledger': typeof AccountingGeneralLedgerRoute
+  '/accounting/inventory-valuation': typeof AccountingInventoryValuationRoute
+  '/accounting/invoice-balances': typeof AccountingInvoiceBalancesRoute
+  '/accounting/journal-entries': typeof AccountingJournalEntriesRoute
+  '/accounting/payments': typeof AccountingPaymentsRoute
+  '/accounting/payroll-journal': typeof AccountingPayrollJournalRoute
+  '/accounting/period-closing': typeof AccountingPeriodClosingRoute
+  '/accounting/pos-devices': typeof AccountingPosDevicesRoute
+  '/accounting/progress-billing': typeof AccountingProgressBillingRoute
+  '/accounting/project-pnl': typeof AccountingProjectPnlRoute
+  '/accounting/retention': typeof AccountingRetentionRoute
+  '/accounting/sales-b2b': typeof AccountingSalesB2bRoute
+  '/accounting/sales-b2c': typeof AccountingSalesB2cRoute
+  '/accounting/vendors': typeof AccountingVendorsRoute
+  '/accounting/wip-poc': typeof AccountingWipPocRoute
+  '/accounting/zatca-onboarding': typeof AccountingZatcaOnboardingRoute
+  '/accounting/zatca-submissions': typeof AccountingZatcaSubmissionsRoute
+  '/accounting/reports/ar-aging': typeof AccountingReportsArAgingRoute
+  '/accounting/reports/balance-sheet': typeof AccountingReportsBalanceSheetRoute
+  '/accounting/reports/profit-loss': typeof AccountingReportsProfitLossRoute
+  '/accounting/reports/trial-balance': typeof AccountingReportsTrialBalanceRoute
+  '/accounting/reports/vat': typeof AccountingReportsVatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/accounting/advances': typeof AccountingAdvancesRoute
+  '/accounting/asset-disposal': typeof AccountingAssetDisposalRoute
+  '/accounting/bank-accounts': typeof AccountingBankAccountsRoute
+  '/accounting/bank-feeds': typeof AccountingBankFeedsRoute
+  '/accounting/bank-guarantees': typeof AccountingBankGuaranteesRoute
+  '/accounting/bank-reconciliation': typeof AccountingBankReconciliationRoute
+  '/accounting/budgets': typeof AccountingBudgetsRoute
+  '/accounting/chart-of-accounts': typeof AccountingChartOfAccountsRoute
+  '/accounting/cheques': typeof AccountingChequesRoute
+  '/accounting/company-profile': typeof AccountingCompanyProfileRoute
+  '/accounting/consolidation': typeof AccountingConsolidationRoute
+  '/accounting/cost-centers': typeof AccountingCostCentersRoute
+  '/accounting/credit-debit-notes': typeof AccountingCreditDebitNotesRoute
+  '/accounting/currencies': typeof AccountingCurrenciesRoute
+  '/accounting/customers': typeof AccountingCustomersRoute
+  '/accounting/expense-claims': typeof AccountingExpenseClaimsRoute
+  '/accounting/fiscal-periods': typeof AccountingFiscalPeriodsRoute
+  '/accounting/fixed-assets': typeof AccountingFixedAssetsRoute
+  '/accounting/general-ledger': typeof AccountingGeneralLedgerRoute
+  '/accounting/inventory-valuation': typeof AccountingInventoryValuationRoute
+  '/accounting/invoice-balances': typeof AccountingInvoiceBalancesRoute
+  '/accounting/journal-entries': typeof AccountingJournalEntriesRoute
+  '/accounting/payments': typeof AccountingPaymentsRoute
+  '/accounting/payroll-journal': typeof AccountingPayrollJournalRoute
+  '/accounting/period-closing': typeof AccountingPeriodClosingRoute
+  '/accounting/pos-devices': typeof AccountingPosDevicesRoute
+  '/accounting/progress-billing': typeof AccountingProgressBillingRoute
+  '/accounting/project-pnl': typeof AccountingProjectPnlRoute
+  '/accounting/retention': typeof AccountingRetentionRoute
+  '/accounting/sales-b2b': typeof AccountingSalesB2bRoute
+  '/accounting/sales-b2c': typeof AccountingSalesB2cRoute
+  '/accounting/vendors': typeof AccountingVendorsRoute
+  '/accounting/wip-poc': typeof AccountingWipPocRoute
+  '/accounting/zatca-onboarding': typeof AccountingZatcaOnboardingRoute
+  '/accounting/zatca-submissions': typeof AccountingZatcaSubmissionsRoute
+  '/accounting/reports/ar-aging': typeof AccountingReportsArAgingRoute
+  '/accounting/reports/balance-sheet': typeof AccountingReportsBalanceSheetRoute
+  '/accounting/reports/profit-loss': typeof AccountingReportsProfitLossRoute
+  '/accounting/reports/trial-balance': typeof AccountingReportsTrialBalanceRoute
+  '/accounting/reports/vat': typeof AccountingReportsVatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/accounting/advances': typeof AccountingAdvancesRoute
+  '/accounting/asset-disposal': typeof AccountingAssetDisposalRoute
+  '/accounting/bank-accounts': typeof AccountingBankAccountsRoute
+  '/accounting/bank-feeds': typeof AccountingBankFeedsRoute
+  '/accounting/bank-guarantees': typeof AccountingBankGuaranteesRoute
+  '/accounting/bank-reconciliation': typeof AccountingBankReconciliationRoute
+  '/accounting/budgets': typeof AccountingBudgetsRoute
+  '/accounting/chart-of-accounts': typeof AccountingChartOfAccountsRoute
+  '/accounting/cheques': typeof AccountingChequesRoute
+  '/accounting/company-profile': typeof AccountingCompanyProfileRoute
+  '/accounting/consolidation': typeof AccountingConsolidationRoute
+  '/accounting/cost-centers': typeof AccountingCostCentersRoute
+  '/accounting/credit-debit-notes': typeof AccountingCreditDebitNotesRoute
+  '/accounting/currencies': typeof AccountingCurrenciesRoute
+  '/accounting/customers': typeof AccountingCustomersRoute
+  '/accounting/expense-claims': typeof AccountingExpenseClaimsRoute
+  '/accounting/fiscal-periods': typeof AccountingFiscalPeriodsRoute
+  '/accounting/fixed-assets': typeof AccountingFixedAssetsRoute
+  '/accounting/general-ledger': typeof AccountingGeneralLedgerRoute
+  '/accounting/inventory-valuation': typeof AccountingInventoryValuationRoute
+  '/accounting/invoice-balances': typeof AccountingInvoiceBalancesRoute
+  '/accounting/journal-entries': typeof AccountingJournalEntriesRoute
+  '/accounting/payments': typeof AccountingPaymentsRoute
+  '/accounting/payroll-journal': typeof AccountingPayrollJournalRoute
+  '/accounting/period-closing': typeof AccountingPeriodClosingRoute
+  '/accounting/pos-devices': typeof AccountingPosDevicesRoute
+  '/accounting/progress-billing': typeof AccountingProgressBillingRoute
+  '/accounting/project-pnl': typeof AccountingProjectPnlRoute
+  '/accounting/retention': typeof AccountingRetentionRoute
+  '/accounting/sales-b2b': typeof AccountingSalesB2bRoute
+  '/accounting/sales-b2c': typeof AccountingSalesB2cRoute
+  '/accounting/vendors': typeof AccountingVendorsRoute
+  '/accounting/wip-poc': typeof AccountingWipPocRoute
+  '/accounting/zatca-onboarding': typeof AccountingZatcaOnboardingRoute
+  '/accounting/zatca-submissions': typeof AccountingZatcaSubmissionsRoute
+  '/accounting/reports/ar-aging': typeof AccountingReportsArAgingRoute
+  '/accounting/reports/balance-sheet': typeof AccountingReportsBalanceSheetRoute
+  '/accounting/reports/profit-loss': typeof AccountingReportsProfitLossRoute
+  '/accounting/reports/trial-balance': typeof AccountingReportsTrialBalanceRoute
+  '/accounting/reports/vat': typeof AccountingReportsVatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/accounting/advances'
+    | '/accounting/asset-disposal'
+    | '/accounting/bank-accounts'
+    | '/accounting/bank-feeds'
+    | '/accounting/bank-guarantees'
+    | '/accounting/bank-reconciliation'
+    | '/accounting/budgets'
+    | '/accounting/chart-of-accounts'
+    | '/accounting/cheques'
+    | '/accounting/company-profile'
+    | '/accounting/consolidation'
+    | '/accounting/cost-centers'
+    | '/accounting/credit-debit-notes'
+    | '/accounting/currencies'
+    | '/accounting/customers'
+    | '/accounting/expense-claims'
+    | '/accounting/fiscal-periods'
+    | '/accounting/fixed-assets'
+    | '/accounting/general-ledger'
+    | '/accounting/inventory-valuation'
+    | '/accounting/invoice-balances'
+    | '/accounting/journal-entries'
+    | '/accounting/payments'
+    | '/accounting/payroll-journal'
+    | '/accounting/period-closing'
+    | '/accounting/pos-devices'
+    | '/accounting/progress-billing'
+    | '/accounting/project-pnl'
+    | '/accounting/retention'
+    | '/accounting/sales-b2b'
+    | '/accounting/sales-b2c'
+    | '/accounting/vendors'
+    | '/accounting/wip-poc'
+    | '/accounting/zatca-onboarding'
+    | '/accounting/zatca-submissions'
+    | '/accounting/reports/ar-aging'
+    | '/accounting/reports/balance-sheet'
+    | '/accounting/reports/profit-loss'
+    | '/accounting/reports/trial-balance'
+    | '/accounting/reports/vat'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/accounting/advances'
+    | '/accounting/asset-disposal'
+    | '/accounting/bank-accounts'
+    | '/accounting/bank-feeds'
+    | '/accounting/bank-guarantees'
+    | '/accounting/bank-reconciliation'
+    | '/accounting/budgets'
+    | '/accounting/chart-of-accounts'
+    | '/accounting/cheques'
+    | '/accounting/company-profile'
+    | '/accounting/consolidation'
+    | '/accounting/cost-centers'
+    | '/accounting/credit-debit-notes'
+    | '/accounting/currencies'
+    | '/accounting/customers'
+    | '/accounting/expense-claims'
+    | '/accounting/fiscal-periods'
+    | '/accounting/fixed-assets'
+    | '/accounting/general-ledger'
+    | '/accounting/inventory-valuation'
+    | '/accounting/invoice-balances'
+    | '/accounting/journal-entries'
+    | '/accounting/payments'
+    | '/accounting/payroll-journal'
+    | '/accounting/period-closing'
+    | '/accounting/pos-devices'
+    | '/accounting/progress-billing'
+    | '/accounting/project-pnl'
+    | '/accounting/retention'
+    | '/accounting/sales-b2b'
+    | '/accounting/sales-b2c'
+    | '/accounting/vendors'
+    | '/accounting/wip-poc'
+    | '/accounting/zatca-onboarding'
+    | '/accounting/zatca-submissions'
+    | '/accounting/reports/ar-aging'
+    | '/accounting/reports/balance-sheet'
+    | '/accounting/reports/profit-loss'
+    | '/accounting/reports/trial-balance'
+    | '/accounting/reports/vat'
+  id:
+    | '__root__'
+    | '/'
+    | '/accounting/advances'
+    | '/accounting/asset-disposal'
+    | '/accounting/bank-accounts'
+    | '/accounting/bank-feeds'
+    | '/accounting/bank-guarantees'
+    | '/accounting/bank-reconciliation'
+    | '/accounting/budgets'
+    | '/accounting/chart-of-accounts'
+    | '/accounting/cheques'
+    | '/accounting/company-profile'
+    | '/accounting/consolidation'
+    | '/accounting/cost-centers'
+    | '/accounting/credit-debit-notes'
+    | '/accounting/currencies'
+    | '/accounting/customers'
+    | '/accounting/expense-claims'
+    | '/accounting/fiscal-periods'
+    | '/accounting/fixed-assets'
+    | '/accounting/general-ledger'
+    | '/accounting/inventory-valuation'
+    | '/accounting/invoice-balances'
+    | '/accounting/journal-entries'
+    | '/accounting/payments'
+    | '/accounting/payroll-journal'
+    | '/accounting/period-closing'
+    | '/accounting/pos-devices'
+    | '/accounting/progress-billing'
+    | '/accounting/project-pnl'
+    | '/accounting/retention'
+    | '/accounting/sales-b2b'
+    | '/accounting/sales-b2c'
+    | '/accounting/vendors'
+    | '/accounting/wip-poc'
+    | '/accounting/zatca-onboarding'
+    | '/accounting/zatca-submissions'
+    | '/accounting/reports/ar-aging'
+    | '/accounting/reports/balance-sheet'
+    | '/accounting/reports/profit-loss'
+    | '/accounting/reports/trial-balance'
+    | '/accounting/reports/vat'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AccountingAdvancesRoute: typeof AccountingAdvancesRoute
+  AccountingAssetDisposalRoute: typeof AccountingAssetDisposalRoute
+  AccountingBankAccountsRoute: typeof AccountingBankAccountsRoute
+  AccountingBankFeedsRoute: typeof AccountingBankFeedsRoute
+  AccountingBankGuaranteesRoute: typeof AccountingBankGuaranteesRoute
+  AccountingBankReconciliationRoute: typeof AccountingBankReconciliationRoute
+  AccountingBudgetsRoute: typeof AccountingBudgetsRoute
+  AccountingChartOfAccountsRoute: typeof AccountingChartOfAccountsRoute
+  AccountingChequesRoute: typeof AccountingChequesRoute
+  AccountingCompanyProfileRoute: typeof AccountingCompanyProfileRoute
+  AccountingConsolidationRoute: typeof AccountingConsolidationRoute
+  AccountingCostCentersRoute: typeof AccountingCostCentersRoute
+  AccountingCreditDebitNotesRoute: typeof AccountingCreditDebitNotesRoute
+  AccountingCurrenciesRoute: typeof AccountingCurrenciesRoute
+  AccountingCustomersRoute: typeof AccountingCustomersRoute
+  AccountingExpenseClaimsRoute: typeof AccountingExpenseClaimsRoute
+  AccountingFiscalPeriodsRoute: typeof AccountingFiscalPeriodsRoute
+  AccountingFixedAssetsRoute: typeof AccountingFixedAssetsRoute
+  AccountingGeneralLedgerRoute: typeof AccountingGeneralLedgerRoute
+  AccountingInventoryValuationRoute: typeof AccountingInventoryValuationRoute
+  AccountingInvoiceBalancesRoute: typeof AccountingInvoiceBalancesRoute
+  AccountingJournalEntriesRoute: typeof AccountingJournalEntriesRoute
+  AccountingPaymentsRoute: typeof AccountingPaymentsRoute
+  AccountingPayrollJournalRoute: typeof AccountingPayrollJournalRoute
+  AccountingPeriodClosingRoute: typeof AccountingPeriodClosingRoute
+  AccountingPosDevicesRoute: typeof AccountingPosDevicesRoute
+  AccountingProgressBillingRoute: typeof AccountingProgressBillingRoute
+  AccountingProjectPnlRoute: typeof AccountingProjectPnlRoute
+  AccountingRetentionRoute: typeof AccountingRetentionRoute
+  AccountingSalesB2bRoute: typeof AccountingSalesB2bRoute
+  AccountingSalesB2cRoute: typeof AccountingSalesB2cRoute
+  AccountingVendorsRoute: typeof AccountingVendorsRoute
+  AccountingWipPocRoute: typeof AccountingWipPocRoute
+  AccountingZatcaOnboardingRoute: typeof AccountingZatcaOnboardingRoute
+  AccountingZatcaSubmissionsRoute: typeof AccountingZatcaSubmissionsRoute
+  AccountingReportsArAgingRoute: typeof AccountingReportsArAgingRoute
+  AccountingReportsBalanceSheetRoute: typeof AccountingReportsBalanceSheetRoute
+  AccountingReportsProfitLossRoute: typeof AccountingReportsProfitLossRoute
+  AccountingReportsTrialBalanceRoute: typeof AccountingReportsTrialBalanceRoute
+  AccountingReportsVatRoute: typeof AccountingReportsVatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +588,331 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/accounting/advances': {
+      id: '/accounting/advances'
+      path: '/accounting/advances'
+      fullPath: '/accounting/advances'
+      preLoaderRoute: typeof AccountingAdvancesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accounting/asset-disposal': {
+      id: '/accounting/asset-disposal'
+      path: '/accounting/asset-disposal'
+      fullPath: '/accounting/asset-disposal'
+      preLoaderRoute: typeof AccountingAssetDisposalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accounting/bank-accounts': {
+      id: '/accounting/bank-accounts'
+      path: '/accounting/bank-accounts'
+      fullPath: '/accounting/bank-accounts'
+      preLoaderRoute: typeof AccountingBankAccountsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accounting/bank-feeds': {
+      id: '/accounting/bank-feeds'
+      path: '/accounting/bank-feeds'
+      fullPath: '/accounting/bank-feeds'
+      preLoaderRoute: typeof AccountingBankFeedsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accounting/bank-guarantees': {
+      id: '/accounting/bank-guarantees'
+      path: '/accounting/bank-guarantees'
+      fullPath: '/accounting/bank-guarantees'
+      preLoaderRoute: typeof AccountingBankGuaranteesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accounting/bank-reconciliation': {
+      id: '/accounting/bank-reconciliation'
+      path: '/accounting/bank-reconciliation'
+      fullPath: '/accounting/bank-reconciliation'
+      preLoaderRoute: typeof AccountingBankReconciliationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accounting/budgets': {
+      id: '/accounting/budgets'
+      path: '/accounting/budgets'
+      fullPath: '/accounting/budgets'
+      preLoaderRoute: typeof AccountingBudgetsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accounting/chart-of-accounts': {
+      id: '/accounting/chart-of-accounts'
+      path: '/accounting/chart-of-accounts'
+      fullPath: '/accounting/chart-of-accounts'
+      preLoaderRoute: typeof AccountingChartOfAccountsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accounting/cheques': {
+      id: '/accounting/cheques'
+      path: '/accounting/cheques'
+      fullPath: '/accounting/cheques'
+      preLoaderRoute: typeof AccountingChequesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accounting/company-profile': {
+      id: '/accounting/company-profile'
+      path: '/accounting/company-profile'
+      fullPath: '/accounting/company-profile'
+      preLoaderRoute: typeof AccountingCompanyProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accounting/consolidation': {
+      id: '/accounting/consolidation'
+      path: '/accounting/consolidation'
+      fullPath: '/accounting/consolidation'
+      preLoaderRoute: typeof AccountingConsolidationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accounting/cost-centers': {
+      id: '/accounting/cost-centers'
+      path: '/accounting/cost-centers'
+      fullPath: '/accounting/cost-centers'
+      preLoaderRoute: typeof AccountingCostCentersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accounting/credit-debit-notes': {
+      id: '/accounting/credit-debit-notes'
+      path: '/accounting/credit-debit-notes'
+      fullPath: '/accounting/credit-debit-notes'
+      preLoaderRoute: typeof AccountingCreditDebitNotesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accounting/currencies': {
+      id: '/accounting/currencies'
+      path: '/accounting/currencies'
+      fullPath: '/accounting/currencies'
+      preLoaderRoute: typeof AccountingCurrenciesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accounting/customers': {
+      id: '/accounting/customers'
+      path: '/accounting/customers'
+      fullPath: '/accounting/customers'
+      preLoaderRoute: typeof AccountingCustomersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accounting/expense-claims': {
+      id: '/accounting/expense-claims'
+      path: '/accounting/expense-claims'
+      fullPath: '/accounting/expense-claims'
+      preLoaderRoute: typeof AccountingExpenseClaimsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accounting/fiscal-periods': {
+      id: '/accounting/fiscal-periods'
+      path: '/accounting/fiscal-periods'
+      fullPath: '/accounting/fiscal-periods'
+      preLoaderRoute: typeof AccountingFiscalPeriodsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accounting/fixed-assets': {
+      id: '/accounting/fixed-assets'
+      path: '/accounting/fixed-assets'
+      fullPath: '/accounting/fixed-assets'
+      preLoaderRoute: typeof AccountingFixedAssetsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accounting/general-ledger': {
+      id: '/accounting/general-ledger'
+      path: '/accounting/general-ledger'
+      fullPath: '/accounting/general-ledger'
+      preLoaderRoute: typeof AccountingGeneralLedgerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accounting/inventory-valuation': {
+      id: '/accounting/inventory-valuation'
+      path: '/accounting/inventory-valuation'
+      fullPath: '/accounting/inventory-valuation'
+      preLoaderRoute: typeof AccountingInventoryValuationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accounting/invoice-balances': {
+      id: '/accounting/invoice-balances'
+      path: '/accounting/invoice-balances'
+      fullPath: '/accounting/invoice-balances'
+      preLoaderRoute: typeof AccountingInvoiceBalancesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accounting/journal-entries': {
+      id: '/accounting/journal-entries'
+      path: '/accounting/journal-entries'
+      fullPath: '/accounting/journal-entries'
+      preLoaderRoute: typeof AccountingJournalEntriesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accounting/payments': {
+      id: '/accounting/payments'
+      path: '/accounting/payments'
+      fullPath: '/accounting/payments'
+      preLoaderRoute: typeof AccountingPaymentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accounting/payroll-journal': {
+      id: '/accounting/payroll-journal'
+      path: '/accounting/payroll-journal'
+      fullPath: '/accounting/payroll-journal'
+      preLoaderRoute: typeof AccountingPayrollJournalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accounting/period-closing': {
+      id: '/accounting/period-closing'
+      path: '/accounting/period-closing'
+      fullPath: '/accounting/period-closing'
+      preLoaderRoute: typeof AccountingPeriodClosingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accounting/pos-devices': {
+      id: '/accounting/pos-devices'
+      path: '/accounting/pos-devices'
+      fullPath: '/accounting/pos-devices'
+      preLoaderRoute: typeof AccountingPosDevicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accounting/progress-billing': {
+      id: '/accounting/progress-billing'
+      path: '/accounting/progress-billing'
+      fullPath: '/accounting/progress-billing'
+      preLoaderRoute: typeof AccountingProgressBillingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accounting/project-pnl': {
+      id: '/accounting/project-pnl'
+      path: '/accounting/project-pnl'
+      fullPath: '/accounting/project-pnl'
+      preLoaderRoute: typeof AccountingProjectPnlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accounting/retention': {
+      id: '/accounting/retention'
+      path: '/accounting/retention'
+      fullPath: '/accounting/retention'
+      preLoaderRoute: typeof AccountingRetentionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accounting/sales-b2b': {
+      id: '/accounting/sales-b2b'
+      path: '/accounting/sales-b2b'
+      fullPath: '/accounting/sales-b2b'
+      preLoaderRoute: typeof AccountingSalesB2bRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accounting/sales-b2c': {
+      id: '/accounting/sales-b2c'
+      path: '/accounting/sales-b2c'
+      fullPath: '/accounting/sales-b2c'
+      preLoaderRoute: typeof AccountingSalesB2cRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accounting/vendors': {
+      id: '/accounting/vendors'
+      path: '/accounting/vendors'
+      fullPath: '/accounting/vendors'
+      preLoaderRoute: typeof AccountingVendorsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accounting/wip-poc': {
+      id: '/accounting/wip-poc'
+      path: '/accounting/wip-poc'
+      fullPath: '/accounting/wip-poc'
+      preLoaderRoute: typeof AccountingWipPocRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accounting/zatca-onboarding': {
+      id: '/accounting/zatca-onboarding'
+      path: '/accounting/zatca-onboarding'
+      fullPath: '/accounting/zatca-onboarding'
+      preLoaderRoute: typeof AccountingZatcaOnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accounting/zatca-submissions': {
+      id: '/accounting/zatca-submissions'
+      path: '/accounting/zatca-submissions'
+      fullPath: '/accounting/zatca-submissions'
+      preLoaderRoute: typeof AccountingZatcaSubmissionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accounting/reports/ar-aging': {
+      id: '/accounting/reports/ar-aging'
+      path: '/accounting/reports/ar-aging'
+      fullPath: '/accounting/reports/ar-aging'
+      preLoaderRoute: typeof AccountingReportsArAgingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accounting/reports/balance-sheet': {
+      id: '/accounting/reports/balance-sheet'
+      path: '/accounting/reports/balance-sheet'
+      fullPath: '/accounting/reports/balance-sheet'
+      preLoaderRoute: typeof AccountingReportsBalanceSheetRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accounting/reports/profit-loss': {
+      id: '/accounting/reports/profit-loss'
+      path: '/accounting/reports/profit-loss'
+      fullPath: '/accounting/reports/profit-loss'
+      preLoaderRoute: typeof AccountingReportsProfitLossRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accounting/reports/trial-balance': {
+      id: '/accounting/reports/trial-balance'
+      path: '/accounting/reports/trial-balance'
+      fullPath: '/accounting/reports/trial-balance'
+      preLoaderRoute: typeof AccountingReportsTrialBalanceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accounting/reports/vat': {
+      id: '/accounting/reports/vat'
+      path: '/accounting/reports/vat'
+      fullPath: '/accounting/reports/vat'
+      preLoaderRoute: typeof AccountingReportsVatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AccountingAdvancesRoute: AccountingAdvancesRoute,
+  AccountingAssetDisposalRoute: AccountingAssetDisposalRoute,
+  AccountingBankAccountsRoute: AccountingBankAccountsRoute,
+  AccountingBankFeedsRoute: AccountingBankFeedsRoute,
+  AccountingBankGuaranteesRoute: AccountingBankGuaranteesRoute,
+  AccountingBankReconciliationRoute: AccountingBankReconciliationRoute,
+  AccountingBudgetsRoute: AccountingBudgetsRoute,
+  AccountingChartOfAccountsRoute: AccountingChartOfAccountsRoute,
+  AccountingChequesRoute: AccountingChequesRoute,
+  AccountingCompanyProfileRoute: AccountingCompanyProfileRoute,
+  AccountingConsolidationRoute: AccountingConsolidationRoute,
+  AccountingCostCentersRoute: AccountingCostCentersRoute,
+  AccountingCreditDebitNotesRoute: AccountingCreditDebitNotesRoute,
+  AccountingCurrenciesRoute: AccountingCurrenciesRoute,
+  AccountingCustomersRoute: AccountingCustomersRoute,
+  AccountingExpenseClaimsRoute: AccountingExpenseClaimsRoute,
+  AccountingFiscalPeriodsRoute: AccountingFiscalPeriodsRoute,
+  AccountingFixedAssetsRoute: AccountingFixedAssetsRoute,
+  AccountingGeneralLedgerRoute: AccountingGeneralLedgerRoute,
+  AccountingInventoryValuationRoute: AccountingInventoryValuationRoute,
+  AccountingInvoiceBalancesRoute: AccountingInvoiceBalancesRoute,
+  AccountingJournalEntriesRoute: AccountingJournalEntriesRoute,
+  AccountingPaymentsRoute: AccountingPaymentsRoute,
+  AccountingPayrollJournalRoute: AccountingPayrollJournalRoute,
+  AccountingPeriodClosingRoute: AccountingPeriodClosingRoute,
+  AccountingPosDevicesRoute: AccountingPosDevicesRoute,
+  AccountingProgressBillingRoute: AccountingProgressBillingRoute,
+  AccountingProjectPnlRoute: AccountingProjectPnlRoute,
+  AccountingRetentionRoute: AccountingRetentionRoute,
+  AccountingSalesB2bRoute: AccountingSalesB2bRoute,
+  AccountingSalesB2cRoute: AccountingSalesB2cRoute,
+  AccountingVendorsRoute: AccountingVendorsRoute,
+  AccountingWipPocRoute: AccountingWipPocRoute,
+  AccountingZatcaOnboardingRoute: AccountingZatcaOnboardingRoute,
+  AccountingZatcaSubmissionsRoute: AccountingZatcaSubmissionsRoute,
+  AccountingReportsArAgingRoute: AccountingReportsArAgingRoute,
+  AccountingReportsBalanceSheetRoute: AccountingReportsBalanceSheetRoute,
+  AccountingReportsProfitLossRoute: AccountingReportsProfitLossRoute,
+  AccountingReportsTrialBalanceRoute: AccountingReportsTrialBalanceRoute,
+  AccountingReportsVatRoute: AccountingReportsVatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
