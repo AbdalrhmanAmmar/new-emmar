@@ -1011,7 +1011,11 @@ export const UNIQUE_KEYS: Record<string, string[][]> = {
   acc_fiscal_periods: [["name"]],
   acc_budgets: [["fiscal_year", "account_id", "cost_center_id"]],
   acc_expense_claims: [["claim_no"]],
-  acc_bank_guarantees: [["guarantee_no"]],
+  acc_items: [["code"], ["name_ar"]],
+  acc_warehouses: [["code"], ["name_ar"]],
+  acc_stock_moves: [["move_no"]],
+  acc_purchase_orders: [["po_no"]],
+
 };
 
 const keyValue = (row: Row, cols: string[]) =>
