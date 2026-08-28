@@ -10,7 +10,7 @@ import { buildCycles } from "@/lib/seedCycles";
 export type Row = Record<string, any>;
 export type Tables = Record<string, Row[]>;
 
-const STORAGE_KEY = "acc_demo_db_v4_cycles_eg";
+const STORAGE_KEY = "acc_demo_db_v5_cycles_eg";
 
 export const uid = () =>
   typeof crypto !== "undefined" && "randomUUID" in crypto
