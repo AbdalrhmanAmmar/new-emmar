@@ -4,7 +4,6 @@ import {
   Boxes,
   ChevronDown,
   FileText,
-  HardHat,
   Landmark,
   Menu,
   PanelRightClose,
@@ -12,9 +11,10 @@ import {
   PieChart,
   RotateCcw,
   Settings,
-  ShieldCheck,
+  ShoppingCart,
   Sliders,
   Target,
+  Truck,
   Wallet,
   X,
 } from "lucide-react";
@@ -27,16 +27,17 @@ import { resetDb } from "@/lib/mockDb";
 
 const groupIcons: Record<string, typeof Wallet> = {
   "الإعداد": Settings,
-  "الخزينة والبنوك": Landmark,
-  ZATCA: ShieldCheck,
+  "الأعلاف والمخزون": Boxes,
+  "المشتريات": ShoppingCart,
   "المبيعات والفوترة": FileText,
+  "الخزينة والبنوك": Landmark,
   "القيود والدفاتر": Banknote,
-  "المقاولات": HardHat,
-  "المخزون والأصول": Boxes,
+  "الأصول": Truck,
   "الموازنات والتخطيط": Target,
   "التقارير والإقفال": PieChart,
   "الإعدادات المتقدمة": Sliders,
 };
+
 
 const WIDTH_KEY = "acc_sidebar_width";
 const OPEN_GROUPS_KEY = "acc_sidebar_groups";
