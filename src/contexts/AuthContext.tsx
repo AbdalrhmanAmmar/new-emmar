@@ -26,7 +26,7 @@ export type AuthContextValue = {
   userRole: string;
   loading: boolean;
   isAdmin: boolean;
-  hasPermission: (permission?: string) => boolean;
+  hasPermission: (module?: string, action?: string) => boolean;
   signOut: () => Promise<void>;
 };
 
