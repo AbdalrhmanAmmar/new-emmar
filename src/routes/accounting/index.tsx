@@ -1,7 +1,11 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { accountingNav } from "@/lib/accountingNav";
+import { supabase } from "@/integrations/supabase/externalClient";
+
 
 export const Route = createFileRoute("/accounting/")({
   head: () => ({
