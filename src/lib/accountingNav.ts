@@ -27,7 +27,7 @@ export const accountingNav: NavGroup[] = [
       { path: "/accounting/items", label: "أصناف الأعلاف والخامات", file: "AccItemsPage" },
       { path: "/accounting/warehouses", label: "المخازن", file: "AccWarehousesPage" },
       { path: "/accounting/stock-moves", label: "حركة المخزون (وارد/صادر)", file: "AccStockMovesPage" },
-      { path: "/accounting/stock-balances", label: "أرصدة المخزون بالأوزان", file: "AccStockBalancesPage" },
+      { path: "/accounting/stock-balance", label: "أرصدة المخزون بالأوزان", file: "AccStockBalancePage" },
       { path: "/accounting/inventory-valuation", label: "تقييم المخزون", file: "AccInventoryValuationPage" },
     ],
   },
