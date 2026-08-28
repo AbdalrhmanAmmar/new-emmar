@@ -195,6 +195,7 @@ function seed(): Tables {
         entry_date: j.date,
         entry_no: j.no,
         status: j.status,
+        source: j.source,
       });
     });
   });
