@@ -39,6 +39,7 @@ import { Route as AccountingPeriodClosingRouteImport } from './routes/accounting
 import { Route as AccountingSalesB2bRouteImport } from './routes/accounting/sales-b2b'
 import { Route as AccountingSalesB2cRouteImport } from './routes/accounting/sales-b2c'
 import { Route as AccountingVendorsRouteImport } from './routes/accounting/vendors'
+import { Route as AccountingWarehousesRouteImport } from './routes/accounting/warehouses'
 import { Route as AccountingReportsArAgingRouteImport } from './routes/accounting/reports/ar-aging'
 import { Route as AccountingReportsBalanceSheetRouteImport } from './routes/accounting/reports/balance-sheet'
 import { Route as AccountingReportsProfitLossRouteImport } from './routes/accounting/reports/profit-loss'
@@ -203,6 +204,11 @@ const AccountingVendorsRoute = AccountingVendorsRouteImport.update({
   path: '/vendors',
   getParentRoute: () => AccountingRoute,
 } as any)
+const AccountingWarehousesRoute = AccountingWarehousesRouteImport.update({
+  id: '/warehouses',
+  path: '/warehouses',
+  getParentRoute: () => AccountingRoute,
+} as any)
 const AccountingReportsArAgingRoute =
   AccountingReportsArAgingRouteImport.update({
     id: '/reports/ar-aging',
@@ -263,6 +269,7 @@ export interface FileRoutesByFullPath {
   '/accounting/sales-b2b': typeof AccountingSalesB2bRoute
   '/accounting/sales-b2c': typeof AccountingSalesB2cRoute
   '/accounting/vendors': typeof AccountingVendorsRoute
+  '/accounting/warehouses': typeof AccountingWarehousesRoute
   '/accounting/': typeof AccountingIndexRoute
   '/accounting/reports/ar-aging': typeof AccountingReportsArAgingRoute
   '/accounting/reports/balance-sheet': typeof AccountingReportsBalanceSheetRoute
@@ -299,6 +306,7 @@ export interface FileRoutesByTo {
   '/accounting/sales-b2b': typeof AccountingSalesB2bRoute
   '/accounting/sales-b2c': typeof AccountingSalesB2cRoute
   '/accounting/vendors': typeof AccountingVendorsRoute
+  '/accounting/warehouses': typeof AccountingWarehousesRoute
   '/accounting': typeof AccountingIndexRoute
   '/accounting/reports/ar-aging': typeof AccountingReportsArAgingRoute
   '/accounting/reports/balance-sheet': typeof AccountingReportsBalanceSheetRoute
@@ -337,6 +345,7 @@ export interface FileRoutesById {
   '/accounting/sales-b2b': typeof AccountingSalesB2bRoute
   '/accounting/sales-b2c': typeof AccountingSalesB2cRoute
   '/accounting/vendors': typeof AccountingVendorsRoute
+  '/accounting/warehouses': typeof AccountingWarehousesRoute
   '/accounting/': typeof AccountingIndexRoute
   '/accounting/reports/ar-aging': typeof AccountingReportsArAgingRoute
   '/accounting/reports/balance-sheet': typeof AccountingReportsBalanceSheetRoute
@@ -376,6 +385,7 @@ export interface FileRouteTypes {
     | '/accounting/sales-b2b'
     | '/accounting/sales-b2c'
     | '/accounting/vendors'
+    | '/accounting/warehouses'
     | '/accounting/'
     | '/accounting/reports/ar-aging'
     | '/accounting/reports/balance-sheet'
@@ -412,6 +422,7 @@ export interface FileRouteTypes {
     | '/accounting/sales-b2b'
     | '/accounting/sales-b2c'
     | '/accounting/vendors'
+    | '/accounting/warehouses'
     | '/accounting'
     | '/accounting/reports/ar-aging'
     | '/accounting/reports/balance-sheet'
@@ -449,6 +460,7 @@ export interface FileRouteTypes {
     | '/accounting/sales-b2b'
     | '/accounting/sales-b2c'
     | '/accounting/vendors'
+    | '/accounting/warehouses'
     | '/accounting/'
     | '/accounting/reports/ar-aging'
     | '/accounting/reports/balance-sheet'
@@ -674,6 +686,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AccountingVendorsRouteImport
       parentRoute: typeof AccountingRoute
     }
+    '/accounting/warehouses': {
+      id: '/accounting/warehouses'
+      path: '/warehouses'
+      fullPath: '/accounting/warehouses'
+      preLoaderRoute: typeof AccountingWarehousesRouteImport
+      parentRoute: typeof AccountingRoute
+    }
     '/accounting/reports/ar-aging': {
       id: '/accounting/reports/ar-aging'
       path: '/reports/ar-aging'
@@ -740,6 +759,7 @@ interface AccountingRouteChildren {
   AccountingSalesB2bRoute: typeof AccountingSalesB2bRoute
   AccountingSalesB2cRoute: typeof AccountingSalesB2cRoute
   AccountingVendorsRoute: typeof AccountingVendorsRoute
+  AccountingWarehousesRoute: typeof AccountingWarehousesRoute
   AccountingIndexRoute: typeof AccountingIndexRoute
   AccountingReportsArAgingRoute: typeof AccountingReportsArAgingRoute
   AccountingReportsBalanceSheetRoute: typeof AccountingReportsBalanceSheetRoute
@@ -776,6 +796,7 @@ const AccountingRouteChildren: AccountingRouteChildren = {
   AccountingSalesB2bRoute: AccountingSalesB2bRoute,
   AccountingSalesB2cRoute: AccountingSalesB2cRoute,
   AccountingVendorsRoute: AccountingVendorsRoute,
+  AccountingWarehousesRoute: AccountingWarehousesRoute,
   AccountingIndexRoute: AccountingIndexRoute,
   AccountingReportsArAgingRoute: AccountingReportsArAgingRoute,
   AccountingReportsBalanceSheetRoute: AccountingReportsBalanceSheetRoute,
