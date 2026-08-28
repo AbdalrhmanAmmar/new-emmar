@@ -1,13 +1,16 @@
+/* eslint-disable */
 /**
  * In-memory demo database for the Accounting module (الوضع الافتراضي).
  * No external backend: data is seeded with realistic Arabic demo rows and
  * persisted in localStorage so edits survive a refresh in the browser.
  */
 
+import { buildCycles } from "@/lib/seedCycles";
+
 export type Row = Record<string, any>;
 export type Tables = Record<string, Row[]>;
 
-const STORAGE_KEY = "acc_demo_db_v3_feed_eg";
+const STORAGE_KEY = "acc_demo_db_v4_cycles_eg";
 
 export const uid = () =>
   typeof crypto !== "undefined" && "randomUUID" in crypto
@@ -42,19 +45,23 @@ const coaDefs = [
   acc("2101", "الموردون (الدائنون)", "liability", false, "2"),
   acc("2102", "ضريبة القيمة المضافة - مخرجات", "liability", false, "2"),
   acc("2103", "رواتب مستحقة", "liability", false, "2"),
-  acc("2104", "ضمان حسن التنفيذ", "liability", false, "2"),
+  acc("2105", "فواتير مشتريات لم تُستلم (GRNI)", "liability", false, "2"),
+  acc("2106", "خصم وحسم تحت حساب الضريبة - مستحق", "liability", false, "2"),
   acc("3", "حقوق الملكية", "equity", true),
   acc("3101", "رأس المال", "equity", false, "3"),
   acc("3201", "الأرباح المبقاة", "equity", false, "3"),
   acc("4", "الإيرادات", "revenue", true),
-  acc("4101", "إيرادات المقاولات", "revenue", false, "4"),
-  acc("4102", "إيرادات خدمات", "revenue", false, "4"),
+  acc("4101", "إيرادات بيع الأعلاف", "revenue", false, "4"),
+  acc("4102", "إيرادات خدمات نقل وشحن", "revenue", false, "4"),
+  acc("4103", "مردودات المبيعات", "revenue", false, "4"),
   acc("5", "المصروفات", "expense", true),
-  acc("5101", "تكلفة المواد", "expense", false, "5"),
+  acc("5101", "تكلفة المبيعات (خامات وأعلاف)", "expense", false, "5"),
   acc("5102", "أجور ورواتب", "expense", false, "5"),
   acc("5103", "إيجارات", "expense", false, "5"),
   acc("5104", "مصروف الإهلاك", "expense", false, "5"),
   acc("5105", "مصروفات إدارية وعمومية", "expense", false, "5"),
+  acc("5106", "نولون ومصاريف نقل المشتريات", "expense", false, "5"),
+  acc("5107", "فروق أوزان وهالك مخزون", "expense", false, "5"),
 ];
 
 function buildCoa() {
@@ -153,18 +160,6 @@ const stockMoves: Row[] = (() => {
   });
   return rows;
 })();
-
-const purchaseOrders: Row[] = [
-  { id: uid(), po_no: "PO-2101", vendor_name: "شركة الدلتا لتجارة الحاصلات الزراعية", order_date: d(3, 2), expected_date: d(3, 12), warehouse_name: warehouses[0].name_ar, subtotal: 1250000, vat_total: 0, total: 1250000, currency: "EGP", status: "received", notes: "ذرة صفراء — 100 طن" },
-  { id: uid(), po_no: "PO-2102", vendor_name: "مطاحن مصر الوسطى", order_date: d(3, 6), expected_date: d(3, 16), warehouse_name: warehouses[1].name_ar, subtotal: 980000, vat_total: 137200, total: 1117200, currency: "EGP", status: "approved", notes: "رجيع كون" },
-  { id: uid(), po_no: "PO-2103", vendor_name: "النيل للإضافات العلفية", order_date: d(3, 10), expected_date: d(3, 24), warehouse_name: warehouses[0].name_ar, subtotal: 340000, vat_total: 47600, total: 387600, currency: "EGP", status: "draft", notes: "بريمكس وميثيونين" },
-];
-
-const purchaseOrderLines: Row[] = [
-  { id: uid(), po_id: purchaseOrders[0].id, po_no: "PO-2101", item_code: "FD-1001", item_name: "ذرة صفراء مستوردة", quantity_kg: 100000, unit_price: 12.5, vat_rate: 0, line_total: 1250000 },
-  { id: uid(), po_id: purchaseOrders[1].id, po_no: "PO-2102", item_code: "FD-1003", item_name: "رجيع كون (بروتين 16%)", quantity_kg: 100000, unit_price: 9.8, vat_rate: 14, line_total: 980000 },
-  { id: uid(), po_id: purchaseOrders[2].id, po_no: "PO-2103", item_code: "FD-4001", item_name: "بريمكس فيتامينات ومعادن", quantity_kg: 5000, unit_price: 68, vat_rate: 14, line_total: 340000 },
-];
 
 function seedFeedNumber(v: any) {
   return Number(v ?? 0);
@@ -369,37 +364,13 @@ function seed(): Tables {
 
   });
 
-  return {
-    acc_chart_of_accounts: coa,
-    acc_company_profile: [
-      {
-        id: uid(),
-        legal_name_ar: "شركة الإنشاءات المتقدمة للمقاولات",
-        legal_name_en: "Advanced Construction Co.",
-        vat_number: "512-345-678",
-        cr_number: "1010123456",
-        short_address: "RRRD2929",
-        building_number: "2929",
-        street: "طريق الملك فهد",
-        district: "العليا",
-        city: "القاهرة",
-        postal_code: "12211",
-        additional_number: "8228",
-        country_code: "SA",
-        phone: "0112345678",
-        email: "finance@advanced-co.sa",
-        is_group_vat: false,
-      },
-    ],
-    acc_journal_entries,
-    acc_ledger_lines,
-    acc_customers: [
+  const acc_customers = [
       party("C-001", "شركة الدلتا لمزارع الدواجن", "512-345-678", "القاهرة", 120000, { customer_type: "company" }),
       party("C-002", "مزارع النيل للألبان", "478-902-116", "الإسكندرية", 42000, { customer_type: "company" }),
       party("C-003", "جمعية منتجي الدواجن", "633-118-540", "القاهرة", 0, { customer_type: "government" }),
       party("C-004", "محمد عبد الرحمن", "", "طنطا", 3500, { customer_type: "individual" }),
-    ],
-    acc_vendors: [
+  ];
+  const acc_vendors = [
       party("V-001", "مصنع الشرق لاستخلاص الزيوت (كسب صويا)", "380-664-201", "القاهرة", 138000, {
         vendor_type: "company",
         bank_name: "البنك الأهلي المصري",
@@ -408,7 +379,48 @@ function seed(): Tables {
       }),
       party("V-002", "الوادي لتجارة الذرة الصفراء", "291-773-908", "الإسكندرية", 64000, { vendor_type: "company" }),
       party("V-003", "النقل السريع للشحن", "845-110-332", "القاهرة", 12000, { vendor_type: "company" }),
+  ];
+  const cycles = buildCycles({
+    items: feedItems as any,
+    warehouses,
+    customers: acc_customers,
+    vendors: acc_vendors,
+    d,
+    today,
+  });
+  const cycleTables: Tables = { ...cycles.tables };
+  const cycleInvoices = cycleTables["__cycle_invoices"] ?? [];
+  const cycleInvoiceLines = cycleTables["__cycle_invoice_lines"] ?? [];
+  delete cycleTables["__cycle_invoices"];
+  delete cycleTables["__cycle_invoice_lines"];
+  const allStockMoves = [...stockMoves, ...cycles.stockMoves];
+
+  return {
+    acc_chart_of_accounts: coa,
+    acc_company_profile: [
+      {
+        id: uid(),
+        legal_name_ar: "شركة إعمار لتجارة الأعلاف",
+        legal_name_en: "Emaar Feed Trading Co.",
+        vat_number: "512-345-678",
+        cr_number: "1010123456",
+        short_address: "",
+        building_number: "27",
+        street: "شارع الجلاء",
+        district: "المنطقة الصناعية",
+        city: "العاشر من رمضان — الشرقية",
+        postal_code: "44634",
+        additional_number: "",
+        country_code: "EG",
+        phone: "0552345678",
+        email: "finance@emaar-feed.com.eg",
+        is_group_vat: false,
+      },
     ],
+    acc_journal_entries,
+    acc_ledger_lines,
+    acc_customers,
+    acc_vendors,
     acc_bank_accounts: [
       {
         id: uid(),
@@ -522,8 +534,8 @@ function seed(): Tables {
         notes: "تحصيل نقدي",
       },
     ],
-    acc_sales_invoices,
-    acc_sales_invoice_lines,
+    acc_sales_invoices: [...acc_sales_invoices, ...cycleInvoices],
+    acc_sales_invoice_lines: [...acc_sales_invoice_lines, ...cycleInvoiceLines],
     acc_credit_debit_notes: [
       {
         id: uid(),
@@ -723,11 +735,9 @@ function seed(): Tables {
     ],
     acc_items: feedItems,
     acc_warehouses: warehouses,
-    acc_stock_moves: stockMoves,
-    acc_purchase_orders: purchaseOrders,
-    acc_purchase_order_lines: purchaseOrderLines,
+    acc_stock_moves: allStockMoves,
     acc_inventory_valuation: feedItems.map((it) => {
-      const qty = stockMoves
+      const qty = allStockMoves
         .filter((m) => m.item_id === it.id)
         .reduce((s, m) => s + (m.move_type === "out" ? -num(m.quantity_kg) : num(m.quantity_kg)), 0);
       return {
@@ -743,6 +753,7 @@ function seed(): Tables {
       };
     }),
 
+    ...cycleTables,
     acc_bank_feeds: [
       {
         id: uid(),
@@ -948,6 +959,16 @@ export const UNIQUE_KEYS: Record<string, string[][]> = {
   acc_warehouses: [["code"], ["name_ar"]],
   acc_stock_moves: [["move_no"]],
   acc_purchase_orders: [["po_no"]],
+  acc_rfqs: [["rfq_no"]],
+  acc_rfq_quotes: [["rfq_id", "vendor_id"]],
+  acc_goods_receipts: [["grn_no"]],
+  acc_landed_costs: [["cost_no"]],
+  acc_vendor_bills: [["bill_no"], ["vendor_id", "vendor_ref"]],
+  acc_purchase_returns: [["return_no"]],
+  acc_sales_quotations: [["quote_no"]],
+  acc_sales_orders: [["so_no"]],
+  acc_deliveries: [["do_no"]],
+  acc_sales_returns: [["return_no"]],
 
 };
 
