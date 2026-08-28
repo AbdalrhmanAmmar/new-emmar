@@ -19,7 +19,7 @@ class Query implements PromiseLike<Result> {
   private limitCount: number | null = null;
   private mode: "select" | "insert" | "update" | "delete" | "upsert" = "select";
   private payload: Row[] = [];
-  private single = false;
+  private singleRow = false;
   private maybe = false;
   private returning = true;
 
@@ -135,6 +135,10 @@ class Query implements PromiseLike<Result> {
     this.maybe = true;
     return this.run();
   }
+  single() {
+    this.singleRow = true;
+    return this.run();
+  }
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
   then<TResult1 = Result, TResult2 = never>(
     onfulfilled?: ((value: Result) => TResult1 | PromiseLike<TResult1>) | null,
@@ -214,20 +218,14 @@ class Query implements PromiseLike<Result> {
   }
 
   private shape(rows: Row[]): Result {
-    if (this.single || this.maybe) {
+    if (this.singleRow || this.maybe) {
       const first = rows[0] ?? null;
-      if (this.single && !first) return { data: null, error: { message: "لا يوجد سجل" } };
+      if (this.singleRow && !first) return { data: null, error: { message: "لا يوجد سجل" } };
       return { data: first, error: null };
     }
     return { data: rows, error: null };
   }
 }
-
-// `single()` needs access to the private flag before running.
-(Query.prototype as any).single = function () {
-  (this as any).single = true;
-  return (this as any).run();
-};
 
 function nextNumber(table: string, column: string, prefix: string) {
   const rows = getTable(table);
