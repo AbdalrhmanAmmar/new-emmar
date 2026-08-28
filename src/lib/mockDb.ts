@@ -1,13 +1,16 @@
+/* eslint-disable */
 /**
  * In-memory demo database for the Accounting module (الوضع الافتراضي).
  * No external backend: data is seeded with realistic Arabic demo rows and
  * persisted in localStorage so edits survive a refresh in the browser.
  */
 
+import { buildCycles } from "@/lib/seedCycles";
+
 export type Row = Record<string, any>;
 export type Tables = Record<string, Row[]>;
 
-const STORAGE_KEY = "acc_demo_db_v3_feed_eg";
+const STORAGE_KEY = "acc_demo_db_v4_cycles_eg";
 
 export const uid = () =>
   typeof crypto !== "undefined" && "randomUUID" in crypto
@@ -42,19 +45,23 @@ const coaDefs = [
   acc("2101", "الموردون (الدائنون)", "liability", false, "2"),
   acc("2102", "ضريبة القيمة المضافة - مخرجات", "liability", false, "2"),
   acc("2103", "رواتب مستحقة", "liability", false, "2"),
-  acc("2104", "ضمان حسن التنفيذ", "liability", false, "2"),
+  acc("2105", "فواتير مشتريات لم تُستلم (GRNI)", "liability", false, "2"),
+  acc("2106", "خصم وحسم تحت حساب الضريبة - مستحق", "liability", false, "2"),
   acc("3", "حقوق الملكية", "equity", true),
   acc("3101", "رأس المال", "equity", false, "3"),
   acc("3201", "الأرباح المبقاة", "equity", false, "3"),
   acc("4", "الإيرادات", "revenue", true),
-  acc("4101", "إيرادات المقاولات", "revenue", false, "4"),
-  acc("4102", "إيرادات خدمات", "revenue", false, "4"),
+  acc("4101", "إيرادات بيع الأعلاف", "revenue", false, "4"),
+  acc("4102", "إيرادات خدمات نقل وشحن", "revenue", false, "4"),
+  acc("4103", "مردودات المبيعات", "revenue", false, "4"),
   acc("5", "المصروفات", "expense", true),
-  acc("5101", "تكلفة المواد", "expense", false, "5"),
+  acc("5101", "تكلفة المبيعات (خامات وأعلاف)", "expense", false, "5"),
   acc("5102", "أجور ورواتب", "expense", false, "5"),
   acc("5103", "إيجارات", "expense", false, "5"),
   acc("5104", "مصروف الإهلاك", "expense", false, "5"),
   acc("5105", "مصروفات إدارية وعمومية", "expense", false, "5"),
+  acc("5106", "نولون ومصاريف نقل المشتريات", "expense", false, "5"),
+  acc("5107", "فروق أوزان وهالك مخزون", "expense", false, "5"),
 ];
 
 function buildCoa() {
@@ -153,18 +160,6 @@ const stockMoves: Row[] = (() => {
   });
   return rows;
 })();
-
-const purchaseOrders: Row[] = [
-  { id: uid(), po_no: "PO-2101", vendor_name: "شركة الدلتا لتجارة الحاصلات الزراعية", order_date: d(3, 2), expected_date: d(3, 12), warehouse_name: warehouses[0].name_ar, subtotal: 1250000, vat_total: 0, total: 1250000, currency: "EGP", status: "received", notes: "ذرة صفراء — 100 طن" },
-  { id: uid(), po_no: "PO-2102", vendor_name: "مطاحن مصر الوسطى", order_date: d(3, 6), expected_date: d(3, 16), warehouse_name: warehouses[1].name_ar, subtotal: 980000, vat_total: 137200, total: 1117200, currency: "EGP", status: "approved", notes: "رجيع كون" },
-  { id: uid(), po_no: "PO-2103", vendor_name: "النيل للإضافات العلفية", order_date: d(3, 10), expected_date: d(3, 24), warehouse_name: warehouses[0].name_ar, subtotal: 340000, vat_total: 47600, total: 387600, currency: "EGP", status: "draft", notes: "بريمكس وميثيونين" },
-];
-
-const purchaseOrderLines: Row[] = [
-  { id: uid(), po_id: purchaseOrders[0].id, po_no: "PO-2101", item_code: "FD-1001", item_name: "ذرة صفراء مستوردة", quantity_kg: 100000, unit_price: 12.5, vat_rate: 0, line_total: 1250000 },
-  { id: uid(), po_id: purchaseOrders[1].id, po_no: "PO-2102", item_code: "FD-1003", item_name: "رجيع كون (بروتين 16%)", quantity_kg: 100000, unit_price: 9.8, vat_rate: 14, line_total: 980000 },
-  { id: uid(), po_id: purchaseOrders[2].id, po_no: "PO-2103", item_code: "FD-4001", item_name: "بريمكس فيتامينات ومعادن", quantity_kg: 5000, unit_price: 68, vat_rate: 14, line_total: 340000 },
-];
 
 function seedFeedNumber(v: any) {
   return Number(v ?? 0);
@@ -374,20 +369,20 @@ function seed(): Tables {
     acc_company_profile: [
       {
         id: uid(),
-        legal_name_ar: "شركة الإنشاءات المتقدمة للمقاولات",
-        legal_name_en: "Advanced Construction Co.",
+        legal_name_ar: "شركة إعمار لتجارة الأعلاف",
+        legal_name_en: "Emaar Feed Trading Co.",
         vat_number: "512-345-678",
         cr_number: "1010123456",
-        short_address: "RRRD2929",
-        building_number: "2929",
-        street: "طريق الملك فهد",
-        district: "العليا",
-        city: "القاهرة",
-        postal_code: "12211",
-        additional_number: "8228",
-        country_code: "SA",
-        phone: "0112345678",
-        email: "finance@advanced-co.sa",
+        short_address: "",
+        building_number: "27",
+        street: "شارع الجلاء",
+        district: "المنطقة الصناعية",
+        city: "العاشر من رمضان — الشرقية",
+        postal_code: "44634",
+        additional_number: "",
+        country_code: "EG",
+        phone: "0552345678",
+        email: "finance@emaar-feed.com.eg",
         is_group_vat: false,
       },
     ],
