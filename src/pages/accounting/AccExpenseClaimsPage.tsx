@@ -34,7 +34,7 @@ const statusColors: Record<string, string> = {
   paid: 'bg-primary/10 text-primary', cancelled: 'bg-gray-100 text-gray-700',
 };
 
-const emptyLine = (n = 1): Line => ({ line_no: n, quantity: 1, unit_price: 0, amount: 0, vat_rate: 15, vat_amount: 0, total: 0 });
+const emptyLine = (n = 1): Line => ({ line_no: n, quantity: 1, unit_price: 0, amount: 0, vat_rate: 14, vat_amount: 0, total: 0 });
 const emptyClaim = (): Partial<Claim> => ({
   claim_number: `EXP-${Date.now().toString().slice(-6)}`,
   claim_date: new Date().toISOString().slice(0, 10),

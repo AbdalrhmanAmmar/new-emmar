@@ -52,7 +52,7 @@ const emptyForm = (): Partial<IPC> => ({
   project_name: '', customer_name: '', contract_value: 0,
   prev_cumulative_amount: 0, current_period_amount: 0, cumulative_amount: 0,
   retention_rate: 10, retention_amount: 0, advance_recovery: 0, penalties: 0, adjustments: 0,
-  net_before_vat: 0, vat_rate: 15, vat_amount: 0, grand_total: 0,
+  net_before_vat: 0, vat_rate: 14, vat_amount: 0, grand_total: 0,
   currency: 'EGP', status: 'draft',
 });
 
@@ -97,7 +97,7 @@ const AccProgressBillingPage: React.FC = () => {
     const penalties = Number(base.penalties ?? 0);
     const adjustments = Number(base.adjustments ?? 0);
     const net_before_vat = +(current_period_amount - retention_amount - advance_recovery - penalties + adjustments).toFixed(2);
-    const vat_rate = Number(base.vat_rate ?? 15);
+    const vat_rate = Number(base.vat_rate ?? 14);
     const vat_amount = +(net_before_vat * vat_rate / 100).toFixed(2);
     const grand_total = +(net_before_vat + vat_amount).toFixed(2);
     return { ...base, current_period_amount, prev_cumulative_amount, cumulative_amount, retention_amount, net_before_vat, vat_amount, grand_total };
@@ -273,7 +273,7 @@ const AccProgressBillingPage: React.FC = () => {
             <div className="space-y-1.5"><Label>استرداد الدفعة المقدمة</Label><Input type="number" step="0.01" value={form.advance_recovery ?? 0} onChange={e => updateHeader({ advance_recovery: Number(e.target.value) })} /></div>
             <div className="space-y-1.5"><Label>غرامات التأخير</Label><Input type="number" step="0.01" value={form.penalties ?? 0} onChange={e => updateHeader({ penalties: Number(e.target.value) })} /></div>
             <div className="space-y-1.5"><Label>تعديلات (+/-)</Label><Input type="number" step="0.01" value={form.adjustments ?? 0} onChange={e => updateHeader({ adjustments: Number(e.target.value) })} /></div>
-            <div className="space-y-1.5"><Label>نسبة الضريبة %</Label><Input type="number" step="0.01" value={form.vat_rate ?? 15} onChange={e => updateHeader({ vat_rate: Number(e.target.value) })} /></div>
+            <div className="space-y-1.5"><Label>نسبة الضريبة %</Label><Input type="number" step="0.01" value={form.vat_rate ?? 14} onChange={e => updateHeader({ vat_rate: Number(e.target.value) })} /></div>
             <div className="space-y-1.5"><Label>العملة</Label><Input value={form.currency || 'EGP'} onChange={e => setForm({ ...form, currency: e.target.value })} /></div>
             <div className="space-y-1.5 md:col-span-4"><Label>ملاحظات</Label><Textarea value={form.notes || ''} onChange={e => setForm({ ...form, notes: e.target.value })} rows={2} /></div>
           </div>

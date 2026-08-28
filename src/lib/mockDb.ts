@@ -114,7 +114,7 @@ function seed(): Tables {
       lines: [
         ["1201", "العميل - شركة البناء الحديث", 345000, 0],
         ["4101", "إيراد مقاولات", 0, 300000],
-        ["2102", "ضريبة مخرجات 15%", 0, 45000],
+        ["2102", "ضريبة مخرجات 14%", 0, 45000],
       ],
     },
     {
@@ -125,7 +125,7 @@ function seed(): Tables {
       source: "purchase",
       lines: [
         ["5101", "مواد بناء", 120000, 0],
-        ["1202", "ضريبة مدخلات 15%", 18000, 0],
+        ["1202", "ضريبة مدخلات 14%", 18000, 0],
         ["2101", "مورد - مصنع الأسمنت", 0, 138000],
       ],
     },
@@ -240,7 +240,7 @@ function seed(): Tables {
   invDefs.forEach((v, idx) => {
     const [invoice_number, buyer_name, buyer_vat_number, subtotal, invoice_type, status, issue_date] = v;
     const id = uid();
-    const vat_total = Math.round(subtotal * 0.15 * 100) / 100;
+    const vat_total = Math.round(subtotal * 0.14 * 100) / 100;
     acc_sales_invoices.push({
       id,
       invoice_number,
@@ -267,7 +267,7 @@ function seed(): Tables {
       description: "أعمال إنشائية على المستخلص",
       quantity: 1,
       unit_price: subtotal,
-      vat_rate: 15,
+      vat_rate: 14,
       vat_amount: vat_total,
       line_total: subtotal + vat_total,
     });
