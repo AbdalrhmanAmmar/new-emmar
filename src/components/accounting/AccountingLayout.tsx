@@ -3,6 +3,7 @@ import {
   Banknote,
   Boxes,
   ChevronDown,
+  ChevronLeft,
   FileText,
   Landmark,
   Menu,
@@ -28,8 +29,9 @@ import { resetDb } from "@/lib/mockDb";
 const groupIcons: Record<string, typeof Wallet> = {
   "الإعداد": Settings,
   "الأعلاف والمخزون": Boxes,
-  "المشتريات": ShoppingCart,
-  "المبيعات والفوترة": FileText,
+  "دورة المشتريات": ShoppingCart,
+  "دورة المبيعات": Truck,
+  "الفوترة السريعة": FileText,
   "الخزينة والبنوك": Landmark,
   "القيود والدفاتر": Banknote,
   "الأصول": Truck,
@@ -40,36 +42,39 @@ const groupIcons: Record<string, typeof Wallet> = {
 
 
 const WIDTH_KEY = "acc_sidebar_width";
-const OPEN_GROUPS_KEY = "acc_sidebar_groups";
 const MIN_W = 200;
 const MAX_W = 420;
+
+/** المجموعة التي تحتوي الصفحة الحالية. */
+function groupOfPath(pathname: string) {
+  const exact = accountingNav.find((g) => g.items.some((i) => i.path === pathname));
+  if (exact) return exact.title;
+  const prefixed = accountingNav.find((g) => g.items.some((i) => pathname.startsWith(`${i.path}/`)));
+  return prefixed?.title ?? null;
+}
 
 export function AccountingLayout({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [mobileOpen, setMobileOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const [width, setWidth] = useState(288);
-  const [openGroups, setOpenGroups] = useState<string[]>(accountingNav.map((g) => g.title));
+  // موديول واحد مفتوح فقط: موديول الصفحة الحالية
+  const [openGroup, setOpenGroup] = useState<string | null>(() => groupOfPath(pathname));
 
   // restore saved layout preferences after hydration
   useEffect(() => {
     const w = Number(window.localStorage.getItem(WIDTH_KEY));
     if (w >= MIN_W && w <= MAX_W) setWidth(w);
-    try {
-      const g = JSON.parse(window.localStorage.getItem(OPEN_GROUPS_KEY) ?? "null");
-      if (Array.isArray(g)) setOpenGroups(g as string[]);
-    } catch {
-      /* ignore */
-    }
   }, []);
 
-  const persistGroups = (next: string[]) => {
-    setOpenGroups(next);
-    window.localStorage.setItem(OPEN_GROUPS_KEY, JSON.stringify(next));
-  };
+  // عند تغيير الصفحة: افتح موديولها واقفل ما عداه
+  useEffect(() => {
+    const g = groupOfPath(pathname);
+    if (g) setOpenGroup(g);
+  }, [pathname]);
 
-  const toggleGroup = (title: string) =>
-    persistGroups(openGroups.includes(title) ? openGroups.filter((t) => t !== title) : [...openGroups, title]);
+  const toggleGroup = (title: string) => setOpenGroup((cur) => (cur === title ? null : title));
+
 
   const startResize = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -93,48 +98,76 @@ export function AccountingLayout({ children }: { children: ReactNode }) {
   };
 
   const sidebarWidth = collapsed ? 64 : width;
+  const activeGroupTitle = groupOfPath(pathname);
+  const activeItem = accountingNav.flatMap((g) => g.items).find((i) => i.path === pathname);
 
   return (
     <div dir="rtl" className="min-h-screen bg-background text-foreground">
-      <header className="sticky top-0 z-40 flex h-16 items-center gap-3 border-b border-border bg-card px-4">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="lg:hidden"
-          onClick={() => setMobileOpen((v) => !v)}
-          aria-label="القائمة"
-        >
-          {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </Button>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="hidden lg:inline-flex"
-          onClick={() => setCollapsed((v) => !v)}
-          aria-label={collapsed ? "توسيع القائمة" : "تصغير القائمة"}
-          title={collapsed ? "توسيع القائمة" : "تصغير القائمة"}
-        >
-          {collapsed ? <PanelRightOpen className="h-5 w-5" /> : <PanelRightClose className="h-5 w-5" />}
-        </Button>
-        <Link to="/accounting" className="flex items-center gap-2">
-          <span className="grid h-9 w-9 place-items-center rounded-lg bg-primary text-primary-foreground">
-            <Wallet className="h-5 w-5" />
-          </span>
-          <span className="text-lg font-bold">برنامج إعمار المحاسبى</span>
-        </Link>
-        <div className="ms-auto flex items-center gap-2">
-          <OfflineIndicator />
+      <header className="sticky top-0 z-40 h-16 border-b border-border bg-card/95 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-card/80">
+        <div className="flex h-full items-center gap-3 px-3 sm:px-4">
           <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              resetDb();
-              window.location.reload();
-            }}
+            variant="ghost"
+            size="icon"
+            className="lg:hidden"
+            onClick={() => setMobileOpen((v) => !v)}
+            aria-label="القائمة"
           >
-            <RotateCcw className="me-1 h-4 w-4" />
-            إعادة تعيين البيانات
+            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
+
+          <Link to="/accounting" className="group flex items-center gap-2.5">
+            <span className="grid h-10 w-10 place-items-center rounded-xl bg-primary text-primary-foreground shadow-sm transition-transform group-hover:scale-105">
+              <Wallet className="h-5 w-5" />
+            </span>
+            <span className="flex flex-col leading-tight">
+              <span className="text-base font-bold tracking-tight sm:text-lg">برنامج إعمار المحاسبى</span>
+              <span className="hidden text-[11px] text-muted-foreground sm:block">
+                إعمار لتجارة الأعلاف — الجنيه المصري
+              </span>
+            </span>
+          </Link>
+
+          <div className="mx-1 hidden h-8 w-px bg-border lg:block" />
+
+          <Button
+            variant="ghost"
+            size="icon"
+            className="hidden shrink-0 lg:inline-flex"
+            onClick={() => setCollapsed((v) => !v)}
+            aria-label={collapsed ? "توسيع القائمة" : "تصغير القائمة"}
+            title={collapsed ? "توسيع القائمة" : "تصغير القائمة"}
+          >
+            {collapsed ? <PanelRightOpen className="h-5 w-5" /> : <PanelRightClose className="h-5 w-5" />}
+          </Button>
+
+          {/* مسار الصفحة الحالية */}
+          <nav aria-label="مسار التنقل" className="hidden min-w-0 items-center gap-1.5 text-xs md:flex">
+            {activeGroupTitle && (
+              <>
+                <span className="truncate rounded-md bg-muted px-2 py-1 font-medium text-muted-foreground">
+                  {activeGroupTitle}
+                </span>
+                <ChevronLeft className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+              </>
+            )}
+            <span className="truncate font-semibold text-primary">{activeItem?.label ?? "لوحة المتابعة"}</span>
+          </nav>
+
+          <div className="ms-auto flex items-center gap-2">
+            <OfflineIndicator />
+            <Button
+              variant="outline"
+              size="sm"
+              className="shadow-sm"
+              onClick={() => {
+                resetDb();
+                window.location.reload();
+              }}
+            >
+              <RotateCcw className="me-1 h-4 w-4" />
+              <span className="hidden sm:inline">إعادة تعيين البيانات</span>
+            </Button>
+          </div>
         </div>
       </header>
 
@@ -146,8 +179,9 @@ export function AccountingLayout({ children }: { children: ReactNode }) {
           <nav className="space-y-1.5">
             {accountingNav.map((group) => {
               const Icon = groupIcons[group.title] ?? Settings;
-              const expanded = openGroups.includes(group.title);
-              const hasActive = group.items.some((i) => i.path === pathname);
+              const expanded = openGroup === group.title;
+              const hasActive = group.title === activeGroupTitle;
+
               if (collapsed) {
                 return (
                   <div
