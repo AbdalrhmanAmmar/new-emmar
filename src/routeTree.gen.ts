@@ -31,6 +31,7 @@ import { Route as AccountingFixedAssetsRouteImport } from './routes/accounting/f
 import { Route as AccountingGeneralLedgerRouteImport } from './routes/accounting/general-ledger'
 import { Route as AccountingInventoryValuationRouteImport } from './routes/accounting/inventory-valuation'
 import { Route as AccountingInvoiceBalancesRouteImport } from './routes/accounting/invoice-balances'
+import { Route as AccountingItemsRouteImport } from './routes/accounting/items'
 import { Route as AccountingJournalEntriesRouteImport } from './routes/accounting/journal-entries'
 import { Route as AccountingPaymentsRouteImport } from './routes/accounting/payments'
 import { Route as AccountingPayrollJournalRouteImport } from './routes/accounting/payroll-journal'
@@ -160,6 +161,11 @@ const AccountingInvoiceBalancesRoute =
     path: '/invoice-balances',
     getParentRoute: () => AccountingRoute,
   } as any)
+const AccountingItemsRoute = AccountingItemsRouteImport.update({
+  id: '/items',
+  path: '/items',
+  getParentRoute: () => AccountingRoute,
+} as any)
 const AccountingJournalEntriesRoute =
   AccountingJournalEntriesRouteImport.update({
     id: '/journal-entries',
@@ -249,6 +255,7 @@ export interface FileRoutesByFullPath {
   '/accounting/general-ledger': typeof AccountingGeneralLedgerRoute
   '/accounting/inventory-valuation': typeof AccountingInventoryValuationRoute
   '/accounting/invoice-balances': typeof AccountingInvoiceBalancesRoute
+  '/accounting/items': typeof AccountingItemsRoute
   '/accounting/journal-entries': typeof AccountingJournalEntriesRoute
   '/accounting/payments': typeof AccountingPaymentsRoute
   '/accounting/payroll-journal': typeof AccountingPayrollJournalRoute
@@ -284,6 +291,7 @@ export interface FileRoutesByTo {
   '/accounting/general-ledger': typeof AccountingGeneralLedgerRoute
   '/accounting/inventory-valuation': typeof AccountingInventoryValuationRoute
   '/accounting/invoice-balances': typeof AccountingInvoiceBalancesRoute
+  '/accounting/items': typeof AccountingItemsRoute
   '/accounting/journal-entries': typeof AccountingJournalEntriesRoute
   '/accounting/payments': typeof AccountingPaymentsRoute
   '/accounting/payroll-journal': typeof AccountingPayrollJournalRoute
@@ -321,6 +329,7 @@ export interface FileRoutesById {
   '/accounting/general-ledger': typeof AccountingGeneralLedgerRoute
   '/accounting/inventory-valuation': typeof AccountingInventoryValuationRoute
   '/accounting/invoice-balances': typeof AccountingInvoiceBalancesRoute
+  '/accounting/items': typeof AccountingItemsRoute
   '/accounting/journal-entries': typeof AccountingJournalEntriesRoute
   '/accounting/payments': typeof AccountingPaymentsRoute
   '/accounting/payroll-journal': typeof AccountingPayrollJournalRoute
@@ -359,6 +368,7 @@ export interface FileRouteTypes {
     | '/accounting/general-ledger'
     | '/accounting/inventory-valuation'
     | '/accounting/invoice-balances'
+    | '/accounting/items'
     | '/accounting/journal-entries'
     | '/accounting/payments'
     | '/accounting/payroll-journal'
@@ -394,6 +404,7 @@ export interface FileRouteTypes {
     | '/accounting/general-ledger'
     | '/accounting/inventory-valuation'
     | '/accounting/invoice-balances'
+    | '/accounting/items'
     | '/accounting/journal-entries'
     | '/accounting/payments'
     | '/accounting/payroll-journal'
@@ -430,6 +441,7 @@ export interface FileRouteTypes {
     | '/accounting/general-ledger'
     | '/accounting/inventory-valuation'
     | '/accounting/invoice-balances'
+    | '/accounting/items'
     | '/accounting/journal-entries'
     | '/accounting/payments'
     | '/accounting/payroll-journal'
@@ -606,6 +618,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AccountingInvoiceBalancesRouteImport
       parentRoute: typeof AccountingRoute
     }
+    '/accounting/items': {
+      id: '/accounting/items'
+      path: '/items'
+      fullPath: '/accounting/items'
+      preLoaderRoute: typeof AccountingItemsRouteImport
+      parentRoute: typeof AccountingRoute
+    }
     '/accounting/journal-entries': {
       id: '/accounting/journal-entries'
       path: '/journal-entries'
@@ -713,6 +732,7 @@ interface AccountingRouteChildren {
   AccountingGeneralLedgerRoute: typeof AccountingGeneralLedgerRoute
   AccountingInventoryValuationRoute: typeof AccountingInventoryValuationRoute
   AccountingInvoiceBalancesRoute: typeof AccountingInvoiceBalancesRoute
+  AccountingItemsRoute: typeof AccountingItemsRoute
   AccountingJournalEntriesRoute: typeof AccountingJournalEntriesRoute
   AccountingPaymentsRoute: typeof AccountingPaymentsRoute
   AccountingPayrollJournalRoute: typeof AccountingPayrollJournalRoute
@@ -748,6 +768,7 @@ const AccountingRouteChildren: AccountingRouteChildren = {
   AccountingGeneralLedgerRoute: AccountingGeneralLedgerRoute,
   AccountingInventoryValuationRoute: AccountingInventoryValuationRoute,
   AccountingInvoiceBalancesRoute: AccountingInvoiceBalancesRoute,
+  AccountingItemsRoute: AccountingItemsRoute,
   AccountingJournalEntriesRoute: AccountingJournalEntriesRoute,
   AccountingPaymentsRoute: AccountingPaymentsRoute,
   AccountingPayrollJournalRoute: AccountingPayrollJournalRoute,
