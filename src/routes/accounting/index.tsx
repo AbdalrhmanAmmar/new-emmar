@@ -6,7 +6,6 @@ import { Badge } from "@/components/ui/badge";
 import { accountingNav } from "@/lib/accountingNav";
 import { supabase } from "@/integrations/supabase/externalClient";
 
-
 export const Route = createFileRoute("/accounting/")({
   head: () => ({
     meta: [
@@ -19,16 +18,15 @@ export const Route = createFileRoute("/accounting/")({
       { property: "og:title", content: "برنامج إعمار المحاسبي | تجارة الأعلاف" },
       {
         property: "og:description",
-        content: "جميع شاشات الحسابات تعمل بالوضع الافتراضي مع بيانات تجريبية محلية.",
+        content: "لوحة متابعة المبيعات والمخزون والمشتريات لشركات تجارة الأعلاف — تعمل بدون إنترنت.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: AccountingHome,
 });
 
-function AccountingHome() {
-  return (
-    <div className="space-y-6">
 const money = (n: any) =>
   Number(n || 0).toLocaleString("en-GB", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
@@ -45,25 +43,22 @@ function AccountingHome() {
   const { data: moves = [] } = useTable("acc_stock_moves");
   const { data: orders = [] } = useTable("acc_purchase_orders");
 
+  const qtyOf = (itemId: string) =>
+    moves
+      .filter((m) => m.item_id === itemId)
+      .reduce((t, m) => t + Number(m.quantity_kg || 0) * (m.move_type === "out" ? -1 : 1), 0);
+
   const sales = invoices.reduce((s, i) => s + Number(i.total || 0), 0);
   const receivables = invoices.reduce((s, i) => s + Number(i.balance || 0), 0);
-  const stockValue = items.reduce((s, it) => {
-    const ms = moves.filter((m) => m.item_id === it.id);
-    const qty = ms.reduce((t, m) => t + Number(m.quantity_kg || 0) * (m.move_type === "out" ? -1 : 1), 0);
-    return s + qty * Number(it.cost_price || 0);
-  }, 0);
-  const tons = moves.reduce((s, m) => s + Number(m.quantity_kg || 0) * (m.move_type === "out" ? -1 : 1), 0) / 1000;
-  const lowItems = items.filter((it) => {
-    const qty = moves
-      .filter((m) => m.item_id === it.id)
-      .reduce((t, m) => t + Number(m.quantity_kg || 0) * (m.move_type === "out" ? -1 : 1), 0);
-    return qty <= Number(it.reorder_level_kg || 0);
-  });
+  const stockValue = items.reduce((s, it) => s + qtyOf(it.id) * Number(it.cost_price || 0), 0);
+  const tons =
+    moves.reduce((s, m) => s + Number(m.quantity_kg || 0) * (m.move_type === "out" ? -1 : 1), 0) / 1000;
+  const lowItems = items.filter((it) => qtyOf(it.id) <= Number(it.reorder_level_kg || 0));
   const openPOs = orders.filter((o) => o.status === "draft" || o.status === "approved");
 
   const kpis = [
     { label: "إجمالي المبيعات", value: `${money(sales)} ج.م` },
-    { label: "أرصدة العملاء (مديونية)", value: `${money(receivables)} ج.م` },
+    { label: "مديونية العملاء", value: `${money(receivables)} ج.م` },
     { label: "قيمة المخزون", value: `${money(stockValue)} ج.م` },
     { label: "كمية المخزون", value: `${money(tons)} طن` },
   ];
@@ -102,7 +97,9 @@ function AccountingHome() {
                 {lowItems.slice(0, 8).map((it) => (
                   <li key={it.id} className="flex justify-between gap-3">
                     <span>{it.name_ar}</span>
-                    <span className="text-muted-foreground">حد الطلب {money(it.reorder_level_kg)} كجم</span>
+                    <span className="text-muted-foreground">
+                      المتاح {money(qtyOf(it.id))} / حد الطلب {money(it.reorder_level_kg)} كجم
+                    </span>
                   </li>
                 ))}
               </ul>
@@ -122,7 +119,9 @@ function AccountingHome() {
               <ul className="space-y-1 text-sm">
                 {openPOs.slice(0, 8).map((o) => (
                   <li key={o.id} className="flex justify-between gap-3">
-                    <span>{o.po_no} — {o.vendor_name}</span>
+                    <span>
+                      {o.po_no} — {o.vendor_name}
+                    </span>
                     <span className="text-muted-foreground">{money(o.total)} ج.م</span>
                   </li>
                 ))}
@@ -138,7 +137,6 @@ function AccountingHome() {
             <CardHeader>
               <CardTitle className="text-base">{group.title}</CardTitle>
             </CardHeader>
-
             <CardContent>
               <ul className="space-y-1">
                 {group.items.map((item) => (
