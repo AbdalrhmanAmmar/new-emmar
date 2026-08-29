@@ -188,6 +188,17 @@ export function AccountingLayout({ children }: { children: ReactNode }) {
             {/* هوية البرنامج داخل القائمة */}
             {!collapsed && (
               <div className="flex items-center gap-2 rounded-xl bg-sidebar-accent/60 px-2.5 py-2">
+                <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                  <Wallet className="h-4 w-4" />
+                </span>
+                <div className="flex min-w-0 flex-1 flex-col items-start leading-tight">
+                  <span className="truncate text-[13px] font-bold text-sidebar-primary">
+                    إعمار لتجارة الأعلاف
+                  </span>
+                  <span className="truncate text-[10px] text-sidebar-foreground/60">
+                    النظام المحاسبي — مصر
+                  </span>
+                </div>
                 <button
                   type="button"
                   onClick={() => setCollapsed(true)}
@@ -196,17 +207,6 @@ export function AccountingLayout({ children }: { children: ReactNode }) {
                 >
                   <ChevronsRight className="h-4 w-4" />
                 </button>
-                <div className="flex min-w-0 flex-1 flex-col items-end leading-tight">
-                  <span className="truncate text-[13px] font-bold text-sidebar-primary">
-                    إعمار لتجارة الأعلاف
-                  </span>
-                  <span className="truncate text-[10px] text-sidebar-foreground/60">
-                    النظام المحاسبي — مصر
-                  </span>
-                </div>
-                <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                  <Wallet className="h-4 w-4" />
-                </span>
               </div>
             )}
 
@@ -242,12 +242,12 @@ export function AccountingLayout({ children }: { children: ReactNode }) {
                           : "text-sidebar-foreground/85 hover:bg-sidebar-accent/70 hover:text-sidebar-foreground"
                       }`}
                     >
-                      <ChevronDown
-                        className={`h-4 w-4 shrink-0 text-sidebar-foreground/45 transition-transform ${expanded ? "" : "rotate-90"}`}
-                      />
-                      <span className="flex-1 truncate text-end">{group.title}</span>
-                      {hasActive && <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-sidebar-primary" />}
                       <Icon className="h-4 w-4 shrink-0" />
+                      {hasActive && <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-sidebar-primary" />}
+                      <span className="flex-1 truncate text-start">{group.title}</span>
+                      <ChevronDown
+                        className={`h-4 w-4 shrink-0 text-sidebar-foreground/45 transition-transform ${expanded ? "" : "-rotate-90"}`}
+                      />
                     </button>
 
                     {expanded && (
@@ -266,9 +266,9 @@ export function AccountingLayout({ children }: { children: ReactNode }) {
                                 }`}
                               >
                                 {active && (
-                                  <span className="absolute end-1.5 h-4 w-[3px] rounded-full bg-sidebar-primary-foreground/70" />
+                                  <span className="absolute start-1.5 h-4 w-[3px] rounded-full bg-sidebar-primary-foreground/70" />
                                 )}
-                                <span className="flex-1 truncate text-end">{item.label}</span>
+                                <span className="flex-1 truncate text-start">{item.label}</span>
                               </Link>
                             </li>
                           );
@@ -287,7 +287,7 @@ export function AccountingLayout({ children }: { children: ReactNode }) {
                   <span className="mb-1 block text-[10px] text-sidebar-foreground/55">السنة المالية</span>
                   <div className="flex items-center gap-2 rounded-lg bg-sidebar-accent/60 px-2.5 py-2 text-[13px] font-semibold">
                     <CalendarDays className="h-4 w-4 shrink-0 text-sidebar-primary" />
-                    <span className="flex-1 text-end">{new Date().getFullYear()}</span>
+                    <span className="flex-1 text-start">{new Date().getFullYear()}</span>
                     <ChevronDown className="h-4 w-4 shrink-0 text-sidebar-foreground/45" />
                   </div>
                 </div>
@@ -296,7 +296,7 @@ export function AccountingLayout({ children }: { children: ReactNode }) {
                   <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-sidebar-accent text-[11px] font-bold text-sidebar-primary">
                     إع
                   </span>
-                  <div className="flex min-w-0 flex-1 flex-col items-end leading-tight">
+                  <div className="flex min-w-0 flex-1 flex-col items-start leading-tight">
                     <span className="truncate text-[12px] font-bold">مدير النظام</span>
                     <span className="truncate text-[10px] text-sidebar-foreground/55">الوضع التجريبي</span>
                   </div>
