@@ -1,17 +1,10 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
   Banknote,
-  BarChart3,
-  Bell,
   Boxes,
   CalendarDays,
   ChevronDown,
   ChevronLeft,
-  ChevronsRight,
-  Languages,
-  Moon,
-  Palette,
-
   FileText,
   Landmark,
   Menu,
@@ -182,10 +175,10 @@ export function AccountingLayout({ children }: { children: ReactNode }) {
       <div className="flex">
         <aside
           style={{ width: sidebarWidth }}
-          className={`${mobileOpen ? "block" : "hidden"} fixed inset-y-16 start-0 z-30 overflow-y-auto bg-sidebar p-2.5 text-sidebar-foreground lg:sticky lg:top-16 lg:block lg:h-[calc(100vh-4rem)] lg:shrink-0`}
+          className={`${mobileOpen ? "flex" : "hidden"} fixed inset-y-16 start-0 z-30 flex-col overflow-hidden bg-sidebar p-2.5 text-sidebar-foreground lg:sticky lg:top-16 lg:flex lg:h-[calc(100vh-4rem)] lg:shrink-0`}
         >
-          <div className="flex min-h-full flex-col gap-3">
-            <nav className="flex-1 space-y-1">
+          <div className="flex min-h-0 flex-1 flex-col gap-3">
+            <nav className="min-h-0 flex-1 space-y-1 overflow-y-auto">
               {accountingNav.map((group) => {
                 const Icon = groupIcons[group.title] ?? Settings;
                 const expanded = openGroup === group.title;
@@ -257,7 +250,7 @@ export function AccountingLayout({ children }: { children: ReactNode }) {
 
             {/* تذييل القائمة: السنة المالية + المستخدم + أدوات */}
             {!collapsed && (
-              <div className="space-y-2 border-t border-sidebar-border pt-2.5">
+              <div className="shrink-0 space-y-2 border-t border-sidebar-border pt-2.5">
                 <div>
                   <span className="mb-1 block text-[10px] text-sidebar-foreground/55">السنة المالية</span>
                   <div className="flex items-center gap-2 rounded-lg bg-sidebar-accent/60 px-2.5 py-2 text-[13px] font-semibold">
@@ -275,17 +268,6 @@ export function AccountingLayout({ children }: { children: ReactNode }) {
                     <span className="truncate text-[12px] font-bold">مدير النظام</span>
                     <span className="truncate text-[10px] text-sidebar-foreground/55">الوضع التجريبي</span>
                   </div>
-                </div>
-
-                <div className="flex items-center justify-between px-1 pb-1 text-sidebar-foreground/55">
-                  {[Moon, Palette, Bell, BarChart3, Languages].map((I, idx) => (
-                    <span
-                      key={idx}
-                      className="grid h-7 w-7 place-items-center rounded-md transition-colors hover:bg-sidebar-accent hover:text-sidebar-primary"
-                    >
-                      <I className="h-4 w-4" />
-                    </span>
-                  ))}
                 </div>
               </div>
             )}
