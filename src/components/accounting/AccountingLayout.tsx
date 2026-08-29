@@ -1,9 +1,17 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
   Banknote,
+  BarChart3,
+  Bell,
   Boxes,
+  CalendarDays,
   ChevronDown,
   ChevronLeft,
+  ChevronsRight,
+  Languages,
+  Moon,
+  Palette,
+
   FileText,
   Landmark,
   Menu,
@@ -174,72 +182,139 @@ export function AccountingLayout({ children }: { children: ReactNode }) {
       <div className="flex">
         <aside
           style={{ width: sidebarWidth }}
-          className={`${mobileOpen ? "block" : "hidden"} fixed inset-y-16 start-0 z-30 overflow-y-auto border-e border-border bg-card p-2 lg:sticky lg:top-16 lg:block lg:h-[calc(100vh-4rem)] lg:shrink-0`}
+          className={`${mobileOpen ? "block" : "hidden"} fixed inset-y-16 start-0 z-30 overflow-y-auto bg-sidebar p-2.5 text-sidebar-foreground lg:sticky lg:top-16 lg:block lg:h-[calc(100vh-4rem)] lg:shrink-0`}
         >
-          <nav className="space-y-1.5">
-            {accountingNav.map((group) => {
-              const Icon = groupIcons[group.title] ?? Settings;
-              const expanded = openGroup === group.title;
-              const hasActive = group.title === activeGroupTitle;
+          <div className="flex min-h-full flex-col gap-3">
+            {/* هوية البرنامج داخل القائمة */}
+            {!collapsed && (
+              <div className="flex items-center gap-2 rounded-xl bg-sidebar-accent/60 px-2.5 py-2">
+                <button
+                  type="button"
+                  onClick={() => setCollapsed(true)}
+                  aria-label="تصغير القائمة"
+                  className="hidden h-7 w-7 shrink-0 place-items-center rounded-md text-sidebar-foreground/60 transition-colors hover:bg-sidebar-accent hover:text-sidebar-primary lg:grid"
+                >
+                  <ChevronsRight className="h-4 w-4" />
+                </button>
+                <div className="flex min-w-0 flex-1 flex-col items-end leading-tight">
+                  <span className="truncate text-[13px] font-bold text-sidebar-primary">
+                    إعمار لتجارة الأعلاف
+                  </span>
+                  <span className="truncate text-[10px] text-sidebar-foreground/60">
+                    النظام المحاسبي — مصر
+                  </span>
+                </div>
+                <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                  <Wallet className="h-4 w-4" />
+                </span>
+              </div>
+            )}
 
-              if (collapsed) {
+            <nav className="flex-1 space-y-1">
+              {accountingNav.map((group) => {
+                const Icon = groupIcons[group.title] ?? Settings;
+                const expanded = openGroup === group.title;
+                const hasActive = group.title === activeGroupTitle;
+
+                if (collapsed) {
+                  return (
+                    <div
+                      key={group.title}
+                      className={`grid h-11 place-items-center rounded-lg ${
+                        hasActive
+                          ? "bg-sidebar-primary text-sidebar-primary-foreground"
+                          : "text-sidebar-foreground/60 hover:bg-sidebar-accent"
+                      }`}
+                      title={group.title}
+                    >
+                      <Icon className="h-5 w-5" />
+                    </div>
+                  );
+                }
                 return (
-                  <div
-                    key={group.title}
-                    className={`grid h-11 place-items-center rounded-md ${hasActive ? "bg-primary/10 text-primary" : "text-muted-foreground"}`}
-                    title={group.title}
-                  >
-                    <Icon className="h-5 w-5" />
+                  <div key={group.title}>
+                    <button
+                      type="button"
+                      onClick={() => toggleGroup(group.title)}
+                      className={`flex w-full items-center gap-2 rounded-lg px-2.5 py-2.5 text-start text-[13px] font-semibold transition-colors ${
+                        hasActive
+                          ? "text-sidebar-primary"
+                          : "text-sidebar-foreground/85 hover:bg-sidebar-accent/70 hover:text-sidebar-foreground"
+                      }`}
+                    >
+                      <ChevronDown
+                        className={`h-4 w-4 shrink-0 text-sidebar-foreground/45 transition-transform ${expanded ? "" : "rotate-90"}`}
+                      />
+                      <span className="flex-1 truncate text-end">{group.title}</span>
+                      {hasActive && <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-sidebar-primary" />}
+                      <Icon className="h-4 w-4 shrink-0" />
+                    </button>
+
+                    {expanded && (
+                      <ul className="mt-1 space-y-1 rounded-xl bg-sidebar-accent/45 p-1.5 ring-1 ring-sidebar-border">
+                        {group.items.map((item) => {
+                          const active = pathname === item.path;
+                          return (
+                            <li key={item.path}>
+                              <Link
+                                to={item.path}
+                                onClick={() => setMobileOpen(false)}
+                                className={`relative flex items-center gap-2 rounded-lg px-2.5 py-2 text-[13px] transition-colors ${
+                                  active
+                                    ? "bg-sidebar-primary font-bold text-sidebar-primary-foreground shadow-sm"
+                                    : "text-sidebar-foreground/75 hover:bg-sidebar-accent hover:text-sidebar-foreground"
+                                }`}
+                              >
+                                {active && (
+                                  <span className="absolute end-1.5 h-4 w-[3px] rounded-full bg-sidebar-primary-foreground/70" />
+                                )}
+                                <span className="flex-1 truncate text-end">{item.label}</span>
+                              </Link>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    )}
                   </div>
                 );
-              }
-              return (
-                <div key={group.title} className="rounded-lg border border-border/60 bg-background/40">
-                  <button
-                    type="button"
-                    onClick={() => toggleGroup(group.title)}
-                    className={`flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-start text-sm font-bold transition-colors hover:bg-accent/60 ${
-                      hasActive ? "text-primary" : "text-foreground"
-                    }`}
-                  >
-                    <Icon className="h-4 w-4 shrink-0" />
-                    <span className="flex-1 truncate">{group.title}</span>
-                    <span className="rounded bg-muted px-1.5 text-[11px] font-medium text-muted-foreground">
-                      {group.items.length}
-                    </span>
-                    <ChevronDown
-                      className={`h-4 w-4 shrink-0 transition-transform ${expanded ? "" : "-rotate-90"}`}
-                    />
-                  </button>
-                  {expanded && (
-                    <ul className="space-y-0.5 border-t border-border/60 p-1.5">
-                      {group.items.map((item) => {
-                        const active = pathname === item.path;
-                        return (
-                          <li key={item.path}>
-                            <Link
-                              to={item.path}
-                              onClick={() => setMobileOpen(false)}
-                              className={`flex items-center gap-2 rounded-md px-2 py-1.5 text-[13px] transition-colors ${
-                                active
-                                  ? "bg-primary font-semibold text-primary-foreground"
-                                  : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-                              }`}
-                            >
-                              <span
-                                className={`h-1.5 w-1.5 shrink-0 rounded-full ${active ? "bg-primary-foreground" : "bg-border"}`}
-                              />
-                              <span className="truncate">{item.label}</span>
-                            </Link>
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  )}
+              })}
+            </nav>
+
+            {/* تذييل القائمة: السنة المالية + المستخدم + أدوات */}
+            {!collapsed && (
+              <div className="space-y-2 border-t border-sidebar-border pt-2.5">
+                <div>
+                  <span className="mb-1 block text-[10px] text-sidebar-foreground/55">السنة المالية</span>
+                  <div className="flex items-center gap-2 rounded-lg bg-sidebar-accent/60 px-2.5 py-2 text-[13px] font-semibold">
+                    <CalendarDays className="h-4 w-4 shrink-0 text-sidebar-primary" />
+                    <span className="flex-1 text-end">{new Date().getFullYear()}</span>
+                    <ChevronDown className="h-4 w-4 shrink-0 text-sidebar-foreground/45" />
+                  </div>
                 </div>
-              );
-            })}
-          </nav>
+
+                <div className="flex items-center gap-2 rounded-lg px-1 py-1.5">
+                  <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-sidebar-accent text-[11px] font-bold text-sidebar-primary">
+                    إع
+                  </span>
+                  <div className="flex min-w-0 flex-1 flex-col items-end leading-tight">
+                    <span className="truncate text-[12px] font-bold">مدير النظام</span>
+                    <span className="truncate text-[10px] text-sidebar-foreground/55">الوضع التجريبي</span>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between px-1 pb-1 text-sidebar-foreground/55">
+                  {[Moon, Palette, Bell, BarChart3, Languages].map((I, idx) => (
+                    <span
+                      key={idx}
+                      className="grid h-7 w-7 place-items-center rounded-md transition-colors hover:bg-sidebar-accent hover:text-sidebar-primary"
+                    >
+                      <I className="h-4 w-4" />
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         </aside>
 
         {!collapsed && (
