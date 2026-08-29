@@ -1,9 +1,17 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
   Banknote,
+  BarChart3,
+  Bell,
   Boxes,
+  CalendarDays,
   ChevronDown,
   ChevronLeft,
+  ChevronsRight,
+  Languages,
+  Moon,
+  Palette,
+
   FileText,
   Landmark,
   Menu,
