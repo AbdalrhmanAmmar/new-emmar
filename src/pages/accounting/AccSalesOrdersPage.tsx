@@ -111,41 +111,39 @@ const AccSalesOrdersPage: React.FC = () => {
 
   return (
     <div className="p-6 space-y-6" dir="rtl">
-      <div className="flex items-start justify-between gap-4 flex-wrap">
-        <div>
-          <h1 className="text-2xl font-bold">أوامر البيع (المرحلة 2 من دورة البيع)</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            تأكيد الأمر يحجز الكميات فلا تُباع مرتين، ويتحقق من حد ائتمان العميل قبل الحفظ.
-          </p>
-        </div>
-        <ExportPdfButton
-          title="أوامر البيع"
-          headers={['رقم الأمر', 'التاريخ', 'العميل', 'المخزن', 'الصافي', 'الضريبة', 'الإجمالي', 'الحالة']}
-          rows={orders.map((o: any) => [o.so_no, o.so_date, o.customer_name, o.warehouse_name, money(o.subtotal), money(o.vat_total), money(o.total), o.status])}
-        />
-      </div>
+      <PageHeader
+        title="أوامر البيع (المرحلة 2 من دورة البيع)"
+        subtitle="تأكيد الأمر يحجز الكميات فلا تُباع مرتين، ويتحقق من حد ائتمان العميل قبل الحفظ."
+        actions={
+          <ExportPdfButton
+            title="أوامر البيع"
+            headers={['رقم الأمر', 'التاريخ', 'العميل', 'المخزن', 'الصافي', 'الضريبة', 'الإجمالي', 'الحالة']}
+            rows={orders.map((o: any) => [o.so_no, o.so_date, o.customer_name, o.warehouse_name, money(o.subtotal), money(o.vat_total), money(o.total), o.status])}
+          />
+        }
+      />
 
       <Card>
         <CardHeader><CardTitle>أمر بيع جديد</CardTitle></CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid md:grid-cols-4 gap-3">
-            <div>
-              <Label>العميل</Label>
-              <Select value={customerId} onValueChange={setCustomerId}>
-                <SelectTrigger><SelectValue placeholder="اختر العميل" /></SelectTrigger>
-                <SelectContent>{customers.map((c: any) => <SelectItem key={c.id} value={c.id}>{c.name_ar}</SelectItem>)}</SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label>المخزن</Label>
-              <Select value={warehouseId} onValueChange={setWarehouseId}>
-                <SelectTrigger><SelectValue placeholder="اختر المخزن" /></SelectTrigger>
-                <SelectContent>{warehouses.map((w: any) => <SelectItem key={w.id} value={w.id}>{w.name_ar}</SelectItem>)}</SelectContent>
-              </Select>
-            </div>
-            <div><Label>تاريخ الأمر</Label><Input type="date" value={soDate} onChange={(e) => setSoDate(e.target.value)} /></div>
-            <div><Label>مدة السداد (يوم)</Label><Input type="number" value={terms} onChange={(e) => setTerms(Number(e.target.value))} /></div>
-          </div>
+          <FieldGrid cols={4}>
+            <SelectField
+              label="العميل"
+              placeholder="اختر العميل"
+              value={customerId}
+              onChange={setCustomerId}
+              options={customers.map((c: any) => ({ value: c.id, label: c.name_ar }))}
+            />
+            <SelectField
+              label="المخزن"
+              placeholder="اختر المخزن"
+              value={warehouseId}
+              onChange={setWarehouseId}
+              options={warehouses.map((w: any) => ({ value: w.id, label: w.name_ar }))}
+            />
+            <DateField label="تاريخ الأمر" value={soDate} onChange={setSoDate} />
+            <NumberField label="مدة السداد (يوم)" value={terms} onChange={setTerms} />
+          </FieldGrid>
 
           {customer && (
             <div className={`flex items-center gap-2 rounded border p-3 text-sm ${overLimit ? 'border-destructive/40 bg-destructive/10 text-destructive' : 'border-border bg-muted'}`}>
