@@ -194,11 +194,13 @@ const AccSalesOrdersPage: React.FC = () => {
 
           <div className="flex items-center justify-between flex-wrap gap-3">
             <Button variant="outline" size="sm" onClick={() => setLines((p) => [...p, newLine()])}><Plus className="h-4 w-4 me-1" /> إضافة سطر</Button>
-            <div className="flex gap-3 text-sm">
-              <div className="p-3 rounded bg-muted"><span className="text-muted-foreground">الصافي </span><b>{money(totals.subtotal)}</b></div>
-              <div className="p-3 rounded bg-muted"><span className="text-muted-foreground">ض.ق.م </span><b>{money(totals.vat_total)}</b></div>
-              <div className="p-3 rounded bg-primary/10 border border-primary/30"><span className="text-muted-foreground">الإجمالي </span><b className="text-primary">{money(totals.total)} ج.م</b></div>
-            </div>
+            <TotalsBar
+              items={[
+                { label: 'الصافي', value: totals.subtotal },
+                { label: 'ض.ق.م', value: totals.vat_total },
+                { label: 'الإجمالي', value: totals.total, primary: true },
+              ]}
+            />
             <Button onClick={save} disabled={saving}>
               {saving ? <Loader2 className="h-4 w-4 animate-spin me-1" /> : <Save className="h-4 w-4 me-1" />} تأكيد أمر البيع
             </Button>
