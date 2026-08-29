@@ -45,7 +45,7 @@ const emptyB = (): Partial<Balance> => ({
 
 const statusLabels: Record<string, string> = { draft: 'مسودة', posted: 'مرحّل', consolidated: 'مُدمج' };
 const statusColors: Record<string, string> = {
-  draft: 'bg-slate-100 text-slate-700', posted: 'bg-blue-100 text-blue-700', consolidated: 'bg-emerald-100 text-emerald-700',
+  draft: 'bg-muted text-muted-foreground', posted: 'bg-accent text-accent-foreground', consolidated: 'bg-primary/10 text-primary',
 };
 
 const fmt = (n: number) => Number(n || 0).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -312,8 +312,8 @@ const AccConsolidationPage: React.FC = () => {
                       <TableCell className="font-mono">{e.base_currency}</TableCell>
                       <TableCell className="text-right font-bold">{e.ownership_percent}%</TableCell>
                       <TableCell className="text-xs text-muted-foreground">{e.parent_entity_id ? entMap.get(e.parent_entity_id)?.code || '-' : '-'}</TableCell>
-                      <TableCell>{e.is_consolidated ? <Badge className="bg-emerald-100 text-emerald-700">نعم</Badge> : <Badge variant="outline">لا</Badge>}</TableCell>
-                      <TableCell>{e.is_active ? <Badge className="bg-blue-100 text-blue-700">نشطة</Badge> : <Badge variant="outline">موقوفة</Badge>}</TableCell>
+                      <TableCell>{e.is_consolidated ? <Badge className="bg-primary/10 text-primary">نعم</Badge> : <Badge variant="outline">لا</Badge>}</TableCell>
+                      <TableCell>{e.is_active ? <Badge className="bg-accent text-accent-foreground">نشطة</Badge> : <Badge className="bg-muted text-muted-foreground">موقوفة</Badge>}</TableCell>
                       <TableCell>
                         <RowActions>
                           {canEdit && <Button size="sm" variant="ghost" onClick={() => { setEForm(e); setEOpen(true); }}><Pencil className="w-3.5 h-3.5" /></Button>}
