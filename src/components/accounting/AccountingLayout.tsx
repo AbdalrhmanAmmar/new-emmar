@@ -46,6 +46,14 @@ const WIDTH_KEY = "acc_sidebar_width";
 const MIN_W = 200;
 const MAX_W = 420;
 
+/** تبويبات التنقل السفلي على الموبيل. */
+const mobileTabs: { path: string; label: string; icon: typeof Wallet }[] = [
+  { path: "/accounting", label: "الرئيسية", icon: PieChart },
+  { path: "/accounting/sales-orders", label: "المبيعات", icon: Truck },
+  { path: "/accounting/purchase-orders", label: "المشتريات", icon: ShoppingCart },
+  { path: "/accounting/stock-balance", label: "المخزون", icon: Boxes },
+];
+
 /** المجموعة التي تحتوي الصفحة الحالية. */
 function groupOfPath(pathname: string) {
   const exact = accountingNav.find((g) => g.items.some((i) => i.path === pathname));
