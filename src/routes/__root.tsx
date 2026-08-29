@@ -79,13 +79,19 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "موديول الحسابات" },
-      { name: "description", content: "نظام محاسبي متكامل يعمل بالوضع الافتراضي على بيانات تجريبية." },
-      { property: "og:title", content: "موديول الحسابات" },
-      { property: "og:description", content: "نظام محاسبي متكامل يعمل بالوضع الافتراضي على بيانات تجريبية." },
+      { title: "برنامج الإيمان المحاسبي | تجارة الأعلاف" },
+      {
+        name: "description",
+        content: "نظام الإيمان المتكامل لإدارة حسابات ومخزون ومشتريات ومبيعات تجارة الأعلاف في مصر.",
+      },
+      { property: "og:site_name", content: "الإيمان لتجارة الأعلاف" },
+      { property: "og:title", content: "برنامج الإيمان المحاسبي | تجارة الأعلاف" },
+      {
+        property: "og:description",
+        content: "إدارة متكاملة لحسابات ومخزون ومشتريات ومبيعات شركة الإيمان لتجارة الأعلاف.",
+      },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:card", content: "summary" },
     ],
     links: [
       {
@@ -98,7 +104,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap",
       },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "icon", href: "/favicon.png", type: "image/png" },
     ],
   }),
   shellComponent: RootShell,
