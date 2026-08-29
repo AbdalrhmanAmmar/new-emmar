@@ -2,13 +2,22 @@ import React, { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 import { AlertTriangle, CheckCircle2, Loader2, Plus, Save, Trash2, XCircle } from 'lucide-react';
 
-import ExportPdfButton from '@/components/accounting/ExportPdfButton';
-import RowActions from '@/components/accounting/RowActions';
-import StatusBadge from '@/components/accounting/StatusBadge';
+import {
+  DataTableCard,
+  DateField,
+  ExportPdfButton,
+  FieldGrid,
+  NumberField,
+  PageHeader,
+  RowActions,
+  SelectField,
+  StatusBadge,
+  TotalsBar,
+  type Column,
+} from '@/components/accounting';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useRefresh, useTable } from '@/hooks/useTable';
@@ -100,43 +109,65 @@ const AccSalesOrdersPage: React.FC = () => {
     refresh('acc_sales_orders');
   };
 
+  const sumLines = (o: any, field: string) =>
+    orderLines.filter((l: any) => l.so_id === o.id).reduce((s2: number, l: any) => s2 + num(l[field]), 0);
+
+  const orderColumns: Column<any>[] = [
+    { header: 'رقم الأمر', cell: (o) => <span className="font-medium">{o.so_no}</span> },
+    { header: 'التاريخ', cell: (o) => new Date(o.so_date).toLocaleDateString('en-GB') },
+    { header: 'العميل', cell: (o) => o.customer_name },
+    { header: 'المخزن', cell: (o) => o.warehouse_name },
+    { header: 'الكمية', cell: (o) => `${qty(sumLines(o, 'quantity_kg'))} كجم` },
+    { header: 'المسلَّم', cell: (o) => `${qty(sumLines(o, 'delivered_kg'))} كجم` },
+    { header: 'الإجمالي', cell: (o) => <span className="font-semibold">{money(o.total)} ج.م</span> },
+    { header: 'الحالة', cell: (o) => <StatusBadge status={o.status} /> },
+    {
+      header: 'إجراءات',
+      cell: (o) => (
+        <RowActions>
+          <Button variant="ghost" size="icon" title="إلغاء الأمر" onClick={() => cancel(o)}>
+            <XCircle className="h-4 w-4 text-destructive" />
+          </Button>
+        </RowActions>
+      ),
+    },
+  ];
+
   return (
     <div className="p-6 space-y-6" dir="rtl">
-      <div className="flex items-start justify-between gap-4 flex-wrap">
-        <div>
-          <h1 className="text-2xl font-bold">أوامر البيع (المرحلة 2 من دورة البيع)</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            تأكيد الأمر يحجز الكميات فلا تُباع مرتين، ويتحقق من حد ائتمان العميل قبل الحفظ.
-          </p>
-        </div>
-        <ExportPdfButton
-          title="أوامر البيع"
-          headers={['رقم الأمر', 'التاريخ', 'العميل', 'المخزن', 'الصافي', 'الضريبة', 'الإجمالي', 'الحالة']}
-          rows={orders.map((o: any) => [o.so_no, o.so_date, o.customer_name, o.warehouse_name, money(o.subtotal), money(o.vat_total), money(o.total), o.status])}
-        />
-      </div>
+      <PageHeader
+        title="أوامر البيع (المرحلة 2 من دورة البيع)"
+        subtitle="تأكيد الأمر يحجز الكميات فلا تُباع مرتين، ويتحقق من حد ائتمان العميل قبل الحفظ."
+        actions={
+          <ExportPdfButton
+            title="أوامر البيع"
+            headers={['رقم الأمر', 'التاريخ', 'العميل', 'المخزن', 'الصافي', 'الضريبة', 'الإجمالي', 'الحالة']}
+            rows={orders.map((o: any) => [o.so_no, o.so_date, o.customer_name, o.warehouse_name, money(o.subtotal), money(o.vat_total), money(o.total), o.status])}
+          />
+        }
+      />
 
       <Card>
         <CardHeader><CardTitle>أمر بيع جديد</CardTitle></CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid md:grid-cols-4 gap-3">
-            <div>
-              <Label>العميل</Label>
-              <Select value={customerId} onValueChange={setCustomerId}>
-                <SelectTrigger><SelectValue placeholder="اختر العميل" /></SelectTrigger>
-                <SelectContent>{customers.map((c: any) => <SelectItem key={c.id} value={c.id}>{c.name_ar}</SelectItem>)}</SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label>المخزن</Label>
-              <Select value={warehouseId} onValueChange={setWarehouseId}>
-                <SelectTrigger><SelectValue placeholder="اختر المخزن" /></SelectTrigger>
-                <SelectContent>{warehouses.map((w: any) => <SelectItem key={w.id} value={w.id}>{w.name_ar}</SelectItem>)}</SelectContent>
-              </Select>
-            </div>
-            <div><Label>تاريخ الأمر</Label><Input type="date" value={soDate} onChange={(e) => setSoDate(e.target.value)} /></div>
-            <div><Label>مدة السداد (يوم)</Label><Input type="number" value={terms} onChange={(e) => setTerms(Number(e.target.value))} /></div>
-          </div>
+          <FieldGrid cols={4}>
+            <SelectField
+              label="العميل"
+              placeholder="اختر العميل"
+              value={customerId}
+              onChange={setCustomerId}
+              options={customers.map((c: any) => ({ value: c.id, label: c.name_ar }))}
+            />
+            <SelectField
+              label="المخزن"
+              placeholder="اختر المخزن"
+              value={warehouseId}
+              onChange={setWarehouseId}
+              options={warehouses.map((w: any) => ({ value: w.id, label: w.name_ar }))}
+            />
+            <DateField label="تاريخ الأمر" value={soDate} onChange={setSoDate} />
+            <NumberField label="مدة السداد (يوم)" value={terms} onChange={setTerms} />
+          </FieldGrid>
 
           {customer && (
             <div className={`flex items-center gap-2 rounded border p-3 text-sm ${overLimit ? 'border-destructive/40 bg-destructive/10 text-destructive' : 'border-border bg-muted'}`}>
@@ -187,11 +218,13 @@ const AccSalesOrdersPage: React.FC = () => {
 
           <div className="flex items-center justify-between flex-wrap gap-3">
             <Button variant="outline" size="sm" onClick={() => setLines((p) => [...p, newLine()])}><Plus className="h-4 w-4 me-1" /> إضافة سطر</Button>
-            <div className="flex gap-3 text-sm">
-              <div className="p-3 rounded bg-muted"><span className="text-muted-foreground">الصافي </span><b>{money(totals.subtotal)}</b></div>
-              <div className="p-3 rounded bg-muted"><span className="text-muted-foreground">ض.ق.م </span><b>{money(totals.vat_total)}</b></div>
-              <div className="p-3 rounded bg-primary/10 border border-primary/30"><span className="text-muted-foreground">الإجمالي </span><b className="text-primary">{money(totals.total)} ج.م</b></div>
-            </div>
+            <TotalsBar
+              items={[
+                { label: 'الصافي', value: totals.subtotal },
+                { label: 'ض.ق.م', value: totals.vat_total },
+                { label: 'الإجمالي', value: totals.total, primary: true },
+              ]}
+            />
             <Button onClick={save} disabled={saving}>
               {saving ? <Loader2 className="h-4 w-4 animate-spin me-1" /> : <Save className="h-4 w-4 me-1" />} تأكيد أمر البيع
             </Button>
@@ -199,54 +232,13 @@ const AccSalesOrdersPage: React.FC = () => {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader><CardTitle>أوامر البيع ({orders.length})</CardTitle></CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>رقم الأمر</TableHead>
-                <TableHead>التاريخ</TableHead>
-                <TableHead>العميل</TableHead>
-                <TableHead>المخزن</TableHead>
-                <TableHead>الكمية</TableHead>
-                <TableHead>المسلَّم</TableHead>
-                <TableHead>الإجمالي</TableHead>
-                <TableHead>الحالة</TableHead>
-                <TableHead>إجراءات</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {orders.length === 0 ? (
-                <TableRow><TableCell colSpan={9} className="text-center text-muted-foreground py-8">لا توجد أوامر بيع</TableCell></TableRow>
-              ) : orders.map((o: any) => {
-                const ol = orderLines.filter((l: any) => l.so_id === o.id);
-                const ordered = ol.reduce((s2: number, l: any) => s2 + num(l.quantity_kg), 0);
-                const delivered = ol.reduce((s2: number, l: any) => s2 + num(l.delivered_kg), 0);
-                return (
-                  <TableRow key={o.id}>
-                    <TableCell className="font-medium">{o.so_no}</TableCell>
-                    <TableCell>{new Date(o.so_date).toLocaleDateString('en-GB')}</TableCell>
-                    <TableCell>{o.customer_name}</TableCell>
-                    <TableCell>{o.warehouse_name}</TableCell>
-                    <TableCell>{qty(ordered)} كجم</TableCell>
-                    <TableCell>{qty(delivered)} كجم</TableCell>
-                    <TableCell className="font-semibold">{money(o.total)} ج.م</TableCell>
-                    <TableCell><StatusBadge status={o.status} /></TableCell>
-                    <TableCell>
-                      <RowActions>
-                        <Button variant="ghost" size="icon" title="إلغاء الأمر" onClick={() => cancel(o)}>
-                          <XCircle className="h-4 w-4 text-destructive" />
-                        </Button>
-                      </RowActions>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+      <DataTableCard<any>
+        title={`أوامر البيع (${orders.length})`}
+        rows={orders}
+        rowKey={(o) => o.id}
+        empty="لا توجد أوامر بيع"
+        columns={orderColumns}
+      />
     </div>
   );
 };
