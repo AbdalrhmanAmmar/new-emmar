@@ -208,54 +208,13 @@ const AccSalesOrdersPage: React.FC = () => {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader><CardTitle>أوامر البيع ({orders.length})</CardTitle></CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>رقم الأمر</TableHead>
-                <TableHead>التاريخ</TableHead>
-                <TableHead>العميل</TableHead>
-                <TableHead>المخزن</TableHead>
-                <TableHead>الكمية</TableHead>
-                <TableHead>المسلَّم</TableHead>
-                <TableHead>الإجمالي</TableHead>
-                <TableHead>الحالة</TableHead>
-                <TableHead>إجراءات</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {orders.length === 0 ? (
-                <TableRow><TableCell colSpan={9} className="text-center text-muted-foreground py-8">لا توجد أوامر بيع</TableCell></TableRow>
-              ) : orders.map((o: any) => {
-                const ol = orderLines.filter((l: any) => l.so_id === o.id);
-                const ordered = ol.reduce((s2: number, l: any) => s2 + num(l.quantity_kg), 0);
-                const delivered = ol.reduce((s2: number, l: any) => s2 + num(l.delivered_kg), 0);
-                return (
-                  <TableRow key={o.id}>
-                    <TableCell className="font-medium">{o.so_no}</TableCell>
-                    <TableCell>{new Date(o.so_date).toLocaleDateString('en-GB')}</TableCell>
-                    <TableCell>{o.customer_name}</TableCell>
-                    <TableCell>{o.warehouse_name}</TableCell>
-                    <TableCell>{qty(ordered)} كجم</TableCell>
-                    <TableCell>{qty(delivered)} كجم</TableCell>
-                    <TableCell className="font-semibold">{money(o.total)} ج.م</TableCell>
-                    <TableCell><StatusBadge status={o.status} /></TableCell>
-                    <TableCell>
-                      <RowActions>
-                        <Button variant="ghost" size="icon" title="إلغاء الأمر" onClick={() => cancel(o)}>
-                          <XCircle className="h-4 w-4 text-destructive" />
-                        </Button>
-                      </RowActions>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+      <DataTableCard<any>
+        title={`أوامر البيع (${orders.length})`}
+        rows={orders}
+        rowKey={(o) => o.id}
+        empty="لا توجد أوامر بيع"
+        columns={orderColumns}
+      />
     </div>
   );
 };
