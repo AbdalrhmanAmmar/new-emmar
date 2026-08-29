@@ -46,6 +46,14 @@ const WIDTH_KEY = "acc_sidebar_width";
 const MIN_W = 200;
 const MAX_W = 420;
 
+/** تبويبات التنقل السفلي على الموبيل. */
+const mobileTabs: { path: string; label: string; icon: typeof Wallet }[] = [
+  { path: "/accounting", label: "الرئيسية", icon: PieChart },
+  { path: "/accounting/sales-orders", label: "المبيعات", icon: Truck },
+  { path: "/accounting/purchase-orders", label: "المشتريات", icon: ShoppingCart },
+  { path: "/accounting/stock-balance", label: "المخزون", icon: Boxes },
+];
+
 /** المجموعة التي تحتوي الصفحة الحالية. */
 function groupOfPath(pathname: string) {
   const exact = accountingNav.find((g) => g.items.some((i) => i.path === pathname));
@@ -72,6 +80,19 @@ export function AccountingLayout({ children }: { children: ReactNode }) {
   useEffect(() => {
     const g = groupOfPath(pathname);
     if (g) setOpenGroup(g);
+  }, [pathname]);
+
+  // منع تمرير الصفحة أثناء فتح الدرج على الموبيل
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileOpen]);
+
+  // إغلاق الدرج تلقائياً عند تغيير الصفحة
+  useEffect(() => {
+    setMobileOpen(false);
   }, [pathname]);
 
   const toggleGroup = (title: string) => setOpenGroup((cur) => (cur === title ? null : title));
@@ -104,29 +125,38 @@ export function AccountingLayout({ children }: { children: ReactNode }) {
 
   return (
     <div dir="rtl" className="min-h-screen bg-background text-foreground">
-      <header className="sticky top-0 z-40 h-16 border-b border-white/10 bg-sidebar/95 text-sidebar-foreground shadow-sm backdrop-blur supports-[backdrop-filter]:bg-sidebar/80">
-        <div className="flex h-full items-center gap-3 px-3 sm:px-4">
+      <header className="sticky top-0 z-40 border-b border-white/10 bg-sidebar/95 pt-[env(safe-area-inset-top)] text-sidebar-foreground shadow-sm backdrop-blur supports-[backdrop-filter]:bg-sidebar/80">
+        <div className="flex h-14 items-center gap-2 px-3 sm:gap-3 sm:px-4 lg:h-16">
           <Button
             variant="ghost"
             size="icon"
-            className="lg:hidden hover:bg-white/10 hover:text-sidebar-foreground"
+            className="h-10 w-10 shrink-0 hover:bg-white/10 hover:text-sidebar-foreground lg:hidden"
             onClick={() => setMobileOpen((v) => !v)}
             aria-label="القائمة"
           >
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
 
-          <Link to="/accounting" className="group flex items-center gap-2.5">
+          {/* الهوية: كاملة على الشاشات الكبيرة، مختصرة على الموبيل */}
+          <Link to="/accounting" className="group hidden items-center gap-2.5 lg:flex">
             <span className="grid h-10 w-10 place-items-center rounded-xl bg-accent text-accent-foreground shadow-sm transition-transform group-hover:scale-105">
               <Wallet className="h-5 w-5" />
             </span>
             <span className="flex flex-col leading-tight">
-              <span className="text-base font-bold tracking-tight sm:text-lg">برنامج إعمار المحاسبى</span>
-              <span className="hidden text-[11px] text-sidebar-foreground/60 sm:block">
-                إعمار لتجارة الأعلاف — الجنيه المصري
-              </span>
+              <span className="text-lg font-bold tracking-tight">برنامج إعمار المحاسبى</span>
+              <span className="text-[11px] text-sidebar-foreground/60">إعمار لتجارة الأعلاف — الجنيه المصري</span>
             </span>
           </Link>
+
+          {/* عنوان الشاشة الحالية بأسلوب تطبيقات الموبيل */}
+          <div className="flex min-w-0 flex-1 flex-col items-center leading-tight lg:hidden">
+            <span className="max-w-full truncate text-[15px] font-bold">
+              {activeItem?.label ?? "لوحة المتابعة"}
+            </span>
+            {activeGroupTitle && (
+              <span className="max-w-full truncate text-[10px] text-sidebar-foreground/60">{activeGroupTitle}</span>
+            )}
+          </div>
 
           <div className="mx-1 hidden h-8 w-px bg-white/10 lg:block" />
 
@@ -142,7 +172,7 @@ export function AccountingLayout({ children }: { children: ReactNode }) {
           </Button>
 
           {/* مسار الصفحة الحالية */}
-          <nav aria-label="مسار التنقل" className="hidden min-w-0 items-center gap-1.5 text-xs md:flex">
+          <nav aria-label="مسار التنقل" className="hidden min-w-0 items-center gap-1.5 text-xs lg:flex">
             {activeGroupTitle && (
               <>
                 <span className="truncate rounded-md bg-white/10 px-2 py-1 font-medium text-sidebar-foreground/70">
@@ -154,12 +184,12 @@ export function AccountingLayout({ children }: { children: ReactNode }) {
             <span className="truncate font-semibold text-accent">{activeItem?.label ?? "لوحة المتابعة"}</span>
           </nav>
 
-          <div className="ms-auto flex items-center gap-2">
+          <div className="flex shrink-0 items-center gap-2 lg:ms-auto">
             <OfflineIndicator />
             <Button
               variant="outline"
               size="sm"
-              className="border-white/15 bg-transparent text-sidebar-foreground shadow-sm hover:bg-white/10 hover:text-sidebar-foreground"
+              className="hidden border-white/15 bg-transparent text-sidebar-foreground shadow-sm hover:bg-white/10 hover:text-sidebar-foreground sm:inline-flex"
               onClick={() => {
                 resetDb();
                 window.location.reload();
@@ -172,11 +202,42 @@ export function AccountingLayout({ children }: { children: ReactNode }) {
         </div>
       </header>
 
+      {/* خلفية معتمة للدرج على الموبيل */}
+      <div
+        onClick={() => setMobileOpen(false)}
+        aria-hidden
+        className={`fixed inset-0 z-30 bg-black/50 backdrop-blur-sm transition-opacity duration-300 lg:hidden ${
+          mobileOpen ? "opacity-100" : "pointer-events-none opacity-0"
+        }`}
+      />
+
       <div className="flex">
         <aside
           style={{ width: sidebarWidth }}
-          className={`${mobileOpen ? "flex" : "hidden"} fixed inset-y-16 start-0 z-30 flex-col overflow-hidden bg-sidebar p-2.5 text-sidebar-foreground lg:sticky lg:top-16 lg:flex lg:h-[calc(100vh-4rem)] lg:shrink-0`}
+          className={`fixed inset-y-0 start-0 z-40 flex max-w-[86vw] flex-col overflow-hidden bg-sidebar p-2.5 pt-[calc(env(safe-area-inset-top)+0.625rem)] text-sidebar-foreground shadow-2xl transition-transform duration-300 ease-out lg:sticky lg:top-16 lg:z-30 lg:h-[calc(100vh-4rem)] lg:max-w-none lg:shrink-0 lg:translate-x-0 lg:pt-2.5 lg:shadow-none ${
+            mobileOpen ? "translate-x-0" : "translate-x-full"
+          }`}
         >
+          {/* رأس الدرج على الموبيل */}
+          <div className="mb-2 flex items-center gap-2.5 border-b border-sidebar-border pb-2.5 lg:hidden">
+            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-accent text-accent-foreground">
+              <Wallet className="h-4.5 w-4.5" />
+            </span>
+            <span className="flex min-w-0 flex-1 flex-col items-start leading-tight">
+              <span className="truncate text-[13px] font-bold">برنامج إعمار المحاسبى</span>
+              <span className="truncate text-[10px] text-sidebar-foreground/60">إعمار لتجارة الأعلاف</span>
+            </span>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-9 w-9 shrink-0 hover:bg-white/10 hover:text-sidebar-foreground"
+              onClick={() => setMobileOpen(false)}
+              aria-label="إغلاق"
+            >
+              <X className="h-5 w-5" />
+            </Button>
+          </div>
+
           <div className="flex min-h-0 flex-1 flex-col gap-3">
             <nav className="min-h-0 flex-1 space-y-1 overflow-y-auto">
               {accountingNav.map((group) => {
@@ -284,12 +345,56 @@ export function AccountingLayout({ children }: { children: ReactNode }) {
           />
         )}
 
-        <main className="min-w-0 flex-1 p-4 lg:p-6">
+        <main className="min-w-0 flex-1 p-3 pb-[calc(4.5rem+env(safe-area-inset-bottom))] sm:p-4 lg:p-6 lg:pb-6">
           <div key={pathname} className="page-transition">
             {children}
           </div>
         </main>
       </div>
+
+      {/* شريط التنقل السفلي بأسلوب تطبيقات الموبيل */}
+      <nav
+        aria-label="التنقل السريع"
+        className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-sidebar/95 pb-[env(safe-area-inset-bottom)] text-sidebar-foreground backdrop-blur lg:hidden"
+      >
+        <ul className="grid grid-cols-5">
+          {mobileTabs.map((tab) => {
+            const active = tab.path === "/accounting" ? pathname === tab.path : pathname.startsWith(tab.path);
+            return (
+              <li key={tab.path}>
+                <Link
+                  to={tab.path}
+                  onClick={() => setMobileOpen(false)}
+                  className={`flex flex-col items-center gap-1 py-2 text-[10px] font-semibold transition-colors ${
+                    active ? "text-sidebar-primary" : "text-sidebar-foreground/60"
+                  }`}
+                >
+                  <span
+                    className={`grid h-8 w-12 place-items-center rounded-full transition-colors ${
+                      active ? "bg-sidebar-primary/15" : ""
+                    }`}
+                  >
+                    <tab.icon className="h-5 w-5" />
+                  </span>
+                  <span className="truncate">{tab.label}</span>
+                </Link>
+              </li>
+            );
+          })}
+          <li>
+            <button
+              type="button"
+              onClick={() => setMobileOpen(true)}
+              className="flex w-full flex-col items-center gap-1 py-2 text-[10px] font-semibold text-sidebar-foreground/60"
+            >
+              <span className="grid h-8 w-12 place-items-center rounded-full">
+                <Menu className="h-5 w-5" />
+              </span>
+              <span>المزيد</span>
+            </button>
+          </li>
+        </ul>
+      </nav>
     </div>
   );
 }

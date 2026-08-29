@@ -48,11 +48,11 @@ const Table = React.forwardRef<HTMLTableElement, TableProps>(
 
     return (
       <TableContext.Provider value={ctx}>
-        <div className="relative w-full overflow-auto">
+        <div className="relative w-full overflow-x-auto [-webkit-overflow-scrolling:touch]">
           <table
             ref={ref}
             data-resizable={resizableColumns ? "true" : undefined}
-            className={cn("w-full caption-bottom text-sm", className)}
+            className={cn("w-full min-w-[640px] caption-bottom text-sm whitespace-nowrap", className)}
             {...props}
           />
         </div>
