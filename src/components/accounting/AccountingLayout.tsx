@@ -287,7 +287,7 @@ export function AccountingLayout({ children }: { children: ReactNode }) {
                   <span className="mb-1 block text-[10px] text-sidebar-foreground/55">السنة المالية</span>
                   <div className="flex items-center gap-2 rounded-lg bg-sidebar-accent/60 px-2.5 py-2 text-[13px] font-semibold">
                     <CalendarDays className="h-4 w-4 shrink-0 text-sidebar-primary" />
-                    <span className="flex-1 text-end">{new Date().getFullYear()}</span>
+                    <span className="flex-1 text-start">{new Date().getFullYear()}</span>
                     <ChevronDown className="h-4 w-4 shrink-0 text-sidebar-foreground/45" />
                   </div>
                 </div>
@@ -296,7 +296,7 @@ export function AccountingLayout({ children }: { children: ReactNode }) {
                   <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-sidebar-accent text-[11px] font-bold text-sidebar-primary">
                     إع
                   </span>
-                  <div className="flex min-w-0 flex-1 flex-col items-end leading-tight">
+                  <div className="flex min-w-0 flex-1 flex-col items-start leading-tight">
                     <span className="truncate text-[12px] font-bold">مدير النظام</span>
                     <span className="truncate text-[10px] text-sidebar-foreground/55">الوضع التجريبي</span>
                   </div>
