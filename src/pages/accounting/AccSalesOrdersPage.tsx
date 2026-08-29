@@ -109,6 +109,30 @@ const AccSalesOrdersPage: React.FC = () => {
     refresh('acc_sales_orders');
   };
 
+  const sumLines = (o: any, field: string) =>
+    orderLines.filter((l: any) => l.so_id === o.id).reduce((s2: number, l: any) => s2 + num(l[field]), 0);
+
+  const orderColumns: Column<any>[] = [
+    { header: 'رقم الأمر', cell: (o) => <span className="font-medium">{o.so_no}</span> },
+    { header: 'التاريخ', cell: (o) => new Date(o.so_date).toLocaleDateString('en-GB') },
+    { header: 'العميل', cell: (o) => o.customer_name },
+    { header: 'المخزن', cell: (o) => o.warehouse_name },
+    { header: 'الكمية', cell: (o) => `${qty(sumLines(o, 'quantity_kg'))} كجم` },
+    { header: 'المسلَّم', cell: (o) => `${qty(sumLines(o, 'delivered_kg'))} كجم` },
+    { header: 'الإجمالي', cell: (o) => <span className="font-semibold">{money(o.total)} ج.م</span> },
+    { header: 'الحالة', cell: (o) => <StatusBadge status={o.status} /> },
+    {
+      header: 'إجراءات',
+      cell: (o) => (
+        <RowActions>
+          <Button variant="ghost" size="icon" title="إلغاء الأمر" onClick={() => cancel(o)}>
+            <XCircle className="h-4 w-4 text-destructive" />
+          </Button>
+        </RowActions>
+      ),
+    },
+  ];
+
   return (
     <div className="p-6 space-y-6" dir="rtl">
       <PageHeader
