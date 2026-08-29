@@ -324,12 +324,56 @@ export function AccountingLayout({ children }: { children: ReactNode }) {
           />
         )}
 
-        <main className="min-w-0 flex-1 p-4 lg:p-6">
+        <main className="min-w-0 flex-1 p-3 pb-[calc(4.5rem+env(safe-area-inset-bottom))] sm:p-4 lg:p-6 lg:pb-6">
           <div key={pathname} className="page-transition">
             {children}
           </div>
         </main>
       </div>
+
+      {/* شريط التنقل السفلي بأسلوب تطبيقات الموبيل */}
+      <nav
+        aria-label="التنقل السريع"
+        className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-sidebar/95 pb-[env(safe-area-inset-bottom)] text-sidebar-foreground backdrop-blur lg:hidden"
+      >
+        <ul className="grid grid-cols-5">
+          {mobileTabs.map((tab) => {
+            const active = tab.path === "/accounting" ? pathname === tab.path : pathname.startsWith(tab.path);
+            return (
+              <li key={tab.path}>
+                <Link
+                  to={tab.path}
+                  onClick={() => setMobileOpen(false)}
+                  className={`flex flex-col items-center gap-1 py-2 text-[10px] font-semibold transition-colors ${
+                    active ? "text-sidebar-primary" : "text-sidebar-foreground/60"
+                  }`}
+                >
+                  <span
+                    className={`grid h-8 w-12 place-items-center rounded-full transition-colors ${
+                      active ? "bg-sidebar-primary/15" : ""
+                    }`}
+                  >
+                    <tab.icon className="h-5 w-5" />
+                  </span>
+                  <span className="truncate">{tab.label}</span>
+                </Link>
+              </li>
+            );
+          })}
+          <li>
+            <button
+              type="button"
+              onClick={() => setMobileOpen(true)}
+              className="flex w-full flex-col items-center gap-1 py-2 text-[10px] font-semibold text-sidebar-foreground/60"
+            >
+              <span className="grid h-8 w-12 place-items-center rounded-full">
+                <Menu className="h-5 w-5" />
+              </span>
+              <span>المزيد</span>
+            </button>
+          </li>
+        </ul>
+      </nav>
     </div>
   );
 }
