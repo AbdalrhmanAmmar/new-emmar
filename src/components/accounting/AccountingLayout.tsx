@@ -82,6 +82,19 @@ export function AccountingLayout({ children }: { children: ReactNode }) {
     if (g) setOpenGroup(g);
   }, [pathname]);
 
+  // منع تمرير الصفحة أثناء فتح الدرج على الموبيل
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileOpen]);
+
+  // إغلاق الدرج تلقائياً عند تغيير الصفحة
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
+
   const toggleGroup = (title: string) => setOpenGroup((cur) => (cur === title ? null : title));
 
 
