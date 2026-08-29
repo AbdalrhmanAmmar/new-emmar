@@ -111,12 +111,12 @@ export function AccountingLayout({ children }: { children: ReactNode }) {
 
   return (
     <div dir="rtl" className="min-h-screen bg-background text-foreground">
-      <header className="sticky top-0 z-40 h-16 border-b border-border bg-card/95 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-card/80">
+      <header className="sticky top-0 z-40 h-16 border-b border-white/10 bg-sidebar/95 text-sidebar-foreground shadow-sm backdrop-blur supports-[backdrop-filter]:bg-sidebar/80">
         <div className="flex h-full items-center gap-3 px-3 sm:px-4">
           <Button
             variant="ghost"
             size="icon"
-            className="lg:hidden"
+            className="lg:hidden hover:bg-white/10 hover:text-sidebar-foreground"
             onClick={() => setMobileOpen((v) => !v)}
             aria-label="القائمة"
           >
@@ -124,23 +124,23 @@ export function AccountingLayout({ children }: { children: ReactNode }) {
           </Button>
 
           <Link to="/accounting" className="group flex items-center gap-2.5">
-            <span className="grid h-10 w-10 place-items-center rounded-xl bg-primary text-primary-foreground shadow-sm transition-transform group-hover:scale-105">
+            <span className="grid h-10 w-10 place-items-center rounded-xl bg-accent text-accent-foreground shadow-sm transition-transform group-hover:scale-105">
               <Wallet className="h-5 w-5" />
             </span>
             <span className="flex flex-col leading-tight">
               <span className="text-base font-bold tracking-tight sm:text-lg">برنامج إعمار المحاسبى</span>
-              <span className="hidden text-[11px] text-muted-foreground sm:block">
+              <span className="hidden text-[11px] text-sidebar-foreground/60 sm:block">
                 إعمار لتجارة الأعلاف — الجنيه المصري
               </span>
             </span>
           </Link>
 
-          <div className="mx-1 hidden h-8 w-px bg-border lg:block" />
+          <div className="mx-1 hidden h-8 w-px bg-white/10 lg:block" />
 
           <Button
             variant="ghost"
             size="icon"
-            className="hidden shrink-0 lg:inline-flex"
+            className="hidden shrink-0 hover:bg-white/10 hover:text-sidebar-foreground lg:inline-flex"
             onClick={() => setCollapsed((v) => !v)}
             aria-label={collapsed ? "توسيع القائمة" : "تصغير القائمة"}
             title={collapsed ? "توسيع القائمة" : "تصغير القائمة"}
@@ -152,13 +152,13 @@ export function AccountingLayout({ children }: { children: ReactNode }) {
           <nav aria-label="مسار التنقل" className="hidden min-w-0 items-center gap-1.5 text-xs md:flex">
             {activeGroupTitle && (
               <>
-                <span className="truncate rounded-md bg-muted px-2 py-1 font-medium text-muted-foreground">
+                <span className="truncate rounded-md bg-white/10 px-2 py-1 font-medium text-sidebar-foreground/70">
                   {activeGroupTitle}
                 </span>
-                <ChevronLeft className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                <ChevronLeft className="h-3.5 w-3.5 shrink-0 text-sidebar-foreground/50" />
               </>
             )}
-            <span className="truncate font-semibold text-primary">{activeItem?.label ?? "لوحة المتابعة"}</span>
+            <span className="truncate font-semibold text-accent">{activeItem?.label ?? "لوحة المتابعة"}</span>
           </nav>
 
           <div className="ms-auto flex items-center gap-2">
@@ -166,7 +166,7 @@ export function AccountingLayout({ children }: { children: ReactNode }) {
             <Button
               variant="outline"
               size="sm"
-              className="shadow-sm"
+              className="border-white/15 bg-transparent text-sidebar-foreground shadow-sm hover:bg-white/10 hover:text-sidebar-foreground"
               onClick={() => {
                 resetDb();
                 window.location.reload();
