@@ -2,13 +2,22 @@ import React, { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 import { AlertTriangle, CheckCircle2, Loader2, Plus, Save, Trash2, XCircle } from 'lucide-react';
 
-import ExportPdfButton from '@/components/accounting/ExportPdfButton';
-import RowActions from '@/components/accounting/RowActions';
-import StatusBadge from '@/components/accounting/StatusBadge';
+import {
+  DataTableCard,
+  DateField,
+  ExportPdfButton,
+  FieldGrid,
+  NumberField,
+  PageHeader,
+  RowActions,
+  SelectField,
+  StatusBadge,
+  TotalsBar,
+  type Column,
+} from '@/components/accounting';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useRefresh, useTable } from '@/hooks/useTable';
