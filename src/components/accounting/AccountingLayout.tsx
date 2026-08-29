@@ -185,31 +185,6 @@ export function AccountingLayout({ children }: { children: ReactNode }) {
           className={`${mobileOpen ? "block" : "hidden"} fixed inset-y-16 start-0 z-30 overflow-y-auto bg-sidebar p-2.5 text-sidebar-foreground lg:sticky lg:top-16 lg:block lg:h-[calc(100vh-4rem)] lg:shrink-0`}
         >
           <div className="flex min-h-full flex-col gap-3">
-            {/* هوية البرنامج داخل القائمة */}
-            {!collapsed && (
-              <div className="flex items-center gap-2 rounded-xl bg-sidebar-accent/60 px-2.5 py-2">
-                <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                  <Wallet className="h-4 w-4" />
-                </span>
-                <div className="flex min-w-0 flex-1 flex-col items-start leading-tight">
-                  <span className="truncate text-[13px] font-bold text-sidebar-primary">
-                    إعمار لتجارة الأعلاف
-                  </span>
-                  <span className="truncate text-[10px] text-sidebar-foreground/60">
-                    النظام المحاسبي — مصر
-                  </span>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setCollapsed(true)}
-                  aria-label="تصغير القائمة"
-                  className="hidden h-7 w-7 shrink-0 place-items-center rounded-md text-sidebar-foreground/60 transition-colors hover:bg-sidebar-accent hover:text-sidebar-primary lg:grid"
-                >
-                  <ChevronsRight className="h-4 w-4" />
-                </button>
-              </div>
-            )}
-
             <nav className="flex-1 space-y-1">
               {accountingNav.map((group) => {
                 const Icon = groupIcons[group.title] ?? Settings;
