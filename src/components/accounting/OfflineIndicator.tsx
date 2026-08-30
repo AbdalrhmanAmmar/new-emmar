@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { flushOutbox, isOnline, pendingOps, subscribeOutbox } from "@/lib/offline";
 
-export function OfflineIndicator() {
+export function OfflineIndicator({ light = false }: { light?: boolean }) {
   const [online, setOnline] = useState(true);
   const [pending, setPending] = useState(0);
   const [syncing, setSyncing] = useState(false);
@@ -52,7 +52,13 @@ export function OfflineIndicator() {
     <div className="flex items-center gap-2">
       <span
         className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${
-          online ? "bg-primary/10 text-primary" : "bg-destructive/10 text-destructive"
+          light
+            ? online
+              ? "bg-white/10 text-white"
+              : "bg-white/10 text-white"
+            : online
+              ? "bg-primary/10 text-primary"
+              : "bg-destructive/10 text-destructive"
         }`}
         title={online ? "متصل بالإنترنت" : "غير متصل — العمل مستمر محليًا"}
       >

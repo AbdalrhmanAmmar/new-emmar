@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { toast } from 'sonner';
-import { Save, Settings2 } from 'lucide-react';
+import { RotateCcw, Save, Settings2 } from 'lucide-react';
 
 import { PageHeader, NumberField, SwitchRow } from '@/components/accounting';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useRefresh } from '@/hooks/useTable';
 import { DEFAULT_SETTINGS, getSettings, num, saveSettings, type DocSettings } from '@/lib/docFlow';
+import { resetDb } from '@/lib/mockDb';
 
 const AccDocSettingsPage: React.FC = () => {
   const refresh = useRefresh();
@@ -73,6 +74,25 @@ const AccDocSettingsPage: React.FC = () => {
           <SwitchRow title="منع تجاوز حد ائتمان العميل" description="يرفض أمر البيع إذا تجاوز الرصيد + قيمة الأمر حد الائتمان." checked={form.enforce_credit_limit} onCheckedChange={(v) => set('enforce_credit_limit', v)} />
           <SwitchRow title="منع الاستلام بأكثر من كمية أمر الشراء" description="يمنع دخول كميات غير متعاقد عليها للمخزن." checked={form.block_over_receipt} onCheckedChange={(v) => set('block_over_receipt', v)} />
           <SwitchRow title="إظهار حقول الفاتورة الإلكترونية" description="البطاقة الضريبية وأكواد الأصناف للتوافق مع منظومة الفاتورة المصرية." checked={form.einvoice_fields_enabled} onCheckedChange={(v) => set('einvoice_fields_enabled', v)} />
+        </CardContent>
+      </Card>
+
+      <Card className="border-destructive/30">
+        <CardHeader><CardTitle className="text-destructive">بيانات النظام</CardTitle></CardHeader>
+        <CardContent className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-sm text-muted-foreground">
+            إعادة تعيين كامل بيانات البرنامج التجريبية إلى حالتها الافتراضية (البيانات الحالية ستُحذف نهائياً).
+          </p>
+          <Button
+            variant="destructive"
+            onClick={() => {
+              if (!window.confirm('سيتم حذف كل البيانات الحالية واستعادة البيانات التجريبية الافتراضية. متابعة؟')) return;
+              resetDb();
+              window.location.reload();
+            }}
+          >
+            <RotateCcw className="h-4 w-4 me-1" /> إعادة تعيين البيانات
+          </Button>
         </CardContent>
       </Card>
 

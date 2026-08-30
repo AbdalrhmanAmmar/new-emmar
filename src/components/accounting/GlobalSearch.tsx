@@ -30,7 +30,7 @@ const SOURCES: { table: string; label: string; path: string; fields: string[] }[
 
 type Hit = { key: string; kind: string; title: string; subtitle: string; path: string };
 
-export function GlobalSearch() {
+export function GlobalSearch({ className = "" }: { className?: string }) {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState("");
@@ -109,17 +109,19 @@ export function GlobalSearch() {
         type="button"
         onClick={() => setOpen(true)}
         title="بحث شامل (Ctrl + K)"
-        className="flex h-10 items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-3 text-sidebar-foreground/80 transition-colors hover:bg-white/10"
+        className={`flex h-10 w-full items-center gap-2.5 rounded-full border border-white/10 bg-white/10 px-4 text-sidebar-foreground/75 shadow-inner backdrop-blur transition-all hover:bg-white/15 hover:shadow-md ${className}`}
       >
-        <Search className="h-4 w-4" />
-        <span className="hidden text-xs md:inline">بحث شامل…</span>
-        <span className="hidden rounded-md border border-white/20 px-1.5 py-0.5 text-[10px] lg:inline">Ctrl K</span>
+        <Search className="h-4 w-4 shrink-0 opacity-70" />
+        <span className="flex-1 truncate text-start text-xs md:text-[13px]">بحث شامل…</span>
+        <kbd className="hidden shrink-0 rounded-md border border-white/20 bg-white/5 px-1.5 py-0.5 font-sans text-[10px] lg:inline">
+          Ctrl K
+        </kbd>
       </button>
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent
           dir="rtl"
-          className="top-[12%] max-w-2xl translate-y-0 gap-0 overflow-hidden p-0"
+          className="top-[18%] max-w-2xl translate-y-0 gap-0 overflow-hidden rounded-2xl border-white/20 bg-card/95 p-0 shadow-2xl backdrop-blur-xl"
           aria-describedby={undefined}
         >
           <div className="flex items-center gap-2 border-b border-border px-4">
