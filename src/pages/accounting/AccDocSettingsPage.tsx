@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { toast } from 'sonner';
-import { Save, Settings2 } from 'lucide-react';
+import { RotateCcw, Save, Settings2 } from 'lucide-react';
 
 import { PageHeader, NumberField, SwitchRow } from '@/components/accounting';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useRefresh } from '@/hooks/useTable';
 import { DEFAULT_SETTINGS, getSettings, num, saveSettings, type DocSettings } from '@/lib/docFlow';
+import { resetDb } from '@/lib/mockDb';
 
 const AccDocSettingsPage: React.FC = () => {
   const refresh = useRefresh();
