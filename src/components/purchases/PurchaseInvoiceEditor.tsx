@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { money, num, today } from "@/lib/format";
+import { addDays } from "@/lib/settingsRules";
 import {
   SALES_PAY_LABEL,
   UNIT_LABEL,
