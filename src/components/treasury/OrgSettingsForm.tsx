@@ -131,6 +131,46 @@ export function OrgSettingsForm() {
 
       <Card>
         <CardHeader className="pb-2">
+          <CardTitle className="text-sm">شعار الشركة</CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-wrap items-center gap-4">
+          <div className="flex size-20 items-center justify-center overflow-hidden rounded-full border border-border bg-muted text-2xl font-bold text-primary">
+            {form.logoDataUrl ? (
+              <img src={form.logoDataUrl} alt="شعار الشركة" className="size-full object-cover" />
+            ) : (
+              form.logoLetter || "إ"
+            )}
+          </div>
+          <div className="space-y-1.5">
+            <div className="flex gap-2">
+              <Button type="button" variant="outline" size="sm" onClick={() => fileRef.current?.click()}>
+                <ImagePlus className="size-4" /> رفع الشعار
+              </Button>
+              {form.logoDataUrl ? (
+                <Button type="button" variant="ghost" size="sm" onClick={() => set("logoDataUrl", undefined)}>
+                  <Trash2 className="size-4" /> إزالة
+                </Button>
+              ) : null}
+            </div>
+            <p className="max-w-sm text-[11px] text-muted-foreground">
+              يظهر الشعار فى الشريط الجانبى وشاشة الدخول وجميع المطبوعات. عند عدم رفع شعار يُستخدم «حرف الشعار» فى المطبوعات.
+            </p>
+            <input
+              ref={fileRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => {
+                void pickLogo(e.target.files?.[0]);
+                e.target.value = "";
+              }}
+            />
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader className="pb-2">
           <CardTitle className="text-sm">الضرائب والسياسات المالية</CardTitle>
         </CardHeader>
         <CardContent className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
