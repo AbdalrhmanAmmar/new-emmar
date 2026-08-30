@@ -21,7 +21,98 @@ export interface Branch {
 export interface AppUser {
   id: string;
   name: string;
+  /** المسمى الوظيفى الظاهر فى الشاشات */
   role: string;
+  code?: string;
+  username?: string;
+  password?: string;
+  phone?: string;
+  email?: string;
+  branchId?: string;
+  roleId?: string | null;
+  active?: boolean;
+  note?: string;
+  lastLogin?: string | null;
+}
+
+/* ===================== الصلاحيات ===================== */
+
+export type PermAction = "view" | "create" | "edit" | "delete" | "post" | "print";
+
+export const PERM_ACTION_LABEL: Record<PermAction, string> = {
+  view: "عرض",
+  create: "إضافة",
+  edit: "تعديل",
+  delete: "حذف",
+  post: "ترحيل/اعتماد",
+  print: "طباعة",
+};
+
+export const PERM_ACTIONS: PermAction[] = ["view", "create", "edit", "delete", "post", "print"];
+
+/** شاشات النظام القابلة للتصريح — مقسمة على الموديولات */
+export interface PermScreen {
+  key: string;
+  label: string;
+  module: string;
+}
+
+export const PERM_SCREENS: PermScreen[] = [
+  { key: "treasury.safes", label: "الخزن والحسابات البنكية", module: "الخزينة" },
+  { key: "treasury.vouchers", label: "سندات القبض والصرف", module: "الخزينة" },
+  { key: "treasury.transfers", label: "التحويل بين الخزن", module: "الخزينة" },
+  { key: "treasury.shifts", label: "تقفيل الورديات والمطابقة", module: "الخزينة" },
+  { key: "sales.invoices", label: "فواتير المبيعات", module: "المبيعات" },
+  { key: "sales.pos", label: "الكاشير / نقطة البيع", module: "المبيعات" },
+  { key: "sales.returns", label: "مرتجعات المبيعات", module: "المبيعات" },
+  { key: "sales.customers", label: "العملاء", module: "المبيعات" },
+  { key: "sales.products", label: "الأصناف والأسعار", module: "المبيعات" },
+  { key: "purchases.invoices", label: "فواتير المشتريات", module: "المشتريات" },
+  { key: "purchases.returns", label: "مرتجعات المشتريات", module: "المشتريات" },
+  { key: "purchases.suppliers", label: "الموردون", module: "المشتريات" },
+  { key: "inventory.moves", label: "الأذون المخزنية", module: "المخازن" },
+  { key: "inventory.warehouses", label: "تكويد المخازن", module: "المخازن" },
+  { key: "inventory.balance", label: "أرصدة وتقييم المخزون", module: "المخازن" },
+  { key: "expenses.docs", label: "المصروفات والنثريات", module: "المصروفات" },
+  { key: "hr.employees", label: "بيانات الموظفين", module: "الموظفون" },
+  { key: "hr.attendance", label: "الحضور والبدلات", module: "الموظفون" },
+  { key: "hr.payroll", label: "مسير الرواتب", module: "الموظفون" },
+  { key: "reports.all", label: "التقارير", module: "التقارير" },
+  { key: "system.settings", label: "إعدادات النظام والبيانات الرئيسية", module: "النظام" },
+  { key: "system.users", label: "إدارة المستخدمين والصلاحيات", module: "النظام" },
+];
+
+/** خريطة الصلاحيات: مفتاح الشاشة => الإجراءات المسموحة */
+export type PermMap = Record<string, PermAction[]>;
+
+export interface AppRole {
+  id: string;
+  code: string;
+  name: string
+  description: string;
+  /** مدير النظام: كل الصلاحيات مفتوحة ولا يمكن حذفه */
+  superAdmin: boolean;
+  system: boolean;
+  permissions: PermMap;
+}
+
+export function fullPerms(): PermMap {
+  const map: PermMap = {};
+  for (const screen of PERM_SCREENS) map[screen.key] = [...PERM_ACTIONS];
+  return map;
+}
+
+export function emptyPerms(): PermMap {
+  const map: PermMap = {};
+  for (const screen of PERM_SCREENS) map[screen.key] = [];
+  return map;
+}
+
+/** صلاحيات مبنية على قائمة شاشات محددة */
+export function permsFor(entries: Record<string, PermAction[]>): PermMap {
+  const map = emptyPerms();
+  for (const [key, actions] of Object.entries(entries)) map[key] = [...actions];
+  return map;
 }
 
 export interface Party {
@@ -589,6 +680,7 @@ export const ATTENDANCE_LABEL: Record<AttendanceStatus, string> = {
 export interface DbShape {
   branches: Branch[];
   users: AppUser[];
+  roles: AppRole[];
   customers: Party[];
   suppliers: Party[];
   categories: Category[];
@@ -639,10 +731,128 @@ function seed(): DbShape {
     { id: "br3", name: "فرع الشرقية" },
   ];
 
+  const roles: AppRole[] = [
+    {
+      id: "rl1",
+      code: "RL-001",
+      name: "مدير النظام",
+      description: "صلاحيات كاملة على كل الشاشات والإعدادات",
+      superAdmin: true,
+      system: true,
+      permissions: fullPerms(),
+    },
+    {
+      id: "rl2",
+      code: "RL-002",
+      name: "أمين خزينة",
+      description: "السندات والتحويلات وتقفيل الوردية",
+      superAdmin: false,
+      system: false,
+      permissions: permsFor({
+        "treasury.safes": ["view", "print"],
+        "treasury.vouchers": ["view", "create", "edit", "post", "print"],
+        "treasury.transfers": ["view", "create", "print"],
+        "treasury.shifts": ["view", "create", "post", "print"],
+        "reports.all": ["view", "print"],
+      }),
+    },
+    {
+      id: "rl3",
+      code: "RL-003",
+      name: "محاسب",
+      description: "الفواتير والمرتجعات والتقارير بدون حذف",
+      superAdmin: false,
+      system: false,
+      permissions: permsFor({
+        "treasury.vouchers": ["view", "create", "print"],
+        "sales.invoices": ["view", "create", "edit", "post", "print"],
+        "sales.returns": ["view", "create", "print"],
+        "sales.customers": ["view", "create", "edit"],
+        "purchases.invoices": ["view", "create", "edit", "post", "print"],
+        "purchases.returns": ["view", "create", "print"],
+        "purchases.suppliers": ["view", "create", "edit"],
+        "inventory.moves": ["view", "print"],
+        "inventory.balance": ["view", "print"],
+        "expenses.docs": ["view", "create", "print"],
+        "reports.all": ["view", "print"],
+      }),
+    },
+    {
+      id: "rl4",
+      code: "RL-004",
+      name: "كاشير / مندوب بيع",
+      description: "بيع نقدى من نقطة البيع فقط",
+      superAdmin: false,
+      system: false,
+      permissions: permsFor({
+        "sales.pos": ["view", "create", "print"],
+        "sales.invoices": ["view", "create", "print"],
+        "sales.customers": ["view"],
+        "sales.products": ["view"],
+      }),
+    },
+    {
+      id: "rl5",
+      code: "RL-005",
+      name: "أمين مخزن",
+      description: "الأذون المخزنية والأرصدة",
+      superAdmin: false,
+      system: false,
+      permissions: permsFor({
+        "inventory.moves": ["view", "create", "edit", "post", "print"],
+        "inventory.warehouses": ["view"],
+        "inventory.balance": ["view", "print"],
+        "sales.products": ["view"],
+      }),
+    },
+  ];
+
   const users: AppUser[] = [
-    { id: "u1", name: "محمد الإيمان", role: "مدير النظام" },
-    { id: "u2", name: "أحمد سالم", role: "أمين خزينة" },
-    { id: "u3", name: "منى عبد الله", role: "محاسب" },
+    {
+      id: "u1",
+      code: "US-001",
+      name: "محمد الإيمان",
+      role: "مدير النظام",
+      username: "admin",
+      password: "admin123",
+      phone: "01000000001",
+      email: "admin@aliman-feed.com",
+      branchId: "br1",
+      roleId: "rl1",
+      active: true,
+      note: "المستخدم الرئيسى للنظام",
+      lastLogin: null,
+    },
+    {
+      id: "u2",
+      code: "US-002",
+      name: "أحمد سالم",
+      role: "أمين خزينة",
+      username: "ahmed.salem",
+      password: "cash123",
+      phone: "01000000002",
+      email: "",
+      branchId: "br1",
+      roleId: "rl2",
+      active: true,
+      note: "",
+      lastLogin: null,
+    },
+    {
+      id: "u3",
+      code: "US-003",
+      name: "منى عبد الله",
+      role: "محاسب",
+      username: "mona.acc",
+      password: "acc12345",
+      phone: "01000000003",
+      email: "",
+      branchId: "br2",
+      roleId: "rl3",
+      active: true,
+      note: "",
+      lastLogin: null,
+    },
   ];
 
   const customers: Party[] = [
