@@ -79,6 +79,17 @@ const AccInventoryValuationPage: React.FC = () => {
     },
   });
 
+  const { data: itemsList = [] } = useQuery<any[]>({
+    queryKey: ['acc_items'],
+    queryFn: async () => (await (supabase as any).from('acc_items').select('*')).data ?? [],
+  });
+  const { data: whList = [] } = useQuery<any[]>({
+    queryKey: ['acc_warehouses'],
+    queryFn: async () => (await (supabase as any).from('acc_warehouses').select('*')).data ?? [],
+  });
+
+
+
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
     if (!q) return rows;
