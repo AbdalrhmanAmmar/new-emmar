@@ -35,7 +35,7 @@ export const RowActions = ({ children }: { children: React.ReactNode }) => {
             الإجراءات
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <div className="flex flex-wrap items-center justify-center gap-1 pt-1 [&>button]:h-8 [&>button]:w-8 [&>button]:rounded-md [&>button]:border [&>button]:border-border/60 [&>button]:bg-card hover:[&>button]:bg-accent/60">
+          <div className="flex flex-col gap-1 pt-1 [&>button]:flex [&>button]:w-full [&>button]:items-center [&>button]:justify-start [&>button]:gap-2 [&>button]:rounded-md [&>button]:px-2.5 [&>button]:py-1.5 [&>button]:text-sm [&>button]:text-foreground [&>button]:transition-colors [&>button:hover]:bg-primary [&>button:hover]:text-primary-foreground [&>button:hover]:border-transparent [&>button:focus-visible]:bg-primary [&>button:focus-visible]:text-primary-foreground [&>button]:border [&>button]:border-transparent [&>button]:bg-transparent [&>button]:cursor-pointer">
             {items}
           </div>
         </DropdownMenuContent>
