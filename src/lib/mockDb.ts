@@ -205,22 +205,26 @@ export const WAREHOUSE_TYPE_LABEL: Record<WarehouseType, string> = {
 /* ===================== المخازن وحركات المخزون ===================== */
 
 /** نوع الإذن المخزني */
-export type StockMoveKind = "in" | "out" | "transfer" | "adjust";
+export type StockMoveKind = "in" | "out" | "transfer" | "adjust" | "return_in" | "return_out";
 
 /** مصدر الإذن: تلقائى من فاتورة أو يدوى */
-export type StockMoveSource = "purchase" | "sales" | "manual";
+export type StockMoveSource = "purchase" | "sales" | "manual" | "sales_return" | "purchase_return";
 
 export const MOVE_KIND_LABEL: Record<StockMoveKind, string> = {
   in: "إذن إضافة مخزون",
   out: "إذن صرف مخزني",
   transfer: "تحويل بين المخازن",
   adjust: "تسوية مخزنية",
+  return_in: "إذن مرتجع وارد للمخزن",
+  return_out: "إذن مرتجع صادر من المخزن",
 };
 
 export const MOVE_SOURCE_LABEL: Record<StockMoveSource, string> = {
   purchase: "فاتورة مشتريات",
   sales: "فاتورة مبيعات",
   manual: "يدوى",
+  sales_return: "مرتجع مبيعات",
+  purchase_return: "مرتجع مشتريات",
 };
 
 export interface StockMoveLine {
@@ -349,6 +353,48 @@ export interface SalesInvoice {
   payCard: number;
   safeId: string | null;
   discountCode: string;
+  note: string;
+  status: DocStatus;
+}
+
+
+/* ===================== المرتجعات ===================== */
+
+/** نوع المرتجع: مرتجع مبيعات (من العميل) أو مرتجع مشتريات (إلى المورد) */
+export type ReturnKind = "sales" | "purchase";
+
+/** طريقة تسوية المرتجع: رد نقدى من/إلى الخزينة أو إشعار على الحساب */
+export type ReturnSettle = "cash" | "credit";
+
+export const RETURN_KIND_LABEL: Record<ReturnKind, string> = {
+  sales: "مرتجع مبيعات",
+  purchase: "مرتجع مشتريات",
+};
+
+export const RETURN_SETTLE_LABEL: Record<ReturnSettle, string> = {
+  cash: "رد نقدى من الخزينة",
+  credit: "إشعار على الحساب",
+};
+
+export interface ReturnDoc {
+  id: string;
+  /** رقم المرتجع المتسلسل SRT / PRT */
+  no: string;
+  kind: ReturnKind;
+  date: string;
+  branchId: string;
+  warehouseId: string;
+  userId: string;
+  /** العميل أو المورد */
+  partyId: string | null;
+  partyName: string;
+  /** الفاتورة الأصلية المرتجع منها */
+  refInvoiceId: string | null;
+  refInvoiceNo: string;
+  lines: SalesLine[];
+  settle: ReturnSettle;
+  safeId: string | null;
+  reason: string;
   note: string;
   status: DocStatus;
 }
@@ -558,6 +604,7 @@ export interface DbShape {
   discountCodes: DiscountCode[];
   salesInvoices: SalesInvoice[];
   purchaseInvoices: PurchaseInvoice[];
+  returns: ReturnDoc[];
   productCategories: ProductCategory[];
   measureUnits: MeasureUnit[];
   expenseItems: ExpenseItem[];
@@ -1128,6 +1175,8 @@ function seed(): DbShape {
     },
   ];
 
+  const returns: ReturnDoc[] = [];
+
   return {
     branches,
     users,
@@ -1146,6 +1195,7 @@ function seed(): DbShape {
     discountCodes,
     salesInvoices,
     purchaseInvoices,
+    returns,
     productCategories,
     measureUnits,
     expenseItems,
@@ -1177,6 +1227,7 @@ function load(): DbShape {
         purchaseInvoices: parsed.purchaseInvoices ?? base.purchaseInvoices,
         warehouses: parsed.warehouses?.length ? parsed.warehouses : base.warehouses,
         stockMoves: parsed.stockMoves ?? base.stockMoves,
+        returns: parsed.returns ?? base.returns,
         productCategories: parsed.productCategories?.length ? parsed.productCategories : base.productCategories,
         measureUnits: parsed.measureUnits?.length ? parsed.measureUnits : base.measureUnits,
         expenseItems: parsed.expenseItems?.length ? parsed.expenseItems : base.expenseItems,

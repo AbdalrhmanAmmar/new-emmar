@@ -1,5 +1,5 @@
 import { today } from "./format";
-import { linesFromInvoice, moveLineBaseQty } from "./inventory";
+import { linesFromInvoice, moveLineBaseQty, moveSign } from "./inventory";
 import {
   isDuplicate,
   mutate,
@@ -23,6 +23,8 @@ const KIND_PREFIX: Record<StockMoveKind, string> = {
   out: "ISS",
   transfer: "TRF",
   adjust: "ADJ",
+  return_in: "RTI",
+  return_out: "RTO",
 };
 
 export function nextMoveNo(data: DbShape, kind: StockMoveKind): string {
@@ -35,7 +37,8 @@ export function nextMoveNo(data: DbShape, kind: StockMoveKind): string {
 
 /** الرقم المرجعى المركّب: كود المستند + رقم الفاتورة */
 export function invoiceRefNo(source: StockMoveSource, invoiceNo: string): string {
-  const code = source === "purchase" ? "PINV" : "SINV";
+  const code =
+    source === "purchase" ? "PINV" : source === "sales_return" ? "SRTN" : source === "purchase_return" ? "PRTN" : "SINV";
   return `${code}-${invoiceNo}`;
 }
 
@@ -210,11 +213,11 @@ export function toggleWarehouseActive(id: string) {
 /* ===================== الأذون اليدوية ===================== */
 
 function applyMoveStock(data: DbShape, move: StockMove, direction: 1 | -1) {
-  if (move.kind === "transfer") return;
+  if (moveSign(move.kind) === 0) return;
   for (const line of move.lines) {
     const product = data.products.find((p) => p.id === line.productId);
     if (!product) continue;
-    const q = moveLineBaseQty(line) * (move.kind === "out" ? -1 : 1) * direction;
+    const q = moveLineBaseQty(line) * (moveSign(move.kind) < 0 ? -1 : 1) * direction;
     product.stock += q;
   }
 }
@@ -279,11 +282,11 @@ export function saveStockMove(
       return;
     }
 
-    if (record.status === "posted" && record.kind !== "in" && !data.settings.allowNegativeStock) {
+    if (record.status === "posted" && moveSign(record.kind) < 0 && !data.settings.allowNegativeStock) {
       for (const line of record.lines) {
         const product = data.products.find((p) => p.id === line.productId);
         if (!product) continue;
-        if (record.kind === "out" && moveLineBaseQty(line) > product.stock + 0.0001) {
+        if (moveLineBaseQty(line) > product.stock + 0.0001) {
           result = { ok: false, error: `الكمية المطلوبة من ${product.name} أكبر من المتاح (${product.stock})` };
           if (existing && existing.status === "posted") applyMoveStock(data, existing, 1);
           return;
