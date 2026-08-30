@@ -810,7 +810,14 @@ function load(): DbShape {
     if (raw) {
       const parsed = JSON.parse(raw) as Partial<DbShape>;
       const base = seed();
-      return { ...base, ...parsed, settings: { ...base.settings, ...(parsed.settings ?? {}) } };
+      return {
+        ...base,
+        ...parsed,
+        purchaseInvoices: parsed.purchaseInvoices ?? base.purchaseInvoices,
+        productCategories: parsed.productCategories?.length ? parsed.productCategories : base.productCategories,
+        settings: { ...base.settings, ...(parsed.settings ?? {}) },
+      };
+
 
     }
   } catch {
