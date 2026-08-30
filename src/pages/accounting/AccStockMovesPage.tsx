@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Loader2, Save } from 'lucide-react';
+import { Loader2, Save, Plus, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import ExportPdfButton from '@/components/accounting/ExportPdfButton';
 import { InlineFormPage } from '@/components/accounting/InlineFormPage';
@@ -23,18 +23,18 @@ const typeColor: Record<string, string> = {
   adjust: 'bg-muted text-muted-foreground',
 };
 
+interface Line { key: string; item_id: string; qty: number; unit_cost: number; batch_no: string; }
+const newLine = (): Line => ({ key: Math.random().toString(36).slice(2), item_id: '', qty: 0, unit_cost: 0, batch_no: '' });
+
 const AccStockMovesPage: React.FC = () => {
   const { isAdmin, hasPermission } = useAuth();
   const qc = useQueryClient();
   const canEdit = isAdmin || hasPermission('accounting_inventory' as any, 'edit');
 
   const [moveType, setMoveType] = useState<'in' | 'out' | 'transfer' | 'adjust'>('in');
-  const [itemId, setItemId] = useState('');
   const [warehouseId, setWarehouseId] = useState('');
   const [toWarehouseId, setToWarehouseId] = useState('');
-  const [qty, setQty] = useState(0);
-  const [unitCost, setUnitCost] = useState(0);
-  const [batchNo, setBatchNo] = useState('');
+  const [lines, setLines] = useState<Line[]>([newLine()]);
   const [moveDate, setMoveDate] = useState(new Date().toISOString().slice(0, 10));
   const [notes, setNotes] = useState('');
   const [saving, setSaving] = useState(false);
@@ -58,7 +58,14 @@ const AccStockMovesPage: React.FC = () => {
       .filter((m) => m.item_id === iId && (!wId || m.warehouse_id === wId))
       .reduce((s, m) => s + Number(m.quantity_kg || 0) * (m.move_type === 'out' ? -1 : 1), 0);
 
-  const available = itemId ? balance(itemId, warehouseId) : 0;
+  const setLine = (key: string, patch: Partial<Line>) =>
+    setLines((ls) => ls.map((l) => (l.key === key ? { ...l, ...patch } : l)));
+
+  const totals = useMemo(() => lines.reduce((a, l) => {
+    const it = items.find((i) => i.id === l.item_id);
+    const cost = Number(l.unit_cost || it?.cost_price || 0);
+    return { qty: a.qty + Number(l.qty || 0), value: a.value + Number(l.qty || 0) * cost };
+  }, { qty: 0, value: 0 }), [lines, items]);
 
   const sorted = useMemo(
     () => [...moves]
@@ -69,48 +76,61 @@ const AccStockMovesPage: React.FC = () => {
   );
 
   const save = async () => {
-    if (!itemId) return toast.error('اختر الصنف');
     if (!warehouseId) return toast.error('اختر المخزن');
-    if (!(qty > 0)) return toast.error('أدخل كمية أكبر من صفر');
     if (moveType === 'transfer' && !toWarehouseId) return toast.error('اختر المخزن المستلم');
     if (moveType === 'transfer' && toWarehouseId === warehouseId) return toast.error('لا يمكن التحويل لنفس المخزن');
-    if ((moveType === 'out' || moveType === 'transfer') && qty > available) {
-      return toast.error(`الرصيد غير كافٍ — المتاح ${money(available)} كجم`);
+    const valid = lines.filter((l) => l.item_id && Number(l.qty) > 0);
+    if (valid.length === 0) return toast.error('أضف صنفاً واحداً على الأقل بكمية أكبر من صفر');
+    const dupe = valid.map((l) => l.item_id).find((id, i, a) => a.indexOf(id) !== i);
+    if (dupe) return toast.error('لا يمكن تكرار نفس الصنف في نفس الحركة');
+    if (moveType === 'out' || moveType === 'transfer') {
+      for (const l of valid) {
+        const av = balance(l.item_id, warehouseId);
+        if (Number(l.qty) > av) {
+          const it = items.find((i) => i.id === l.item_id);
+          return toast.error(`الرصيد غير كافٍ للصنف ${it?.name_ar ?? ''} — المتاح ${money(av)} كجم`);
+        }
+      }
     }
+
     setSaving(true);
     try {
-      const it = items.find((i) => i.id === itemId);
       const wh = warehouses.find((w) => w.id === warehouseId);
       const toWh = warehouses.find((w) => w.id === toWarehouseId);
-      const cost = Number(unitCost || it?.cost_price || 0);
-      const seq = moves.length + 1;
-      const base = {
-        move_date: moveDate, item_id: itemId, item_code: it?.code, item_name: it?.name_ar,
-        quantity_kg: Number(qty), unit_cost: cost,
-        total_cost: Math.round(Number(qty) * cost * 100) / 100,
-        batch_no: batchNo || null, ref_type: 'manual', ref_no: null, notes: notes || null,
-      };
-      if (moveType === 'transfer') {
-        const { error: e1 } = await (supabase as any).from('acc_stock_moves').insert({
-          ...base, move_no: `TRF-O-${String(seq).padStart(5, '0')}`, move_type: 'out',
-          warehouse_id: warehouseId, warehouse_name: wh?.name_ar, notes: `تحويل إلى ${toWh?.name_ar}`,
-        });
-        if (e1) throw e1;
-        const { error: e2 } = await (supabase as any).from('acc_stock_moves').insert({
-          ...base, move_no: `TRF-I-${String(seq + 1).padStart(5, '0')}`, move_type: 'in',
-          warehouse_id: toWarehouseId, warehouse_name: toWh?.name_ar, notes: `تحويل من ${wh?.name_ar}`,
-        });
-        if (e2) throw e2;
-      } else {
-        const { error } = await (supabase as any).from('acc_stock_moves').insert({
-          ...base,
-          move_no: `${moveType.toUpperCase()}-${String(seq).padStart(5, '0')}`,
-          move_type: moveType, warehouse_id: warehouseId, warehouse_name: wh?.name_ar,
-        });
-        if (error) throw error;
+      let seq = moves.length + 1;
+      const docNo = `${moveType === 'transfer' ? 'TRF' : moveType.toUpperCase()}-${String(seq).padStart(5, '0')}`;
+
+      for (const l of valid) {
+        const it = items.find((i) => i.id === l.item_id);
+        const cost = Number(l.unit_cost || it?.cost_price || 0);
+        const base = {
+          move_date: moveDate, item_id: l.item_id, item_code: it?.code, item_name: it?.name_ar,
+          quantity_kg: Number(l.qty), unit_cost: cost,
+          total_cost: Math.round(Number(l.qty) * cost * 100) / 100,
+          batch_no: l.batch_no || null, ref_type: 'manual', ref_no: docNo, notes: notes || null,
+        };
+        if (moveType === 'transfer') {
+          const { error: e1 } = await (supabase as any).from('acc_stock_moves').insert({
+            ...base, move_no: `TRF-O-${String(seq++).padStart(5, '0')}`, move_type: 'out',
+            warehouse_id: warehouseId, warehouse_name: wh?.name_ar, notes: `تحويل إلى ${toWh?.name_ar}`,
+          });
+          if (e1) throw e1;
+          const { error: e2 } = await (supabase as any).from('acc_stock_moves').insert({
+            ...base, move_no: `TRF-I-${String(seq++).padStart(5, '0')}`, move_type: 'in',
+            warehouse_id: toWarehouseId, warehouse_name: toWh?.name_ar, notes: `تحويل من ${wh?.name_ar}`,
+          });
+          if (e2) throw e2;
+        } else {
+          const { error } = await (supabase as any).from('acc_stock_moves').insert({
+            ...base,
+            move_no: `${moveType.toUpperCase()}-${String(seq++).padStart(5, '0')}`,
+            move_type: moveType, warehouse_id: warehouseId, warehouse_name: wh?.name_ar,
+          });
+          if (error) throw error;
+        }
       }
-      toast.success('تم تسجيل الحركة المخزنية');
-      setQty(0); setUnitCost(0); setBatchNo(''); setNotes('');
+      toast.success(`تم تسجيل ${valid.length} سطر في الحركة ${docNo}`);
+      setLines([newLine()]); setNotes('');
       qc.invalidateQueries({ queryKey: ['acc_stock_moves'] });
       refetch();
     } catch (e: any) {
@@ -126,7 +146,7 @@ const AccStockMovesPage: React.FC = () => {
         <div>
           <h1 className="text-2xl font-bold">حركة المخزون (وارد / منصرف / تحويل)</h1>
           <p className="text-sm text-muted-foreground mt-1">
-            كل الكميات بالكيلوجرام — لا يُسمح بالصرف أو التحويل بأكثر من الرصيد المتاح.
+            كل الكميات بالكيلوجرام — يمكن إضافة عدة أصناف في نفس الحركة، ولا يُسمح بالصرف أو التحويل بأكثر من الرصيد المتاح.
           </p>
         </div>
         <ExportPdfButton
@@ -139,88 +159,128 @@ const AccStockMovesPage: React.FC = () => {
         />
       </div>
 
-      <InlineFormPage title="حركة جديدة">
-          <div className="grid md:grid-cols-4 gap-3">
+      <InlineFormPage title="حركة جديدة" description="بيانات الحركة ثم أضف أسطر الأصناف">
+        <div className="grid md:grid-cols-4 gap-3">
+          <div>
+            <Label>نوع الحركة</Label>
+            <Select value={moveType} onValueChange={(v) => setMoveType(v as any)}>
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                {Object.entries(typeLabel).map(([k, v]) => <SelectItem key={k} value={k}>{v}</SelectItem>)}
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <Label>{moveType === 'transfer' ? 'من مخزن' : 'المخزن'}</Label>
+            <Select value={warehouseId} onValueChange={setWarehouseId}>
+              <SelectTrigger><SelectValue placeholder="اختر المخزن" /></SelectTrigger>
+              <SelectContent searchable searchPlaceholder="ابحث عن مخزن...">
+                {warehouses.map((w) => <SelectItem key={w.id} value={w.id}>{w.name_ar}</SelectItem>)}
+              </SelectContent>
+            </Select>
+          </div>
+          {moveType === 'transfer' && (
             <div>
-              <Label>نوع الحركة</Label>
-              <Select value={moveType} onValueChange={(v) => setMoveType(v as any)}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  {Object.entries(typeLabel).map(([k, v]) => <SelectItem key={k} value={k}>{v}</SelectItem>)}
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label>الصنف</Label>
-              <Select value={itemId} onValueChange={setItemId}>
-                <SelectTrigger><SelectValue placeholder="اختر الصنف" /></SelectTrigger>
-                <SelectContent>
-                  {items.map((i) => <SelectItem key={i.id} value={i.id}>{i.code} — {i.name_ar}</SelectItem>)}
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label>{moveType === 'transfer' ? 'من مخزن' : 'المخزن'}</Label>
-              <Select value={warehouseId} onValueChange={setWarehouseId}>
-                <SelectTrigger><SelectValue placeholder="اختر المخزن" /></SelectTrigger>
-                <SelectContent>
+              <Label>إلى مخزن</Label>
+              <Select value={toWarehouseId} onValueChange={setToWarehouseId}>
+                <SelectTrigger><SelectValue placeholder="اختر المخزن المستلم" /></SelectTrigger>
+                <SelectContent searchable searchPlaceholder="ابحث عن مخزن...">
                   {warehouses.map((w) => <SelectItem key={w.id} value={w.id}>{w.name_ar}</SelectItem>)}
                 </SelectContent>
               </Select>
             </div>
-            {moveType === 'transfer' ? (
-              <div>
-                <Label>إلى مخزن</Label>
-                <Select value={toWarehouseId} onValueChange={setToWarehouseId}>
-                  <SelectTrigger><SelectValue placeholder="اختر المخزن المستلم" /></SelectTrigger>
-                  <SelectContent>
-                    {warehouses.map((w) => <SelectItem key={w.id} value={w.id}>{w.name_ar}</SelectItem>)}
-                  </SelectContent>
-                </Select>
-              </div>
-            ) : (
-              <div>
-                <Label>تكلفة الكيلو (اختياري)</Label>
-                <Input type="number" step="0.01" value={unitCost} onChange={(e) => setUnitCost(Number(e.target.value))} />
-              </div>
-            )}
-            <div>
-              <Label>الكمية (كجم)</Label>
-              <Input type="number" min={0} value={qty} onChange={(e) => setQty(Number(e.target.value))} />
-            </div>
-            <div>
-              <Label>رقم التشغيلة / الدفعة</Label>
-              <Input value={batchNo} onChange={(e) => setBatchNo(e.target.value)} />
-            </div>
-            <div>
-              <Label>التاريخ</Label>
-              <Input type="date" value={moveDate} onChange={(e) => setMoveDate(e.target.value)} />
-            </div>
-            <div>
-              <Label>ملاحظات</Label>
-              <Input value={notes} onChange={(e) => setNotes(e.target.value)} />
-            </div>
-          </div>
-
-          {itemId && (
-            <div className="text-sm p-3 rounded bg-muted">
-              الرصيد المتاح للصنف في المخزن المحدد: <span className="font-bold">{money(available)} كجم</span>
-            </div>
           )}
-
-          <div className="flex justify-end">
-            <Button onClick={save} disabled={!canEdit || saving}>
-              {saving ? <Loader2 className="h-4 w-4 animate-spin me-1" /> : <Save className="h-4 w-4 me-1" />} تسجيل الحركة
-            </Button>
+          <div>
+            <Label>التاريخ</Label>
+            <Input type="date" value={moveDate} onChange={(e) => setMoveDate(e.target.value)} />
           </div>
+          <div>
+            <Label>ملاحظات</Label>
+            <Input value={notes} onChange={(e) => setNotes(e.target.value)} />
+          </div>
+        </div>
 
+        <div className="rounded-lg border overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-muted/50">
+              <tr>
+                <th className="p-2 text-center w-8">#</th>
+                <th className="p-2 text-center min-w-56">الصنف</th>
+                <th className="p-2 text-center w-32">الكمية (كجم)</th>
+                <th className="p-2 text-center w-32">تكلفة الكيلو</th>
+                <th className="p-2 text-center w-28">الرصيد المتاح</th>
+                <th className="p-2 text-center w-32">التشغيلة</th>
+                <th className="p-2 text-center w-28">الإجمالي</th>
+                <th className="p-2 w-10" />
+              </tr>
+            </thead>
+            <tbody>
+              {lines.map((l, idx) => {
+                const it = items.find((i) => i.id === l.item_id);
+                const cost = Number(l.unit_cost || it?.cost_price || 0);
+                return (
+                  <tr key={l.key} className="border-t">
+                    <td className="p-2 text-center text-muted-foreground">{idx + 1}</td>
+                    <td className="p-2">
+                      <Select value={l.item_id} onValueChange={(v) => {
+                        const item = items.find((i) => i.id === v);
+                        setLine(l.key, { item_id: v, unit_cost: Number(item?.cost_price || 0) });
+                      }}>
+                        <SelectTrigger><SelectValue placeholder="اختر الصنف" /></SelectTrigger>
+                        <SelectContent searchable searchPlaceholder="ابحث بالكود أو الاسم...">
+                          {items.map((i) => <SelectItem key={i.id} value={i.id}>{i.code} — {i.name_ar}</SelectItem>)}
+                        </SelectContent>
+                      </Select>
+                    </td>
+                    <td className="p-2">
+                      <Input type="number" min={0} value={l.qty} onChange={(e) => setLine(l.key, { qty: Number(e.target.value) })} />
+                    </td>
+                    <td className="p-2">
+                      <Input type="number" step="0.01" value={l.unit_cost} onChange={(e) => setLine(l.key, { unit_cost: Number(e.target.value) })} />
+                    </td>
+                    <td className="p-2 text-center font-mono text-xs">
+                      {l.item_id ? money(balance(l.item_id, warehouseId)) : '—'}
+                    </td>
+                    <td className="p-2">
+                      <Input value={l.batch_no} onChange={(e) => setLine(l.key, { batch_no: e.target.value })} />
+                    </td>
+                    <td className="p-2 text-center font-mono">{money(Number(l.qty || 0) * cost)}</td>
+                    <td className="p-2 text-center">
+                      <Button size="icon" variant="ghost" title="حذف السطر"
+                        onClick={() => setLines((ls) => (ls.length > 1 ? ls.filter((x) => x.key !== l.key) : ls))}>
+                        <Trash2 className="size-4 text-destructive" />
+                      </Button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+
+        <div className="flex items-center justify-between flex-wrap gap-3">
+          <Button variant="outline" onClick={() => setLines((ls) => [...ls, newLine()])} className="gap-1.5">
+            <Plus className="size-4" /> إضافة سطر
+          </Button>
+          <div className="flex items-center gap-4 text-sm">
+            <span>إجمالي الكمية: <span className="font-bold font-mono">{money(totals.qty)} كجم</span></span>
+            <span>إجمالي القيمة: <span className="font-bold font-mono text-primary">{money(totals.value)} ج.م</span></span>
+          </div>
+        </div>
+
+        <div className="flex justify-end">
+          <Button onClick={save} disabled={!canEdit || saving}>
+            {saving ? <Loader2 className="h-4 w-4 animate-spin me-1" /> : <Save className="h-4 w-4 me-1" />} تسجيل الحركة
+          </Button>
+        </div>
       </InlineFormPage>
+
       <Card>
         <CardHeader className="flex-row items-center justify-between gap-3">
           <CardTitle>سجل الحركات (آخر 200)</CardTitle>
           <Select value={filterItem} onValueChange={setFilterItem}>
             <SelectTrigger className="max-w-xs"><SelectValue /></SelectTrigger>
-            <SelectContent>
+            <SelectContent searchable searchPlaceholder="ابحث عن صنف...">
               <SelectItem value="all">كل الأصناف</SelectItem>
               {items.map((i) => <SelectItem key={i.id} value={i.id}>{i.name_ar}</SelectItem>)}
             </SelectContent>

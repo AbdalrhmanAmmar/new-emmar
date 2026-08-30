@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Plus, Pencil, Trash2, Package, Lock } from 'lucide-react';
+import { Plus, Pencil, Trash2, Package, Lock, Calculator } from 'lucide-react';
 import { toast } from 'sonner';
 import ExportPdfButton from '@/components/accounting/ExportPdfButton';
 import { RowActions } from "@/components/accounting/RowActions";
@@ -79,6 +79,17 @@ const AccInventoryValuationPage: React.FC = () => {
     },
   });
 
+  const { data: itemsList = [] } = useQuery<any[]>({
+    queryKey: ['acc_items'],
+    queryFn: async () => (await (supabase as any).from('acc_items').select('*')).data ?? [],
+  });
+  const { data: whList = [] } = useQuery<any[]>({
+    queryKey: ['acc_warehouses'],
+    queryFn: async () => (await (supabase as any).from('acc_warehouses').select('*')).data ?? [],
+  });
+
+
+
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
     if (!q) return rows;
@@ -132,10 +143,59 @@ const AccInventoryValuationPage: React.FC = () => {
     qc.invalidateQueries({ queryKey: ['acc_inventory_valuation'] });
   };
 
+  // احتساب تلقائي لتقييم المخزون من حركات المخزون الفعلية للفترة المحددة
+  const autoBuild = async () => {
+    if (!confirm(`سيتم احتساب تقييم المخزون للفترة ${fMonth}/${fYear} من حركات المخزون، واستبدال صفوف المسودة الحالية. متابعة؟`)) return;
+    try {
+      const { data: allMoves = [] } = await (supabase as any).from('acc_stock_moves').select('*');
+      const start = new Date(Date.UTC(fYear, fMonth - 1, 1));
+      const end = new Date(Date.UTC(fYear, fMonth, 1));
+      const key = (w: string, i: string) => `${w}||${i}`;
+      const acc: Record<string, any> = {};
+      const ensure = (m: any) => {
+        const k = key(m.warehouse_id || '-', m.item_id || m.item_code || '-');
+        acc[k] = acc[k] || {
+          warehouse_code: m.warehouse_id || '-', warehouse_name: m.warehouse_name || '-',
+          item_code: m.item_code || '-', item_name: m.item_name || '-', uom: 'كجم',
+          opening_qty: 0, opening_value: 0, receipts_qty: 0, receipts_value: 0, issues_qty: 0, issues_value: 0,
+        };
+        return acc[k];
+      };
+      for (const m of allMoves) {
+        const d = new Date(m.move_date);
+        const qty = Number(m.quantity_kg || 0);
+        const val = Number(m.total_cost || qty * Number(m.unit_cost || 0));
+        const row = ensure(m);
+        const sign = m.move_type === 'out' ? -1 : 1;
+        if (d < start) { row.opening_qty += sign * qty; row.opening_value += sign * val; }
+        else if (d < end) {
+          if (sign > 0) { row.receipts_qty += qty; row.receipts_value += val; }
+          else { row.issues_qty += qty; row.issues_value += val; }
+        }
+      }
+      const built = Object.values(acc);
+      if (built.length === 0) { toast.error('لا توجد حركات مخزون في هذه الفترة'); return; }
+      // حذف المسودات القديمة لنفس الفترة لمنع تكرار البيانات
+      for (const r of rows.filter(r => r.status === 'draft')) {
+        await (supabase as any).from('acc_inventory_valuation').delete().eq('id', r.id);
+      }
+      for (const b of built as any[]) {
+        const d = calc(b);
+        await (supabase as any).from('acc_inventory_valuation').insert({
+          ...b, ...d, period_year: fYear, period_month: fMonth,
+          valuation_method: 'WAC', status: 'draft', created_by: user?.id,
+        });
+      }
+      toast.success(`تم احتساب ${built.length} صنف/مخزن من حركات المخزون`);
+      qc.invalidateQueries({ queryKey: ['acc_inventory_valuation'] });
+    } catch (e: any) { toast.error(e?.message || 'فشل الاحتساب'); }
+  };
+
   if (!canView) return <div className="p-8 text-center text-muted-foreground">لا تملك صلاحية الوصول</div>;
 
   const monthOptions = Array.from({ length: 12 }, (_, i) => i + 1);
   const yearOptions = Array.from({ length: 6 }, (_, i) => now.getFullYear() - 3 + i);
+
 
   return (
     <div className="container mx-auto p-6 space-y-4">
@@ -143,8 +203,8 @@ const AccInventoryValuationPage: React.FC = () => {
         <div className="flex items-center gap-3">
           <Package className="w-6 h-6 text-primary" />
           <div>
-            <h1 className="text-2xl font-bold">تقييم المخزون (Inventory Valuation)</h1>
-            <p className="text-xs text-muted-foreground">أرصدة أول المدة، الحركات، وأرصدة آخر المدة بتكلفة الوحدة لكل صنف/مخزن</p>
+            <h1 className="text-2xl font-bold">تقييم المخزون شهرياً</h1>
+            <p className="text-xs text-muted-foreground">قيمة الأعلاف الموجودة في كل مخزن آخر كل شهر = رصيد أول الشهر + الوارد − المنصرف</p>
           </div>
         </div>
         <div className="flex gap-2 items-center flex-wrap">
@@ -167,9 +227,22 @@ const AccInventoryValuationPage: React.FC = () => {
               { label: 'رصيد آخر المدة', value: fmt(totals.closing) },
             ]}
           />
-          {canEdit && <Button onClick={openNew}><Plus className="w-4 h-4 ml-2" /> صنف جديد</Button>}
+          {canEdit && <Button variant="outline" onClick={autoBuild}><Calculator className="w-4 h-4 ml-2" /> احتساب تلقائي من حركات المخزون</Button>}
+          {canEdit && <Button onClick={openNew}><Plus className="w-4 h-4 ml-2" /> إدخال يدوي</Button>}
         </div>
       </div>
+
+      <Card className="bg-muted/40 border-dashed">
+        <CardContent className="p-4 text-xs leading-6 text-muted-foreground space-y-1">
+          <div className="font-semibold text-foreground text-sm">كيف تقرأ هذه الصفحة؟</div>
+          <div>١. اختر <span className="font-medium text-foreground">السنة والشهر</span> من الأعلى — كل الأرقام المعروضة تخص هذا الشهر فقط.</div>
+          <div>٢. اضغط <span className="font-medium text-foreground">«احتساب تلقائي من حركات المخزون»</span> ليقوم البرنامج بحساب كل صنف في كل مخزن من حركات الوارد والمنصرف المسجّلة فعلياً.</div>
+          <div>٣. كل صف = صنف واحد في مخزن واحد: <span className="font-medium text-foreground">أول المدة</span> (ما كان موجوداً بداية الشهر) + <span className="font-medium text-foreground">الوارد</span> (المشتريات/الإضافات) − <span className="font-medium text-foreground">المنصرف</span> (البيع/الصرف) = <span className="font-medium text-foreground">رصيد آخر المدة</span>.</div>
+          <div>٤. <span className="font-medium text-foreground">تكلفة الوحدة</span> = قيمة رصيد آخر المدة ÷ كميته (متوسط مرجح لتكلفة الكيلو) — وهي القيمة التي تُدرج في الميزانية كمخزون.</div>
+          <div>٥. الصف يبقى <span className="font-medium text-foreground">مسودة</span> حتى تضغط «ترحيل» فيصبح <span className="font-medium text-foreground">مرحّلاً</span> ولا يمكن حذفه.</div>
+        </CardContent>
+      </Card>
+
 
       <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
         <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">عدد الأصناف</div><div className="text-2xl font-bold">{totals.items}</div></CardContent></Card>
@@ -189,12 +262,12 @@ const AccInventoryValuationPage: React.FC = () => {
             <TableHeader><TableRow>
               <TableHead>المخزن</TableHead><TableHead>الصنف</TableHead>
               <TableHead>الطريقة</TableHead>
-              <TableHead className="text-right">أول (قيمة)</TableHead>
-              <TableHead className="text-right">وارد</TableHead>
-              <TableHead className="text-right">صادر</TableHead>
-              <TableHead className="text-right">كمية الرصيد</TableHead>
-              <TableHead className="text-right">قيمة الرصيد</TableHead>
-              <TableHead className="text-right">تكلفة وحدة</TableHead>
+              <TableHead className="text-right">أول المدة (كمية / قيمة)</TableHead>
+              <TableHead className="text-right">وارد (كمية / قيمة)</TableHead>
+              <TableHead className="text-right">منصرف (كمية / قيمة)</TableHead>
+              <TableHead className="text-right">كمية آخر المدة</TableHead>
+              <TableHead className="text-right">قيمة آخر المدة</TableHead>
+              <TableHead className="text-right">تكلفة الوحدة</TableHead>
               <TableHead>الحالة</TableHead><TableHead></TableHead>
             </TableRow></TableHeader>
             <TableBody>
@@ -205,9 +278,9 @@ const AccInventoryValuationPage: React.FC = () => {
                       <TableCell className="text-xs"><div className="font-mono">{r.warehouse_code}</div><div className="text-muted-foreground">{r.warehouse_name}</div></TableCell>
                       <TableCell className="text-xs"><div className="font-mono">{r.item_code}</div><div className="text-muted-foreground">{r.item_name}</div></TableCell>
                       <TableCell><Badge variant="outline">{methodLabels[r.valuation_method]}</Badge></TableCell>
-                      <TableCell className="text-right font-mono">{fmt(r.opening_value)}</TableCell>
-                      <TableCell className="text-right font-mono text-emerald-600">{fmt(r.receipts_value)}</TableCell>
-                      <TableCell className="text-right font-mono text-rose-600">{fmt(r.issues_value)}</TableCell>
+                      <TableCell className="text-right font-mono text-xs"><div>{fmt(r.opening_qty)}</div><div className="text-muted-foreground">{fmt(r.opening_value)}</div></TableCell>
+                      <TableCell className="text-right font-mono text-xs text-emerald-600"><div>{fmt(r.receipts_qty)}</div><div className="opacity-70">{fmt(r.receipts_value)}</div></TableCell>
+                      <TableCell className="text-right font-mono text-xs text-rose-600"><div>{fmt(r.issues_qty)}</div><div className="opacity-70">{fmt(r.issues_value)}</div></TableCell>
                       <TableCell className="text-right font-mono">{fmt(r.closing_qty)}</TableCell>
                       <TableCell className="text-right font-mono font-bold text-primary">{fmt(r.closing_value)}</TableCell>
                       <TableCell className="text-right font-mono">{fmt(r.unit_cost)}</TableCell>
@@ -248,10 +321,28 @@ const AccInventoryValuationPage: React.FC = () => {
                 <SelectContent>{Object.entries(methodLabels).map(([k, v]) => <SelectItem key={k} value={k}>{v}</SelectItem>)}</SelectContent>
               </Select>
             </div>
-            <div className="space-y-1.5"><Label>كود المخزن *</Label><Input value={form.warehouse_code || ''} onChange={e => setForm({ ...form, warehouse_code: e.target.value })} /></div>
-            <div className="space-y-1.5 md:col-span-2"><Label>اسم المخزن</Label><Input value={form.warehouse_name || ''} onChange={e => setForm({ ...form, warehouse_name: e.target.value })} /></div>
-            <div className="space-y-1.5"><Label>كود الصنف *</Label><Input value={form.item_code || ''} onChange={e => setForm({ ...form, item_code: e.target.value })} /></div>
-            <div className="space-y-1.5 md:col-span-2"><Label>اسم الصنف</Label><Input value={form.item_name || ''} onChange={e => setForm({ ...form, item_name: e.target.value })} /></div>
+            <div className="space-y-1.5 md:col-span-3"><Label>المخزن *</Label>
+              <Select value={form.warehouse_code || ''} onValueChange={v => {
+                const w = whList.find((x: any) => (x.code || x.id) === v);
+                setForm({ ...form, warehouse_code: v, warehouse_name: w?.name_ar || '' });
+              }}>
+                <SelectTrigger><SelectValue placeholder="اختر المخزن" /></SelectTrigger>
+                <SelectContent searchable searchPlaceholder="ابحث عن مخزن...">
+                  {whList.map((w: any) => <SelectItem key={w.id} value={w.code || w.id}>{w.name_ar}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-1.5 md:col-span-3"><Label>الصنف *</Label>
+              <Select value={form.item_code || ''} onValueChange={v => {
+                const it = itemsList.find((x: any) => x.code === v);
+                setForm({ ...form, item_code: v, item_name: it?.name_ar || '', uom: it?.uom || 'كجم' });
+              }}>
+                <SelectTrigger><SelectValue placeholder="اختر الصنف" /></SelectTrigger>
+                <SelectContent searchable searchPlaceholder="ابحث بالكود أو الاسم...">
+                  {itemsList.map((i: any) => <SelectItem key={i.id} value={i.code}>{i.code} — {i.name_ar}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
             <div className="space-y-1.5"><Label>الوحدة</Label><Input value={form.uom || ''} onChange={e => setForm({ ...form, uom: e.target.value })} /></div>
             <div className="space-y-1.5"><Label>كمية أول المدة</Label><Input type="number" step="0.0001" value={form.opening_qty ?? 0} onChange={e => setForm({ ...form, opening_qty: Number(e.target.value) })} /></div>
             <div className="space-y-1.5"><Label>قيمة أول المدة</Label><Input type="number" step="0.01" value={form.opening_value ?? 0} onChange={e => setForm({ ...form, opening_value: Number(e.target.value) })} /></div>
