@@ -2,6 +2,7 @@ import { Save } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
+import { DangerZone } from "@/components/treasury/DangerZone";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -145,6 +146,8 @@ export function OrgSettingsForm() {
           <Save className="size-4" /> حفظ الإعدادات
         </Button>
       </div>
+
+      <DangerZone />
     </div>
   );
 }
