@@ -331,6 +331,94 @@ export interface PurchaseInvoice {
   status: DocStatus;
 }
 
+
+/* ===================== المصروفات والموظفون ===================== */
+
+/** بند صرف مكوّد (مصروفات عامة / نثريات / رواتب ...) */
+export interface ExpenseItem {
+  id: string;
+  code: string;
+  name: string;
+  group: string;
+  note: string;
+  active: boolean;
+}
+
+export type ExpenseKind = "general" | "petty" | "salary" | "advance";
+
+export interface Expense {
+  id: string;
+  no: string;
+  date: string;
+  itemId: string;
+  kind: ExpenseKind;
+  employeeId: string | null;
+  beneficiary: string;
+  amount: number;
+  branchId: string;
+  safeId: string | null;
+  payMethod: PayMethod;
+  /** شهر الاستحقاق للرواتب YYYY-MM */
+  period: string;
+  note: string;
+  status: DocStatus;
+}
+
+export type SalaryType = "monthly" | "daily";
+
+export interface Employee {
+  id: string;
+  code: string;
+  name: string;
+  jobTitle: string;
+  department: string;
+  phone: string;
+  nationalId: string;
+  hireDate: string;
+  branchId: string;
+  salaryType: SalaryType;
+  /** الراتب الشهرى (أو أجر اليوم لو يومى) */
+  baseSalary: number;
+  /** عدد أيام العمل بالشهر لحساب أجر اليوم */
+  workDays: number;
+  allowances: number;
+  deductions: number;
+  active: boolean;
+  note: string;
+}
+
+export type AttendanceStatus = "present" | "late" | "absent" | "leave" | "holiday";
+
+export interface Attendance {
+  id: string;
+  date: string;
+  employeeId: string;
+  status: AttendanceStatus;
+  lateMinutes: number;
+  overtimeHours: number;
+  note: string;
+}
+
+export const EXPENSE_KIND_LABEL: Record<ExpenseKind, string> = {
+  general: "مصروف عام",
+  petty: "نثريات",
+  salary: "راتب / أجر",
+  advance: "سلفة / عهدة",
+};
+
+export const SALARY_TYPE_LABEL: Record<SalaryType, string> = {
+  monthly: "شهرى",
+  daily: "يومى",
+};
+
+export const ATTENDANCE_LABEL: Record<AttendanceStatus, string> = {
+  present: "حاضر",
+  late: "تأخير",
+  absent: "غياب",
+  leave: "إجازة",
+  holiday: "عطلة رسمية",
+};
+
 export interface DbShape {
   branches: Branch[];
   users: AppUser[];
@@ -350,6 +438,10 @@ export interface DbShape {
   purchaseInvoices: PurchaseInvoice[];
   productCategories: ProductCategory[];
   measureUnits: MeasureUnit[];
+  expenseItems: ExpenseItem[];
+  expenses: Expense[];
+  employees: Employee[];
+  attendance: Attendance[];
   settings: OrgSettings;
 
 }
@@ -720,6 +812,59 @@ function seed(): DbShape {
     { id: "mu7", code: "ltr", name: "لتر", decimals: 2, note: "", active: true },
   ];
 
+  const expenseItems: ExpenseItem[] = [
+    { id: "ei1", code: "EX-001", name: "رواتب وأجور", group: "رواتب", note: "رواتب الموظفين الشهرية", active: true },
+    { id: "ei2", code: "EX-002", name: "سلف وعهد موظفين", group: "رواتب", note: "تُخصم من الراتب", active: true },
+    { id: "ei3", code: "EX-003", name: "نقل وشحن", group: "تشغيل", note: "أجرة سيارات نقل الأعلاف", active: true },
+    { id: "ei4", code: "EX-004", name: "كهرباء ومياه", group: "مرافق", note: "", active: true },
+    { id: "ei5", code: "EX-005", name: "إيجارات", group: "مرافق", note: "إيجار المخازن والمقر", active: true },
+    { id: "ei6", code: "EX-006", name: "صيانة وقطع غيار", group: "تشغيل", note: "", active: true },
+    { id: "ei7", code: "EX-007", name: "نثريات وضيافة", group: "نثريات", note: "شاي وقهوة ومصروفات صغيرة", active: true },
+    { id: "ei8", code: "EX-008", name: "مصروفات إدارية", group: "إدارى", note: "أوراق وطباعة واتصالات", active: true },
+  ];
+
+  const employees: Employee[] = [
+    { id: "em1", code: "EMP-001", name: "أحمد سالم عبد الله", jobTitle: "أمين خزينة", department: "المالية", phone: "01001112223", nationalId: "28901011200123", hireDate: d(-900), branchId: "br1", salaryType: "monthly", baseSalary: 9000, workDays: 26, allowances: 800, deductions: 0, active: true, note: "" },
+    { id: "em2", code: "EMP-002", name: "منى عبد الله حسن", jobTitle: "محاسب", department: "المالية", phone: "01004445556", nationalId: "29005151200456", hireDate: d(-620), branchId: "br1", salaryType: "monthly", baseSalary: 8500, workDays: 26, allowances: 500, deductions: 0, active: true, note: "" },
+    { id: "em3", code: "EMP-003", name: "محمود رجب سيد", jobTitle: "أمين مخزن", department: "المخازن", phone: "01007778889", nationalId: "28712121200789", hireDate: d(-430), branchId: "br2", salaryType: "monthly", baseSalary: 7000, workDays: 26, allowances: 400, deductions: 0, active: true, note: "" },
+    { id: "em4", code: "EMP-004", name: "سيد كمال إبراهيم", jobTitle: "عامل تحميل", department: "المخازن", phone: "01011122233", nationalId: "29508081200321", hireDate: d(-200), branchId: "br1", salaryType: "daily", baseSalary: 320, workDays: 26, allowances: 0, deductions: 0, active: true, note: "أجر يومى" },
+    { id: "em5", code: "EMP-005", name: "خالد فتحى عليوة", jobTitle: "مندوب بيع", department: "المبيعات", phone: "01022233344", nationalId: "29303031200654", hireDate: d(-320), branchId: "br3", salaryType: "monthly", baseSalary: 7500, workDays: 26, allowances: 1000, deductions: 0, active: true, note: "" },
+  ];
+
+  const attendance: Attendance[] = [];
+  for (const emp of employees) {
+    for (let i = 1; i <= 24; i += 1) {
+      const date = d(-i);
+      const weekday = new Date(date).getDay();
+      let status: AttendanceStatus = "present";
+      let lateMinutes = 0;
+      if (weekday === 5) status = "holiday";
+      else if (i % 11 === 0) status = "absent";
+      else if (i % 7 === 0) {
+        status = "late";
+        lateMinutes = 45;
+      }
+      attendance.push({
+        id: `at_${emp.id}_${i}`,
+        date,
+        employeeId: emp.id,
+        status,
+        lateMinutes,
+        overtimeHours: i % 9 === 0 ? 2 : 0,
+        note: "",
+      });
+    }
+  }
+
+  const expenses: Expense[] = [
+    { id: "exp1", no: "EXP-000001", date: d(-20), itemId: "ei1", kind: "salary", employeeId: "em1", beneficiary: "أحمد سالم عبد الله", amount: 9000, branchId: "br1", safeId: "sf1", payMethod: "cash", period: d(-35).slice(0, 7), note: "راتب الشهر السابق", status: "posted" },
+    { id: "exp2", no: "EXP-000002", date: d(-20), itemId: "ei1", kind: "salary", employeeId: "em2", beneficiary: "منى عبد الله حسن", amount: 8500, branchId: "br1", safeId: "sf1", payMethod: "cash", period: d(-35).slice(0, 7), note: "راتب الشهر السابق", status: "posted" },
+    { id: "exp3", no: "EXP-000003", date: d(-8), itemId: "ei2", kind: "advance", employeeId: "em4", beneficiary: "سيد كمال إبراهيم", amount: 1000, branchId: "br1", safeId: "sf1", payMethod: "cash", period: d(0).slice(0, 7), note: "سلفة تُخصم من المستحق", status: "posted" },
+    { id: "exp4", no: "EXP-000004", date: d(-6), itemId: "ei3", kind: "general", employeeId: null, beneficiary: "نقل الدلتا", amount: 4200, branchId: "br1", safeId: "sf1", payMethod: "cash", period: d(0).slice(0, 7), note: "نقل 20 طن للمنوفية", status: "posted" },
+    { id: "exp5", no: "EXP-000005", date: d(-4), itemId: "ei7", kind: "petty", employeeId: null, beneficiary: "نثريات المقر", amount: 350, branchId: "br1", safeId: "sf1", payMethod: "cash", period: d(0).slice(0, 7), note: "ضيافة", status: "posted" },
+    { id: "exp6", no: "EXP-000006", date: d(-2), itemId: "ei4", kind: "general", employeeId: null, beneficiary: "شركة الكهرباء", amount: 6800, branchId: "br1", safeId: "sf2", payMethod: "transfer", period: d(0).slice(0, 7), note: "فاتورة الكهرباء", status: "posted" },
+  ];
+
   const settings: OrgSettings = {
     companyName: "الإيمان لتجارة الأعلاف",
     companyNameEn: "AL-IMAN FEED TRADING CO",
@@ -866,6 +1011,10 @@ function seed(): DbShape {
     purchaseInvoices,
     productCategories,
     measureUnits,
+    expenseItems,
+    expenses,
+    employees,
+    attendance,
     settings,
 
   };
@@ -890,6 +1039,10 @@ function load(): DbShape {
         purchaseInvoices: parsed.purchaseInvoices ?? base.purchaseInvoices,
         productCategories: parsed.productCategories?.length ? parsed.productCategories : base.productCategories,
         measureUnits: parsed.measureUnits?.length ? parsed.measureUnits : base.measureUnits,
+        expenseItems: parsed.expenseItems?.length ? parsed.expenseItems : base.expenseItems,
+        expenses: parsed.expenses ?? base.expenses,
+        employees: parsed.employees?.length ? parsed.employees : base.employees,
+        attendance: parsed.attendance ?? base.attendance,
         settings: { ...base.settings, ...(parsed.settings ?? {}) },
       };
 
