@@ -1,5 +1,5 @@
-import { Save } from "lucide-react";
-import { useEffect, useState } from "react";
+import { ImagePlus, Save, Trash2 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 import { DangerZone } from "@/components/treasury/DangerZone";
@@ -9,6 +9,33 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { saveSettings, useDb, type OrgSettings } from "@/lib/mockDb";
+
+/** يضغط الصورة ويحولها إلى data URL صغيرة مناسبة للتخزين المحلى */
+function fileToLogoDataUrl(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error("تعذر قراءة الملف"));
+    reader.onload = () => {
+      const img = new Image();
+      img.onerror = () => reject(new Error("الملف ليس صورة صالحة"));
+      img.onload = () => {
+        const size = 256;
+        const canvas = document.createElement("canvas");
+        canvas.width = size;
+        canvas.height = size;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return reject(new Error("تعذر معالجة الصورة"));
+        const scale = Math.max(size / img.width, size / img.height);
+        const w = img.width * scale;
+        const h = img.height * scale;
+        ctx.drawImage(img, (size - w) / 2, (size - h) / 2, w, h);
+        resolve(canvas.toDataURL("image/png"));
+      };
+      img.src = String(reader.result);
+    };
+    reader.readAsDataURL(file);
+  });
+}
 
 type TextKey =
   | "companyName"
