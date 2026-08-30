@@ -20,9 +20,14 @@ import { Route as TreasuryReceiptsIndexRouteImport } from './routes/treasury/rec
 import { Route as TreasuryReceiptsIdRouteImport } from './routes/treasury/receipts/$id'
 import { Route as TreasuryReceiptsNewRouteImport } from './routes/treasury/receipts/new'
 import { Route as TreasuryReconcileIndexRouteImport } from './routes/treasury/reconcile/index'
+import { Route as TreasuryReportsAgingRouteImport } from './routes/treasury/reports/aging'
+import { Route as TreasuryReportsCashflowRouteImport } from './routes/treasury/reports/cashflow'
+import { Route as TreasuryReportsShiftDiffRouteImport } from './routes/treasury/reports/shift-diff'
+import { Route as TreasuryReportsVouchersRouteImport } from './routes/treasury/reports/vouchers'
 import { Route as TreasurySafesIndexRouteImport } from './routes/treasury/safes/index'
 import { Route as TreasurySafesIdRouteImport } from './routes/treasury/safes/$id'
 import { Route as TreasurySafesNewRouteImport } from './routes/treasury/safes/new'
+import { Route as TreasurySettingsIndexRouteImport } from './routes/treasury/settings/index'
 import { Route as TreasuryShiftsIndexRouteImport } from './routes/treasury/shifts/index'
 import { Route as TreasuryStatementIndexRouteImport } from './routes/treasury/statement/index'
 import { Route as TreasuryTransfersIndexRouteImport } from './routes/treasury/transfers/index'
@@ -83,6 +88,27 @@ const TreasuryReconcileIndexRoute = TreasuryReconcileIndexRouteImport.update({
   path: '/reconcile/',
   getParentRoute: () => TreasuryRouteRoute,
 } as any)
+const TreasuryReportsAgingRoute = TreasuryReportsAgingRouteImport.update({
+  id: '/reports/aging',
+  path: '/reports/aging',
+  getParentRoute: () => TreasuryRouteRoute,
+} as any)
+const TreasuryReportsCashflowRoute = TreasuryReportsCashflowRouteImport.update({
+  id: '/reports/cashflow',
+  path: '/reports/cashflow',
+  getParentRoute: () => TreasuryRouteRoute,
+} as any)
+const TreasuryReportsShiftDiffRoute =
+  TreasuryReportsShiftDiffRouteImport.update({
+    id: '/reports/shift-diff',
+    path: '/reports/shift-diff',
+    getParentRoute: () => TreasuryRouteRoute,
+  } as any)
+const TreasuryReportsVouchersRoute = TreasuryReportsVouchersRouteImport.update({
+  id: '/reports/vouchers',
+  path: '/reports/vouchers',
+  getParentRoute: () => TreasuryRouteRoute,
+} as any)
 const TreasurySafesIndexRoute = TreasurySafesIndexRouteImport.update({
   id: '/safes/',
   path: '/safes/',
@@ -96,6 +122,11 @@ const TreasurySafesIdRoute = TreasurySafesIdRouteImport.update({
 const TreasurySafesNewRoute = TreasurySafesNewRouteImport.update({
   id: '/safes/new',
   path: '/safes/new',
+  getParentRoute: () => TreasuryRouteRoute,
+} as any)
+const TreasurySettingsIndexRoute = TreasurySettingsIndexRouteImport.update({
+  id: '/settings/',
+  path: '/settings/',
   getParentRoute: () => TreasuryRouteRoute,
 } as any)
 const TreasuryShiftsIndexRoute = TreasuryShiftsIndexRouteImport.update({
@@ -127,6 +158,10 @@ export interface FileRoutesByFullPath {
   '/treasury/payments/new': typeof TreasuryPaymentsNewRoute
   '/treasury/receipts/$id': typeof TreasuryReceiptsIdRoute
   '/treasury/receipts/new': typeof TreasuryReceiptsNewRoute
+  '/treasury/reports/aging': typeof TreasuryReportsAgingRoute
+  '/treasury/reports/cashflow': typeof TreasuryReportsCashflowRoute
+  '/treasury/reports/shift-diff': typeof TreasuryReportsShiftDiffRoute
+  '/treasury/reports/vouchers': typeof TreasuryReportsVouchersRoute
   '/treasury/safes/$id': typeof TreasurySafesIdRoute
   '/treasury/safes/new': typeof TreasurySafesNewRoute
   '/treasury/transfers/new': typeof TreasuryTransfersNewRoute
@@ -135,6 +170,7 @@ export interface FileRoutesByFullPath {
   '/treasury/receipts/': typeof TreasuryReceiptsIndexRoute
   '/treasury/reconcile/': typeof TreasuryReconcileIndexRoute
   '/treasury/safes/': typeof TreasurySafesIndexRoute
+  '/treasury/settings/': typeof TreasurySettingsIndexRoute
   '/treasury/shifts/': typeof TreasuryShiftsIndexRoute
   '/treasury/statement/': typeof TreasuryStatementIndexRoute
   '/treasury/transfers/': typeof TreasuryTransfersIndexRoute
@@ -146,6 +182,10 @@ export interface FileRoutesByTo {
   '/treasury/payments/new': typeof TreasuryPaymentsNewRoute
   '/treasury/receipts/$id': typeof TreasuryReceiptsIdRoute
   '/treasury/receipts/new': typeof TreasuryReceiptsNewRoute
+  '/treasury/reports/aging': typeof TreasuryReportsAgingRoute
+  '/treasury/reports/cashflow': typeof TreasuryReportsCashflowRoute
+  '/treasury/reports/shift-diff': typeof TreasuryReportsShiftDiffRoute
+  '/treasury/reports/vouchers': typeof TreasuryReportsVouchersRoute
   '/treasury/safes/$id': typeof TreasurySafesIdRoute
   '/treasury/safes/new': typeof TreasurySafesNewRoute
   '/treasury/transfers/new': typeof TreasuryTransfersNewRoute
@@ -154,6 +194,7 @@ export interface FileRoutesByTo {
   '/treasury/receipts': typeof TreasuryReceiptsIndexRoute
   '/treasury/reconcile': typeof TreasuryReconcileIndexRoute
   '/treasury/safes': typeof TreasurySafesIndexRoute
+  '/treasury/settings': typeof TreasurySettingsIndexRoute
   '/treasury/shifts': typeof TreasuryShiftsIndexRoute
   '/treasury/statement': typeof TreasuryStatementIndexRoute
   '/treasury/transfers': typeof TreasuryTransfersIndexRoute
@@ -167,6 +208,10 @@ export interface FileRoutesById {
   '/treasury/payments/new': typeof TreasuryPaymentsNewRoute
   '/treasury/receipts/$id': typeof TreasuryReceiptsIdRoute
   '/treasury/receipts/new': typeof TreasuryReceiptsNewRoute
+  '/treasury/reports/aging': typeof TreasuryReportsAgingRoute
+  '/treasury/reports/cashflow': typeof TreasuryReportsCashflowRoute
+  '/treasury/reports/shift-diff': typeof TreasuryReportsShiftDiffRoute
+  '/treasury/reports/vouchers': typeof TreasuryReportsVouchersRoute
   '/treasury/safes/$id': typeof TreasurySafesIdRoute
   '/treasury/safes/new': typeof TreasurySafesNewRoute
   '/treasury/transfers/new': typeof TreasuryTransfersNewRoute
@@ -175,6 +220,7 @@ export interface FileRoutesById {
   '/treasury/receipts/': typeof TreasuryReceiptsIndexRoute
   '/treasury/reconcile/': typeof TreasuryReconcileIndexRoute
   '/treasury/safes/': typeof TreasurySafesIndexRoute
+  '/treasury/settings/': typeof TreasurySettingsIndexRoute
   '/treasury/shifts/': typeof TreasuryShiftsIndexRoute
   '/treasury/statement/': typeof TreasuryStatementIndexRoute
   '/treasury/transfers/': typeof TreasuryTransfersIndexRoute
@@ -189,6 +235,10 @@ export interface FileRouteTypes {
     | '/treasury/payments/new'
     | '/treasury/receipts/$id'
     | '/treasury/receipts/new'
+    | '/treasury/reports/aging'
+    | '/treasury/reports/cashflow'
+    | '/treasury/reports/shift-diff'
+    | '/treasury/reports/vouchers'
     | '/treasury/safes/$id'
     | '/treasury/safes/new'
     | '/treasury/transfers/new'
@@ -197,6 +247,7 @@ export interface FileRouteTypes {
     | '/treasury/receipts/'
     | '/treasury/reconcile/'
     | '/treasury/safes/'
+    | '/treasury/settings/'
     | '/treasury/shifts/'
     | '/treasury/statement/'
     | '/treasury/transfers/'
@@ -208,6 +259,10 @@ export interface FileRouteTypes {
     | '/treasury/payments/new'
     | '/treasury/receipts/$id'
     | '/treasury/receipts/new'
+    | '/treasury/reports/aging'
+    | '/treasury/reports/cashflow'
+    | '/treasury/reports/shift-diff'
+    | '/treasury/reports/vouchers'
     | '/treasury/safes/$id'
     | '/treasury/safes/new'
     | '/treasury/transfers/new'
@@ -216,6 +271,7 @@ export interface FileRouteTypes {
     | '/treasury/receipts'
     | '/treasury/reconcile'
     | '/treasury/safes'
+    | '/treasury/settings'
     | '/treasury/shifts'
     | '/treasury/statement'
     | '/treasury/transfers'
@@ -228,6 +284,10 @@ export interface FileRouteTypes {
     | '/treasury/payments/new'
     | '/treasury/receipts/$id'
     | '/treasury/receipts/new'
+    | '/treasury/reports/aging'
+    | '/treasury/reports/cashflow'
+    | '/treasury/reports/shift-diff'
+    | '/treasury/reports/vouchers'
     | '/treasury/safes/$id'
     | '/treasury/safes/new'
     | '/treasury/transfers/new'
@@ -236,6 +296,7 @@ export interface FileRouteTypes {
     | '/treasury/receipts/'
     | '/treasury/reconcile/'
     | '/treasury/safes/'
+    | '/treasury/settings/'
     | '/treasury/shifts/'
     | '/treasury/statement/'
     | '/treasury/transfers/'
@@ -325,6 +386,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TreasuryReconcileIndexRouteImport
       parentRoute: typeof TreasuryRouteRoute
     }
+    '/treasury/reports/aging': {
+      id: '/treasury/reports/aging'
+      path: '/reports/aging'
+      fullPath: '/treasury/reports/aging'
+      preLoaderRoute: typeof TreasuryReportsAgingRouteImport
+      parentRoute: typeof TreasuryRouteRoute
+    }
+    '/treasury/reports/cashflow': {
+      id: '/treasury/reports/cashflow'
+      path: '/reports/cashflow'
+      fullPath: '/treasury/reports/cashflow'
+      preLoaderRoute: typeof TreasuryReportsCashflowRouteImport
+      parentRoute: typeof TreasuryRouteRoute
+    }
+    '/treasury/reports/shift-diff': {
+      id: '/treasury/reports/shift-diff'
+      path: '/reports/shift-diff'
+      fullPath: '/treasury/reports/shift-diff'
+      preLoaderRoute: typeof TreasuryReportsShiftDiffRouteImport
+      parentRoute: typeof TreasuryRouteRoute
+    }
+    '/treasury/reports/vouchers': {
+      id: '/treasury/reports/vouchers'
+      path: '/reports/vouchers'
+      fullPath: '/treasury/reports/vouchers'
+      preLoaderRoute: typeof TreasuryReportsVouchersRouteImport
+      parentRoute: typeof TreasuryRouteRoute
+    }
     '/treasury/safes/': {
       id: '/treasury/safes/'
       path: '/safes'
@@ -344,6 +433,13 @@ declare module '@tanstack/react-router' {
       path: '/safes/new'
       fullPath: '/treasury/safes/new'
       preLoaderRoute: typeof TreasurySafesNewRouteImport
+      parentRoute: typeof TreasuryRouteRoute
+    }
+    '/treasury/settings/': {
+      id: '/treasury/settings/'
+      path: '/settings'
+      fullPath: '/treasury/settings/'
+      preLoaderRoute: typeof TreasurySettingsIndexRouteImport
       parentRoute: typeof TreasuryRouteRoute
     }
     '/treasury/shifts/': {
@@ -383,6 +479,10 @@ interface TreasuryRouteRouteChildren {
   TreasuryPaymentsNewRoute: typeof TreasuryPaymentsNewRoute
   TreasuryReceiptsIdRoute: typeof TreasuryReceiptsIdRoute
   TreasuryReceiptsNewRoute: typeof TreasuryReceiptsNewRoute
+  TreasuryReportsAgingRoute: typeof TreasuryReportsAgingRoute
+  TreasuryReportsCashflowRoute: typeof TreasuryReportsCashflowRoute
+  TreasuryReportsShiftDiffRoute: typeof TreasuryReportsShiftDiffRoute
+  TreasuryReportsVouchersRoute: typeof TreasuryReportsVouchersRoute
   TreasurySafesIdRoute: typeof TreasurySafesIdRoute
   TreasurySafesNewRoute: typeof TreasurySafesNewRoute
   TreasuryTransfersNewRoute: typeof TreasuryTransfersNewRoute
@@ -391,6 +491,7 @@ interface TreasuryRouteRouteChildren {
   TreasuryReceiptsIndexRoute: typeof TreasuryReceiptsIndexRoute
   TreasuryReconcileIndexRoute: typeof TreasuryReconcileIndexRoute
   TreasurySafesIndexRoute: typeof TreasurySafesIndexRoute
+  TreasurySettingsIndexRoute: typeof TreasurySettingsIndexRoute
   TreasuryShiftsIndexRoute: typeof TreasuryShiftsIndexRoute
   TreasuryStatementIndexRoute: typeof TreasuryStatementIndexRoute
   TreasuryTransfersIndexRoute: typeof TreasuryTransfersIndexRoute
@@ -402,6 +503,10 @@ const TreasuryRouteRouteChildren: TreasuryRouteRouteChildren = {
   TreasuryPaymentsNewRoute: TreasuryPaymentsNewRoute,
   TreasuryReceiptsIdRoute: TreasuryReceiptsIdRoute,
   TreasuryReceiptsNewRoute: TreasuryReceiptsNewRoute,
+  TreasuryReportsAgingRoute: TreasuryReportsAgingRoute,
+  TreasuryReportsCashflowRoute: TreasuryReportsCashflowRoute,
+  TreasuryReportsShiftDiffRoute: TreasuryReportsShiftDiffRoute,
+  TreasuryReportsVouchersRoute: TreasuryReportsVouchersRoute,
   TreasurySafesIdRoute: TreasurySafesIdRoute,
   TreasurySafesNewRoute: TreasurySafesNewRoute,
   TreasuryTransfersNewRoute: TreasuryTransfersNewRoute,
@@ -410,6 +515,7 @@ const TreasuryRouteRouteChildren: TreasuryRouteRouteChildren = {
   TreasuryReceiptsIndexRoute: TreasuryReceiptsIndexRoute,
   TreasuryReconcileIndexRoute: TreasuryReconcileIndexRoute,
   TreasurySafesIndexRoute: TreasurySafesIndexRoute,
+  TreasurySettingsIndexRoute: TreasurySettingsIndexRoute,
   TreasuryShiftsIndexRoute: TreasuryShiftsIndexRoute,
   TreasuryStatementIndexRoute: TreasuryStatementIndexRoute,
   TreasuryTransfersIndexRoute: TreasuryTransfersIndexRoute,
