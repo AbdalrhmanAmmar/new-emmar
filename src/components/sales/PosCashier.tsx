@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { money, num, today } from "@/lib/format";
 import { UNIT_LABEL, nextNo, uid, useDb, type Product, type SalesLine, type SalesPayMethod } from "@/lib/mockDb";
+import { CustomerHistoryButton } from "@/components/sales/CustomerHistoryButton";
 import { invoicePrintInput, printSalesInvoice } from "@/lib/printInvoice";
 import { discountPercentOf, invoiceTotals, lineTotals } from "@/lib/sales";
 import { saveSalesInvoice } from "@/lib/salesActions";
