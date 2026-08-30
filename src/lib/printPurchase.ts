@@ -9,7 +9,7 @@ export function purchasePrintInput(data: DbShape, inv: PurchaseInvoice): Invoice
     no: inv.no,
     date: inv.date,
     dueDate: inv.dueDate,
-    customer: supplier?.name ?? inv.supplierName || "مورد نقدي",
+    customer: supplier?.name ?? (inv.supplierName || "مورد نقدي"),
     customerPhone: supplier?.phone,
     branch: data.branches.find((b) => b.id === inv.branchId)?.name ?? "-",
     warehouse: data.warehouses.find((w) => w.id === inv.warehouseId)?.name ?? "-",
