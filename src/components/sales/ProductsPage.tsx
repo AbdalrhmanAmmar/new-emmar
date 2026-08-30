@@ -153,7 +153,7 @@ export function ProductFormPage({ id }: { id?: string }) {
     unitPrice: String(existing?.unitPrice ?? ""),
     wholesalePrice: String(existing?.wholesalePrice ?? ""),
     cost: String(existing?.cost ?? ""),
-    taxRate: String(existing?.taxRate ?? 14),
+    taxRate: String(existing?.taxRate ?? data.settings.vatRate),
     category: existing?.category ?? "",
     stock: String(existing?.stock ?? 0),
     minStock: String(existing?.minStock ?? 0),
@@ -239,7 +239,7 @@ export function ProductFormPage({ id }: { id?: string }) {
         <Field label="التكلفة">
           <Input type="number" value={form.cost} onChange={(e) => set("cost", e.target.value)} />
         </Field>
-        <Field label="نسبة الضريبة %" hint="القيمة المضافة في مصر 14%">
+        <Field label="نسبة الضريبة %" hint={`الافتراضى من الإعدادات ${data.settings.vatRate}%`}>
           <Input type="number" value={form.taxRate} onChange={(e) => set("taxRate", e.target.value)} />
         </Field>
       </FormSection>

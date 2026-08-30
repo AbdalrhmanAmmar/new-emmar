@@ -452,7 +452,7 @@ function NewItemDialog({
                 unitPrice: Number(form.unitPrice || 0),
                 wholesalePrice: Number(form.unitPrice || 0),
                 cost: Number(form.cost || 0),
-                taxRate: 14,
+                taxRate: data.settings.vatRate,
                 category: "",
                 stock: Number(form.stock || 0),
                 minStock: 0,

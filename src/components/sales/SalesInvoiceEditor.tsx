@@ -40,7 +40,9 @@ export function SalesInvoiceEditor({ invoice }: Props) {
   const [warehouseId, setWarehouseId] = useState(invoice?.warehouseId ?? data.warehouses[0]?.id ?? "");
   const [repId, setRepId] = useState<string | null>(invoice?.repId ?? data.reps[0]?.id ?? null);
   const [date, setDate] = useState(invoice?.date ?? today());
-  const [dueDate, setDueDate] = useState(invoice?.dueDate ?? today());
+  const [dueDate, setDueDate] = useState(
+    invoice?.dueDate ?? addDays(today(), data.settings.defaultPaymentDays),
+  );
   const [customerKind, setCustomerKind] = useState<"cash" | "registered">(
     invoice?.customerId ? "registered" : "cash",
   );
@@ -190,7 +192,7 @@ export function SalesInvoiceEditor({ invoice }: Props) {
             <span className="rounded-full border border-primary/30 bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary">
               رقم الفاتورة (تلقائى): {invoiceNo}
             </span>
-            شاشة بيع متكاملة — أصناف، خصومات، ضريبة 14%، وتسوية فورية بالجنيه المصري
+            {`شاشة بيع متكاملة — أصناف، خصومات، ضريبة ${data.settings.vatRate}%، وتسوية فورية`}
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
@@ -498,7 +500,7 @@ export function SalesInvoiceEditor({ invoice }: Props) {
               <SummaryRow label="الإجمالي" value={money(totals.gross)} />
               <SummaryRow label="الخصم" value={money(totals.discount)} />
               <SummaryRow label="الصافي" value={money(totals.net)} />
-              <SummaryRow label="الضريبة (14%)" value={money(totals.tax)} />
+              <SummaryRow label={`الضريبة (${data.settings.vatRate}%)`} value={money(totals.tax)} />
               <SummaryRow label="المستحق" value={money(totals.total)} strong />
               <SummaryRow label="إجمالي المدفوع" value={money(totals.paid)} />
               <SummaryRow label="المتبقي" value={money(totals.remaining)} strong danger={totals.remaining > 0} />
