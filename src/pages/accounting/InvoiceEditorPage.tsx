@@ -56,6 +56,7 @@ const InvoiceEditorPage: React.FC<Props> = ({ mode, pageTitle, pageDescription }
   const canEdit = isAdmin || hasPermission('accounting_sales' as any, 'edit');
 
   const [buyerName, setBuyerName] = useState(mode === 'b2c' ? 'عميل نقدي' : '');
+  const [custType, setCustType] = useState<'cash' | 'customer'>(mode === 'b2b' ? 'customer' : 'cash');
   const [buyerVat, setBuyerVat] = useState('');
   const [customerId, setCustomerId] = useState('');
   const [warehouseId, setWarehouseId] = useState('');
@@ -83,7 +84,6 @@ const InvoiceEditorPage: React.FC<Props> = ({ mode, pageTitle, pageDescription }
       const { data } = await (supabase as any).from('acc_customers').select('*');
       return (data ?? []) as Customer[];
     },
-    enabled: mode === 'b2b',
   });
   const { data: moves = [] } = useQuery<any[]>({
     queryKey: ['acc_stock_moves'],
