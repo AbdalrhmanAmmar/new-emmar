@@ -1,4 +1,4 @@
-import { useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { KeyRound, Pencil, Plus, Power, ShieldCheck, Trash2, Users } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -88,16 +88,16 @@ export function UsersPage() {
         actions={
           <>
             <Button asChild className="gap-1.5">
-              <a href="/users/new">
+              <Link to="/users/new">
                 <Plus className="size-4" />
                 مستخدم جديد
-              </a>
+              </Link>
             </Button>
             <Button asChild variant="outline" className="gap-1.5">
-              <a href="/users/permissions">
+              <Link to="/users/permissions">
                 <ShieldCheck className="size-4" />
                 شاشة الصلاحيات
-              </a>
+              </Link>
             </Button>
           </>
         }
