@@ -7,9 +7,9 @@ import { PageHeader, StatCard, StatusBadge } from "@/components/treasury/PageHea
 import { RowActions } from "@/components/treasury/RowActions";
 import { Button } from "@/components/ui/button";
 import { dateFmt, money } from "@/lib/format";
-import { SALES_PAY_LABEL, UNIT_LABEL, useDb, type SalesInvoice } from "@/lib/mockDb";
-import { printRecord } from "@/lib/printDoc";
-import { invoiceTotalsOf, lineTotals } from "@/lib/sales";
+import { SALES_PAY_LABEL, useDb, type SalesInvoice } from "@/lib/mockDb";
+import { invoicePrintInput, printSalesInvoice } from "@/lib/printInvoice";
+import { invoiceTotalsOf } from "@/lib/sales";
 import { deleteSalesInvoice, setSalesInvoiceStatus } from "@/lib/salesActions";
 
 export function SalesInvoiceList() {
@@ -25,39 +25,7 @@ export function SalesInvoiceList() {
     inv.customerId ? data.customers.find((c) => c.id === inv.customerId)?.name ?? "-" : inv.customerName || "عميل نقدي";
 
   const doPrint = (inv: SalesInvoice) => {
-    const t = invoiceTotalsOf(data, inv);
-    printRecord(
-      `فاتورة مبيعات ${inv.no}`,
-      [
-        ["رقم الفاتورة", inv.no],
-        ["التاريخ", dateFmt(inv.date)],
-        ["العميل", customerName(inv)],
-        ["تاريخ الاستحقاق", dateFmt(inv.dueDate)],
-        ["الفرع", data.branches.find((b) => b.id === inv.branchId)?.name ?? "-"],
-        ["المخزن", data.warehouses.find((w) => w.id === inv.warehouseId)?.name ?? "-"],
-        ["المندوب", data.reps.find((r) => r.id === inv.repId)?.name ?? "-"],
-        ["طريقة الدفع", SALES_PAY_LABEL[inv.payMethod]],
-      ],
-      {
-        headers: ["الكود", "الصنف", "الكمية", "الوحدة", "سعر الوحدة", "الخصم", "الضريبة", "الإجمالي"],
-        rows: inv.lines.map((l) => {
-          const lt = lineTotals(l);
-          return [
-            l.code,
-            l.name,
-            String(l.qty),
-            UNIT_LABEL[l.unit],
-            String(l.price),
-            lt.discount.toFixed(2),
-            lt.tax.toFixed(2),
-            lt.total.toFixed(2),
-          ];
-        }),
-      },
-      `الصافي: ${money(t.net)} — الضريبة: ${money(t.tax)} — المستحق: ${money(t.total)} — المدفوع: ${money(
-        t.paid,
-      )} — المتبقي: ${money(t.remaining)}`,
-    );
+    printSalesInvoice(invoicePrintInput(data, inv, invoiceTotalsOf(data, inv)));
   };
 
   const columns: Array<Column<SalesInvoice>> = [

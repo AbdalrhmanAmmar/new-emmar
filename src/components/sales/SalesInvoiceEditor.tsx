@@ -9,17 +9,18 @@ import { SearchSelect } from "@/components/treasury/SearchSelect";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { dateFmt, money, num, today } from "@/lib/format";
+import { money, num, today } from "@/lib/format";
 import {
   SALES_PAY_LABEL,
   UNIT_LABEL,
+  nextNo,
   uid,
   useDb,
   type SalesInvoice,
   type SalesLine,
   type SalesPayMethod,
 } from "@/lib/mockDb";
-import { printRecord } from "@/lib/printDoc";
+import { invoicePrintInput, printSalesInvoice } from "@/lib/printInvoice";
 import { discountPercentOf, emptyLine, invoiceTotals, lineTotals, productOptions } from "@/lib/sales";
 import { saveSalesInvoice } from "@/lib/salesActions";
 
@@ -50,6 +51,11 @@ export function SalesInvoiceEditor({ invoice }: Props) {
   const [safeId, setSafeId] = useState<string | null>(invoice?.safeId ?? data.safes[0]?.id ?? null);
   const [discountCode, setDiscountCode] = useState(invoice?.discountCode ?? "");
   const [note, setNote] = useState(invoice?.note ?? "");
+
+  const invoiceNo = useMemo(
+    () => invoice?.no ?? nextNo("SO", data.salesInvoices.map((i) => i.no)),
+    [invoice?.no, data.salesInvoices],
+  );
 
   const codePercent = discountPercentOf(data, discountCode);
   const products = useMemo(() => productOptions(data), [data]);
@@ -128,43 +134,26 @@ export function SalesInvoiceEditor({ invoice }: Props) {
   });
 
   const doPrint = () => {
-    printRecord(
-      `فاتورة مبيعات ${invoice?.no ?? "جديدة"}`,
-      [
-        ["رقم الفاتورة", invoice?.no ?? "—"],
-        ["التاريخ", dateFmt(date)],
-        ["العميل", customerKind === "registered"
-          ? data.customers.find((c) => c.id === customerId)?.name ?? "-"
-          : customerName || "عميل نقدي"],
-        ["تاريخ الاستحقاق", dateFmt(payMethod === "credit" ? dueDate : date)],
-        ["الفرع", data.branches.find((b) => b.id === branchId)?.name ?? "-"],
-        ["المخزن", data.warehouses.find((w) => w.id === warehouseId)?.name ?? "-"],
-        ["المندوب", data.reps.find((r) => r.id === repId)?.name ?? "-"],
-        ["طريقة الدفع", SALES_PAY_LABEL[payMethod]],
-      ],
-      {
-        headers: ["الكود", "الصنف", "الكمية", "الوحدة", "سعر الوحدة", "الخصم", "الضريبة", "الإجمالي"],
-        rows: lines
-          .filter((l) => l.productId)
-          .map((l) => {
-            const t = lineTotals(l);
-            return [
-              l.code,
-              l.name,
-              num(l.qty),
-              UNIT_LABEL[l.unit],
-              num(l.price),
-              num(t.discount),
-              num(t.tax),
-              num(t.total),
-            ];
-          }),
-      },
-      `الإجمالي: ${money(totals.gross)} — الخصم: ${money(totals.discount)} — الصافي: ${money(
-        totals.net,
-      )} — الضريبة: ${money(totals.tax)} — المستحق: ${money(totals.total)} — المدفوع: ${money(
-        totals.paid,
-      )} — المتبقي: ${money(totals.remaining)}`,
+    printSalesInvoice(
+      invoicePrintInput(
+        data,
+        {
+          no: invoiceNo,
+          date,
+          dueDate: payMethod === "credit" ? dueDate : date,
+          branchId,
+          warehouseId,
+          repId,
+          customerId: customerKind === "registered" ? customerId : null,
+          customerName: customerKind === "registered" ? "" : customerName,
+          lines: lines.filter((l) => l.productId),
+          payMethod,
+          discountCode,
+          note,
+          status: invoice?.status ?? "draft",
+        },
+        totals,
+      ),
     );
   };
 
