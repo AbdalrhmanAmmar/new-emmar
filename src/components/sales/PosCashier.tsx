@@ -252,13 +252,19 @@ export function PosCashier() {
           ))}
         </div>
         {customerKind === "registered" ? (
-          <SearchSelect
-            value={customerId}
-            onChange={(v) => setCustomerId(v || null)}
-            options={data.customers.map((c) => ({ value: c.id, label: c.name, hint: `${c.code} — ${c.phone}` }))}
-            placeholder="اختر العميل"
-          />
+          <div className="flex items-center gap-1.5">
+            <div className="min-w-0 flex-1">
+              <SearchSelect
+                value={customerId}
+                onChange={(v) => setCustomerId(v || null)}
+                options={data.customers.map((c) => ({ value: c.id, label: c.name, hint: `${c.code} — ${c.phone}` }))}
+                placeholder="اختر العميل"
+              />
+            </div>
+            <CustomerHistoryButton customerId={customerId} />
+          </div>
         ) : null}
+
 
         <div className="max-h-[46vh] space-y-2 overflow-y-auto">
           {lines.length === 0 ? (
