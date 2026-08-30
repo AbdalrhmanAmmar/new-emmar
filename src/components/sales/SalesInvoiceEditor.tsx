@@ -57,6 +57,9 @@ export function SalesInvoiceEditor({ invoice }: Props) {
     [invoice?.no, data.salesInvoices],
   );
 
+  const filledLines = lines.filter((l) => l.productId);
+  const qtySum = filledLines.reduce((acc, l) => acc + Number(l.qty || 0), 0);
+
   const codePercent = discountPercentOf(data, discountCode);
   const products = useMemo(() => productOptions(data), [data]);
 
@@ -508,6 +511,29 @@ function SummaryRow({
       >
         {value}
       </span>
+    </div>
+  );
+}
+
+function LiveStat({
+  label,
+  value,
+  tone = "muted",
+}: {
+  label: string;
+  value: string;
+  tone?: "muted" | "primary" | "danger" | "ok";
+}) {
+  const tones: Record<string, string> = {
+    muted: "border-border bg-muted/40 text-foreground",
+    primary: "border-primary/30 bg-primary/10 text-primary",
+    danger: "border-destructive/30 bg-destructive/10 text-destructive",
+    ok: "border-primary/25 bg-primary/5 text-primary",
+  };
+  return (
+    <div className={`rounded-lg border px-3 py-2 ${tones[tone]}`}>
+      <div className="text-[11px] text-muted-foreground">{label}</div>
+      <div className="mt-0.5 text-sm font-bold">{value}</div>
     </div>
   );
 }
