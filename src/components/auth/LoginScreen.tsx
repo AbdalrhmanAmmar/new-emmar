@@ -81,8 +81,8 @@ export function LoginScreen() {
         <div className="w-full max-w-sm space-y-6">
           <div className="flex flex-col items-center gap-3 text-center">
             <img
-              src={logoAsset.url}
-              alt="شعار الإيمان لتجارة الأعلاف"
+              src={logoSrc}
+              alt={`شعار ${settings.companyName}`}
               width={120}
               height={120}
               className="size-24 rounded-full border-2 border-accent/50 object-cover shadow-md"
