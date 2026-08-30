@@ -1,5 +1,5 @@
 import { dateFmt, money, num } from "@/lib/format";
-import { SALES_PAY_LABEL, UNIT_LABEL, type DbShape, type SalesInvoice, type SalesLine } from "@/lib/mockDb";
+import { SALES_PAY_LABEL, UNIT_LABEL, type DbShape, type OrgSettings, type SalesInvoice, type SalesLine } from "@/lib/mockDb";
 import { lineTotals } from "@/lib/sales";
 
 export interface InvoicePrintTotals {
@@ -27,7 +27,9 @@ export interface InvoicePrintInput {
   status?: string;
   lines: SalesLine[];
   totals: InvoicePrintTotals;
+  org: OrgSettings;
 }
+
 
 /* ===================== تفقيط المبالغ بالعربي ===================== */
 
