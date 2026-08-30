@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ReportsRouteRouteImport } from './routes/reports/route'
 import { Route as SalesRouteRouteImport } from './routes/sales/route'
 import { Route as TreasuryRouteRouteImport } from './routes/treasury/route'
+import { Route as ReportsIndexRouteImport } from './routes/reports/index'
 import { Route as SalesIndexRouteImport } from './routes/sales/index'
 import { Route as TreasuryIndexRouteImport } from './routes/treasury/index'
 import { Route as SalesCustomersIndexRouteImport } from './routes/sales/customers/index'
@@ -67,6 +68,11 @@ const TreasuryRouteRoute = TreasuryRouteRouteImport.update({
   id: '/treasury',
   path: '/treasury',
   getParentRoute: () => rootRouteImport,
+} as any)
+const ReportsIndexRoute = ReportsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ReportsRouteRoute,
 } as any)
 const SalesIndexRoute = SalesIndexRouteImport.update({
   id: '/',
@@ -242,9 +248,10 @@ const TreasuryTransfersNewRoute = TreasuryTransfersNewRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/reports': typeof ReportsRouteRoute
+  '/reports': typeof ReportsRouteRouteWithChildren
   '/sales': typeof SalesRouteRouteWithChildren
   '/treasury': typeof TreasuryRouteRouteWithChildren
+  '/reports/': typeof ReportsIndexRoute
   '/sales/': typeof SalesIndexRoute
   '/treasury/': typeof TreasuryIndexRoute
   '/sales/customers/$id': typeof SalesCustomersIdRoute
@@ -282,7 +289,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/reports': typeof ReportsRouteRoute
+  '/reports': typeof ReportsIndexRoute
   '/sales': typeof SalesIndexRoute
   '/treasury': typeof TreasuryIndexRoute
   '/sales/customers/$id': typeof SalesCustomersIdRoute
@@ -321,9 +328,10 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/reports': typeof ReportsRouteRoute
+  '/reports': typeof ReportsRouteRouteWithChildren
   '/sales': typeof SalesRouteRouteWithChildren
   '/treasury': typeof TreasuryRouteRouteWithChildren
+  '/reports/': typeof ReportsIndexRoute
   '/sales/': typeof SalesIndexRoute
   '/treasury/': typeof TreasuryIndexRoute
   '/sales/customers/$id': typeof SalesCustomersIdRoute
@@ -366,6 +374,7 @@ export interface FileRouteTypes {
     | '/reports'
     | '/sales'
     | '/treasury'
+    | '/reports/'
     | '/sales/'
     | '/treasury/'
     | '/sales/customers/$id'
@@ -444,6 +453,7 @@ export interface FileRouteTypes {
     | '/reports'
     | '/sales'
     | '/treasury'
+    | '/reports/'
     | '/sales/'
     | '/treasury/'
     | '/sales/customers/$id'
@@ -482,7 +492,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ReportsRouteRoute: typeof ReportsRouteRoute
+  ReportsRouteRoute: typeof ReportsRouteRouteWithChildren
   SalesRouteRoute: typeof SalesRouteRouteWithChildren
   TreasuryRouteRoute: typeof TreasuryRouteRouteWithChildren
 }
@@ -516,6 +526,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/treasury'
       preLoaderRoute: typeof TreasuryRouteRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/reports/': {
+      id: '/reports/'
+      path: '/'
+      fullPath: '/reports/'
+      preLoaderRoute: typeof ReportsIndexRouteImport
+      parentRoute: typeof ReportsRouteRoute
     }
     '/sales/': {
       id: '/sales/'
@@ -758,6 +775,18 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface ReportsRouteRouteChildren {
+  ReportsIndexRoute: typeof ReportsIndexRoute
+}
+
+const ReportsRouteRouteChildren: ReportsRouteRouteChildren = {
+  ReportsIndexRoute: ReportsIndexRoute,
+}
+
+const ReportsRouteRouteWithChildren = ReportsRouteRoute._addFileChildren(
+  ReportsRouteRouteChildren,
+)
+
 interface SalesRouteRouteChildren {
   SalesIndexRoute: typeof SalesIndexRoute
   SalesCustomersIdRoute: typeof SalesCustomersIdRoute
@@ -848,7 +877,7 @@ const TreasuryRouteRouteWithChildren = TreasuryRouteRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ReportsRouteRoute: ReportsRouteRoute,
+  ReportsRouteRoute: ReportsRouteRouteWithChildren,
   SalesRouteRoute: SalesRouteRouteWithChildren,
   TreasuryRouteRoute: TreasuryRouteRouteWithChildren,
 }
