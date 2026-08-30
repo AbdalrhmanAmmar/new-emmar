@@ -42,6 +42,21 @@ interface NavGroup {
 
 const NAV: NavGroup[] = [
   {
+    id: "sales",
+    label: "العملاء والمبيعات",
+    icon: <BadgeDollarSign className="size-4" />,
+    items: [
+      { to: "/sales", label: "لوحة المبيعات", icon: <LayoutDashboard className="size-4" /> },
+      { to: "/sales/invoices", label: "فواتير المبيعات", icon: <Receipt className="size-4" /> },
+      { to: "/sales/customers", label: "العملاء", icon: <FileText className="size-4" /> },
+      { to: "/sales/products", label: "الأصناف والأسعار", icon: <ListChecks className="size-4" /> },
+      { to: "/sales/reports/by-product", label: "المبيعات حسب الصنف", icon: <ScrollText className="size-4" /> },
+      { to: "/sales/reports/by-rep", label: "المبيعات حسب المندوب", icon: <ScrollText className="size-4" /> },
+      { to: "/sales/reports/by-customer", label: "المبيعات حسب العميل", icon: <ScrollText className="size-4" /> },
+    ],
+  },
+  {
+
     id: "cash",
     label: "الخزن والحسابات",
     icon: <Landmark className="size-4" />,
