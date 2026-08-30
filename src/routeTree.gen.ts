@@ -25,6 +25,7 @@ import { Route as PurchasesInvoicesIdRouteImport } from './routes/purchases/invo
 import { Route as PurchasesInvoicesNewRouteImport } from './routes/purchases/invoices/new'
 import { Route as PurchasesReportsByProductRouteImport } from './routes/purchases/reports/by-product'
 import { Route as PurchasesReportsBySupplierRouteImport } from './routes/purchases/reports/by-supplier'
+import { Route as PurchasesReportsSupplierStatementRouteImport } from './routes/purchases/reports/supplier-statement'
 import { Route as PurchasesSuppliersIndexRouteImport } from './routes/purchases/suppliers/index'
 import { Route as PurchasesSuppliersIdRouteImport } from './routes/purchases/suppliers/$id'
 import { Route as PurchasesSuppliersNewRouteImport } from './routes/purchases/suppliers/new'
@@ -142,6 +143,12 @@ const PurchasesReportsBySupplierRoute =
   PurchasesReportsBySupplierRouteImport.update({
     id: '/reports/by-supplier',
     path: '/reports/by-supplier',
+    getParentRoute: () => PurchasesRouteRoute,
+  } as any)
+const PurchasesReportsSupplierStatementRoute =
+  PurchasesReportsSupplierStatementRouteImport.update({
+    id: '/reports/supplier-statement',
+    path: '/reports/supplier-statement',
     getParentRoute: () => PurchasesRouteRoute,
   } as any)
 const PurchasesSuppliersIndexRoute = PurchasesSuppliersIndexRouteImport.update({
@@ -337,6 +344,7 @@ export interface FileRoutesByFullPath {
   '/purchases/invoices/new': typeof PurchasesInvoicesNewRoute
   '/purchases/reports/by-product': typeof PurchasesReportsByProductRoute
   '/purchases/reports/by-supplier': typeof PurchasesReportsBySupplierRoute
+  '/purchases/reports/supplier-statement': typeof PurchasesReportsSupplierStatementRoute
   '/purchases/suppliers/$id': typeof PurchasesSuppliersIdRoute
   '/purchases/suppliers/new': typeof PurchasesSuppliersNewRoute
   '/sales/customers/$id': typeof SalesCustomersIdRoute
@@ -386,6 +394,7 @@ export interface FileRoutesByTo {
   '/purchases/invoices/new': typeof PurchasesInvoicesNewRoute
   '/purchases/reports/by-product': typeof PurchasesReportsByProductRoute
   '/purchases/reports/by-supplier': typeof PurchasesReportsBySupplierRoute
+  '/purchases/reports/supplier-statement': typeof PurchasesReportsSupplierStatementRoute
   '/purchases/suppliers/$id': typeof PurchasesSuppliersIdRoute
   '/purchases/suppliers/new': typeof PurchasesSuppliersNewRoute
   '/sales/customers/$id': typeof SalesCustomersIdRoute
@@ -440,6 +449,7 @@ export interface FileRoutesById {
   '/purchases/invoices/new': typeof PurchasesInvoicesNewRoute
   '/purchases/reports/by-product': typeof PurchasesReportsByProductRoute
   '/purchases/reports/by-supplier': typeof PurchasesReportsBySupplierRoute
+  '/purchases/reports/supplier-statement': typeof PurchasesReportsSupplierStatementRoute
   '/purchases/suppliers/$id': typeof PurchasesSuppliersIdRoute
   '/purchases/suppliers/new': typeof PurchasesSuppliersNewRoute
   '/sales/customers/$id': typeof SalesCustomersIdRoute
@@ -495,6 +505,7 @@ export interface FileRouteTypes {
     | '/purchases/invoices/new'
     | '/purchases/reports/by-product'
     | '/purchases/reports/by-supplier'
+    | '/purchases/reports/supplier-statement'
     | '/purchases/suppliers/$id'
     | '/purchases/suppliers/new'
     | '/sales/customers/$id'
@@ -544,6 +555,7 @@ export interface FileRouteTypes {
     | '/purchases/invoices/new'
     | '/purchases/reports/by-product'
     | '/purchases/reports/by-supplier'
+    | '/purchases/reports/supplier-statement'
     | '/purchases/suppliers/$id'
     | '/purchases/suppliers/new'
     | '/sales/customers/$id'
@@ -597,6 +609,7 @@ export interface FileRouteTypes {
     | '/purchases/invoices/new'
     | '/purchases/reports/by-product'
     | '/purchases/reports/by-supplier'
+    | '/purchases/reports/supplier-statement'
     | '/purchases/suppliers/$id'
     | '/purchases/suppliers/new'
     | '/sales/customers/$id'
@@ -755,6 +768,13 @@ declare module '@tanstack/react-router' {
       path: '/reports/by-supplier'
       fullPath: '/purchases/reports/by-supplier'
       preLoaderRoute: typeof PurchasesReportsBySupplierRouteImport
+      parentRoute: typeof PurchasesRouteRoute
+    }
+    '/purchases/reports/supplier-statement': {
+      id: '/purchases/reports/supplier-statement'
+      path: '/reports/supplier-statement'
+      fullPath: '/purchases/reports/supplier-statement'
+      preLoaderRoute: typeof PurchasesReportsSupplierStatementRouteImport
       parentRoute: typeof PurchasesRouteRoute
     }
     '/purchases/suppliers/': {
@@ -1011,6 +1031,7 @@ interface PurchasesRouteRouteChildren {
   PurchasesInvoicesNewRoute: typeof PurchasesInvoicesNewRoute
   PurchasesReportsByProductRoute: typeof PurchasesReportsByProductRoute
   PurchasesReportsBySupplierRoute: typeof PurchasesReportsBySupplierRoute
+  PurchasesReportsSupplierStatementRoute: typeof PurchasesReportsSupplierStatementRoute
   PurchasesSuppliersIdRoute: typeof PurchasesSuppliersIdRoute
   PurchasesSuppliersNewRoute: typeof PurchasesSuppliersNewRoute
   PurchasesInvoicesIndexRoute: typeof PurchasesInvoicesIndexRoute
@@ -1023,6 +1044,8 @@ const PurchasesRouteRouteChildren: PurchasesRouteRouteChildren = {
   PurchasesInvoicesNewRoute: PurchasesInvoicesNewRoute,
   PurchasesReportsByProductRoute: PurchasesReportsByProductRoute,
   PurchasesReportsBySupplierRoute: PurchasesReportsBySupplierRoute,
+  PurchasesReportsSupplierStatementRoute:
+    PurchasesReportsSupplierStatementRoute,
   PurchasesSuppliersIdRoute: PurchasesSuppliersIdRoute,
   PurchasesSuppliersNewRoute: PurchasesSuppliersNewRoute,
   PurchasesInvoicesIndexRoute: PurchasesInvoicesIndexRoute,
