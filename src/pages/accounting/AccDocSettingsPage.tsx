@@ -77,6 +77,25 @@ const AccDocSettingsPage: React.FC = () => {
         </CardContent>
       </Card>
 
+      <Card className="border-destructive/30">
+        <CardHeader><CardTitle className="text-destructive">بيانات النظام</CardTitle></CardHeader>
+        <CardContent className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-sm text-muted-foreground">
+            إعادة تعيين كامل بيانات البرنامج التجريبية إلى حالتها الافتراضية (البيانات الحالية ستُحذف نهائياً).
+          </p>
+          <Button
+            variant="destructive"
+            onClick={() => {
+              if (!window.confirm('سيتم حذف كل البيانات الحالية واستعادة البيانات التجريبية الافتراضية. متابعة؟')) return;
+              resetDb();
+              window.location.reload();
+            }}
+          >
+            <RotateCcw className="h-4 w-4 me-1" /> إعادة تعيين البيانات
+          </Button>
+        </CardContent>
+      </Card>
+
       <div className="flex justify-end gap-2">
         <Button variant="outline" onClick={reset}>استعادة الافتراضي المصري</Button>
         <Button onClick={save}><Save className="h-4 w-4 me-1" /> حفظ الإعدادات</Button>
