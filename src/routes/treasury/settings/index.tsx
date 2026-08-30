@@ -15,6 +15,7 @@ import {
   type SalesRep,
   type Warehouse,
   mutate,
+  nextCode,
   resetDb,
   uid,
   useDb,
@@ -58,7 +59,7 @@ function SettingsPage() {
   ];
 
   const warehouseFields: FieldDef<Warehouse>[] = [
-    { key: "code", label: "الكود", required: true },
+    { key: "code", label: "الكود (تلقائى)", required: true },
     { key: "name", label: "اسم المخزن", required: true },
     { key: "branchId", label: "الفرع", type: "select", required: true, options: branchOptions },
   ];
@@ -186,7 +187,7 @@ function SettingsPage() {
             secondary={(row) => data.branches.find((b) => b.id === row.branchId)?.name ?? "-"}
             emptyRow={() => ({
               id: uid("wh"),
-              code: "",
+              code: nextCode("WH", data.warehouses.map((w) => w.code)),
               name: "",
               branchId: data.branches[0]?.id ?? "",
             })}
