@@ -17,6 +17,11 @@ import {
   Settings2,
   Truck,
   ShoppingCart,
+  Warehouse,
+  ArrowDownToLine,
+  ArrowUpFromLine,
+  Boxes,
+  Package,
   Users,
   Wallet,
 } from "lucide-react";
@@ -121,6 +126,36 @@ export const PURCHASES_MODULE: NavModule = {
   ],
 };
 
+export const INVENTORY_MODULE: NavModule = {
+  id: "inventory",
+  label: "المخازن والمخزون",
+  icon: <Warehouse className="size-4" />,
+  home: { to: "/inventory", label: "لوحة المخازن", icon: <LayoutDashboard className="size-4" /> },
+  groups: [
+    {
+      id: "inventory-docs",
+      label: "الأذون المخزنية",
+      icon: <Boxes className="size-4" />,
+      items: [
+        { to: "/inventory/moves", label: "كل الأذون المخزنية", icon: <Boxes className="size-4" /> },
+        { to: "/inventory/moves/receipts", label: "أذون إضافة مخزون", icon: <ArrowDownToLine className="size-4" /> },
+        { to: "/inventory/moves/issues", label: "أذون صرف مخزني", icon: <ArrowUpFromLine className="size-4" /> },
+        { to: "/inventory/moves/transfers", label: "التحويل بين المخازن", icon: <ArrowLeftRight className="size-4" /> },
+        { to: "/inventory/moves/new", label: "إذن مخزني جديد", icon: <Package className="size-4" /> },
+      ],
+    },
+    {
+      id: "inventory-master",
+      label: "المخازن والأرصدة",
+      icon: <Warehouse className="size-4" />,
+      items: [
+        { to: "/inventory/warehouses", label: "تكويد المخازن", icon: <Warehouse className="size-4" /> },
+        { to: "/inventory/balance", label: "أرصدة المخازن", icon: <ListChecks className="size-4" /> },
+      ],
+    },
+  ],
+};
+
 export const EXPENSES_MODULE: NavModule = {
   id: "expenses",
   label: "المصروفات العامة والنثريات",
@@ -213,6 +248,15 @@ export const REPORTS_MODULE: NavModule = {
       ],
     },
     {
+      id: "reports-inventory",
+      label: "تقارير المخازن",
+      icon: <Warehouse className="size-4" />,
+      items: [
+        { to: "/inventory/balance", label: "أرصدة وتقييم المخزون", icon: <ListChecks className="size-4" /> },
+        { to: "/inventory/moves", label: "حركة الأذون المخزنية", icon: <Boxes className="size-4" /> },
+      ],
+    },
+    {
       id: "reports-purchases",
       label: "تقارير المشتريات",
       icon: <Truck className="size-4" />,
@@ -250,6 +294,7 @@ export const SETTINGS_GROUPS: SettingsGroup[] = [
       { to: "/purchases/suppliers", label: "الموردون", icon: <Truck className="size-4" /> },
       { to: "/sales/products", label: "الأصناف والأسعار", icon: <ListChecks className="size-4" /> },
       { to: "/sales/units", label: "تكويد الوحدات", icon: <Ruler className="size-4" /> },
+      { to: "/inventory/warehouses", label: "المخازن", icon: <Warehouse className="size-4" /> },
     ],
   },
 ];
@@ -260,6 +305,7 @@ export const MODULES: NavModule[] = [
   TREASURY_MODULE,
   SALES_MODULE,
   PURCHASES_MODULE,
+  INVENTORY_MODULE,
   EXPENSES_MODULE,
   HR_MODULE,
   REPORTS_MODULE,
