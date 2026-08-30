@@ -17,6 +17,7 @@ import { Route as PurchasesRouteRouteImport } from './routes/purchases/route'
 import { Route as ReportsRouteRouteImport } from './routes/reports/route'
 import { Route as SalesRouteRouteImport } from './routes/sales/route'
 import { Route as TreasuryRouteRouteImport } from './routes/treasury/route'
+import { Route as UsersRouteRouteImport } from './routes/users/route'
 import { Route as ExpensesIndexRouteImport } from './routes/expenses/index'
 import { Route as ExpensesIdRouteImport } from './routes/expenses/$id'
 import { Route as ExpensesNewRouteImport } from './routes/expenses/new'
@@ -29,6 +30,10 @@ import { Route as ReportsCustomerStatementRouteImport } from './routes/reports/c
 import { Route as SalesIndexRouteImport } from './routes/sales/index'
 import { Route as SalesPosRouteImport } from './routes/sales/pos'
 import { Route as TreasuryIndexRouteImport } from './routes/treasury/index'
+import { Route as UsersIndexRouteImport } from './routes/users/index'
+import { Route as UsersIdRouteImport } from './routes/users/$id'
+import { Route as UsersNewRouteImport } from './routes/users/new'
+import { Route as UsersPermissionsRouteImport } from './routes/users/permissions'
 import { Route as ExpensesItemsIndexRouteImport } from './routes/expenses/items/index'
 import { Route as ExpensesListIndexRouteImport } from './routes/expenses/list/index'
 import { Route as HrAdjustmentsIndexRouteImport } from './routes/hr/adjustments/index'
@@ -137,6 +142,11 @@ const TreasuryRouteRoute = TreasuryRouteRouteImport.update({
   path: '/treasury',
   getParentRoute: () => rootRouteImport,
 } as any)
+const UsersRouteRoute = UsersRouteRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ExpensesIndexRoute = ExpensesIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -197,6 +207,26 @@ const TreasuryIndexRoute = TreasuryIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => TreasuryRouteRoute,
+} as any)
+const UsersIndexRoute = UsersIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => UsersRouteRoute,
+} as any)
+const UsersIdRoute = UsersIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => UsersRouteRoute,
+} as any)
+const UsersNewRoute = UsersNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => UsersRouteRoute,
+} as any)
+const UsersPermissionsRoute = UsersPermissionsRouteImport.update({
+  id: '/permissions',
+  path: '/permissions',
+  getParentRoute: () => UsersRouteRoute,
 } as any)
 const ExpensesItemsIndexRoute = ExpensesItemsIndexRouteImport.update({
   id: '/items/',
@@ -548,11 +578,15 @@ export interface FileRoutesByFullPath {
   '/reports': typeof ReportsRouteRouteWithChildren
   '/sales': typeof SalesRouteRouteWithChildren
   '/treasury': typeof TreasuryRouteRouteWithChildren
+  '/users': typeof UsersRouteRouteWithChildren
   '/expenses/$id': typeof ExpensesIdRoute
   '/expenses/new': typeof ExpensesNewRoute
   '/inventory/balance': typeof InventoryBalanceRoute
   '/reports/customer-statement': typeof ReportsCustomerStatementRoute
   '/sales/pos': typeof SalesPosRoute
+  '/users/$id': typeof UsersIdRoute
+  '/users/new': typeof UsersNewRoute
+  '/users/permissions': typeof UsersPermissionsRoute
   '/expenses/': typeof ExpensesIndexRoute
   '/hr/': typeof HrIndexRoute
   '/inventory/': typeof InventoryIndexRoute
@@ -560,6 +594,7 @@ export interface FileRoutesByFullPath {
   '/reports/': typeof ReportsIndexRoute
   '/sales/': typeof SalesIndexRoute
   '/treasury/': typeof TreasuryIndexRoute
+  '/users/': typeof UsersIndexRoute
   '/hr/employees/new': typeof HrEmployeesNewRoute
   '/inventory/moves/$id': typeof InventoryMovesIdRoute
   '/inventory/moves/issues': typeof InventoryMovesIssuesRoute
@@ -635,6 +670,9 @@ export interface FileRoutesByTo {
   '/inventory/balance': typeof InventoryBalanceRoute
   '/reports/customer-statement': typeof ReportsCustomerStatementRoute
   '/sales/pos': typeof SalesPosRoute
+  '/users/$id': typeof UsersIdRoute
+  '/users/new': typeof UsersNewRoute
+  '/users/permissions': typeof UsersPermissionsRoute
   '/expenses': typeof ExpensesIndexRoute
   '/hr': typeof HrIndexRoute
   '/inventory': typeof InventoryIndexRoute
@@ -642,6 +680,7 @@ export interface FileRoutesByTo {
   '/reports': typeof ReportsIndexRoute
   '/sales': typeof SalesIndexRoute
   '/treasury': typeof TreasuryIndexRoute
+  '/users': typeof UsersIndexRoute
   '/hr/employees/new': typeof HrEmployeesNewRoute
   '/inventory/moves/$id': typeof InventoryMovesIdRoute
   '/inventory/moves/issues': typeof InventoryMovesIssuesRoute
@@ -720,11 +759,15 @@ export interface FileRoutesById {
   '/reports': typeof ReportsRouteRouteWithChildren
   '/sales': typeof SalesRouteRouteWithChildren
   '/treasury': typeof TreasuryRouteRouteWithChildren
+  '/users': typeof UsersRouteRouteWithChildren
   '/expenses/$id': typeof ExpensesIdRoute
   '/expenses/new': typeof ExpensesNewRoute
   '/inventory/balance': typeof InventoryBalanceRoute
   '/reports/customer-statement': typeof ReportsCustomerStatementRoute
   '/sales/pos': typeof SalesPosRoute
+  '/users/$id': typeof UsersIdRoute
+  '/users/new': typeof UsersNewRoute
+  '/users/permissions': typeof UsersPermissionsRoute
   '/expenses/': typeof ExpensesIndexRoute
   '/hr/': typeof HrIndexRoute
   '/inventory/': typeof InventoryIndexRoute
@@ -732,6 +775,7 @@ export interface FileRoutesById {
   '/reports/': typeof ReportsIndexRoute
   '/sales/': typeof SalesIndexRoute
   '/treasury/': typeof TreasuryIndexRoute
+  '/users/': typeof UsersIndexRoute
   '/hr/employees/new': typeof HrEmployeesNewRoute
   '/inventory/moves/$id': typeof InventoryMovesIdRoute
   '/inventory/moves/issues': typeof InventoryMovesIssuesRoute
@@ -811,11 +855,15 @@ export interface FileRouteTypes {
     | '/reports'
     | '/sales'
     | '/treasury'
+    | '/users'
     | '/expenses/$id'
     | '/expenses/new'
     | '/inventory/balance'
     | '/reports/customer-statement'
     | '/sales/pos'
+    | '/users/$id'
+    | '/users/new'
+    | '/users/permissions'
     | '/expenses/'
     | '/hr/'
     | '/inventory/'
@@ -823,6 +871,7 @@ export interface FileRouteTypes {
     | '/reports/'
     | '/sales/'
     | '/treasury/'
+    | '/users/'
     | '/hr/employees/new'
     | '/inventory/moves/$id'
     | '/inventory/moves/issues'
@@ -898,6 +947,9 @@ export interface FileRouteTypes {
     | '/inventory/balance'
     | '/reports/customer-statement'
     | '/sales/pos'
+    | '/users/$id'
+    | '/users/new'
+    | '/users/permissions'
     | '/expenses'
     | '/hr'
     | '/inventory'
@@ -905,6 +957,7 @@ export interface FileRouteTypes {
     | '/reports'
     | '/sales'
     | '/treasury'
+    | '/users'
     | '/hr/employees/new'
     | '/inventory/moves/$id'
     | '/inventory/moves/issues'
@@ -982,11 +1035,15 @@ export interface FileRouteTypes {
     | '/reports'
     | '/sales'
     | '/treasury'
+    | '/users'
     | '/expenses/$id'
     | '/expenses/new'
     | '/inventory/balance'
     | '/reports/customer-statement'
     | '/sales/pos'
+    | '/users/$id'
+    | '/users/new'
+    | '/users/permissions'
     | '/expenses/'
     | '/hr/'
     | '/inventory/'
@@ -994,6 +1051,7 @@ export interface FileRouteTypes {
     | '/reports/'
     | '/sales/'
     | '/treasury/'
+    | '/users/'
     | '/hr/employees/new'
     | '/inventory/moves/$id'
     | '/inventory/moves/issues'
@@ -1072,6 +1130,7 @@ export interface RootRouteChildren {
   ReportsRouteRoute: typeof ReportsRouteRouteWithChildren
   SalesRouteRoute: typeof SalesRouteRouteWithChildren
   TreasuryRouteRoute: typeof TreasuryRouteRouteWithChildren
+  UsersRouteRoute: typeof UsersRouteRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -1130,6 +1189,13 @@ declare module '@tanstack/react-router' {
       path: '/treasury'
       fullPath: '/treasury'
       preLoaderRoute: typeof TreasuryRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/users': {
+      id: '/users'
+      path: '/users'
+      fullPath: '/users'
+      preLoaderRoute: typeof UsersRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/expenses/': {
@@ -1215,6 +1281,34 @@ declare module '@tanstack/react-router' {
       fullPath: '/treasury/'
       preLoaderRoute: typeof TreasuryIndexRouteImport
       parentRoute: typeof TreasuryRouteRoute
+    }
+    '/users/': {
+      id: '/users/'
+      path: '/'
+      fullPath: '/users/'
+      preLoaderRoute: typeof UsersIndexRouteImport
+      parentRoute: typeof UsersRouteRoute
+    }
+    '/users/$id': {
+      id: '/users/$id'
+      path: '/$id'
+      fullPath: '/users/$id'
+      preLoaderRoute: typeof UsersIdRouteImport
+      parentRoute: typeof UsersRouteRoute
+    }
+    '/users/new': {
+      id: '/users/new'
+      path: '/new'
+      fullPath: '/users/new'
+      preLoaderRoute: typeof UsersNewRouteImport
+      parentRoute: typeof UsersRouteRoute
+    }
+    '/users/permissions': {
+      id: '/users/permissions'
+      path: '/permissions'
+      fullPath: '/users/permissions'
+      preLoaderRoute: typeof UsersPermissionsRouteImport
+      parentRoute: typeof UsersRouteRoute
     }
     '/expenses/items/': {
       id: '/expenses/items/'
@@ -1916,6 +2010,24 @@ const TreasuryRouteRouteWithChildren = TreasuryRouteRoute._addFileChildren(
   TreasuryRouteRouteChildren,
 )
 
+interface UsersRouteRouteChildren {
+  UsersIdRoute: typeof UsersIdRoute
+  UsersNewRoute: typeof UsersNewRoute
+  UsersPermissionsRoute: typeof UsersPermissionsRoute
+  UsersIndexRoute: typeof UsersIndexRoute
+}
+
+const UsersRouteRouteChildren: UsersRouteRouteChildren = {
+  UsersIdRoute: UsersIdRoute,
+  UsersNewRoute: UsersNewRoute,
+  UsersPermissionsRoute: UsersPermissionsRoute,
+  UsersIndexRoute: UsersIndexRoute,
+}
+
+const UsersRouteRouteWithChildren = UsersRouteRoute._addFileChildren(
+  UsersRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ExpensesRouteRoute: ExpensesRouteRouteWithChildren,
@@ -1925,6 +2037,7 @@ const rootRouteChildren: RootRouteChildren = {
   ReportsRouteRoute: ReportsRouteRouteWithChildren,
   SalesRouteRoute: SalesRouteRouteWithChildren,
   TreasuryRouteRoute: TreasuryRouteRouteWithChildren,
+  UsersRouteRoute: UsersRouteRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
