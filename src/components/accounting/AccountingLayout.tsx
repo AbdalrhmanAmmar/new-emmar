@@ -143,7 +143,7 @@ export function AccountingLayout({ children }: { children: ReactNode }) {
               <Wallet className="h-5 w-5" />
             </span>
             <span className="flex flex-col leading-tight">
-              <span className="text-lg font-bold tracking-tight">برنامج إعمار المحاسبى</span>
+              <span className="text-lg font-bold tracking-tight">الإيمان لتجارة الأعلاف</span>
               <span className="text-[11px] text-sidebar-foreground/60">AL-IMAN FEED TRADING CO</span>
             </span>
           </Link>
