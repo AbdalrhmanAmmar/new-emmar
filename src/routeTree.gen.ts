@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TreasuryRouteRouteImport } from './routes/treasury/route'
 import { Route as TreasuryIndexRouteImport } from './routes/treasury/index'
+import { Route as TreasurySafesIndexRouteImport } from './routes/treasury/safes/index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -28,28 +29,36 @@ const TreasuryIndexRoute = TreasuryIndexRouteImport.update({
   path: '/',
   getParentRoute: () => TreasuryRouteRoute,
 } as any)
+const TreasurySafesIndexRoute = TreasurySafesIndexRouteImport.update({
+  id: '/safes/',
+  path: '/safes/',
+  getParentRoute: () => TreasuryRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/treasury': typeof TreasuryRouteRouteWithChildren
   '/treasury/': typeof TreasuryIndexRoute
+  '/treasury/safes/': typeof TreasurySafesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/treasury': typeof TreasuryIndexRoute
+  '/treasury/safes': typeof TreasurySafesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/treasury': typeof TreasuryRouteRouteWithChildren
   '/treasury/': typeof TreasuryIndexRoute
+  '/treasury/safes/': typeof TreasurySafesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/treasury' | '/treasury/'
+  fullPaths: '/' | '/treasury' | '/treasury/' | '/treasury/safes/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/treasury'
-  id: '__root__' | '/' | '/treasury' | '/treasury/'
+  to: '/' | '/treasury' | '/treasury/safes'
+  id: '__root__' | '/' | '/treasury' | '/treasury/' | '/treasury/safes/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -80,15 +89,24 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TreasuryIndexRouteImport
       parentRoute: typeof TreasuryRouteRoute
     }
+    '/treasury/safes/': {
+      id: '/treasury/safes/'
+      path: '/safes'
+      fullPath: '/treasury/safes/'
+      preLoaderRoute: typeof TreasurySafesIndexRouteImport
+      parentRoute: typeof TreasuryRouteRoute
+    }
   }
 }
 
 interface TreasuryRouteRouteChildren {
   TreasuryIndexRoute: typeof TreasuryIndexRoute
+  TreasurySafesIndexRoute: typeof TreasurySafesIndexRoute
 }
 
 const TreasuryRouteRouteChildren: TreasuryRouteRouteChildren = {
   TreasuryIndexRoute: TreasuryIndexRoute,
+  TreasurySafesIndexRoute: TreasurySafesIndexRoute,
 }
 
 const TreasuryRouteRouteWithChildren = TreasuryRouteRoute._addFileChildren(
