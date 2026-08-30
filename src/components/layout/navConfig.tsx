@@ -22,6 +22,7 @@ import {
   ArrowUpFromLine,
   Boxes,
   Package,
+  Undo2,
   Users,
   Wallet,
 } from "lucide-react";
@@ -142,6 +143,17 @@ export const INVENTORY_MODULE: NavModule = {
         { to: "/inventory/moves/issues", label: "أذون صرف مخزني", icon: <ArrowUpFromLine className="size-4" /> },
         { to: "/inventory/moves/transfers", label: "التحويل بين المخازن", icon: <ArrowLeftRight className="size-4" /> },
         { to: "/inventory/moves/new", label: "إذن مخزني جديد", icon: <Package className="size-4" /> },
+      ],
+    },
+    {
+      id: "inventory-returns",
+      label: "المرتجعات",
+      icon: <Undo2 className="size-4" />,
+      items: [
+        { to: "/returns", label: "كل المرتجعات", icon: <Undo2 className="size-4" /> },
+        { to: "/returns/sales", label: "مرتجع مبيعات", icon: <ArrowDownToLine className="size-4" /> },
+        { to: "/returns/purchase", label: "مرتجع مشتريات", icon: <ArrowUpFromLine className="size-4" /> },
+        { to: "/returns/new", label: "مرتجع جديد", icon: <Package className="size-4" /> },
       ],
     },
     {
