@@ -10,12 +10,12 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { landingPath, resolveUser, signIn, useSession } from "@/lib/session";
-import { getSettings } from "@/lib/mockDb";
+import { getDb } from "@/lib/mockDb";
 
 /** شاشة تسجيل الدخول المرتبطة بموديول إدارة المستخدمين */
 export function LoginScreen() {
   const navigate = useNavigate();
-  const settings = getSettings();
+  const settings = getDb().settings;
   const logoSrc = settings.logoDataUrl || logoAsset.url;
   const session = useSession();
   const [identifier, setIdentifier] = useState("");
