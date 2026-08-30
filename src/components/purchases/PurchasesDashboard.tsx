@@ -8,6 +8,7 @@ import { PageHeader, StatCard } from "@/components/treasury/PageHeader";
 import { Button } from "@/components/ui/button";
 import { dateFmt, money, num } from "@/lib/format";
 import { UNIT_LABEL, useDb, type Party } from "@/lib/mockDb";
+import type { SalesByKeyRow } from "@/lib/sales";
 import { purchaseKpis, purchaseTotalsOf, purchaseTrendSeries, purchasesByProduct, purchasesBySupplier, supplierStats } from "@/lib/purchases";
 
 export function PurchasesDashboard() {
@@ -120,6 +121,43 @@ export function PurchasesDashboard() {
       />
 
       <DataTable title="الموردون" data={data.suppliers} columns={supplierColumns} rowId={(r) => r.id} />
+    </div>
+  );
+}
+
+const PURCHASE_REPORTS = {
+  product: { title: "المشتريات حسب الصنف", label: "الصنف", rows: purchasesByProduct },
+  supplier: { title: "المشتريات حسب المورد", label: "المورد", rows: purchasesBySupplier },
+} as const;
+
+/** تقرير تحليلى للمشتريات المُرحّلة */
+export function PurchaseReport({ kind }: { kind: keyof typeof PURCHASE_REPORTS }) {
+  const data = useDb();
+  const config = PURCHASE_REPORTS[kind];
+  const rows = config.rows(data);
+  const total = rows.reduce((sum, r) => sum + r.total, 0);
+
+  const columns: Array<Column<SalesByKeyRow>> = [
+    { key: "label", header: config.label, cell: (r) => r.label, text: (r) => r.label },
+    { key: "count", header: "عدد الحركات", cell: (r) => r.count, align: "center" },
+    { key: "qty", header: "الكمية", cell: (r) => num(r.qty), align: "center" },
+    { key: "total", header: "إجمالي الشراء", cell: (r) => money(r.total), text: (r) => String(r.total) },
+    {
+      key: "share",
+      header: "النسبة",
+      align: "center",
+      cell: (r) => `${total > 0 ? ((r.total / total) * 100).toFixed(1) : "0.0"}%`,
+    },
+  ];
+
+  return (
+    <div className="space-y-4">
+      <PageHeader title={config.title} description="تقرير تحليلي لفواتير الشراء المُرحّلة بالجنيه المصري" />
+      <div className="grid gap-3 sm:grid-cols-2">
+        <StatCard label="إجمالي المشتريات" value={money(total)} />
+        <StatCard label="عدد السطور" value={String(rows.length)} tone="muted" />
+      </div>
+      <DataTable title={config.title} data={rows} columns={columns} rowId={(r) => r.key} />
     </div>
   );
 }
