@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useRefresh, useTable } from '@/hooks/useTable';
 import { supabase } from '@/integrations/supabase/externalClient';
+import { InlineFormPage } from '@/components/accounting/InlineFormPage';
 import {
   GL, calcTotals, createStockMove, getSettings, money, nextDocNo, num, postJournal, qty, rollupStatus, todayStr, withinTolerance,
 } from '@/lib/docFlow';
@@ -152,9 +153,7 @@ const AccGoodsReceiptsPage: React.FC = () => {
         />
       </div>
 
-      <Card>
-        <CardHeader><CardTitle>إذن استلام جديد</CardTitle></CardHeader>
-        <CardContent className="space-y-4">
+      <InlineFormPage title="إذن استلام جديد">
           <div className="grid md:grid-cols-4 gap-3">
             <div>
               <Label>أمر الشراء</Label>
@@ -221,9 +220,8 @@ const AccGoodsReceiptsPage: React.FC = () => {
               {saving ? <Loader2 className="h-4 w-4 animate-spin me-1" /> : <Save className="h-4 w-4 me-1" />} ترحيل الاستلام
             </Button>
           </div>
-        </CardContent>
-      </Card>
 
+      </InlineFormPage>
       <Card>
         <CardHeader><CardTitle>إذون الاستلام ({grns.length})</CardTitle></CardHeader>
         <CardContent>

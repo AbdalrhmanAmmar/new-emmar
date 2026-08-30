@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { Loader2, Save } from 'lucide-react';
 import { toast } from 'sonner';
 import ExportPdfButton from '@/components/accounting/ExportPdfButton';
+import { InlineFormPage } from '@/components/accounting/InlineFormPage';
 
 const money = (n: any) => Number(n || 0).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const typeLabel: Record<string, string> = { in: 'إضافة (وارد)', out: 'صرف (منصرف)', transfer: 'تحويل بين المخازن', adjust: 'تسوية جرد' };
@@ -138,9 +139,7 @@ const AccStockMovesPage: React.FC = () => {
         />
       </div>
 
-      <Card>
-        <CardHeader><CardTitle>حركة جديدة</CardTitle></CardHeader>
-        <CardContent className="space-y-4">
+      <InlineFormPage title="حركة جديدة">
           <div className="grid md:grid-cols-4 gap-3">
             <div>
               <Label>نوع الحركة</Label>
@@ -214,9 +213,8 @@ const AccStockMovesPage: React.FC = () => {
               {saving ? <Loader2 className="h-4 w-4 animate-spin me-1" /> : <Save className="h-4 w-4 me-1" />} تسجيل الحركة
             </Button>
           </div>
-        </CardContent>
-      </Card>
 
+      </InlineFormPage>
       <Card>
         <CardHeader className="flex-row items-center justify-between gap-3">
           <CardTitle>سجل الحركات (آخر 200)</CardTitle>

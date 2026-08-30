@@ -23,6 +23,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { useRefresh, useTable } from '@/hooks/useTable';
 import { supabase } from '@/integrations/supabase/externalClient';
 import { availableKg, calcTotals, customerBalance, getSettings, money, nextDocNo, num, qty, todayStr } from '@/lib/docFlow';
+import { InlineFormPage } from '@/components/accounting/InlineFormPage';
 
 type Line = { key: string; item_id: string; quantity_kg: number; unit_price: number; discount_pct: number; vat_rate: number };
 const newLine = (): Line => ({ key: Math.random().toString(36).slice(2), item_id: '', quantity_kg: 0, unit_price: 0, discount_pct: 0, vat_rate: getSettings().vat_rate });
@@ -147,9 +148,7 @@ const AccSalesOrdersPage: React.FC = () => {
         }
       />
 
-      <Card>
-        <CardHeader><CardTitle>أمر بيع جديد</CardTitle></CardHeader>
-        <CardContent className="space-y-4">
+      <InlineFormPage title="أمر بيع جديد">
           <FieldGrid cols={4}>
             <SelectField
               label="العميل"
@@ -229,9 +228,8 @@ const AccSalesOrdersPage: React.FC = () => {
               {saving ? <Loader2 className="h-4 w-4 animate-spin me-1" /> : <Save className="h-4 w-4 me-1" />} تأكيد أمر البيع
             </Button>
           </div>
-        </CardContent>
-      </Card>
 
+      </InlineFormPage>
       <DataTableCard<any>
         title={`أوامر البيع (${orders.length})`}
         rows={orders}
