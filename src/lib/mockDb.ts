@@ -744,6 +744,23 @@ export function nextNo(prefix: string, existing: string[]): string {
   return `${prefix}-${String(max + 1).padStart(6, "0")}`;
 }
 
+/** توليد كود تلقائى بنفس نمط الأكواد الموجودة (عدد الخانات + البادئة) */
+export function nextCode(prefix: string, existing: string[]): string {
+  let max = 0;
+  let width = 3;
+  for (const value of existing) {
+    const text = String(value ?? "").trim();
+    if (!text) continue;
+    if (prefix && !text.toUpperCase().startsWith(`${prefix.toUpperCase()}-`)) continue;
+    const tail = text.split("-").pop() ?? "";
+    const n = Number(tail);
+    if (!tail || Number.isNaN(n)) continue;
+    width = Math.max(width, tail.length);
+    if (n > max) max = n;
+  }
+  return `${prefix}-${String(max + 1).padStart(width, "0")}`;
+}
+
 /** منع تكرار البيانات: يتحقق من عدم وجود قيمة مكررة في حقل مفتاحي */
 export function isDuplicate<T extends { id: string }>(
   rows: T[],
