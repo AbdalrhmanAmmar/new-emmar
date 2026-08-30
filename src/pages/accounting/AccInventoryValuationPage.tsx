@@ -203,8 +203,8 @@ const AccInventoryValuationPage: React.FC = () => {
         <div className="flex items-center gap-3">
           <Package className="w-6 h-6 text-primary" />
           <div>
-            <h1 className="text-2xl font-bold">تقييم المخزون (Inventory Valuation)</h1>
-            <p className="text-xs text-muted-foreground">أرصدة أول المدة، الحركات، وأرصدة آخر المدة بتكلفة الوحدة لكل صنف/مخزن</p>
+            <h1 className="text-2xl font-bold">تقييم المخزون شهرياً</h1>
+            <p className="text-xs text-muted-foreground">قيمة الأعلاف الموجودة في كل مخزن آخر كل شهر = رصيد أول الشهر + الوارد − المنصرف</p>
           </div>
         </div>
         <div className="flex gap-2 items-center flex-wrap">
@@ -227,9 +227,22 @@ const AccInventoryValuationPage: React.FC = () => {
               { label: 'رصيد آخر المدة', value: fmt(totals.closing) },
             ]}
           />
-          {canEdit && <Button onClick={openNew}><Plus className="w-4 h-4 ml-2" /> صنف جديد</Button>}
+          {canEdit && <Button variant="outline" onClick={autoBuild}><Calculator className="w-4 h-4 ml-2" /> احتساب تلقائي من حركات المخزون</Button>}
+          {canEdit && <Button onClick={openNew}><Plus className="w-4 h-4 ml-2" /> إدخال يدوي</Button>}
         </div>
       </div>
+
+      <Card className="bg-muted/40 border-dashed">
+        <CardContent className="p-4 text-xs leading-6 text-muted-foreground space-y-1">
+          <div className="font-semibold text-foreground text-sm">كيف تقرأ هذه الصفحة؟</div>
+          <div>١. اختر <span className="font-medium text-foreground">السنة والشهر</span> من الأعلى — كل الأرقام المعروضة تخص هذا الشهر فقط.</div>
+          <div>٢. اضغط <span className="font-medium text-foreground">«احتساب تلقائي من حركات المخزون»</span> ليقوم البرنامج بحساب كل صنف في كل مخزن من حركات الوارد والمنصرف المسجّلة فعلياً.</div>
+          <div>٣. كل صف = صنف واحد في مخزن واحد: <span className="font-medium text-foreground">أول المدة</span> (ما كان موجوداً بداية الشهر) + <span className="font-medium text-foreground">الوارد</span> (المشتريات/الإضافات) − <span className="font-medium text-foreground">المنصرف</span> (البيع/الصرف) = <span className="font-medium text-foreground">رصيد آخر المدة</span>.</div>
+          <div>٤. <span className="font-medium text-foreground">تكلفة الوحدة</span> = قيمة رصيد آخر المدة ÷ كميته (متوسط مرجح لتكلفة الكيلو) — وهي القيمة التي تُدرج في الميزانية كمخزون.</div>
+          <div>٥. الصف يبقى <span className="font-medium text-foreground">مسودة</span> حتى تضغط «ترحيل» فيصبح <span className="font-medium text-foreground">مرحّلاً</span> ولا يمكن حذفه.</div>
+        </CardContent>
+      </Card>
+
 
       <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
         <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">عدد الأصناف</div><div className="text-2xl font-bold">{totals.items}</div></CardContent></Card>
