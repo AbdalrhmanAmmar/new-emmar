@@ -134,11 +134,12 @@ const SelectContent = React.forwardRef<
               <Search className="pointer-events-none absolute end-2 top-1/2 -translate-y-1/2 size-3.5 opacity-50" />
               <input
                 autoFocus
+                dir="rtl"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={(e) => e.stopPropagation()}
                 placeholder={searchPlaceholder ?? "بحث..."}
-                className="h-8 w-full rounded-md border border-input bg-background ps-2 pe-7 text-sm outline-none focus:ring-1 focus:ring-ring"
+                className="h-8 w-full rounded-md border border-input bg-background ps-2 pe-7 text-sm text-right outline-none focus:ring-1 focus:ring-ring"
               />
             </div>
           </div>

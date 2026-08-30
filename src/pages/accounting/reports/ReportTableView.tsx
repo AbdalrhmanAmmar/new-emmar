@@ -180,6 +180,7 @@ export function ReportTableView<T extends Record<string, any>>({
                 <div className="relative w-64">
                   <Search className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                   <Input
+                    dir="rtl"
                     placeholder="بحث..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}

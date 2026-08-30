@@ -255,7 +255,7 @@ const AccInventoryValuationPage: React.FC = () => {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between gap-2 flex-wrap">
           <CardTitle>سجل الفترة {fYear}/{fMonth} ({filtered.length})</CardTitle>
-          <Input value={search} onChange={e => setSearch(e.target.value)} placeholder="بحث بالصنف أو المخزن..." className="w-64" />
+          <Input dir="rtl" value={search} onChange={e => setSearch(e.target.value)} placeholder="بحث بالصنف أو المخزن..." className="w-64" />
         </CardHeader>
         <CardContent className="p-0 overflow-x-auto">
           <Table>

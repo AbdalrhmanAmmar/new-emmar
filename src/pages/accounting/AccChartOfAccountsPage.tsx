@@ -186,7 +186,7 @@ const AccChartOfAccountsPage: React.FC = () => {
       <Card>
         <CardHeader>
           <div className="flex items-center gap-3">
-            <Input placeholder="بحث بالكود أو الاسم..." value={search} onChange={e => setSearch(e.target.value)} className="max-w-sm" />
+            <Input dir="rtl" placeholder="بحث بالكود أو الاسم..." value={search} onChange={e => setSearch(e.target.value)} className="max-w-sm" />
             <span className="text-sm text-muted-foreground">إجمالي: {accounts.length} حساب</span>
           </div>
         </CardHeader>

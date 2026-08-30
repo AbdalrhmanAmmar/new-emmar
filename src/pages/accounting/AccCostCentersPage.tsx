@@ -148,7 +148,7 @@ const AccCostCentersPage: React.FC = () => {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between gap-2 flex-wrap">
           <CardTitle>مراكز التكلفة ({filtered.length})</CardTitle>
-          <Input value={search} onChange={e => setSearch(e.target.value)} placeholder="بحث بالكود أو الاسم..." className="w-64" />
+          <Input dir="rtl" value={search} onChange={e => setSearch(e.target.value)} placeholder="بحث بالكود أو الاسم..." className="w-64" />
         </CardHeader>
         <CardContent className="p-0 overflow-x-auto">
           <Table>

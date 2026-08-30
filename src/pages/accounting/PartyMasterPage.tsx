@@ -127,7 +127,7 @@ const PartyMasterPage: React.FC<Props> = ({ table, title, subtitle, typeField, m
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>القائمة ({filtered.length})</CardTitle>
-          <div className="relative w-72"><Search className="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground" /><Input className="pr-9" placeholder="بحث..." value={search} onChange={e => setSearch(e.target.value)} /></div>
+          <div className="relative w-72"><Search className="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground" /><Input dir="rtl" className="pr-9" placeholder="بحث..." value={search} onChange={e => setSearch(e.target.value)} /></div>
         </CardHeader>
         <CardContent className="p-0">
           <Table>
