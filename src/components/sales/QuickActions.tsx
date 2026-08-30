@@ -23,7 +23,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { money, num } from "@/lib/format";
-import { UNIT_LABEL, useDb, type Product } from "@/lib/mockDb";
+import { UNIT_LABEL, orgSettings, useDb, type Product } from "@/lib/mockDb";
 import { printHtml } from "@/lib/printDoc";
 import { discountPercentOf, productOptions } from "@/lib/sales";
 import { saveProduct, updateProductPrices } from "@/lib/salesActions";
@@ -452,6 +452,7 @@ function NewItemDialog({
                 unitPrice: Number(form.unitPrice || 0),
                 wholesalePrice: Number(form.unitPrice || 0),
                 cost: Number(form.cost || 0),
+                taxRate: orgSettings().vatRate,
                 category: "",
                 stock: Number(form.stock || 0),
                 minStock: 0,
