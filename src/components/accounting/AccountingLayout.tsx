@@ -27,7 +27,6 @@ import { GlobalSearch } from "@/components/accounting/GlobalSearch";
 import { OfflineIndicator } from "@/components/accounting/OfflineIndicator";
 import { Button } from "@/components/ui/button";
 import { accountingNav } from "@/lib/accountingNav";
-import { resetDb } from "@/lib/mockDb";
 
 const groupIcons: Record<string, typeof Wallet> = {
   "الإعداد": Settings,
@@ -188,8 +187,8 @@ export function AccountingLayout({ children }: { children: ReactNode }) {
             <span className="truncate font-semibold text-accent">{activeItem?.label ?? "لوحة المتابعة"}</span>
           </nav>
 
-          <div className="flex min-w-0 flex-1 items-center justify-end lg:ms-auto lg:max-w-md lg:flex-initial">
-            <GlobalSearch className="max-w-md" />
+          <div className="flex min-w-0 flex-1 items-center justify-end">
+            <GlobalSearch className="max-w-xl" />
           </div>
         </div>
       </header>
