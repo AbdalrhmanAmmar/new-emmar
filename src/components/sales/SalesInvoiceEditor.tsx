@@ -181,7 +181,10 @@ export function SalesInvoiceEditor({ invoice }: Props) {
           <h1 className="text-xl font-bold text-foreground">
             {invoice ? `تعديل فاتورة مبيعات ${invoice.no}` : "فاتورة مبيعات جديدة"}
           </h1>
-          <p className="text-sm text-muted-foreground">
+          <p className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+            <span className="rounded-full border border-primary/30 bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary">
+              رقم الفاتورة (تلقائى): {invoiceNo}
+            </span>
             شاشة بيع متكاملة — أصناف، خصومات، ضريبة 14%، وتسوية فورية بالجنيه المصري
           </p>
         </div>
