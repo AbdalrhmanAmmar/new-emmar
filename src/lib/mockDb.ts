@@ -178,12 +178,92 @@ export interface MeasureUnit {
 export type SalesPayMethod = "cash" | "card" | "credit" | "multi";
 export type InvoiceView = "professional" | "simple";
 
+/** نوع المخزن: رئيسي أو فرعي تابع لمخزن رئيسي */
+export type WarehouseType = "main" | "sub";
+
 export interface Warehouse {
   id: string;
   code: string;
   name: string;
   branchId: string;
+  /** رئيسي / فرعي */
+  type?: WarehouseType;
+  /** المخزن الرئيسي التابع له (للمخازن الفرعية) */
+  parentId?: string | null;
+  /** أمين المخزن */
+  keeperId?: string | null;
+  address?: string;
+  note?: string;
+  active?: boolean;
 }
+
+export const WAREHOUSE_TYPE_LABEL: Record<WarehouseType, string> = {
+  main: "مخزن رئيسي",
+  sub: "مخزن فرعي",
+};
+
+/* ===================== المخازن وحركات المخزون ===================== */
+
+/** نوع الإذن المخزني */
+export type StockMoveKind = "in" | "out" | "transfer" | "adjust";
+
+/** مصدر الإذن: تلقائى من فاتورة أو يدوى */
+export type StockMoveSource = "purchase" | "sales" | "manual";
+
+export const MOVE_KIND_LABEL: Record<StockMoveKind, string> = {
+  in: "إذن إضافة مخزون",
+  out: "إذن صرف مخزني",
+  transfer: "تحويل بين المخازن",
+  adjust: "تسوية مخزنية",
+};
+
+export const MOVE_SOURCE_LABEL: Record<StockMoveSource, string> = {
+  purchase: "فاتورة مشتريات",
+  sales: "فاتورة مبيعات",
+  manual: "يدوى",
+};
+
+export interface StockMoveLine {
+  id: string;
+  productId: string;
+  code: string;
+  name: string;
+  /** الكمية بوحدة الإذن */
+  qty: number;
+  unit: Unit;
+  unitCode?: string;
+  unitName?: string;
+  unitFactor?: number;
+  /** تكلفة الوحدة الأساسية لحساب قيمة الإذن */
+  cost: number;
+}
+
+export interface StockMove {
+  id: string;
+  /** رقم الإذن المتسلسل GRN / ISS / TRF / ADJ */
+  no: string;
+  date: string;
+  kind: StockMoveKind;
+  source: StockMoveSource;
+  /** المخزن المصدر (للصرف والتحويل) أو المستقبل (للإضافة) */
+  warehouseId: string;
+  /** المخزن المستقبل فى التحويل */
+  toWarehouseId: string | null;
+  /** رقم مرجعى مركب: كود المستند + رقم الفاتورة */
+  refNo: string;
+  /** كود الفاتورة المرتبطة (رقم الفاتورة كما هو) */
+  refCode: string;
+  /** معرّف الفاتورة المرتبطة */
+  refId: string | null;
+  /** العميل أو المورد */
+  partyName: string;
+  branchId: string;
+  userId: string;
+  lines: StockMoveLine[];
+  note: string;
+  status: DocStatus;
+}
+
 
 export interface SalesRep {
   id: string;
@@ -472,6 +552,7 @@ export interface DbShape {
   invoices: Invoice[];
   shifts: Shift[];
   warehouses: Warehouse[];
+  stockMoves: StockMove[];
   reps: SalesRep[];
   products: Product[];
   discountCodes: DiscountCode[];
@@ -812,10 +893,13 @@ function seed(): DbShape {
 
 
   const warehouses: Warehouse[] = [
-    { id: "wh1", code: "WH-01", name: "المخزن الرئيسي - القاهرة", branchId: "br1" },
-    { id: "wh2", code: "WH-02", name: "مخزن المنوفية", branchId: "br2" },
-    { id: "wh3", code: "WH-03", name: "مخزن الشرقية", branchId: "br3" },
+    { id: "wh1", code: "WH-01", name: "المخزن الرئيسي - القاهرة", branchId: "br1", type: "main", parentId: null, keeperId: "u2", address: "القاهرة — طريق مصر إسكندرية الزراعي", note: "", active: true },
+    { id: "wh2", code: "WH-02", name: "مخزن المنوفية", branchId: "br2", type: "sub", parentId: "wh1", keeperId: "u3", address: "المنوفية — شبين الكوم", note: "", active: true },
+    { id: "wh3", code: "WH-03", name: "مخزن الشرقية", branchId: "br3", type: "sub", parentId: "wh1", keeperId: "u3", address: "الشرقية — الزقازيق", note: "", active: true },
+    { id: "wh4", code: "WH-04", name: "مخزن الخام والمواد الأولية", branchId: "br1", type: "main", parentId: null, keeperId: "u2", address: "القاهرة — العاشر من رمضان", note: "ذرة وصويا وكسب", active: true },
   ];
+
+  const stockMoves: StockMove[] = [];
 
   const reps: SalesRep[] = [
     { id: "rp1", name: "خالد مصطفى", phone: "01011122233", branchId: "br1", commissionPct: 1 },
@@ -1056,6 +1140,7 @@ function seed(): DbShape {
     invoices,
     shifts,
     warehouses,
+    stockMoves,
     reps,
     products,
     discountCodes,
@@ -1090,6 +1175,8 @@ function load(): DbShape {
         ...base,
         ...parsed,
         purchaseInvoices: parsed.purchaseInvoices ?? base.purchaseInvoices,
+        warehouses: parsed.warehouses?.length ? parsed.warehouses : base.warehouses,
+        stockMoves: parsed.stockMoves ?? base.stockMoves,
         productCategories: parsed.productCategories?.length ? parsed.productCategories : base.productCategories,
         measureUnits: parsed.measureUnits?.length ? parsed.measureUnits : base.measureUnits,
         expenseItems: parsed.expenseItems?.length ? parsed.expenseItems : base.expenseItems,
