@@ -105,7 +105,7 @@ const Table = React.forwardRef<HTMLTableElement, TableProps>(
             </div>
           </div>
         )}
-        <div className="relative w-full overflow-x-auto [-webkit-overflow-scrolling:touch]">
+        <div className="table-scroll-x relative w-full overflow-x-auto [-webkit-overflow-scrolling:touch]">
           <table
             ref={ref}
             data-resizable={resizableColumns ? "true" : undefined}
