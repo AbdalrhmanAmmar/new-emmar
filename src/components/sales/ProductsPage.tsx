@@ -237,6 +237,10 @@ export function ProductFormPage({ id }: { id?: string }) {
           <Input type="number" value={form.minStock} onChange={(e) => set("minStock", e.target.value)} />
         </Field>
       </FormSection>
+
+      <FormSection title="وحدات البيع ومعاملات التحويل" className="grid-cols-1 sm:grid-cols-1 lg:grid-cols-1">
+        <ProductUnitsEditor baseUnit={form.unit as Product["unit"]} units={units} onChange={setUnits} />
+      </FormSection>
     </FormPage>
   );
 }
