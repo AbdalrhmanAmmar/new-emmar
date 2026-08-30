@@ -156,11 +156,13 @@ export function printSalesInvoice(input: InvoicePrintInput) {
     .join("");
 
   const t = input.totals;
+  const org = input.org;
   const totalsRows: Array<[string, string, boolean]> = [
     ["الإجمالي قبل الخصم", money(t.gross), false],
     ["إجمالي الخصم", money(t.discount), false],
     ["الصافي بعد الخصم", money(t.net), false],
-    ["ضريبة القيمة المضافة (14%)", money(t.tax), false],
+    [`ضريبة القيمة المضافة (${num(org.vatRate)}%)`, money(t.tax), false],
+
     ["الإجمالي المستحق", money(t.total), true],
     ["المدفوع", money(t.paid), false],
     ["المتبقي", money(t.remaining), true],
