@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Plus, Pencil, Trash2, Package, Lock } from 'lucide-react';
+import { Plus, Pencil, Trash2, Package, Lock, Calculator } from 'lucide-react';
 import { toast } from 'sonner';
 import ExportPdfButton from '@/components/accounting/ExportPdfButton';
 import { RowActions } from "@/components/accounting/RowActions";
@@ -262,12 +262,12 @@ const AccInventoryValuationPage: React.FC = () => {
             <TableHeader><TableRow>
               <TableHead>المخزن</TableHead><TableHead>الصنف</TableHead>
               <TableHead>الطريقة</TableHead>
-              <TableHead className="text-right">أول (قيمة)</TableHead>
-              <TableHead className="text-right">وارد</TableHead>
-              <TableHead className="text-right">صادر</TableHead>
-              <TableHead className="text-right">كمية الرصيد</TableHead>
-              <TableHead className="text-right">قيمة الرصيد</TableHead>
-              <TableHead className="text-right">تكلفة وحدة</TableHead>
+              <TableHead className="text-right">أول المدة (كمية / قيمة)</TableHead>
+              <TableHead className="text-right">وارد (كمية / قيمة)</TableHead>
+              <TableHead className="text-right">منصرف (كمية / قيمة)</TableHead>
+              <TableHead className="text-right">كمية آخر المدة</TableHead>
+              <TableHead className="text-right">قيمة آخر المدة</TableHead>
+              <TableHead className="text-right">تكلفة الوحدة</TableHead>
               <TableHead>الحالة</TableHead><TableHead></TableHead>
             </TableRow></TableHeader>
             <TableBody>
@@ -278,9 +278,9 @@ const AccInventoryValuationPage: React.FC = () => {
                       <TableCell className="text-xs"><div className="font-mono">{r.warehouse_code}</div><div className="text-muted-foreground">{r.warehouse_name}</div></TableCell>
                       <TableCell className="text-xs"><div className="font-mono">{r.item_code}</div><div className="text-muted-foreground">{r.item_name}</div></TableCell>
                       <TableCell><Badge variant="outline">{methodLabels[r.valuation_method]}</Badge></TableCell>
-                      <TableCell className="text-right font-mono">{fmt(r.opening_value)}</TableCell>
-                      <TableCell className="text-right font-mono text-emerald-600">{fmt(r.receipts_value)}</TableCell>
-                      <TableCell className="text-right font-mono text-rose-600">{fmt(r.issues_value)}</TableCell>
+                      <TableCell className="text-right font-mono text-xs"><div>{fmt(r.opening_qty)}</div><div className="text-muted-foreground">{fmt(r.opening_value)}</div></TableCell>
+                      <TableCell className="text-right font-mono text-xs text-emerald-600"><div>{fmt(r.receipts_qty)}</div><div className="opacity-70">{fmt(r.receipts_value)}</div></TableCell>
+                      <TableCell className="text-right font-mono text-xs text-rose-600"><div>{fmt(r.issues_qty)}</div><div className="opacity-70">{fmt(r.issues_value)}</div></TableCell>
                       <TableCell className="text-right font-mono">{fmt(r.closing_qty)}</TableCell>
                       <TableCell className="text-right font-mono font-bold text-primary">{fmt(r.closing_value)}</TableCell>
                       <TableCell className="text-right font-mono">{fmt(r.unit_cost)}</TableCell>
@@ -321,10 +321,28 @@ const AccInventoryValuationPage: React.FC = () => {
                 <SelectContent>{Object.entries(methodLabels).map(([k, v]) => <SelectItem key={k} value={k}>{v}</SelectItem>)}</SelectContent>
               </Select>
             </div>
-            <div className="space-y-1.5"><Label>كود المخزن *</Label><Input value={form.warehouse_code || ''} onChange={e => setForm({ ...form, warehouse_code: e.target.value })} /></div>
-            <div className="space-y-1.5 md:col-span-2"><Label>اسم المخزن</Label><Input value={form.warehouse_name || ''} onChange={e => setForm({ ...form, warehouse_name: e.target.value })} /></div>
-            <div className="space-y-1.5"><Label>كود الصنف *</Label><Input value={form.item_code || ''} onChange={e => setForm({ ...form, item_code: e.target.value })} /></div>
-            <div className="space-y-1.5 md:col-span-2"><Label>اسم الصنف</Label><Input value={form.item_name || ''} onChange={e => setForm({ ...form, item_name: e.target.value })} /></div>
+            <div className="space-y-1.5 md:col-span-3"><Label>المخزن *</Label>
+              <Select value={form.warehouse_code || ''} onValueChange={v => {
+                const w = whList.find((x: any) => (x.code || x.id) === v);
+                setForm({ ...form, warehouse_code: v, warehouse_name: w?.name_ar || '' });
+              }}>
+                <SelectTrigger><SelectValue placeholder="اختر المخزن" /></SelectTrigger>
+                <SelectContent searchable searchPlaceholder="ابحث عن مخزن...">
+                  {whList.map((w: any) => <SelectItem key={w.id} value={w.code || w.id}>{w.name_ar}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-1.5 md:col-span-3"><Label>الصنف *</Label>
+              <Select value={form.item_code || ''} onValueChange={v => {
+                const it = itemsList.find((x: any) => x.code === v);
+                setForm({ ...form, item_code: v, item_name: it?.name_ar || '', uom: it?.uom || 'كجم' });
+              }}>
+                <SelectTrigger><SelectValue placeholder="اختر الصنف" /></SelectTrigger>
+                <SelectContent searchable searchPlaceholder="ابحث بالكود أو الاسم...">
+                  {itemsList.map((i: any) => <SelectItem key={i.id} value={i.code}>{i.code} — {i.name_ar}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
             <div className="space-y-1.5"><Label>الوحدة</Label><Input value={form.uom || ''} onChange={e => setForm({ ...form, uom: e.target.value })} /></div>
             <div className="space-y-1.5"><Label>كمية أول المدة</Label><Input type="number" step="0.0001" value={form.opening_qty ?? 0} onChange={e => setForm({ ...form, opening_qty: Number(e.target.value) })} /></div>
             <div className="space-y-1.5"><Label>قيمة أول المدة</Label><Input type="number" step="0.01" value={form.opening_value ?? 0} onChange={e => setForm({ ...form, opening_value: Number(e.target.value) })} /></div>
