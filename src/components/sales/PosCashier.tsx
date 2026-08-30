@@ -29,10 +29,12 @@ export function PosCashier() {
   const [discountCode, setDiscountCode] = useState("");
 
   const categories = useMemo(() => {
-    const set = new Set<string>();
+    const names = data.productCategories.filter((c) => c.active).map((c) => c.name);
+    const set = new Set<string>(names);
     for (const p of data.products) if (p.active && p.category) set.add(p.category);
     return ["all", ...Array.from(set)];
-  }, [data.products]);
+  }, [data.products, data.productCategories]);
+
 
   const products = useMemo(() => {
     const q = term.trim().toLowerCase();
