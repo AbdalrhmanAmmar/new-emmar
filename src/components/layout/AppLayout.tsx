@@ -49,6 +49,7 @@ export function AppLayout() {
   );
 
   return (
+    <AuthGate>
     <div className="flex min-h-screen bg-background">
       <aside
         className={cn(

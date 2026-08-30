@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ExpensesRouteRouteImport } from './routes/expenses/route'
 import { Route as HrRouteRouteImport } from './routes/hr/route'
 import { Route as InventoryRouteRouteImport } from './routes/inventory/route'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as PurchasesRouteRouteImport } from './routes/purchases/route'
 import { Route as ReportsRouteRouteImport } from './routes/reports/route'
 import { Route as SalesRouteRouteImport } from './routes/sales/route'
@@ -120,6 +121,11 @@ const HrRouteRoute = HrRouteRouteImport.update({
 const InventoryRouteRoute = InventoryRouteRouteImport.update({
   id: '/inventory',
   path: '/inventory',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PurchasesRouteRoute = PurchasesRouteRouteImport.update({
@@ -579,6 +585,7 @@ export interface FileRoutesByFullPath {
   '/sales': typeof SalesRouteRouteWithChildren
   '/treasury': typeof TreasuryRouteRouteWithChildren
   '/users': typeof UsersRouteRouteWithChildren
+  '/login': typeof LoginRoute
   '/expenses/$id': typeof ExpensesIdRoute
   '/expenses/new': typeof ExpensesNewRoute
   '/inventory/balance': typeof InventoryBalanceRoute
@@ -665,6 +672,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
   '/expenses/$id': typeof ExpensesIdRoute
   '/expenses/new': typeof ExpensesNewRoute
   '/inventory/balance': typeof InventoryBalanceRoute
@@ -760,6 +768,7 @@ export interface FileRoutesById {
   '/sales': typeof SalesRouteRouteWithChildren
   '/treasury': typeof TreasuryRouteRouteWithChildren
   '/users': typeof UsersRouteRouteWithChildren
+  '/login': typeof LoginRoute
   '/expenses/$id': typeof ExpensesIdRoute
   '/expenses/new': typeof ExpensesNewRoute
   '/inventory/balance': typeof InventoryBalanceRoute
@@ -856,6 +865,7 @@ export interface FileRouteTypes {
     | '/sales'
     | '/treasury'
     | '/users'
+    | '/login'
     | '/expenses/$id'
     | '/expenses/new'
     | '/inventory/balance'
@@ -942,6 +952,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/login'
     | '/expenses/$id'
     | '/expenses/new'
     | '/inventory/balance'
@@ -1036,6 +1047,7 @@ export interface FileRouteTypes {
     | '/sales'
     | '/treasury'
     | '/users'
+    | '/login'
     | '/expenses/$id'
     | '/expenses/new'
     | '/inventory/balance'
@@ -1131,6 +1143,7 @@ export interface RootRouteChildren {
   SalesRouteRoute: typeof SalesRouteRouteWithChildren
   TreasuryRouteRoute: typeof TreasuryRouteRouteWithChildren
   UsersRouteRoute: typeof UsersRouteRouteWithChildren
+  LoginRoute: typeof LoginRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -1161,6 +1174,13 @@ declare module '@tanstack/react-router' {
       path: '/inventory'
       fullPath: '/inventory'
       preLoaderRoute: typeof InventoryRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/purchases': {
@@ -2038,6 +2058,7 @@ const rootRouteChildren: RootRouteChildren = {
   SalesRouteRoute: SalesRouteRouteWithChildren,
   TreasuryRouteRoute: TreasuryRouteRouteWithChildren,
   UsersRouteRoute: UsersRouteRouteWithChildren,
+  LoginRoute: LoginRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
