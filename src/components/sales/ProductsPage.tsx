@@ -3,6 +3,7 @@ import { Barcode, Pencil, Plus, Power, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
+import { ProductUnitsEditor } from "@/components/sales/ProductUnitsEditor";
 import { DataTable, type Column } from "@/components/treasury/DataTable";
 import { Field, FormPage, FormSection } from "@/components/treasury/FormPage";
 import { PageHeader, StatCard, StatusBadge } from "@/components/treasury/PageHeader";
@@ -11,7 +12,7 @@ import { SearchSelect } from "@/components/treasury/SearchSelect";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { money, num } from "@/lib/format";
-import { UNIT_LABEL, nextCode, useDb, type Product } from "@/lib/mockDb";
+import { UNIT_LABEL, nextCode, useDb, type Product, type ProductUnit } from "@/lib/mockDb";
 import { printHtml } from "@/lib/printDoc";
 import { deleteProduct, saveProduct, toggleProductActive } from "@/lib/salesActions";
 
@@ -147,6 +148,7 @@ export function ProductFormPage({ id }: { id?: string }) {
     stock: String(existing?.stock ?? 0),
     minStock: String(existing?.minStock ?? 0),
   });
+  const [units, setUnits] = useState<ProductUnit[]>(existing?.units ?? []);
   const set = (key: keyof typeof form, value: string) => setForm((f) => ({ ...f, [key]: value }));
 
   const submit = () => {
@@ -165,6 +167,7 @@ export function ProductFormPage({ id }: { id?: string }) {
       stock: Number(form.stock || 0),
       minStock: Number(form.minStock || 0),
       active: existing?.active ?? true,
+      units,
     });
     if (!res.ok) {
       toast.error(res.error ?? "تعذر الحفظ");
