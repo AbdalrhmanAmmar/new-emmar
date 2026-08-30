@@ -126,7 +126,9 @@ export function invoicePrintInput(
     status: inv.status === "posted" ? "مرحّلة" : inv.status === "draft" ? "مسودة" : "ملغاة",
     lines: inv.lines,
     totals,
+    org: data.settings,
   };
+
 }
 
 /* ===================== الطباعة الاحترافية ===================== */
