@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { toast } from 'sonner';
-import { Banknote, Loader2, Save } from 'lucide-react';
+import { Banknote, Loader2, Pencil, Printer, Save, Trash2 } from 'lucide-react';
 
 import ExportPdfButton from '@/components/accounting/ExportPdfButton';
 import RowActions from '@/components/accounting/RowActions';
@@ -11,7 +11,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/accounting/FormPage';
 import { useRefresh, useTable } from '@/hooks/useTable';
+import { printSalesInvoice } from '@/lib/invoicePrint';
 import { supabase } from '@/integrations/supabase/externalClient';
 import { GL, addDays, calcTotals, getSettings, money, nextDocNo, num, postJournal, qty, todayStr } from '@/lib/docFlow';
 
@@ -146,6 +148,117 @@ const AccSalesBillingPage: React.FC = () => {
       refresh('acc_sales_invoices', 'acc_journal_entries', 'acc_ledger_lines');
     } catch (e: any) {
       toast.error(e?.message ?? 'فشل التحصيل');
+    }
+  };
+
+  /* ===== تعديل / حذف / طباعة فاتورة ===== */
+  const { data: invLines = [] } = useTable('acc_sales_invoice_lines');
+  const [editInv, setEditInv] = useState<any>(null);
+  const [editOpen, setEditOpen] = useState(false);
+  const [editDate, setEditDate] = useState('');
+  const [editDue, setEditDue] = useState('');
+  const [editNotes, setEditNotes] = useState('');
+  const [editLines, setEditLines] = useState<any[]>([]);
+
+  const editTotals = useMemo(() => {
+    const sub = editLines.reduce((t, l) => t + num(l.quantity) * num(l.unit_price), 0);
+    const vat = editLines.reduce((t, l) => t + (num(l.quantity) * num(l.unit_price) * num(l.vat_rate)) / 100, 0);
+    const r2 = (v: number) => Math.round(v * 100) / 100;
+    return { subtotal: r2(sub), vat_total: r2(vat), total: r2(sub + vat) };
+  }, [editLines]);
+
+  const openEdit = (inv: any) => {
+    setEditInv(inv);
+    setEditDate(String(inv.issue_date ?? todayStr()).slice(0, 10));
+    setEditDue(inv.due_date ? String(inv.due_date).slice(0, 10) : '');
+    setEditNotes(inv.notes ?? '');
+    setEditLines(invLines.filter((l: any) => l.invoice_id === inv.id).map((l: any) => ({ ...l })));
+    setEditOpen(true);
+  };
+
+  const setEditLine = (id: string, patch: any) =>
+    setEditLines((p) => p.map((l) => (l.id === id ? { ...l, ...patch } : l)));
+
+  const removeJournalOf = async (refNo: string) => {
+    await (supabase as any).from('acc_ledger_lines').delete().eq('ref_no', refNo);
+    await (supabase as any).from('acc_journal_entries').delete().eq('ref_no', refNo);
+  };
+
+  const saveEdit = async () => {
+    if (!editInv) return;
+    if (!editLines.length) return toast.error('لا توجد أسطر في الفاتورة');
+    if (editTotals.total < num(editInv.paid_amount)) return toast.error('إجمالي الفاتورة أقل من المبلغ المحصل بالفعل');
+    setSaving(true);
+    try {
+      for (const l of editLines) {
+        const net = num(l.quantity) * num(l.unit_price);
+        await (supabase as any).from('acc_sales_invoice_lines').update({
+          quantity: num(l.quantity), unit_price: num(l.unit_price), vat_rate: num(l.vat_rate),
+          vat_amount: Math.round((net * num(l.vat_rate)) / 100 * 100) / 100,
+          line_total: Math.round(net * (1 + num(l.vat_rate) / 100) * 100) / 100,
+        }).eq('id', l.id);
+      }
+      // إعادة ترحيل القيد بالقيم الجديدة (منعاً لتضارب الأرصدة)
+      await removeJournalOf(editInv.invoice_number);
+      const journal_no = await postJournal({
+        date: editDate,
+        description: `فاتورة بيع ${editInv.invoice_number} — ${editInv.buyer_name} (معدّلة)`,
+        source: 'sales_invoice',
+        ref_no: editInv.invoice_number,
+        lines: [
+          { code: GL.receivable, description: `مدينون — ${editInv.buyer_name}`, debit: editTotals.total },
+          { code: GL.revenue, description: `إيراد بيع أعلاف ${editInv.invoice_number}`, credit: editTotals.subtotal },
+          { code: GL.vatOutput, description: 'ض.ق.م مبيعات مستحقة', credit: editTotals.vat_total },
+        ],
+      });
+      const paid = num(editInv.paid_amount);
+      const balance = Math.round((editTotals.total - paid) * 100) / 100;
+      await (supabase as any).from('acc_sales_invoices').update({
+        issue_date: editDate, due_date: editDue || null, notes: editNotes || null,
+        subtotal: editTotals.subtotal, vat_total: editTotals.vat_total, total: editTotals.total,
+        balance, status: balance <= 0 ? 'paid' : paid > 0 ? 'partially_paid' : 'posted', journal_no,
+      }).eq('id', editInv.id);
+      toast.success(`تم تعديل الفاتورة ${editInv.invoice_number} وإعادة ترحيل قيدها`);
+      setEditOpen(false);
+      setEditInv(null);
+      refresh('acc_sales_invoices', 'acc_sales_invoice_lines', 'acc_journal_entries', 'acc_ledger_lines');
+    } catch (e: any) {
+      toast.error(e?.message ?? 'فشل التعديل');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const removeInvoice = async (inv: any) => {
+    if (num(inv.paid_amount) > 0) return toast.error('لا يمكن حذف فاتورة عليها تحصيلات — اعمل إشعار دائن بدلاً من الحذف');
+    if (!window.confirm(`حذف الفاتورة ${inv.invoice_number} نهائياً وإرجاع الكميات لإذن التسليم؟`)) return;
+    try {
+      const lines = invLines.filter((l: any) => l.invoice_id === inv.id);
+      // إرجاع الكميات المفوترة على أسطر إذن التسليم وأمر البيع
+      const dl = doLines.filter((l: any) => dos.find((d: any) => d.id === l.do_id)?.do_no === inv.do_no);
+      for (const l of lines) {
+        const src = dl.find((x: any) => x.item_code === l.item_code);
+        if (!src) continue;
+        await (supabase as any).from('acc_delivery_lines')
+          .update({ invoiced_kg: Math.max(0, num(src.invoiced_kg) - num(l.quantity)) }).eq('id', src.id);
+        if (src.so_line_id) {
+          const sol = ((await (supabase as any).from('acc_sales_order_lines').select('*')).data ?? [])
+            .find((x: any) => x.id === src.so_line_id);
+          if (sol) {
+            await (supabase as any).from('acc_sales_order_lines')
+              .update({ invoiced_kg: Math.max(0, num(sol.invoiced_kg) - num(l.quantity)) }).eq('id', sol.id);
+          }
+        }
+      }
+      await (supabase as any).from('acc_sales_invoice_lines').delete().eq('invoice_id', inv.id);
+      await removeJournalOf(inv.invoice_number);
+      await (supabase as any).from('acc_sales_invoices').delete().eq('id', inv.id);
+      const d = dos.find((x: any) => x.do_no === inv.do_no);
+      if (d) await (supabase as any).from('acc_deliveries').update({ status: 'delivered' }).eq('id', d.id);
+      toast.success(`تم حذف الفاتورة ${inv.invoice_number}`);
+      refresh('acc_sales_invoices', 'acc_sales_invoice_lines', 'acc_deliveries', 'acc_delivery_lines', 'acc_sales_orders', 'acc_sales_order_lines', 'acc_journal_entries', 'acc_ledger_lines');
+    } catch (e: any) {
+      toast.error(e?.message ?? 'فشل الحذف');
     }
   };
 
@@ -285,8 +398,17 @@ const AccSalesBillingPage: React.FC = () => {
                   <TableCell><StatusBadge status={i.status} /></TableCell>
                   <TableCell>
                     <RowActions>
+                      <Button variant="ghost" size="icon" title="طباعة الفاتورة" onClick={() => printSalesInvoice(i.id)}>
+                        <Printer className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="icon" title="تعديل الفاتورة" onClick={() => openEdit(i)}>
+                        <Pencil className="h-4 w-4" />
+                      </Button>
                       <Button variant="ghost" size="icon" title="تحصيل كامل الرصيد" onClick={() => collect(i, 0)}>
                         <Banknote className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="icon" title="حذف الفاتورة" onClick={() => removeInvoice(i)}>
+                        <Trash2 className="h-4 w-4 text-destructive" />
                       </Button>
                     </RowActions>
                   </TableCell>
@@ -296,6 +418,59 @@ const AccSalesBillingPage: React.FC = () => {
           </Table>
         </CardContent>
       </Card>
+      <Dialog open={editOpen} onOpenChange={(o) => { setEditOpen(o); if (!o) setEditInv(null); }}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>تعديل الفاتورة {editInv?.invoice_number}</DialogTitle>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            <div className="grid md:grid-cols-3 gap-3">
+              <div><Label>تاريخ الفاتورة</Label><Input type="date" value={editDate} onChange={(e) => setEditDate(e.target.value)} /></div>
+              <div><Label>تاريخ الاستحقاق</Label><Input type="date" value={editDue} onChange={(e) => setEditDue(e.target.value)} /></div>
+              <div><Label>ملاحظات</Label><Input value={editNotes} onChange={(e) => setEditNotes(e.target.value)} placeholder="ملاحظات على الفاتورة" /></div>
+            </div>
+
+            <Table paginate={false} searchable={false}>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>البيان</TableHead>
+                  <TableHead>الكمية (كجم)</TableHead>
+                  <TableHead>سعر الكيلو</TableHead>
+                  <TableHead>ض.ق.م %</TableHead>
+                  <TableHead>الإجمالي</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {editLines.map((l: any) => (
+                  <TableRow key={l.id}>
+                    <TableCell className="font-medium">{l.description ?? l.item_code}</TableCell>
+                    <TableCell><Input type="number" className="w-32" value={l.quantity} onChange={(e) => setEditLine(l.id, { quantity: Number(e.target.value) })} /></TableCell>
+                    <TableCell><Input type="number" step="0.01" className="w-28" value={l.unit_price} onChange={(e) => setEditLine(l.id, { unit_price: Number(e.target.value) })} /></TableCell>
+                    <TableCell><Input type="number" className="w-20" value={l.vat_rate} onChange={(e) => setEditLine(l.id, { vat_rate: Number(e.target.value) })} /></TableCell>
+                    <TableCell className="font-semibold">{money(num(l.quantity) * num(l.unit_price) * (1 + num(l.vat_rate) / 100))} ج.م</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+
+            <div className="flex gap-3 text-sm flex-wrap">
+              <div className="p-3 rounded bg-muted"><span className="text-muted-foreground">الصافي </span><b>{money(editTotals.subtotal)}</b></div>
+              <div className="p-3 rounded bg-muted"><span className="text-muted-foreground">ض.ق.م </span><b>{money(editTotals.vat_total)}</b></div>
+              <div className="p-3 rounded bg-primary/10 border border-primary/30"><span className="text-muted-foreground">الإجمالي </span><b className="text-primary">{money(editTotals.total)} ج.م</b></div>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button onClick={saveEdit} disabled={saving}>
+              {saving ? <Loader2 className="h-4 w-4 animate-spin me-1" /> : <Save className="h-4 w-4 me-1" />} حفظ التعديلات
+            </Button>
+            <Button variant="outline" onClick={() => printSalesInvoice(editInv?.id)}>
+              <Printer className="h-4 w-4 me-1" /> طباعة
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
