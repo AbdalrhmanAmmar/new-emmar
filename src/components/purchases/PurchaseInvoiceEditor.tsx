@@ -82,6 +82,9 @@ export function PurchaseInvoiceEditor({ invoice }: Props) {
       code: product.code,
       name: product.name,
       unit: product.unit,
+      unitCode: product.unit,
+      unitName: UNIT_LABEL[product.unit],
+      unitFactor: 1,
       price: product.cost,
       taxRate: product.taxRate,
     });
@@ -316,7 +319,13 @@ export function PurchaseInvoiceEditor({ invoice }: Props) {
                           <SearchSelect
                             options={unitOptions(product)}
                             value={line.unitCode ?? product.unit}
-                            onChange={(v) => setLine(line.id, { ...unitPatch(product, v), price: line.price })}
+                            onChange={(v) => {
+                              const patch = unitPatch(product, v);
+                              setLine(line.id, {
+                                ...patch,
+                                price: Number((product.cost * (patch.unitFactor || 1)).toFixed(2)),
+                              });
+                            }}
                           />
                         ) : (
                           <span className="block text-center text-xs text-muted-foreground">{lineUnitLabel(line)}</span>
