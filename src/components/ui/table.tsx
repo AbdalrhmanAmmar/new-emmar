@@ -1,11 +1,12 @@
 import * as React from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Search, X as XIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
 const PAGE_SIZES = [10, 25, 50, 100, 200];
 
 type TableCtx = {
+  query: string;
   page: number;
   pageSize: number;
   setPage: (p: number) => void;
@@ -22,16 +23,44 @@ type TableProps = React.HTMLAttributes<HTMLTableElement> & {
   defaultPageSize?: number;
   /** تعطيل توسيع/تضييق الأعمدة */
   resizableColumns?: boolean;
+  /** تعطيل مربع البحث داخل الجدول */
+  searchable?: boolean;
+  /** نص إرشادي لمربع البحث */
+  searchPlaceholder?: string;
 };
+
+/** استخراج نص الصف لمطابقته مع كلمة البحث. */
+export function nodeText(node: React.ReactNode): string {
+  if (node === null || node === undefined || typeof node === "boolean") return "";
+  if (typeof node === "string" || typeof node === "number") return String(node);
+  if (Array.isArray(node)) return node.map(nodeText).join(" ");
+  if (React.isValidElement(node)) {
+    const props = node.props as Record<string, any>;
+    const extra = [props?.title, props?.["aria-label"], props?.value]
+      .filter((v) => typeof v === "string" || typeof v === "number")
+      .join(" ");
+    return `${nodeText(props?.children)} ${extra}`;
+  }
+  return "";
+}
 
 const Table = React.forwardRef<HTMLTableElement, TableProps>(
   (
-    { className, paginate = true, defaultPageSize = 25, resizableColumns = true, ...props },
+    {
+      className,
+      paginate = true,
+      defaultPageSize = 25,
+      resizableColumns = true,
+      searchable = true,
+      searchPlaceholder = "بحث في الجدول…",
+      ...props
+    },
     ref,
   ) => {
     const [page, setPage] = React.useState(1);
     const [pageSize, setPageSize] = React.useState(defaultPageSize);
     const [total, setTotal] = React.useState(0);
+    const [query, setQuery] = React.useState("");
 
     const pageCount = Math.max(1, Math.ceil(total / pageSize));
     React.useEffect(() => {
@@ -39,8 +68,8 @@ const Table = React.forwardRef<HTMLTableElement, TableProps>(
     }, [page, pageCount]);
 
     const ctx = React.useMemo<TableCtx>(
-      () => ({ page, pageSize, setPage, setTotal, paginate }),
-      [page, pageSize, paginate],
+      () => ({ query: searchable ? query : "", page, pageSize, setPage, setTotal, paginate }),
+      [query, searchable, page, pageSize, paginate],
     );
 
     const from = total === 0 ? 0 : (page - 1) * pageSize + 1;
@@ -48,6 +77,33 @@ const Table = React.forwardRef<HTMLTableElement, TableProps>(
 
     return (
       <TableContext.Provider value={ctx}>
+        {searchable && (
+          <div className="mb-3 flex items-center justify-end">
+            <div className="relative w-full sm:w-72">
+              <Search className="pointer-events-none absolute inset-y-0 end-3 my-auto h-4 w-4 text-muted-foreground" />
+              <input
+                type="search"
+                value={query}
+                onChange={(e) => {
+                  setQuery(e.target.value);
+                  setPage(1);
+                }}
+                placeholder={searchPlaceholder}
+                className="h-10 w-full rounded-xl border border-border bg-card pe-9 ps-9 text-sm shadow-sm outline-none transition-colors placeholder:text-muted-foreground/70 focus:border-primary focus:ring-2 focus:ring-primary/20"
+              />
+              {query && (
+                <button
+                  type="button"
+                  aria-label="مسح البحث"
+                  onClick={() => setQuery("")}
+                  className="absolute inset-y-0 start-2 my-auto grid h-6 w-6 place-items-center rounded-full text-muted-foreground hover:bg-muted"
+                >
+                  <XIcon className="h-3.5 w-3.5" />
+                </button>
+              )}
+            </div>
+          </div>
+        )}
         <div className="relative w-full overflow-x-auto [-webkit-overflow-scrolling:touch]">
           <table
             ref={ref}
@@ -158,7 +214,13 @@ const TableBody = React.forwardRef<
   React.HTMLAttributes<HTMLTableSectionElement>
 >(({ className, children, ...props }, ref) => {
   const ctx = React.useContext(TableContext);
-  const rows = React.Children.toArray(children);
+  const allRows = React.Children.toArray(children);
+  const q = (ctx?.query ?? "").trim().toLowerCase();
+  const rows = React.useMemo(
+    () => (q ? allRows.filter((r) => nodeText(r).toLowerCase().includes(q)) : allRows),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [children, q],
+  );
   const total = rows.length;
 
   React.useEffect(() => {
@@ -172,7 +234,15 @@ const TableBody = React.forwardRef<
 
   return (
     <tbody ref={ref} className={cn("[&_tr:last-child]:border-0", className)} {...props}>
-      {visible}
+      {q && total === 0 ? (
+        <tr>
+          <td colSpan={99} className="p-8 text-center text-sm text-muted-foreground">
+            لا نتائج مطابقة لكلمة البحث
+          </td>
+        </tr>
+      ) : (
+        visible
+      )}
     </tbody>
   );
 });
