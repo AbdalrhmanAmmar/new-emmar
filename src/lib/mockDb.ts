@@ -881,3 +881,10 @@ export const STATUS_LABEL: Record<DocStatus, string> = {
   posted: "مُرحّل",
   cancelled: "ملغي",
 };
+
+/** حفظ الإعدادات الرئيسية */
+export function saveSettings(patch: Partial<OrgSettings>) {
+  mutate((data) => {
+    data.settings = { ...data.settings, ...patch };
+  });
+}
