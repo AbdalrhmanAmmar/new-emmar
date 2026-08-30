@@ -15,6 +15,8 @@ import {
   ScanBarcode,
   ScrollText,
   Settings2,
+  ShieldCheck,
+  UserPlus,
   Truck,
   ShoppingCart,
   Warehouse,
