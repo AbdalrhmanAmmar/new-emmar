@@ -124,10 +124,10 @@ export function ProductFormPage({ id }: { id?: string }) {
   const existing = id ? data.products.find((p) => p.id === id) : undefined;
 
   const [form, setForm] = useState({
-    code: existing?.code ?? "",
+    code: existing?.code ?? nextCode("IT", data.products.map((p) => p.code)),
     name: existing?.name ?? "",
-    barcode: existing?.barcode ?? "",
-    serial: existing?.serial ?? "",
+    barcode: existing?.barcode ?? autoBarcode(data.products.map((p) => p.barcode)),
+    serial: existing?.serial ?? nextCode("SR", data.products.map((p) => p.serial)),
     unit: existing?.unit ?? "ton",
     unitPrice: String(existing?.unitPrice ?? ""),
     wholesalePrice: String(existing?.wholesalePrice ?? ""),
@@ -172,8 +172,8 @@ export function ProductFormPage({ id }: { id?: string }) {
       onSubmit={submit}
     >
       <FormSection title="البيانات الأساسية">
-        <Field label="كود الصنف">
-          <Input dir="rtl" value={form.code} onChange={(e) => set("code", e.target.value)} />
+        <Field label="كود الصنف" hint="يتم توليده تلقائياً">
+          <Input dir="rtl" value={form.code} readOnly className="bg-muted/50" />
         </Field>
         <Field label="اسم الصنف">
           <Input dir="rtl" value={form.name} onChange={(e) => set("name", e.target.value)} />

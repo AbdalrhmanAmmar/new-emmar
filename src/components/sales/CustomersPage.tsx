@@ -116,7 +116,7 @@ export function CustomerFormPage({ id }: { id?: string }) {
   const existing = id ? data.customers.find((c) => c.id === id) : undefined;
 
   const [form, setForm] = useState({
-    code: existing?.code ?? "",
+    code: existing?.code ?? nextCode("CU", data.customers.map((c) => c.code)),
     name: existing?.name ?? "",
     phone: existing?.phone ?? "",
     branchId: existing?.branchId ?? data.branches[0]?.id ?? "",
@@ -141,8 +141,8 @@ export function CustomerFormPage({ id }: { id?: string }) {
       onSubmit={submit}
     >
       <FormSection title="بيانات العميل">
-        <Field label="كود العميل">
-          <Input dir="rtl" value={form.code} onChange={(e) => set("code", e.target.value)} />
+        <Field label="كود العميل" hint="يتم توليده تلقائياً">
+          <Input dir="rtl" value={form.code} readOnly className="bg-muted/50" />
         </Field>
         <Field label="اسم العميل">
           <Input dir="rtl" value={form.name} onChange={(e) => set("name", e.target.value)} />
