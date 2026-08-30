@@ -1,5 +1,7 @@
 import * as React from "react";
-import { ChevronLeft, ChevronRight, Search, X as XIcon } from "lucide-react";
+import { ChevronLeft, ChevronRight, Printer as PrinterIcon, Search, X as XIcon } from "lucide-react";
+
+import { printTableElement } from "@/lib/printRecord";
 
 import { cn } from "@/lib/utils";
 
@@ -57,6 +59,7 @@ const Table = React.forwardRef<HTMLTableElement, TableProps>(
     },
     ref,
   ) => {
+    const wrapRef = React.useRef<HTMLDivElement>(null);
     const [page, setPage] = React.useState(1);
     const [pageSize, setPageSize] = React.useState(defaultPageSize);
     const [total, setTotal] = React.useState(0);
