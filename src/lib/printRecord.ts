@@ -109,3 +109,50 @@ export function printTableRow(el: HTMLElement | null, title = "مستند") {
   const ref = fields.find((f) => f.value && f.value !== "—")?.value;
   printDocument({ title, subtitle: ref ? `رقم/مرجع: ${ref}` : undefined, fields });
 }
+
+/** طباعة جدول كامل كما يظهر على الشاشة (بدون عمود الإجراءات). */
+export function printTableElement(table: HTMLTableElement | null, title = "تقرير") {
+  if (!table) return;
+  const co = companyName();
+  const clone = table.cloneNode(true) as HTMLTableElement;
+  // إزالة أعمدة الإجراءات وأي أزرار
+  const heads = Array.from(clone.querySelectorAll("thead tr"));
+  const actionIdx: number[] = [];
+  heads.forEach((tr) => {
+    Array.from(tr.children).forEach((th, i) => {
+      if ((th.textContent ?? "").trim().includes("إجراء")) actionIdx.push(i);
+    });
+  });
+  Array.from(clone.rows).forEach((row) => {
+    actionIdx
+      .slice()
+      .sort((a, b) => b - a)
+      .forEach((i) => row.cells[i]?.remove());
+  });
+  clone.querySelectorAll("button, svg, input").forEach((n) => n.remove());
+
+  const html = `<!doctype html><html dir="rtl" lang="ar"><head><meta charset="utf-8">
+<title>${esc(title)}</title>
+<style>
+  *{box-sizing:border-box;font-family:"IBM Plex Sans Arabic","Segoe UI",Tahoma,sans-serif}
+  body{margin:0;padding:18px;color:#152318}
+  .head{display:flex;justify-content:space-between;border-bottom:3px solid #1c5f3f;padding-bottom:10px;margin-bottom:14px}
+  h1{font-size:18px;margin:0}
+  .muted{color:#5b6b60;font-size:12px}
+  table{width:100%;border-collapse:collapse;font-size:11.5px}
+  th,td{border:1px solid #d6ded8;padding:6px 7px;text-align:center}
+  th{background:#eef4f0;font-weight:700}
+  @page{size:A4 landscape;margin:10mm}
+</style></head><body>
+<div class="head">
+  <div><h1>${esc(co.name)}</h1><div class="muted">الرقم الضريبي: ${esc(co.tax)}</div></div>
+  <div style="text-align:left"><h1>${esc(title)}</h1><div class="muted">${new Date().toLocaleString("en-GB")}</div></div>
+</div>
+${clone.outerHTML}
+<script>window.onload=function(){window.print()}</script>
+</body></html>`;
+  const w = window.open("", "_blank", "width=1100,height=900");
+  if (!w) return;
+  w.document.write(html);
+  w.document.close();
+}
