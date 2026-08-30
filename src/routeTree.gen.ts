@@ -10,8 +10,22 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SalesRouteRouteImport } from './routes/sales/route'
 import { Route as TreasuryRouteRouteImport } from './routes/treasury/route'
+import { Route as SalesIndexRouteImport } from './routes/sales/index'
 import { Route as TreasuryIndexRouteImport } from './routes/treasury/index'
+import { Route as SalesCustomersIndexRouteImport } from './routes/sales/customers/index'
+import { Route as SalesCustomersIdRouteImport } from './routes/sales/customers/$id'
+import { Route as SalesCustomersNewRouteImport } from './routes/sales/customers/new'
+import { Route as SalesInvoicesIndexRouteImport } from './routes/sales/invoices/index'
+import { Route as SalesInvoicesIdRouteImport } from './routes/sales/invoices/$id'
+import { Route as SalesInvoicesNewRouteImport } from './routes/sales/invoices/new'
+import { Route as SalesProductsIndexRouteImport } from './routes/sales/products/index'
+import { Route as SalesProductsIdRouteImport } from './routes/sales/products/$id'
+import { Route as SalesProductsNewRouteImport } from './routes/sales/products/new'
+import { Route as SalesReportsByCustomerRouteImport } from './routes/sales/reports/by-customer'
+import { Route as SalesReportsByProductRouteImport } from './routes/sales/reports/by-product'
+import { Route as SalesReportsByRepRouteImport } from './routes/sales/reports/by-rep'
 import { Route as TreasuryInvoicesIndexRouteImport } from './routes/treasury/invoices/index'
 import { Route as TreasuryPaymentsIndexRouteImport } from './routes/treasury/payments/index'
 import { Route as TreasuryPaymentsIdRouteImport } from './routes/treasury/payments/$id'
@@ -38,15 +52,85 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SalesRouteRoute = SalesRouteRouteImport.update({
+  id: '/sales',
+  path: '/sales',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TreasuryRouteRoute = TreasuryRouteRouteImport.update({
   id: '/treasury',
   path: '/treasury',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SalesIndexRoute = SalesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => SalesRouteRoute,
+} as any)
 const TreasuryIndexRoute = TreasuryIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => TreasuryRouteRoute,
+} as any)
+const SalesCustomersIndexRoute = SalesCustomersIndexRouteImport.update({
+  id: '/customers/',
+  path: '/customers/',
+  getParentRoute: () => SalesRouteRoute,
+} as any)
+const SalesCustomersIdRoute = SalesCustomersIdRouteImport.update({
+  id: '/customers/$id',
+  path: '/customers/$id',
+  getParentRoute: () => SalesRouteRoute,
+} as any)
+const SalesCustomersNewRoute = SalesCustomersNewRouteImport.update({
+  id: '/customers/new',
+  path: '/customers/new',
+  getParentRoute: () => SalesRouteRoute,
+} as any)
+const SalesInvoicesIndexRoute = SalesInvoicesIndexRouteImport.update({
+  id: '/invoices/',
+  path: '/invoices/',
+  getParentRoute: () => SalesRouteRoute,
+} as any)
+const SalesInvoicesIdRoute = SalesInvoicesIdRouteImport.update({
+  id: '/invoices/$id',
+  path: '/invoices/$id',
+  getParentRoute: () => SalesRouteRoute,
+} as any)
+const SalesInvoicesNewRoute = SalesInvoicesNewRouteImport.update({
+  id: '/invoices/new',
+  path: '/invoices/new',
+  getParentRoute: () => SalesRouteRoute,
+} as any)
+const SalesProductsIndexRoute = SalesProductsIndexRouteImport.update({
+  id: '/products/',
+  path: '/products/',
+  getParentRoute: () => SalesRouteRoute,
+} as any)
+const SalesProductsIdRoute = SalesProductsIdRouteImport.update({
+  id: '/products/$id',
+  path: '/products/$id',
+  getParentRoute: () => SalesRouteRoute,
+} as any)
+const SalesProductsNewRoute = SalesProductsNewRouteImport.update({
+  id: '/products/new',
+  path: '/products/new',
+  getParentRoute: () => SalesRouteRoute,
+} as any)
+const SalesReportsByCustomerRoute = SalesReportsByCustomerRouteImport.update({
+  id: '/reports/by-customer',
+  path: '/reports/by-customer',
+  getParentRoute: () => SalesRouteRoute,
+} as any)
+const SalesReportsByProductRoute = SalesReportsByProductRouteImport.update({
+  id: '/reports/by-product',
+  path: '/reports/by-product',
+  getParentRoute: () => SalesRouteRoute,
+} as any)
+const SalesReportsByRepRoute = SalesReportsByRepRouteImport.update({
+  id: '/reports/by-rep',
+  path: '/reports/by-rep',
+  getParentRoute: () => SalesRouteRoute,
 } as any)
 const TreasuryInvoicesIndexRoute = TreasuryInvoicesIndexRouteImport.update({
   id: '/invoices/',
@@ -152,8 +236,19 @@ const TreasuryTransfersNewRoute = TreasuryTransfersNewRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/sales': typeof SalesRouteRouteWithChildren
   '/treasury': typeof TreasuryRouteRouteWithChildren
+  '/sales/': typeof SalesIndexRoute
   '/treasury/': typeof TreasuryIndexRoute
+  '/sales/customers/$id': typeof SalesCustomersIdRoute
+  '/sales/customers/new': typeof SalesCustomersNewRoute
+  '/sales/invoices/$id': typeof SalesInvoicesIdRoute
+  '/sales/invoices/new': typeof SalesInvoicesNewRoute
+  '/sales/products/$id': typeof SalesProductsIdRoute
+  '/sales/products/new': typeof SalesProductsNewRoute
+  '/sales/reports/by-customer': typeof SalesReportsByCustomerRoute
+  '/sales/reports/by-product': typeof SalesReportsByProductRoute
+  '/sales/reports/by-rep': typeof SalesReportsByRepRoute
   '/treasury/payments/$id': typeof TreasuryPaymentsIdRoute
   '/treasury/payments/new': typeof TreasuryPaymentsNewRoute
   '/treasury/receipts/$id': typeof TreasuryReceiptsIdRoute
@@ -165,6 +260,9 @@ export interface FileRoutesByFullPath {
   '/treasury/safes/$id': typeof TreasurySafesIdRoute
   '/treasury/safes/new': typeof TreasurySafesNewRoute
   '/treasury/transfers/new': typeof TreasuryTransfersNewRoute
+  '/sales/customers/': typeof SalesCustomersIndexRoute
+  '/sales/invoices/': typeof SalesInvoicesIndexRoute
+  '/sales/products/': typeof SalesProductsIndexRoute
   '/treasury/invoices/': typeof TreasuryInvoicesIndexRoute
   '/treasury/payments/': typeof TreasuryPaymentsIndexRoute
   '/treasury/receipts/': typeof TreasuryReceiptsIndexRoute
@@ -177,7 +275,17 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/sales': typeof SalesIndexRoute
   '/treasury': typeof TreasuryIndexRoute
+  '/sales/customers/$id': typeof SalesCustomersIdRoute
+  '/sales/customers/new': typeof SalesCustomersNewRoute
+  '/sales/invoices/$id': typeof SalesInvoicesIdRoute
+  '/sales/invoices/new': typeof SalesInvoicesNewRoute
+  '/sales/products/$id': typeof SalesProductsIdRoute
+  '/sales/products/new': typeof SalesProductsNewRoute
+  '/sales/reports/by-customer': typeof SalesReportsByCustomerRoute
+  '/sales/reports/by-product': typeof SalesReportsByProductRoute
+  '/sales/reports/by-rep': typeof SalesReportsByRepRoute
   '/treasury/payments/$id': typeof TreasuryPaymentsIdRoute
   '/treasury/payments/new': typeof TreasuryPaymentsNewRoute
   '/treasury/receipts/$id': typeof TreasuryReceiptsIdRoute
@@ -189,6 +297,9 @@ export interface FileRoutesByTo {
   '/treasury/safes/$id': typeof TreasurySafesIdRoute
   '/treasury/safes/new': typeof TreasurySafesNewRoute
   '/treasury/transfers/new': typeof TreasuryTransfersNewRoute
+  '/sales/customers': typeof SalesCustomersIndexRoute
+  '/sales/invoices': typeof SalesInvoicesIndexRoute
+  '/sales/products': typeof SalesProductsIndexRoute
   '/treasury/invoices': typeof TreasuryInvoicesIndexRoute
   '/treasury/payments': typeof TreasuryPaymentsIndexRoute
   '/treasury/receipts': typeof TreasuryReceiptsIndexRoute
@@ -202,8 +313,19 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/sales': typeof SalesRouteRouteWithChildren
   '/treasury': typeof TreasuryRouteRouteWithChildren
+  '/sales/': typeof SalesIndexRoute
   '/treasury/': typeof TreasuryIndexRoute
+  '/sales/customers/$id': typeof SalesCustomersIdRoute
+  '/sales/customers/new': typeof SalesCustomersNewRoute
+  '/sales/invoices/$id': typeof SalesInvoicesIdRoute
+  '/sales/invoices/new': typeof SalesInvoicesNewRoute
+  '/sales/products/$id': typeof SalesProductsIdRoute
+  '/sales/products/new': typeof SalesProductsNewRoute
+  '/sales/reports/by-customer': typeof SalesReportsByCustomerRoute
+  '/sales/reports/by-product': typeof SalesReportsByProductRoute
+  '/sales/reports/by-rep': typeof SalesReportsByRepRoute
   '/treasury/payments/$id': typeof TreasuryPaymentsIdRoute
   '/treasury/payments/new': typeof TreasuryPaymentsNewRoute
   '/treasury/receipts/$id': typeof TreasuryReceiptsIdRoute
@@ -215,6 +337,9 @@ export interface FileRoutesById {
   '/treasury/safes/$id': typeof TreasurySafesIdRoute
   '/treasury/safes/new': typeof TreasurySafesNewRoute
   '/treasury/transfers/new': typeof TreasuryTransfersNewRoute
+  '/sales/customers/': typeof SalesCustomersIndexRoute
+  '/sales/invoices/': typeof SalesInvoicesIndexRoute
+  '/sales/products/': typeof SalesProductsIndexRoute
   '/treasury/invoices/': typeof TreasuryInvoicesIndexRoute
   '/treasury/payments/': typeof TreasuryPaymentsIndexRoute
   '/treasury/receipts/': typeof TreasuryReceiptsIndexRoute
@@ -229,8 +354,19 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/sales'
     | '/treasury'
+    | '/sales/'
     | '/treasury/'
+    | '/sales/customers/$id'
+    | '/sales/customers/new'
+    | '/sales/invoices/$id'
+    | '/sales/invoices/new'
+    | '/sales/products/$id'
+    | '/sales/products/new'
+    | '/sales/reports/by-customer'
+    | '/sales/reports/by-product'
+    | '/sales/reports/by-rep'
     | '/treasury/payments/$id'
     | '/treasury/payments/new'
     | '/treasury/receipts/$id'
@@ -242,6 +378,9 @@ export interface FileRouteTypes {
     | '/treasury/safes/$id'
     | '/treasury/safes/new'
     | '/treasury/transfers/new'
+    | '/sales/customers/'
+    | '/sales/invoices/'
+    | '/sales/products/'
     | '/treasury/invoices/'
     | '/treasury/payments/'
     | '/treasury/receipts/'
@@ -254,7 +393,17 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/sales'
     | '/treasury'
+    | '/sales/customers/$id'
+    | '/sales/customers/new'
+    | '/sales/invoices/$id'
+    | '/sales/invoices/new'
+    | '/sales/products/$id'
+    | '/sales/products/new'
+    | '/sales/reports/by-customer'
+    | '/sales/reports/by-product'
+    | '/sales/reports/by-rep'
     | '/treasury/payments/$id'
     | '/treasury/payments/new'
     | '/treasury/receipts/$id'
@@ -266,6 +415,9 @@ export interface FileRouteTypes {
     | '/treasury/safes/$id'
     | '/treasury/safes/new'
     | '/treasury/transfers/new'
+    | '/sales/customers'
+    | '/sales/invoices'
+    | '/sales/products'
     | '/treasury/invoices'
     | '/treasury/payments'
     | '/treasury/receipts'
@@ -278,8 +430,19 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/sales'
     | '/treasury'
+    | '/sales/'
     | '/treasury/'
+    | '/sales/customers/$id'
+    | '/sales/customers/new'
+    | '/sales/invoices/$id'
+    | '/sales/invoices/new'
+    | '/sales/products/$id'
+    | '/sales/products/new'
+    | '/sales/reports/by-customer'
+    | '/sales/reports/by-product'
+    | '/sales/reports/by-rep'
     | '/treasury/payments/$id'
     | '/treasury/payments/new'
     | '/treasury/receipts/$id'
@@ -291,6 +454,9 @@ export interface FileRouteTypes {
     | '/treasury/safes/$id'
     | '/treasury/safes/new'
     | '/treasury/transfers/new'
+    | '/sales/customers/'
+    | '/sales/invoices/'
+    | '/sales/products/'
     | '/treasury/invoices/'
     | '/treasury/payments/'
     | '/treasury/receipts/'
@@ -304,6 +470,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  SalesRouteRoute: typeof SalesRouteRouteWithChildren
   TreasuryRouteRoute: typeof TreasuryRouteRouteWithChildren
 }
 
@@ -316,6 +483,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sales': {
+      id: '/sales'
+      path: '/sales'
+      fullPath: '/sales'
+      preLoaderRoute: typeof SalesRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/treasury': {
       id: '/treasury'
       path: '/treasury'
@@ -323,12 +497,103 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TreasuryRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sales/': {
+      id: '/sales/'
+      path: '/'
+      fullPath: '/sales/'
+      preLoaderRoute: typeof SalesIndexRouteImport
+      parentRoute: typeof SalesRouteRoute
+    }
     '/treasury/': {
       id: '/treasury/'
       path: '/'
       fullPath: '/treasury/'
       preLoaderRoute: typeof TreasuryIndexRouteImport
       parentRoute: typeof TreasuryRouteRoute
+    }
+    '/sales/customers/': {
+      id: '/sales/customers/'
+      path: '/customers'
+      fullPath: '/sales/customers/'
+      preLoaderRoute: typeof SalesCustomersIndexRouteImport
+      parentRoute: typeof SalesRouteRoute
+    }
+    '/sales/customers/$id': {
+      id: '/sales/customers/$id'
+      path: '/customers/$id'
+      fullPath: '/sales/customers/$id'
+      preLoaderRoute: typeof SalesCustomersIdRouteImport
+      parentRoute: typeof SalesRouteRoute
+    }
+    '/sales/customers/new': {
+      id: '/sales/customers/new'
+      path: '/customers/new'
+      fullPath: '/sales/customers/new'
+      preLoaderRoute: typeof SalesCustomersNewRouteImport
+      parentRoute: typeof SalesRouteRoute
+    }
+    '/sales/invoices/': {
+      id: '/sales/invoices/'
+      path: '/invoices'
+      fullPath: '/sales/invoices/'
+      preLoaderRoute: typeof SalesInvoicesIndexRouteImport
+      parentRoute: typeof SalesRouteRoute
+    }
+    '/sales/invoices/$id': {
+      id: '/sales/invoices/$id'
+      path: '/invoices/$id'
+      fullPath: '/sales/invoices/$id'
+      preLoaderRoute: typeof SalesInvoicesIdRouteImport
+      parentRoute: typeof SalesRouteRoute
+    }
+    '/sales/invoices/new': {
+      id: '/sales/invoices/new'
+      path: '/invoices/new'
+      fullPath: '/sales/invoices/new'
+      preLoaderRoute: typeof SalesInvoicesNewRouteImport
+      parentRoute: typeof SalesRouteRoute
+    }
+    '/sales/products/': {
+      id: '/sales/products/'
+      path: '/products'
+      fullPath: '/sales/products/'
+      preLoaderRoute: typeof SalesProductsIndexRouteImport
+      parentRoute: typeof SalesRouteRoute
+    }
+    '/sales/products/$id': {
+      id: '/sales/products/$id'
+      path: '/products/$id'
+      fullPath: '/sales/products/$id'
+      preLoaderRoute: typeof SalesProductsIdRouteImport
+      parentRoute: typeof SalesRouteRoute
+    }
+    '/sales/products/new': {
+      id: '/sales/products/new'
+      path: '/products/new'
+      fullPath: '/sales/products/new'
+      preLoaderRoute: typeof SalesProductsNewRouteImport
+      parentRoute: typeof SalesRouteRoute
+    }
+    '/sales/reports/by-customer': {
+      id: '/sales/reports/by-customer'
+      path: '/reports/by-customer'
+      fullPath: '/sales/reports/by-customer'
+      preLoaderRoute: typeof SalesReportsByCustomerRouteImport
+      parentRoute: typeof SalesRouteRoute
+    }
+    '/sales/reports/by-product': {
+      id: '/sales/reports/by-product'
+      path: '/reports/by-product'
+      fullPath: '/sales/reports/by-product'
+      preLoaderRoute: typeof SalesReportsByProductRouteImport
+      parentRoute: typeof SalesRouteRoute
+    }
+    '/sales/reports/by-rep': {
+      id: '/sales/reports/by-rep'
+      path: '/reports/by-rep'
+      fullPath: '/sales/reports/by-rep'
+      preLoaderRoute: typeof SalesReportsByRepRouteImport
+      parentRoute: typeof SalesRouteRoute
     }
     '/treasury/invoices/': {
       id: '/treasury/invoices/'
@@ -473,6 +738,42 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface SalesRouteRouteChildren {
+  SalesIndexRoute: typeof SalesIndexRoute
+  SalesCustomersIdRoute: typeof SalesCustomersIdRoute
+  SalesCustomersNewRoute: typeof SalesCustomersNewRoute
+  SalesInvoicesIdRoute: typeof SalesInvoicesIdRoute
+  SalesInvoicesNewRoute: typeof SalesInvoicesNewRoute
+  SalesProductsIdRoute: typeof SalesProductsIdRoute
+  SalesProductsNewRoute: typeof SalesProductsNewRoute
+  SalesReportsByCustomerRoute: typeof SalesReportsByCustomerRoute
+  SalesReportsByProductRoute: typeof SalesReportsByProductRoute
+  SalesReportsByRepRoute: typeof SalesReportsByRepRoute
+  SalesCustomersIndexRoute: typeof SalesCustomersIndexRoute
+  SalesInvoicesIndexRoute: typeof SalesInvoicesIndexRoute
+  SalesProductsIndexRoute: typeof SalesProductsIndexRoute
+}
+
+const SalesRouteRouteChildren: SalesRouteRouteChildren = {
+  SalesIndexRoute: SalesIndexRoute,
+  SalesCustomersIdRoute: SalesCustomersIdRoute,
+  SalesCustomersNewRoute: SalesCustomersNewRoute,
+  SalesInvoicesIdRoute: SalesInvoicesIdRoute,
+  SalesInvoicesNewRoute: SalesInvoicesNewRoute,
+  SalesProductsIdRoute: SalesProductsIdRoute,
+  SalesProductsNewRoute: SalesProductsNewRoute,
+  SalesReportsByCustomerRoute: SalesReportsByCustomerRoute,
+  SalesReportsByProductRoute: SalesReportsByProductRoute,
+  SalesReportsByRepRoute: SalesReportsByRepRoute,
+  SalesCustomersIndexRoute: SalesCustomersIndexRoute,
+  SalesInvoicesIndexRoute: SalesInvoicesIndexRoute,
+  SalesProductsIndexRoute: SalesProductsIndexRoute,
+}
+
+const SalesRouteRouteWithChildren = SalesRouteRoute._addFileChildren(
+  SalesRouteRouteChildren,
+)
+
 interface TreasuryRouteRouteChildren {
   TreasuryIndexRoute: typeof TreasuryIndexRoute
   TreasuryPaymentsIdRoute: typeof TreasuryPaymentsIdRoute
@@ -527,6 +828,7 @@ const TreasuryRouteRouteWithChildren = TreasuryRouteRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  SalesRouteRoute: SalesRouteRouteWithChildren,
   TreasuryRouteRoute: TreasuryRouteRouteWithChildren,
 }
 export const routeTree = rootRouteImport
