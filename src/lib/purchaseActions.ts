@@ -1,4 +1,5 @@
 import { today } from "./format";
+import { addDays } from "./settingsRules";
 import {
   isDuplicate,
   mutate,
@@ -130,7 +131,11 @@ export function savePurchaseInvoice(
       id: existing?.id ?? uid("pi"),
       no: existing?.no ?? input.no ?? nextNo("PO", data.purchaseInvoices.map((i) => i.no)),
       date: input.date || today(),
-      dueDate: input.dueDate || input.date || today(),
+      dueDate:
+        input.dueDate ||
+        (input.payMethod === "credit"
+          ? addDays(input.date || today(), data.settings.defaultPaymentDays)
+          : input.date || today()),
       branchId: input.branchId,
       warehouseId: input.warehouseId,
       userId: input.userId,

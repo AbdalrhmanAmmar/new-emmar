@@ -10,6 +10,7 @@ import {
   type Product,
   type SalesInvoice,
 } from "./mockDb";
+import { addDays } from "./settingsRules";
 import { invoiceTotals, discountPercentOf } from "./sales";
 import { baseQty } from "./units";
 
@@ -104,6 +105,11 @@ export function saveSalesInvoice(
       result = { ok: false, error: "يجب اختيار المخزن المستهدف" };
       return;
     }
+    const maxDisc = Number(data.settings.maxLineDiscountPct || 0);
+    if (maxDisc > 0 && lines.some((l) => Number(l.discountPct || 0) > maxDisc + 0.0001)) {
+      result = { ok: false, error: `أقصى خصم مسموح للسطر ${maxDisc}% حسب الإعدادات الرئيسية` };
+      return;
+    }
     if (input.payMethod === "credit" && !input.customerId) {
       result = { ok: false, error: "البيع الآجل يتطلب اختيار عميل مسجل" };
       return;
@@ -125,7 +131,11 @@ export function saveSalesInvoice(
         result = { ok: false, error: "صنف غير موجود" };
         return;
       }
-      if (input.status === "posted" && baseQty(line) > product.stock + 0.0001) {
+      if (
+        input.status === "posted" &&
+        !data.settings.allowNegativeStock &&
+        baseQty(line) > product.stock + 0.0001
+      ) {
         result = {
           ok: false,
           error: `الكمية المطلوبة من ${product.name} أكبر من المتاح (${product.stock})`,
@@ -148,7 +158,11 @@ export function saveSalesInvoice(
       id: existing?.id ?? uid("si"),
       no: existing?.no ?? input.no ?? nextNo("SO", data.salesInvoices.map((i) => i.no)),
       date: input.date || today(),
-      dueDate: input.dueDate || input.date || today(),
+      dueDate:
+        input.dueDate ||
+        (input.payMethod === "credit"
+          ? addDays(input.date || today(), data.settings.defaultPaymentDays)
+          : input.date || today()),
       view: input.view,
       branchId: input.branchId,
       warehouseId: input.warehouseId,
@@ -200,7 +214,7 @@ export function setSalesInvoiceStatus(id: string, status: DocStatus): ActionResu
     if (status === "posted") {
       for (const line of inv.lines) {
         const product = data.products.find((p) => p.id === line.productId);
-        if (product && baseQty(line) > product.stock + 0.0001) {
+        if (product && !data.settings.allowNegativeStock && baseQty(line) > product.stock + 0.0001) {
           result = { ok: false, error: `الكمية المطلوبة من ${product.name} أكبر من المتاح` };
           inv.status = "draft";
           return;
@@ -260,7 +274,7 @@ export function saveProduct(input: Omit<Product, "id"> & { id?: string }): Actio
       unitPrice: Number(input.unitPrice || 0),
       wholesalePrice: Number(input.wholesalePrice || 0),
       cost: Number(input.cost || 0),
-      taxRate: Number(input.taxRate ?? 14),
+      taxRate: Number(input.taxRate ?? data.settings.vatRate),
       category: input.category?.trim() ?? "",
       stock: Number(input.stock || 0),
       minStock: Number(input.minStock || 0),

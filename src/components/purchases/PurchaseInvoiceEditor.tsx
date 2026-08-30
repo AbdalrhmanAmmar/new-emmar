@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { money, num, today } from "@/lib/format";
+import { addDays } from "@/lib/settingsRules";
 import {
   SALES_PAY_LABEL,
   UNIT_LABEL,
@@ -39,7 +40,9 @@ export function PurchaseInvoiceEditor({ invoice }: Props) {
   const [branchId, setBranchId] = useState(invoice?.branchId ?? data.branches[0]?.id ?? "");
   const [warehouseId, setWarehouseId] = useState(invoice?.warehouseId ?? data.warehouses[0]?.id ?? "");
   const [date, setDate] = useState(invoice?.date ?? today());
-  const [dueDate, setDueDate] = useState(invoice?.dueDate ?? today());
+  const [dueDate, setDueDate] = useState(
+    invoice?.dueDate ?? addDays(today(), data.settings.defaultPaymentDays),
+  );
   const [supplierKind, setSupplierKind] = useState<"cash" | "registered">(invoice?.supplierId ? "registered" : "cash");
   const [supplierId, setSupplierId] = useState<string | null>(invoice?.supplierId ?? null);
   const [supplierName, setSupplierName] = useState(invoice?.supplierId ? "" : invoice?.supplierName ?? "مورد نقدي");
@@ -147,7 +150,7 @@ export function PurchaseInvoiceEditor({ invoice }: Props) {
             <span className="rounded-full border border-primary/30 bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary">
               رقم الفاتورة (تلقائى): {invoiceNo}
             </span>
-            شاشة شراء متكاملة — أصناف، خصومات، ضريبة 14%، وسداد فورى بالجنيه المصري
+            {`شاشة شراء متكاملة — أصناف، خصومات، ضريبة ${data.settings.vatRate}%، وسداد فورى`}
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
@@ -435,7 +438,7 @@ export function PurchaseInvoiceEditor({ invoice }: Props) {
             <SummaryRow label="الإجمالي" value={money(totals.gross)} />
             <SummaryRow label="الخصم" value={money(totals.discount)} />
             <SummaryRow label="الصافي" value={money(totals.net)} />
-            <SummaryRow label="الضريبة (14%)" value={money(totals.tax)} />
+            <SummaryRow label={`الضريبة (${data.settings.vatRate}%)`} value={money(totals.tax)} />
             <SummaryRow label="المستحق للمورد" value={money(totals.total)} strong />
             <SummaryRow label="إجمالي المسدد" value={money(totals.paid)} />
             <SummaryRow label="المتبقي" value={money(totals.remaining)} strong danger={totals.remaining > 0} />

@@ -1,5 +1,7 @@
 import { useEffect, useSyncExternalStore } from "react";
 
+import { setCurrencyLabel } from "./format";
+
 /* ============================================================
  * قاعدة بيانات محلية (الوضع الافتراضي) — تعمل بدون إنترنت
  * وتُحفظ في متصفح المستخدم. لا يوجد نظام قيود يومية هنا،
@@ -909,7 +911,10 @@ function persist() {
 }
 
 export function getDb(): DbShape {
-  if (!db) db = load();
+  if (!db) {
+    db = load();
+    setCurrencyLabel(db.settings?.currencyLabel);
+  }
   return db;
 }
 
@@ -1029,9 +1034,15 @@ export const STATUS_LABEL: Record<DocStatus, string> = {
   cancelled: "ملغي",
 };
 
-/** حفظ الإعدادات الرئيسية */
+/** الإعدادات الرئيسية الحالية — تُستخدم فى كل منطق البرنامج */
+export function orgSettings(): OrgSettings {
+  return getDb().settings;
+}
+
+/** حفظ الإعدادات الرئيسية وتطبيقها فوراً على البرنامج */
 export function saveSettings(patch: Partial<OrgSettings>) {
   mutate((data) => {
     data.settings = { ...data.settings, ...patch };
+    setCurrencyLabel(data.settings.currencyLabel);
   });
 }

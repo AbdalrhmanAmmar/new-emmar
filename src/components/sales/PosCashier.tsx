@@ -328,11 +328,15 @@ export function PosCashier() {
                         <span className="text-xs text-muted-foreground">{lineUnitLabel(l)}</span>
                       );
                     })()}
-                    <Input
-                      value={String(l.price)}
-                      onChange={(e) => setPrice(l.id, Number(e.target.value || 0))}
-                      className="h-7 w-20 text-center text-xs"
-                    />
+                    {data.settings.priceEditInPos ? (
+                      <Input
+                        value={String(l.price)}
+                        onChange={(e) => setPrice(l.id, Number(e.target.value || 0))}
+                        className="h-7 w-20 text-center text-xs"
+                      />
+                    ) : (
+                      <span className="w-20 text-center text-xs font-semibold">{money(l.price)}</span>
+                    )}
                     <span className="text-xs font-bold text-primary">{money(t.total)}</span>
                   </div>
                 </div>
