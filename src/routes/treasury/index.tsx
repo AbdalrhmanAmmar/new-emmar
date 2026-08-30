@@ -31,14 +31,14 @@ function TreasuryDashboard() {
   const data = useDb();
   const totals = totalsByType(data);
   const movements = safeMovements(data);
-  const flow = cashFlow(data, "day").slice(-7).reverse();
+  const flow = cashFlow(data, "day").slice(0, 7);
   const receivables = aging(data, "sales");
   const payables = aging(data, "purchase");
 
   const totalBalance = data.safes.reduce((acc, safe) => acc + safeBalance(data, safe.id), 0);
   const receivablesTotal = receivables.reduce((acc, row) => acc + row.total, 0);
   const payablesTotal = payables.reduce((acc, row) => acc + row.total, 0);
-  const overdue = receivables.reduce((acc, row) => acc + row.d31_60 + row.d61_90 + row.over90, 0);
+  const overdue = receivables.reduce((acc, row) => acc + row.b30 + row.b60 + row.b90, 0);
   const openShifts = data.shifts.filter((s) => s.status === "open");
 
   return (
@@ -98,7 +98,7 @@ function TreasuryDashboard() {
               <Link
                 key={safe.id}
                 to="/treasury/statement"
-                search={{ safeId: safe.id }}
+                search={{ safe: safe.id }}
                 className="flex items-center justify-between gap-2 rounded-lg border border-border/70 px-3 py-2 text-sm transition-colors hover:bg-muted/60"
               >
                 <span className="flex flex-col">
@@ -167,11 +167,11 @@ function TreasuryDashboard() {
                 <span className="flex flex-col">
                   <strong className="text-[13px] font-medium">{move.description}</strong>
                   <span className="text-xs text-muted-foreground">
-                    {dateFmt(move.date)} — {move.ref}
+                    {dateFmt(move.date)} — {move.docNo}
                   </span>
                 </span>
-                <span className={move.inflow ? "font-semibold text-primary" : "font-semibold text-destructive"}>
-                  {money(move.inflow || move.outflow)}
+                <span className={move.debit ? "font-semibold text-primary" : "font-semibold text-destructive"}>
+                  {money(move.debit || move.credit)}
                 </span>
               </div>
             ))}
