@@ -17,6 +17,28 @@ export const RowActions = ({ children }: { children: React.ReactNode }) => {
   const items = React.Children.toArray(children).filter(Boolean);
   if (items.length === 0) return null;
 
+  // Extract a readable label for each action (title / aria-label) so the
+  // menu shows icon + text rows instead of bare icons.
+  const rows = items.map((child, i) => {
+    if (!React.isValidElement(child)) return child;
+    const props = child.props as Record<string, unknown>;
+    const label = (props["title"] ?? props["aria-label"]) as string | undefined;
+    return (
+      <React.Fragment key={(child.key as string) ?? i}>
+        {React.cloneElement(child as React.ReactElement<Record<string, unknown>>, {
+          title: undefined,
+          "aria-label": label,
+          children: (
+            <>
+              {(child.props as { children?: React.ReactNode }).children}
+              {label ? <span className="flex-1 text-start">{label}</span> : null}
+            </>
+          ),
+        })}
+      </React.Fragment>
+    );
+  });
+
   return (
     <div className="flex justify-center">
       <DropdownMenu>
