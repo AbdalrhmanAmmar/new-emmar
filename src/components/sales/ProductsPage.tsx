@@ -43,6 +43,16 @@ export function ProductsPage() {
     { key: "barcode", header: "الباركود", cell: (r) => r.barcode || "-", text: (r) => r.barcode },
     { key: "category", header: "التصنيف", cell: (r) => r.category || "-", text: (r) => r.category },
     { key: "unit", header: "الوحدة", cell: (r) => UNIT_LABEL[r.unit], align: "center" },
+    {
+      key: "units",
+      header: "وحدات البيع",
+      align: "center",
+      cell: (r) =>
+        r.units?.length
+          ? r.units.map((u) => u.name || u.code).join(" / ")
+          : "—",
+      text: (r) => (r.units ?? []).map((u) => `${u.code} ${u.name}`).join(" "),
+    },
     { key: "price", header: "سعر البيع", cell: (r) => money(r.unitPrice), text: (r) => String(r.unitPrice) },
     { key: "wholesale", header: "سعر الجملة", cell: (r) => money(r.wholesalePrice) },
     { key: "cost", header: "التكلفة", cell: (r) => money(r.cost) },

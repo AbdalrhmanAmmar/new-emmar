@@ -2,8 +2,13 @@ import { Plus, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { num } from "@/lib/format";
 import { UNIT_LABEL, uid, type ProductUnit, type Unit } from "@/lib/mockDb";
+
+/** صياغة معامل التحويل بدون فقدان الكسور الصغيرة */
+function factorText(v: number): string {
+  if (!Number.isFinite(v)) return "—";
+  return Number(v.toFixed(6)).toLocaleString("en-GB", { maximumFractionDigits: 6 });
+}
 
 /** محرر وحدات الصنف ومعاملات التحويل — اشترِ بالطن وبِع بالكيلو أو الشيكارة */
 export function ProductUnitsEditor({
@@ -116,7 +121,8 @@ export function ProductUnitsEditor({
                   </td>
                   <td className="px-3 py-2 text-center text-xs text-muted-foreground">
                     {Number(u.factor) > 0
-                      ? `1 ${u.name || u.code || "وحدة"} = ${num(Number(u.factor))} ${baseLabel}`
+                      ? `1 ${u.name || u.code || "وحدة"} = ${factorText(Number(u.factor))} ${baseLabel}` +
+                        (Number(u.factor) < 1 ? ` (1 ${baseLabel} = ${factorText(1 / Number(u.factor))} ${u.name || u.code})` : "")
                       : "أدخل معامل تحويل أكبر من صفر"}
                   </td>
                   <td className="px-2 py-1.5 text-center">
