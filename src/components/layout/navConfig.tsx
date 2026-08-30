@@ -74,17 +74,6 @@ export const TREASURY_MODULE: NavModule = {
       ],
     },
     {
-      id: "treasury-reports",
-      label: "تقارير الخزينة",
-      icon: <ScrollText className="size-4" />,
-      items: [
-        { to: "/treasury/reports/cashflow", label: "التدفق النقدي", icon: <ScrollText className="size-4" /> },
-        { to: "/treasury/reports/vouchers", label: "تحليل السندات", icon: <Receipt className="size-4" /> },
-        { to: "/treasury/reports/aging", label: "أعمار الديون", icon: <FileText className="size-4" /> },
-        { to: "/treasury/reports/shift-diff", label: "فروقات التقفيل", icon: <ListChecks className="size-4" /> },
-      ],
-    },
-    {
       id: "treasury-settings",
       label: "إعدادات الخزينة",
       icon: <Settings2 className="size-4" />,
