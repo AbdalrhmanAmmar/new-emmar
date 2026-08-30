@@ -1,0 +1,191 @@
+import { Info, Printer } from "lucide-react";
+import { useMemo, useState } from "react";
+
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { StatusBadge } from "@/components/treasury/PageHeader";
+import { dateFmt, money, num } from "@/lib/format";
+import { customerInvoices, customerLedger, customerPriceHistory } from "@/lib/customerLedger";
+import { printCustomerStatement } from "@/lib/printStatement";
+import { UNIT_LABEL, useDb } from "@/lib/mockDb";
+
+/** أيقونة تعجب جانب العميل: كل فواتيره السابقة والأسعار التى تحاسب بها */
+export function CustomerHistoryButton({ customerId }: { customerId: string | null }) {
+  const data = useDb();
+  const [open, setOpen] = useState(false);
+  const [tab, setTab] = useState<"invoices" | "prices">("invoices");
+
+  const customer = customerId ? data.customers.find((c) => c.id === customerId) : undefined;
+  const invoices = useMemo(() => (customerId ? customerInvoices(data, customerId) : []), [data, customerId]);
+  const prices = useMemo(() => (customerId ? customerPriceHistory(data, customerId) : []), [data, customerId]);
+  const ledger = useMemo(() => (customerId ? customerLedger(data, customerId) : null), [data, customerId]);
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button
+          type="button"
+          variant="outline"
+          size="icon"
+          disabled={!customerId}
+          title="سجل فواتير العميل والأسعار السابقة"
+          aria-label="سجل فواتير العميل والأسعار السابقة"
+          className="size-9 shrink-0 border-accent/50 text-accent-foreground hover:bg-accent/15"
+        >
+          <Info className="size-4" />
+        </Button>
+      </DialogTrigger>
+      <DialogContent dir="rtl" className="max-h-[85vh] max-w-4xl overflow-y-auto">
+        <DialogHeader className="text-right">
+          <DialogTitle>سجل العميل: {customer?.name ?? "—"}</DialogTitle>
+          <DialogDescription>
+            كل الفواتير السابقة والأسعار التى تم التحاسب بها — بالجنيه المصري
+          </DialogDescription>
+        </DialogHeader>
+
+        {ledger ? (
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+            <Mini label="عدد الفواتير" value={String(ledger.invoiceCount)} />
+            <Mini label="إجمالى المسحوب" value={money(ledger.totalDebit)} />
+            <Mini label="إجمالى المسدد" value={money(ledger.totalCredit)} />
+            <Mini label="الرصيد المستحق" value={money(ledger.balance)} tone={ledger.balance > 0.01} />
+          </div>
+        ) : null}
+
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex gap-2">
+            <Button
+              type="button"
+              size="sm"
+              variant={tab === "invoices" ? "default" : "outline"}
+              onClick={() => setTab("invoices")}
+            >
+              الفواتير السابقة
+            </Button>
+            <Button
+              type="button"
+              size="sm"
+              variant={tab === "prices" ? "default" : "outline"}
+              onClick={() => setTab("prices")}
+            >
+              أسعار التحاسب
+            </Button>
+          </div>
+          {customer && ledger ? (
+            <Button
+              type="button"
+              size="sm"
+              variant="secondary"
+              className="gap-1.5"
+              onClick={() => printCustomerStatement(customer, ledger, {})}
+            >
+              <Printer className="size-4" />
+              طباعة كشف الحساب
+            </Button>
+          ) : null}
+        </div>
+
+        <div className="table-scroll overflow-x-auto rounded-xl border border-border">
+          {tab === "invoices" ? (
+            <table className="w-full min-w-[40rem] text-sm">
+              <thead className="bg-muted/50 text-xs text-muted-foreground">
+                <tr>
+                  {["رقم الفاتورة", "التاريخ", "الأصناف", "الإجمالي", "المسدد", "المتبقي", "الحالة"].map((h) => (
+                    <th key={h} className="px-3 py-2 text-center font-medium">
+                      {h}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {invoices.length === 0 ? (
+                  <tr>
+                    <td colSpan={7} className="px-3 py-6 text-center text-muted-foreground">
+                      لا توجد فواتير سابقة لهذا العميل
+                    </td>
+                  </tr>
+                ) : (
+                  invoices.map(({ invoice, total, paid, remaining }) => (
+                    <tr key={invoice.id} className="border-t border-border/60">
+                      <td className="px-3 py-2 text-center font-semibold">{invoice.no}</td>
+                      <td className="px-3 py-2 text-center">{dateFmt(invoice.date)}</td>
+                      <td className="px-3 py-2 text-right text-xs text-muted-foreground">
+                        {invoice.lines.map((l) => `${l.name} (${num(l.qty)} × ${num(l.price)})`).join(" — ")}
+                      </td>
+                      <td className="px-3 py-2 text-center">{num(total)}</td>
+                      <td className="px-3 py-2 text-center">{num(paid)}</td>
+                      <td className="px-3 py-2 text-center font-semibold">{num(remaining)}</td>
+                      <td className="px-3 py-2 text-center">
+                        <StatusBadge
+                          label={
+                            invoice.status === "posted" ? "مُرحّلة" : invoice.status === "draft" ? "مسودة" : "ملغاة"
+                          }
+                          tone={invoice.status === "posted" ? "green" : invoice.status === "draft" ? "gold" : "red"}
+                        />
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          ) : (
+            <table className="w-full min-w-[40rem] text-sm">
+              <thead className="bg-muted/50 text-xs text-muted-foreground">
+                <tr>
+                  {["الكود", "الصنف", "الوحدة", "آخر سعر", "أقل سعر", "أعلى سعر", "متوسط السعر", "الكمية", "آخر فاتورة"].map(
+                    (h) => (
+                      <th key={h} className="px-3 py-2 text-center font-medium">
+                        {h}
+                      </th>
+                    ),
+                  )}
+                </tr>
+              </thead>
+              <tbody>
+                {prices.length === 0 ? (
+                  <tr>
+                    <td colSpan={9} className="px-3 py-6 text-center text-muted-foreground">
+                      لا توجد أسعار سابقة لهذا العميل
+                    </td>
+                  </tr>
+                ) : (
+                  prices.map((row) => (
+                    <tr key={row.productId} className="border-t border-border/60">
+                      <td className="px-3 py-2 text-center text-xs text-muted-foreground">{row.code}</td>
+                      <td className="px-3 py-2 text-right font-semibold">{row.name}</td>
+                      <td className="px-3 py-2 text-center text-xs">{UNIT_LABEL[row.unit]}</td>
+                      <td className="px-3 py-2 text-center font-semibold text-primary">{num(row.lastPrice)}</td>
+                      <td className="px-3 py-2 text-center">{num(row.minPrice)}</td>
+                      <td className="px-3 py-2 text-center">{num(row.maxPrice)}</td>
+                      <td className="px-3 py-2 text-center">{num(row.avgPrice)}</td>
+                      <td className="px-3 py-2 text-center">{num(row.qty)}</td>
+                      <td className="px-3 py-2 text-center text-xs">
+                        {row.lastInvoiceNo} — {dateFmt(row.lastDate)}
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          )}
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function Mini({ label, value, tone }: { label: string; value: string; tone?: boolean }) {
+  return (
+    <div className="rounded-lg border border-border bg-muted/30 p-2.5">
+      <div className="text-[11px] text-muted-foreground">{label}</div>
+      <div className={`mt-0.5 text-sm font-bold ${tone ? "text-destructive" : "text-foreground"}`}>{value}</div>
+    </div>
+  );
+}
