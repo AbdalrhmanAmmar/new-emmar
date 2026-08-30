@@ -26,7 +26,6 @@ export function AttendancePage() {
   const setStatus = (employeeId: string, status: AttendanceStatus) => {
     const existing = rowFor(employeeId);
     const res = markAttendance({
-      id: existing?.id,
       date,
       employeeId,
       status,
@@ -40,10 +39,9 @@ export function AttendancePage() {
   const setNumber = (employeeId: string, field: "lateMinutes" | "overtimeHours", value: number) => {
     const existing = rowFor(employeeId);
     const res = markAttendance({
-      id: existing?.id,
       date,
       employeeId,
-      status: existing?.status ?? "present",
+      status: field === "lateMinutes" && value > 0 ? "late" : (existing?.status ?? "present"),
       lateMinutes: field === "lateMinutes" ? value : (existing?.lateMinutes ?? 0),
       overtimeHours: field === "overtimeHours" ? value : (existing?.overtimeHours ?? 0),
       note: existing?.note ?? "",
