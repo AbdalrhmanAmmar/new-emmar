@@ -217,7 +217,9 @@ export function salesInvoiceHtml(input: InvoicePrintInput): string {
 </style></head><body><div class="doc">
   <div class="top">
     <div class="brand">
-      <div class="mark">${org.logoLetter || "إ"}</div>
+      ${org.logoDataUrl
+        ? `<img class="mark" src="${org.logoDataUrl}" alt="" style="object-fit:cover;border-radius:50%;background:#fff" />`
+        : `<div class="mark">${org.logoLetter || "إ"}</div>`}
       <div>
         <div class="co">${org.companyName}</div>
         <div class="sub">${org.companyNameEn} — ${org.address}<br/>${org.activity}<br/>

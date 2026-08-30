@@ -10,10 +10,13 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { landingPath, resolveUser, signIn, useSession } from "@/lib/session";
+import { getDb } from "@/lib/mockDb";
 
 /** شاشة تسجيل الدخول المرتبطة بموديول إدارة المستخدمين */
 export function LoginScreen() {
   const navigate = useNavigate();
+  const settings = getDb().settings;
+  const logoSrc = settings.logoDataUrl || logoAsset.url;
   const session = useSession();
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
@@ -78,8 +81,8 @@ export function LoginScreen() {
         <div className="w-full max-w-sm space-y-6">
           <div className="flex flex-col items-center gap-3 text-center">
             <img
-              src={logoAsset.url}
-              alt="شعار الإيمان لتجارة الأعلاف"
+              src={logoSrc}
+              alt={`شعار ${settings.companyName}`}
               width={120}
               height={120}
               className="size-24 rounded-full border-2 border-accent/50 object-cover shadow-md"

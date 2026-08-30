@@ -154,6 +154,8 @@ export interface OrgSettings {
   email: string;
   website: string;
   logoLetter: string;
+  /** شعار الشركة المرفوع (base64 data URL) — يظهر فى الشريط الجانبى والمطبوعات وشاشة الدخول */
+  logoDataUrl?: string;
   printFooter: string;
   invoiceTerms: string;
   showSignatures: boolean;

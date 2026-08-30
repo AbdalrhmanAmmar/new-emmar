@@ -1,5 +1,5 @@
-import { Save } from "lucide-react";
-import { useEffect, useState } from "react";
+import { ImagePlus, Save, Trash2 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 import { DangerZone } from "@/components/treasury/DangerZone";
@@ -9,6 +9,33 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { saveSettings, useDb, type OrgSettings } from "@/lib/mockDb";
+
+/** يضغط الصورة ويحولها إلى data URL صغيرة مناسبة للتخزين المحلى */
+function fileToLogoDataUrl(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error("تعذر قراءة الملف"));
+    reader.onload = () => {
+      const img = new Image();
+      img.onerror = () => reject(new Error("الملف ليس صورة صالحة"));
+      img.onload = () => {
+        const size = 256;
+        const canvas = document.createElement("canvas");
+        canvas.width = size;
+        canvas.height = size;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return reject(new Error("تعذر معالجة الصورة"));
+        const scale = Math.max(size / img.width, size / img.height);
+        const w = img.width * scale;
+        const h = img.height * scale;
+        ctx.drawImage(img, (size - w) / 2, (size - h) / 2, w, h);
+        resolve(canvas.toDataURL("image/png"));
+      };
+      img.src = String(reader.result);
+    };
+    reader.readAsDataURL(file);
+  });
+}
 
 type TextKey =
   | "companyName"
@@ -56,6 +83,18 @@ const FLAGS: Array<{ key: keyof OrgSettings; label: string }> = [
 export function OrgSettingsForm() {
   const data = useDb();
   const [form, setForm] = useState<OrgSettings>(data.settings);
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  const pickLogo = async (file: File | undefined) => {
+    if (!file) return;
+    try {
+      const dataUrl = await fileToLogoDataUrl(file);
+      set("logoDataUrl", dataUrl);
+      toast.success("تم تحميل الشعار — احفظ الإعدادات لتطبيقه");
+    } catch {
+      toast.error("تعذر تحميل الصورة، جرّب ملفاً آخر");
+    }
+  };
 
   useEffect(() => {
     setForm(data.settings);
@@ -87,6 +126,46 @@ export function OrgSettingsForm() {
               {f.hint ? <p className="text-[11px] text-muted-foreground">{f.hint}</p> : null}
             </div>
           ))}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm">شعار الشركة</CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-wrap items-center gap-4">
+          <div className="flex size-20 items-center justify-center overflow-hidden rounded-full border border-border bg-muted text-2xl font-bold text-primary">
+            {form.logoDataUrl ? (
+              <img src={form.logoDataUrl} alt="شعار الشركة" className="size-full object-cover" />
+            ) : (
+              form.logoLetter || "إ"
+            )}
+          </div>
+          <div className="space-y-1.5">
+            <div className="flex gap-2">
+              <Button type="button" variant="outline" size="sm" onClick={() => fileRef.current?.click()}>
+                <ImagePlus className="size-4" /> رفع الشعار
+              </Button>
+              {form.logoDataUrl ? (
+                <Button type="button" variant="ghost" size="sm" onClick={() => set("logoDataUrl", undefined)}>
+                  <Trash2 className="size-4" /> إزالة
+                </Button>
+              ) : null}
+            </div>
+            <p className="max-w-sm text-[11px] text-muted-foreground">
+              يظهر الشعار فى الشريط الجانبى وشاشة الدخول وجميع المطبوعات. عند عدم رفع شعار يُستخدم «حرف الشعار» فى المطبوعات.
+            </p>
+            <input
+              ref={fileRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => {
+                void pickLogo(e.target.files?.[0]);
+                e.target.value = "";
+              }}
+            />
+          </div>
         </CardContent>
       </Card>
 
