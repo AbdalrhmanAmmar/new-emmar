@@ -10,16 +10,22 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ExpensesRouteRouteImport } from './routes/expenses/route'
 import { Route as PurchasesRouteRouteImport } from './routes/purchases/route'
 import { Route as ReportsRouteRouteImport } from './routes/reports/route'
 import { Route as SalesRouteRouteImport } from './routes/sales/route'
 import { Route as TreasuryRouteRouteImport } from './routes/treasury/route'
+import { Route as ExpensesIndexRouteImport } from './routes/expenses/index'
+import { Route as ExpensesIdRouteImport } from './routes/expenses/$id'
+import { Route as ExpensesNewRouteImport } from './routes/expenses/new'
 import { Route as PurchasesIndexRouteImport } from './routes/purchases/index'
 import { Route as ReportsIndexRouteImport } from './routes/reports/index'
 import { Route as ReportsCustomerStatementRouteImport } from './routes/reports/customer-statement'
 import { Route as SalesIndexRouteImport } from './routes/sales/index'
 import { Route as SalesPosRouteImport } from './routes/sales/pos'
 import { Route as TreasuryIndexRouteImport } from './routes/treasury/index'
+import { Route as ExpensesItemsIndexRouteImport } from './routes/expenses/items/index'
+import { Route as ExpensesListIndexRouteImport } from './routes/expenses/list/index'
 import { Route as PurchasesInvoicesIndexRouteImport } from './routes/purchases/invoices/index'
 import { Route as PurchasesInvoicesIdRouteImport } from './routes/purchases/invoices/$id'
 import { Route as PurchasesInvoicesNewRouteImport } from './routes/purchases/invoices/new'
@@ -68,6 +74,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ExpensesRouteRoute = ExpensesRouteRouteImport.update({
+  id: '/expenses',
+  path: '/expenses',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PurchasesRouteRoute = PurchasesRouteRouteImport.update({
   id: '/purchases',
   path: '/purchases',
@@ -87,6 +98,21 @@ const TreasuryRouteRoute = TreasuryRouteRouteImport.update({
   id: '/treasury',
   path: '/treasury',
   getParentRoute: () => rootRouteImport,
+} as any)
+const ExpensesIndexRoute = ExpensesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ExpensesRouteRoute,
+} as any)
+const ExpensesIdRoute = ExpensesIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => ExpensesRouteRoute,
+} as any)
+const ExpensesNewRoute = ExpensesNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => ExpensesRouteRoute,
 } as any)
 const PurchasesIndexRoute = PurchasesIndexRouteImport.update({
   id: '/',
@@ -118,6 +144,16 @@ const TreasuryIndexRoute = TreasuryIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => TreasuryRouteRoute,
+} as any)
+const ExpensesItemsIndexRoute = ExpensesItemsIndexRouteImport.update({
+  id: '/items/',
+  path: '/items/',
+  getParentRoute: () => ExpensesRouteRoute,
+} as any)
+const ExpensesListIndexRoute = ExpensesListIndexRouteImport.update({
+  id: '/list/',
+  path: '/list/',
+  getParentRoute: () => ExpensesRouteRoute,
 } as any)
 const PurchasesInvoicesIndexRoute = PurchasesInvoicesIndexRouteImport.update({
   id: '/invoices/',
@@ -336,12 +372,16 @@ const TreasuryTransfersNewRoute = TreasuryTransfersNewRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/expenses': typeof ExpensesRouteRouteWithChildren
   '/purchases': typeof PurchasesRouteRouteWithChildren
   '/reports': typeof ReportsRouteRouteWithChildren
   '/sales': typeof SalesRouteRouteWithChildren
   '/treasury': typeof TreasuryRouteRouteWithChildren
+  '/expenses/$id': typeof ExpensesIdRoute
+  '/expenses/new': typeof ExpensesNewRoute
   '/reports/customer-statement': typeof ReportsCustomerStatementRoute
   '/sales/pos': typeof SalesPosRoute
+  '/expenses/': typeof ExpensesIndexRoute
   '/purchases/': typeof PurchasesIndexRoute
   '/reports/': typeof ReportsIndexRoute
   '/sales/': typeof SalesIndexRoute
@@ -373,6 +413,8 @@ export interface FileRoutesByFullPath {
   '/treasury/safes/$id': typeof TreasurySafesIdRoute
   '/treasury/safes/new': typeof TreasurySafesNewRoute
   '/treasury/transfers/new': typeof TreasuryTransfersNewRoute
+  '/expenses/items/': typeof ExpensesItemsIndexRoute
+  '/expenses/list/': typeof ExpensesListIndexRoute
   '/purchases/invoices/': typeof PurchasesInvoicesIndexRoute
   '/purchases/suppliers/': typeof PurchasesSuppliersIndexRoute
   '/sales/customers/': typeof SalesCustomersIndexRoute
@@ -391,8 +433,11 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/expenses/$id': typeof ExpensesIdRoute
+  '/expenses/new': typeof ExpensesNewRoute
   '/reports/customer-statement': typeof ReportsCustomerStatementRoute
   '/sales/pos': typeof SalesPosRoute
+  '/expenses': typeof ExpensesIndexRoute
   '/purchases': typeof PurchasesIndexRoute
   '/reports': typeof ReportsIndexRoute
   '/sales': typeof SalesIndexRoute
@@ -424,6 +469,8 @@ export interface FileRoutesByTo {
   '/treasury/safes/$id': typeof TreasurySafesIdRoute
   '/treasury/safes/new': typeof TreasurySafesNewRoute
   '/treasury/transfers/new': typeof TreasuryTransfersNewRoute
+  '/expenses/items': typeof ExpensesItemsIndexRoute
+  '/expenses/list': typeof ExpensesListIndexRoute
   '/purchases/invoices': typeof PurchasesInvoicesIndexRoute
   '/purchases/suppliers': typeof PurchasesSuppliersIndexRoute
   '/sales/customers': typeof SalesCustomersIndexRoute
@@ -443,12 +490,16 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/expenses': typeof ExpensesRouteRouteWithChildren
   '/purchases': typeof PurchasesRouteRouteWithChildren
   '/reports': typeof ReportsRouteRouteWithChildren
   '/sales': typeof SalesRouteRouteWithChildren
   '/treasury': typeof TreasuryRouteRouteWithChildren
+  '/expenses/$id': typeof ExpensesIdRoute
+  '/expenses/new': typeof ExpensesNewRoute
   '/reports/customer-statement': typeof ReportsCustomerStatementRoute
   '/sales/pos': typeof SalesPosRoute
+  '/expenses/': typeof ExpensesIndexRoute
   '/purchases/': typeof PurchasesIndexRoute
   '/reports/': typeof ReportsIndexRoute
   '/sales/': typeof SalesIndexRoute
@@ -480,6 +531,8 @@ export interface FileRoutesById {
   '/treasury/safes/$id': typeof TreasurySafesIdRoute
   '/treasury/safes/new': typeof TreasurySafesNewRoute
   '/treasury/transfers/new': typeof TreasuryTransfersNewRoute
+  '/expenses/items/': typeof ExpensesItemsIndexRoute
+  '/expenses/list/': typeof ExpensesListIndexRoute
   '/purchases/invoices/': typeof PurchasesInvoicesIndexRoute
   '/purchases/suppliers/': typeof PurchasesSuppliersIndexRoute
   '/sales/customers/': typeof SalesCustomersIndexRoute
@@ -500,12 +553,16 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/expenses'
     | '/purchases'
     | '/reports'
     | '/sales'
     | '/treasury'
+    | '/expenses/$id'
+    | '/expenses/new'
     | '/reports/customer-statement'
     | '/sales/pos'
+    | '/expenses/'
     | '/purchases/'
     | '/reports/'
     | '/sales/'
@@ -537,6 +594,8 @@ export interface FileRouteTypes {
     | '/treasury/safes/$id'
     | '/treasury/safes/new'
     | '/treasury/transfers/new'
+    | '/expenses/items/'
+    | '/expenses/list/'
     | '/purchases/invoices/'
     | '/purchases/suppliers/'
     | '/sales/customers/'
@@ -555,8 +614,11 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/expenses/$id'
+    | '/expenses/new'
     | '/reports/customer-statement'
     | '/sales/pos'
+    | '/expenses'
     | '/purchases'
     | '/reports'
     | '/sales'
@@ -588,6 +650,8 @@ export interface FileRouteTypes {
     | '/treasury/safes/$id'
     | '/treasury/safes/new'
     | '/treasury/transfers/new'
+    | '/expenses/items'
+    | '/expenses/list'
     | '/purchases/invoices'
     | '/purchases/suppliers'
     | '/sales/customers'
@@ -606,12 +670,16 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/expenses'
     | '/purchases'
     | '/reports'
     | '/sales'
     | '/treasury'
+    | '/expenses/$id'
+    | '/expenses/new'
     | '/reports/customer-statement'
     | '/sales/pos'
+    | '/expenses/'
     | '/purchases/'
     | '/reports/'
     | '/sales/'
@@ -643,6 +711,8 @@ export interface FileRouteTypes {
     | '/treasury/safes/$id'
     | '/treasury/safes/new'
     | '/treasury/transfers/new'
+    | '/expenses/items/'
+    | '/expenses/list/'
     | '/purchases/invoices/'
     | '/purchases/suppliers/'
     | '/sales/customers/'
@@ -662,6 +732,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ExpensesRouteRoute: typeof ExpensesRouteRouteWithChildren
   PurchasesRouteRoute: typeof PurchasesRouteRouteWithChildren
   ReportsRouteRoute: typeof ReportsRouteRouteWithChildren
   SalesRouteRoute: typeof SalesRouteRouteWithChildren
@@ -675,6 +746,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/expenses': {
+      id: '/expenses'
+      path: '/expenses'
+      fullPath: '/expenses'
+      preLoaderRoute: typeof ExpensesRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/purchases': {
@@ -704,6 +782,27 @@ declare module '@tanstack/react-router' {
       fullPath: '/treasury'
       preLoaderRoute: typeof TreasuryRouteRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/expenses/': {
+      id: '/expenses/'
+      path: '/'
+      fullPath: '/expenses/'
+      preLoaderRoute: typeof ExpensesIndexRouteImport
+      parentRoute: typeof ExpensesRouteRoute
+    }
+    '/expenses/$id': {
+      id: '/expenses/$id'
+      path: '/$id'
+      fullPath: '/expenses/$id'
+      preLoaderRoute: typeof ExpensesIdRouteImport
+      parentRoute: typeof ExpensesRouteRoute
+    }
+    '/expenses/new': {
+      id: '/expenses/new'
+      path: '/new'
+      fullPath: '/expenses/new'
+      preLoaderRoute: typeof ExpensesNewRouteImport
+      parentRoute: typeof ExpensesRouteRoute
     }
     '/purchases/': {
       id: '/purchases/'
@@ -746,6 +845,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/treasury/'
       preLoaderRoute: typeof TreasuryIndexRouteImport
       parentRoute: typeof TreasuryRouteRoute
+    }
+    '/expenses/items/': {
+      id: '/expenses/items/'
+      path: '/items'
+      fullPath: '/expenses/items/'
+      preLoaderRoute: typeof ExpensesItemsIndexRouteImport
+      parentRoute: typeof ExpensesRouteRoute
+    }
+    '/expenses/list/': {
+      id: '/expenses/list/'
+      path: '/list'
+      fullPath: '/expenses/list/'
+      preLoaderRoute: typeof ExpensesListIndexRouteImport
+      parentRoute: typeof ExpensesRouteRoute
     }
     '/purchases/invoices/': {
       id: '/purchases/invoices/'
@@ -1044,6 +1157,26 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface ExpensesRouteRouteChildren {
+  ExpensesIdRoute: typeof ExpensesIdRoute
+  ExpensesNewRoute: typeof ExpensesNewRoute
+  ExpensesIndexRoute: typeof ExpensesIndexRoute
+  ExpensesItemsIndexRoute: typeof ExpensesItemsIndexRoute
+  ExpensesListIndexRoute: typeof ExpensesListIndexRoute
+}
+
+const ExpensesRouteRouteChildren: ExpensesRouteRouteChildren = {
+  ExpensesIdRoute: ExpensesIdRoute,
+  ExpensesNewRoute: ExpensesNewRoute,
+  ExpensesIndexRoute: ExpensesIndexRoute,
+  ExpensesItemsIndexRoute: ExpensesItemsIndexRoute,
+  ExpensesListIndexRoute: ExpensesListIndexRoute,
+}
+
+const ExpensesRouteRouteWithChildren = ExpensesRouteRoute._addFileChildren(
+  ExpensesRouteRouteChildren,
+)
+
 interface PurchasesRouteRouteChildren {
   PurchasesIndexRoute: typeof PurchasesIndexRoute
   PurchasesInvoicesIdRoute: typeof PurchasesInvoicesIdRoute
@@ -1183,6 +1316,7 @@ const TreasuryRouteRouteWithChildren = TreasuryRouteRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ExpensesRouteRoute: ExpensesRouteRouteWithChildren,
   PurchasesRouteRoute: PurchasesRouteRouteWithChildren,
   ReportsRouteRoute: ReportsRouteRouteWithChildren,
   SalesRouteRoute: SalesRouteRouteWithChildren,
