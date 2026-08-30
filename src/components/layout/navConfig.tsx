@@ -103,6 +103,7 @@ export const SALES_MODULE: NavModule = {
         { to: "/sales/invoices", label: "فواتير المبيعات", icon: <Receipt className="size-4" /> },
         { to: "/sales/invoices/new", label: "فاتورة مبيعات جديدة", icon: <BadgeDollarSign className="size-4" /> },
         { to: "/sales/pos", label: "الكاشير (نقطة بيع)", icon: <ScanBarcode className="size-4" /> },
+        { to: "/returns/sales", label: "مرتجع مبيعات", icon: <Undo2 className="size-4" /> },
       ],
     },
   ],
@@ -122,6 +123,7 @@ export const PURCHASES_MODULE: NavModule = {
       items: [
         { to: "/purchases/invoices", label: "فواتير المشتريات", icon: <Receipt className="size-4" /> },
         { to: "/purchases/invoices/new", label: "فاتورة مشتريات جديدة", icon: <BadgeDollarSign className="size-4" /> },
+        { to: "/returns/purchase", label: "مرتجع مشتريات", icon: <Undo2 className="size-4" /> },
       ],
     },
   ],
