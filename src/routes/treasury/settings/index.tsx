@@ -3,6 +3,7 @@ import { RotateCcw } from "lucide-react";
 import { toast } from "sonner";
 
 import { EntityEditor, type FieldDef } from "@/components/treasury/EntityEditor";
+import { OrgSettingsForm } from "@/components/treasury/OrgSettingsForm";
 import { PageHeader, StatCard } from "@/components/treasury/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,6 +13,8 @@ import {
   type AppUser,
   type Branch,
   type Category,
+  type DiscountCode,
+  type ProductCategory,
   type SalesRep,
   type Warehouse,
   mutate,
@@ -20,6 +23,7 @@ import {
   uid,
   useDb,
 } from "@/lib/mockDb";
+
 
 export const Route = createFileRoute("/treasury/settings/")({
   head: () => ({
