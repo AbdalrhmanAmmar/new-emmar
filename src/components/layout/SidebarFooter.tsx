@@ -1,4 +1,16 @@
-import { Wifi, WifiOff } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { Settings2, Wifi, WifiOff } from "lucide-react";
+
+import { SETTINGS_GROUPS } from "@/components/layout/navConfig";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface Props {
   collapsed: boolean;
@@ -21,6 +33,37 @@ export function SidebarFooter({ collapsed, online }: Props) {
             </div>
           </div>
         ) : null}
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              title="الإعدادات والبيانات الرئيسية"
+              aria-label="الإعدادات والبيانات الرئيسية"
+              className="size-8 shrink-0 text-sidebar-foreground hover:bg-sidebar-accent"
+            >
+              <Settings2 className="size-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" side="top" className="w-60">
+            {SETTINGS_GROUPS.map((group, index) => (
+              <div key={group.id}>
+                {index > 0 ? <DropdownMenuSeparator /> : null}
+                <DropdownMenuLabel className="text-xs text-muted-foreground">{group.label}</DropdownMenuLabel>
+                {group.items.map((item) => (
+                  <DropdownMenuItem key={item.to} asChild className="gap-2 text-sm">
+                    <Link to={item.to}>
+                      {item.icon}
+                      {item.label}
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              </div>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </div>
   );

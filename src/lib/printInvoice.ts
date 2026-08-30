@@ -28,6 +28,10 @@ export interface InvoicePrintInput {
   lines: SalesLine[];
   totals: InvoicePrintTotals;
   org: OrgSettings;
+  /** عنوان المستند (افتراضياً فاتورة مبيعات) */
+  docTitle?: string;
+  /** مسمى الطرف (العميل / المورد) */
+  partyLabel?: string;
 }
 
 
@@ -223,7 +227,7 @@ export function printSalesInvoice(input: InvoicePrintInput) {
     </div>
 
     <div class="doctag">
-      <h1>فاتورة مبيعات</h1>
+      <h1>${input.docTitle ?? "فاتورة مبيعات"}</h1>
       <div class="sub">رقم: <b>${input.no}</b><br/>تاريخ: ${dateFmt(input.date)}</div>
       <div class="chip">${input.status ?? ""} — ${SALES_PAY_LABEL[input.payMethod]}</div>
     </div>
@@ -231,7 +235,7 @@ export function printSalesInvoice(input: InvoicePrintInput) {
 
   <div class="grid">
     <div class="box">
-      <h2>بيانات العميل</h2>
+      <h2>بيانات ${input.partyLabel ?? "العميل"}</h2>
       <div class="row"><span>الاسم</span><span>${input.customer}</span></div>
       <div class="row"><span>الهاتف</span><span>${input.customerPhone ?? "—"}</span></div>
       <div class="row"><span>تاريخ الاستحقاق</span><span>${dateFmt(input.dueDate)}</span></div>
@@ -241,7 +245,7 @@ export function printSalesInvoice(input: InvoicePrintInput) {
       <h2>بيانات الإصدار</h2>
       <div class="row"><span>الفرع</span><span>${input.branch}</span></div>
       <div class="row"><span>المخزن</span><span>${input.warehouse}</span></div>
-      <div class="row"><span>المندوب</span><span>${input.rep}</span></div>
+      <div class="row"><span>${input.partyLabel === "المورد" ? "المستلم" : "المندوب"}</span><span>${input.rep}</span></div>
       <div class="row"><span>عدد الأصناف</span><span>${input.lines.length}</span></div>
     </div>
   </div>
