@@ -113,7 +113,7 @@ export function invoicePrintInput(
     no: inv.no,
     date: inv.date,
     dueDate: inv.dueDate,
-    customer: customer?.name ?? inv.customerName || "عميل نقدي",
+    customer: customer?.name ?? (inv.customerName || "عميل نقدي"),
     customerPhone: customer?.phone,
     branch: data.branches.find((b) => b.id === inv.branchId)?.name ?? "-",
     warehouse: data.warehouses.find((w) => w.id === inv.warehouseId)?.name ?? "-",
