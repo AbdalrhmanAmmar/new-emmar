@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Pencil, Plus, Printer, Send, Trash2, Undo2 } from "lucide-react";
+import { Download, Pencil, Plus, Printer, Send, Trash2, Undo2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { DataTable, type Column } from "@/components/treasury/DataTable";
@@ -8,7 +8,8 @@ import { RowActions } from "@/components/treasury/RowActions";
 import { Button } from "@/components/ui/button";
 import { dateFmt, money } from "@/lib/format";
 import { SALES_PAY_LABEL, useDb, type PurchaseInvoice } from "@/lib/mockDb";
-import { printPurchaseInvoice } from "@/lib/printPurchase";
+import { downloadSalesInvoice } from "@/lib/printInvoice";
+import { printPurchaseInvoice, purchasePrintInput } from "@/lib/printPurchase";
 import { deletePurchaseInvoice, setPurchaseInvoiceStatus } from "@/lib/purchaseActions";
 import { purchaseTotalsOf } from "@/lib/purchases";
 
@@ -98,6 +99,14 @@ export function PurchaseInvoiceList() {
                 onSelect: () => navigate({ to: "/purchases/invoices/$id", params: { id: row.id } }),
               },
               { label: "طباعة", icon: <Printer className="size-4" />, onSelect: () => printPurchaseInvoice(data, row) },
+              {
+                label: "تنزيل الفاتورة",
+                icon: <Download className="size-4" />,
+                onSelect: () => {
+                  downloadSalesInvoice(purchasePrintInput(data, row));
+                  toast.success(`تم تنزيل الفاتورة ${row.no} على جهازك`);
+                },
+              },
               row.status === "draft"
                 ? {
                     label: "ترحيل",
