@@ -741,9 +741,10 @@ function load(): DbShape {
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (raw) {
-      const parsed = JSON.parse(raw) as DbShape;
+      const parsed = JSON.parse(raw) as Partial<DbShape>;
       const base = seed();
-      return { ...base, ...parsed };
+      return { ...base, ...parsed, settings: { ...base.settings, ...(parsed.settings ?? {}) } };
+
     }
   } catch {
     /* تجاهل وابدأ من البيانات الافتراضية */
