@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { TreasuryLayout } from "@/components/treasury/TreasuryLayout";
+import { AppLayout } from "@/components/layout/AppLayout";
 
 export const Route = createFileRoute("/sales")({
   ssr: false,
@@ -14,5 +14,5 @@ export const Route = createFileRoute("/sales")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  component: TreasuryLayout,
+  component: AppLayout,
 });
