@@ -52,13 +52,13 @@ export const RowActions = ({ children }: { children: React.ReactNode }) => {
             <Settings2 className="w-4 h-4" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="center" className="min-w-[9rem] p-1.5">
+        <DropdownMenuContent align="center" className="min-w-[10rem] p-1.5">
           <DropdownMenuLabel className="px-2 py-1 text-xs text-muted-foreground">
             الإجراءات
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <div className="flex flex-col gap-1 pt-1 [&>button]:flex [&>button]:w-full [&>button]:items-center [&>button]:justify-start [&>button]:gap-2 [&>button]:rounded-md [&>button]:px-2.5 [&>button]:py-1.5 [&>button]:text-sm [&>button]:text-foreground [&>button]:transition-colors [&>button:hover]:bg-primary [&>button:hover]:text-primary-foreground [&>button:hover]:border-transparent [&>button:focus-visible]:bg-primary [&>button:focus-visible]:text-primary-foreground [&>button]:border [&>button]:border-transparent [&>button]:bg-transparent [&>button]:cursor-pointer">
-            {items}
+          <div className="flex flex-col gap-0.5 pt-1 [&_button]:flex [&_button]:w-full [&_button]:items-center [&_button]:justify-start [&_button]:gap-2 [&_button]:rounded-md [&_button]:px-2.5 [&_button]:py-2 [&_button]:text-sm [&_button]:text-foreground [&_button]:transition-colors [&_button]:cursor-pointer [&_button]:border [&_button]:border-transparent [&_button]:bg-transparent [&_button:hover]:bg-primary [&_button:hover]:text-primary-foreground [&_button:focus-visible]:bg-primary [&_button:focus-visible]:text-primary-foreground">
+            {rows}
           </div>
         </DropdownMenuContent>
       </DropdownMenu>
