@@ -83,6 +83,7 @@ const Table = React.forwardRef<HTMLTableElement, TableProps>(
               <Search className="pointer-events-none absolute inset-y-0 end-3 my-auto h-4 w-4 text-muted-foreground" />
               <input
                 type="search"
+                dir="rtl"
                 value={query}
                 onChange={(e) => {
                   setQuery(e.target.value);
