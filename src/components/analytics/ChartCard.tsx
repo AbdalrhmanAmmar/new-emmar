@@ -57,11 +57,14 @@ export function ChartCard({
         </div>
         {actions}
       </CardHeader>
-      <CardContent dir="ltr" style={{ height }} className="pb-4 pt-2">
-        <ResponsiveContainer width="100%" height="100%">
-          {children as never}
-        </ResponsiveContainer>
+      <CardContent dir="ltr" className="pb-4 pt-2">
+        <div className="w-full" style={{ height }}>
+          <ResponsiveContainer width="100%" height="100%">
+            {children as never}
+          </ResponsiveContainer>
+        </div>
       </CardContent>
+
     </Card>
   );
 }
