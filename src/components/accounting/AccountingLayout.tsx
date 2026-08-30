@@ -144,7 +144,7 @@ export function AccountingLayout({ children }: { children: ReactNode }) {
             </span>
             <span className="flex flex-col leading-tight">
               <span className="text-lg font-bold tracking-tight">برنامج إعمار المحاسبى</span>
-              <span className="text-[11px] text-sidebar-foreground/60">إعمار لتجارة الأعلاف — الجنيه المصري</span>
+              <span className="text-[11px] text-sidebar-foreground/60">AL-IMAN FEED TRADING CO</span>
             </span>
           </Link>
 
