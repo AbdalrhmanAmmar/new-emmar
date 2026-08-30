@@ -224,8 +224,8 @@ const AccPeriodClosingPage: React.FC = () => {
                             {canEdit && r.status === 'open' && <Button size="sm" variant="ghost" title="إرسال للمراجعة" onClick={() => toReview(r)}><CheckCircle2 className="w-3.5 h-3.5 text-amber-600" /></Button>}
                             {canClose && (r.status === 'in_review' || r.status === 'open' || r.status === 'reopened') && <Button size="sm" variant="ghost" title="إقفال الفترة" onClick={() => closePeriod(r)}><Lock className="w-3.5 h-3.5 text-emerald-600" /></Button>}
                             {canClose && r.status === 'closed' && <Button size="sm" variant="ghost" title="إعادة فتح" onClick={() => reopen(r)}><Unlock className="w-3.5 h-3.5 text-orange-600" /></Button>}
-                            {canEdit && r.status !== 'closed' && <Button size="sm" variant="ghost" onClick={() => openEdit(r)}><Pencil className="w-3.5 h-3.5" /></Button>}
-                            {canDelete && r.status !== 'closed' && <Button size="sm" variant="ghost" onClick={() => del(r)}><Trash2 className="w-3.5 h-3.5 text-destructive" /></Button>}
+                            {canEdit && r.status !== 'closed' && <Button title="تعديل" aria-label="تعديل" size="sm" variant="ghost" onClick={() => openEdit(r)}><Pencil className="w-3.5 h-3.5" /></Button>}
+                            {canDelete && r.status !== 'closed' && <Button title="حذف" aria-label="حذف" size="sm" variant="ghost" onClick={() => del(r)}><Trash2 className="w-3.5 h-3.5 text-destructive" /></Button>}
                           </RowActions>
                         </TableCell>
                       </TableRow>

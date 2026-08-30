@@ -219,8 +219,8 @@ const AccAssetDisposalPage: React.FC = () => {
                       <TableCell>
                         <RowActions>
                           {canEdit && r.status === 'draft' && <Button size="sm" variant="ghost" title="ترحيل" onClick={() => post(r)}><CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /></Button>}
-                          {canEdit && r.status !== 'posted' && <Button size="sm" variant="ghost" onClick={() => openEdit(r)}><Pencil className="w-3.5 h-3.5" /></Button>}
-                          {canDelete && r.status !== 'posted' && <Button size="sm" variant="ghost" onClick={() => del(r)}><Trash2 className="w-3.5 h-3.5 text-destructive" /></Button>}
+                          {canEdit && r.status !== 'posted' && <Button title="تعديل" aria-label="تعديل" size="sm" variant="ghost" onClick={() => openEdit(r)}><Pencil className="w-3.5 h-3.5" /></Button>}
+                          {canDelete && r.status !== 'posted' && <Button title="حذف" aria-label="حذف" size="sm" variant="ghost" onClick={() => del(r)}><Trash2 className="w-3.5 h-3.5 text-destructive" /></Button>}
                         </RowActions>
                       </TableCell>
                     </TableRow>

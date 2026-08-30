@@ -280,8 +280,8 @@ const AccConsolidationPage: React.FC = () => {
                       <TableCell><Badge className={statusColors[b.status]}>{statusLabels[b.status]}</Badge></TableCell>
                       <TableCell>
                         <RowActions>
-                          {canEdit && <Button size="sm" variant="ghost" onClick={() => { setBForm(b); setBOpen(true); }}><Pencil className="w-3.5 h-3.5" /></Button>}
-                          {canDelete && <Button size="sm" variant="ghost" onClick={() => delB(b)}><Trash2 className="w-3.5 h-3.5 text-destructive" /></Button>}
+                          {canEdit && <Button title="تعديل" aria-label="تعديل" size="sm" variant="ghost" onClick={() => { setBForm(b); setBOpen(true); }}><Pencil className="w-3.5 h-3.5" /></Button>}
+                          {canDelete && <Button title="حذف" aria-label="حذف" size="sm" variant="ghost" onClick={() => delB(b)}><Trash2 className="w-3.5 h-3.5 text-destructive" /></Button>}
                         </RowActions>
                       </TableCell>
                     </TableRow>
@@ -316,8 +316,8 @@ const AccConsolidationPage: React.FC = () => {
                       <TableCell>{e.is_active ? <Badge className="bg-accent text-accent-foreground">نشطة</Badge> : <Badge className="bg-muted text-muted-foreground">موقوفة</Badge>}</TableCell>
                       <TableCell>
                         <RowActions>
-                          {canEdit && <Button size="sm" variant="ghost" onClick={() => { setEForm(e); setEOpen(true); }}><Pencil className="w-3.5 h-3.5" /></Button>}
-                          {canDelete && <Button size="sm" variant="ghost" onClick={() => delE(e)}><Trash2 className="w-3.5 h-3.5 text-destructive" /></Button>}
+                          {canEdit && <Button title="تعديل" aria-label="تعديل" size="sm" variant="ghost" onClick={() => { setEForm(e); setEOpen(true); }}><Pencil className="w-3.5 h-3.5" /></Button>}
+                          {canDelete && <Button title="حذف" aria-label="حذف" size="sm" variant="ghost" onClick={() => delE(e)}><Trash2 className="w-3.5 h-3.5 text-destructive" /></Button>}
                         </RowActions>
                       </TableCell>
                     </TableRow>

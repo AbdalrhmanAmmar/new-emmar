@@ -147,14 +147,14 @@ const AccFiscalPeriodsPage: React.FC = () => {
                         <RowActions>
                           {canEdit && p.status === 'open' && (
                             <>
-                              <Button size="sm" variant="outline" onClick={() => runClosing(p)}>
+                              <Button title="قفل" aria-label="قفل" size="sm" variant="outline" onClick={() => runClosing(p)}>
                                 <Lock className="w-3 h-3 ml-1" /> إقفال
                               </Button>
-                              <Button size="icon" variant="ghost" onClick={() => del(p)}><Trash2 className="w-4 h-4 text-red-600" /></Button>
+                              <Button title="حذف" aria-label="حذف" size="icon" variant="ghost" onClick={() => del(p)}><Trash2 className="w-4 h-4 text-red-600" /></Button>
                             </>
                           )}
                           {canEdit && p.status === 'closed' && (
-                            <Button size="sm" variant="outline" onClick={() => reopen(p)}>
+                            <Button title="فتح" aria-label="فتح" size="sm" variant="outline" onClick={() => reopen(p)}>
                               <Unlock className="w-3 h-3 ml-1" /> إعادة فتح
                             </Button>
                           )}

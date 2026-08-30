@@ -169,8 +169,8 @@ const AccCurrenciesPage: React.FC = () => {
                         <TableCell>{c.is_active ? <Badge className="bg-emerald-100 text-emerald-700">نشطة</Badge> : <Badge variant="outline">موقوفة</Badge>}</TableCell>
                         <TableCell>
                           <RowActions>
-                            {canEdit && <Button size="sm" variant="ghost" onClick={() => { setCForm(c); setCOpen(true); }}><Pencil className="w-3.5 h-3.5" /></Button>}
-                            {canDelete && <Button size="sm" variant="ghost" onClick={() => delC(c)}><Trash2 className="w-3.5 h-3.5 text-destructive" /></Button>}
+                            {canEdit && <Button title="تعديل" aria-label="تعديل" size="sm" variant="ghost" onClick={() => { setCForm(c); setCOpen(true); }}><Pencil className="w-3.5 h-3.5" /></Button>}
+                            {canDelete && <Button title="حذف" aria-label="حذف" size="sm" variant="ghost" onClick={() => delC(c)}><Trash2 className="w-3.5 h-3.5 text-destructive" /></Button>}
                           </RowActions>
                         </TableCell>
                       </TableRow>
@@ -215,8 +215,8 @@ const AccCurrenciesPage: React.FC = () => {
                         <TableCell className="text-xs text-muted-foreground">{r.notes || '-'}</TableCell>
                         <TableCell>
                           <RowActions>
-                            {canEdit && <Button size="sm" variant="ghost" onClick={() => { setRForm(r); setROpen(true); }}><Pencil className="w-3.5 h-3.5" /></Button>}
-                            {canDelete && <Button size="sm" variant="ghost" onClick={() => delR(r)}><Trash2 className="w-3.5 h-3.5 text-destructive" /></Button>}
+                            {canEdit && <Button title="تعديل" aria-label="تعديل" size="sm" variant="ghost" onClick={() => { setRForm(r); setROpen(true); }}><Pencil className="w-3.5 h-3.5" /></Button>}
+                            {canDelete && <Button title="حذف" aria-label="حذف" size="sm" variant="ghost" onClick={() => delR(r)}><Trash2 className="w-3.5 h-3.5 text-destructive" /></Button>}
                           </RowActions>
                         </TableCell>
                       </TableRow>

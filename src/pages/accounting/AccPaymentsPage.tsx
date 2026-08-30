@@ -214,7 +214,7 @@ const AccPaymentsPage: React.FC = () => {
                         {canEdit && p.status === 'draft' && (
                           <>
                             <Button size="icon" variant="ghost" onClick={() => post(p)} title="اعتماد"><CheckCircle2 className="w-4 h-4 text-emerald-600" /></Button>
-                            <Button size="icon" variant="ghost" onClick={() => del(p)}><Trash2 className="w-4 h-4 text-red-600" /></Button>
+                            <Button title="حذف" aria-label="حذف" size="icon" variant="ghost" onClick={() => del(p)}><Trash2 className="w-4 h-4 text-red-600" /></Button>
                           </>
                         )}
                       </RowActions>
