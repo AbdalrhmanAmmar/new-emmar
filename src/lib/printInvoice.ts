@@ -214,12 +214,14 @@ export function printSalesInvoice(input: InvoicePrintInput) {
 </style></head><body><div class="doc">
   <div class="top">
     <div class="brand">
-      <div class="mark">إ</div>
+      <div class="mark">${org.logoLetter || "إ"}</div>
       <div>
-        <div class="co">الإيمان لتجارة الأعلاف</div>
-        <div class="sub">AL-IMAN FEED TRADING CO — جمهورية مصر العربية<br/>أعلاف دواجن وماشية وخامات — بيع جملة وتجزئة</div>
+        <div class="co">${org.companyName}</div>
+        <div class="sub">${org.companyNameEn} — ${org.address}<br/>${org.activity}<br/>
+        س.ت: ${org.commercialNo || "—"} • رقم ضريبى: ${org.taxNo || "—"} • ت: ${[org.phone, org.phone2].filter(Boolean).join(" / ") || "—"}</div>
       </div>
     </div>
+
     <div class="doctag">
       <h1>فاتورة مبيعات</h1>
       <div class="sub">رقم: <b>${input.no}</b><br/>تاريخ: ${dateFmt(input.date)}</div>
