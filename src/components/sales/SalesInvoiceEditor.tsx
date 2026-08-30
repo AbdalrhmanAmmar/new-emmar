@@ -219,8 +219,8 @@ export function SalesInvoiceEditor({ invoice }: Props) {
         </div>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-[1fr_14rem]">
-        <div className="space-y-4">
+      <div className="grid min-w-0 gap-4 xl:grid-cols-[minmax(0,1fr)_13.5rem]">
+        <div className="min-w-0 space-y-4">
           {/* ===== الهيدر والمعاملات ===== */}
           <section className="space-y-3 rounded-xl border border-border bg-card p-4">
             <h2 className="border-b border-border pb-2 text-sm font-semibold text-primary">بيانات الفاتورة</h2>
@@ -317,7 +317,7 @@ export function SalesInvoiceEditor({ invoice }: Props) {
             </div>
 
             <div className="table-scroll overflow-x-auto">
-              <table className="w-full min-w-[62rem] text-sm">
+              <table className="w-full min-w-[54rem] text-sm">
                 <thead>
                   <tr className="border-b border-border text-xs text-muted-foreground">
                     {["الكود", "اسم الصنف / بحث سريع", "الكمية", "الوحدة", "سعر الوحدة", "خصم %", "خصم مبلغ", "الضريبة", "الإجمالي", ""].map(
