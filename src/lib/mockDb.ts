@@ -724,6 +724,9 @@ function seed(): DbShape {
     products,
     discountCodes,
     salesInvoices,
+    productCategories,
+    settings,
+
   };
 }
 
