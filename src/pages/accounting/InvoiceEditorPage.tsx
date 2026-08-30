@@ -56,6 +56,7 @@ const InvoiceEditorPage: React.FC<Props> = ({ mode, pageTitle, pageDescription }
   const canEdit = isAdmin || hasPermission('accounting_sales' as any, 'edit');
 
   const [buyerName, setBuyerName] = useState(mode === 'b2c' ? 'عميل نقدي' : '');
+  const [custType, setCustType] = useState<'cash' | 'customer'>(mode === 'b2b' ? 'customer' : 'cash');
   const [buyerVat, setBuyerVat] = useState('');
   const [customerId, setCustomerId] = useState('');
   const [warehouseId, setWarehouseId] = useState('');
@@ -83,7 +84,6 @@ const InvoiceEditorPage: React.FC<Props> = ({ mode, pageTitle, pageDescription }
       const { data } = await (supabase as any).from('acc_customers').select('*');
       return (data ?? []) as Customer[];
     },
-    enabled: mode === 'b2b',
   });
   const { data: moves = [] } = useQuery<any[]>({
     queryKey: ['acc_stock_moves'],
@@ -132,7 +132,7 @@ const InvoiceEditorPage: React.FC<Props> = ({ mode, pageTitle, pageDescription }
   };
 
   const save = async () => {
-    if (mode === 'b2b' && !customerId) return toast.error('اختر العميل');
+    if (custType === 'customer' && !customerId) return toast.error('اختر العميل من قائمة العملاء');
     if (!warehouseId) return toast.error('اختر المخزن الصادر منه');
     const filled = lines.filter((l) => l.item_id && Number(l.quantity) > 0);
     if (!filled.length) return toast.error('أضف صنفاً واحداً على الأقل بكمية صحيحة');
@@ -161,15 +161,15 @@ const InvoiceEditorPage: React.FC<Props> = ({ mode, pageTitle, pageDescription }
         user_id: user?.id ?? null,
         invoice_number: invoiceNumber,
         icv: seq,
-        buyer_name: mode === 'b2b' ? cust?.name ?? buyerName : buyerName || 'عميل نقدي',
-        buyer_vat_number: mode === 'b2b' ? cust?.tax_number ?? buyerVat ?? null : null,
-        customer_id: mode === 'b2b' ? customerId : null,
+        buyer_name: custType === 'customer' ? cust?.name ?? '' : buyerName || 'عميل نقدي',
+        buyer_vat_number: custType === 'customer' ? cust?.tax_number ?? null : null,
+        customer_id: custType === 'customer' ? customerId : null,
         invoice_type: mode,
         subtotal: totals.subtotal,
         vat_total: totals.vat,
         total: totals.total,
-        paid_amount: mode === 'b2c' ? totals.total : 0,
-        balance: mode === 'b2c' ? 0 : totals.total,
+        paid_amount: custType === 'cash' ? totals.total : 0,
+        balance: custType === 'cash' ? 0 : totals.total,
         currency: 'EGP',
         warehouse_id: warehouseId,
         warehouse_name: wh?.name_ar ?? null,
@@ -207,7 +207,8 @@ const InvoiceEditorPage: React.FC<Props> = ({ mode, pageTitle, pageDescription }
 
       toast.success(`تم إصدار الفاتورة ${invoiceNumber} وصرف الكميات من المخزن`);
       setLines([newLine()]);
-      if (mode === 'b2c') setBuyerName('عميل نقدي');
+      setCustomerId('');
+      if (mode === 'b2c') { setBuyerName('عميل نقدي'); setCustType('cash'); }
       qc.invalidateQueries({ queryKey: ['acc_sales_invoices'] });
       qc.invalidateQueries({ queryKey: ['acc_stock_moves'] });
       refetch();
@@ -242,14 +243,26 @@ const InvoiceEditorPage: React.FC<Props> = ({ mode, pageTitle, pageDescription }
 
       <InlineFormPage title="فاتورة جديدة">
           <div className="grid md:grid-cols-4 gap-3">
-            {mode === 'b2b' ? (
+            {mode === 'b2c' && (
+              <div>
+                <Label>نوع العميل</Label>
+                <Select value={custType} onValueChange={(v) => setCustType(v as 'cash' | 'customer')}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="cash">عميل نقدي</SelectItem>
+                    <SelectItem value="customer">عميل مسجل (آجل)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+            {custType === 'customer' ? (
               <div>
                 <Label>العميل</Label>
                 <Select value={customerId} onValueChange={setCustomerId}>
                   <SelectTrigger><SelectValue placeholder="اختر العميل" /></SelectTrigger>
                   <SelectContent>
                     {customers.map((c) => (
-                      <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
+                      <SelectItem key={c.id} value={c.id}>{c.name}{c.code ? ` — ${c.code}` : ''}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
