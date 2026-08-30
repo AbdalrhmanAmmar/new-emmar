@@ -110,6 +110,7 @@ export interface CustomerPriceRow {
   code: string;
   name: string;
   unit: Unit;
+  unitName?: string;
   lastPrice: number;
   minPrice: number;
   maxPrice: number;
@@ -140,6 +141,7 @@ export function customerPriceHistory(data: DbShape, customerId: string): Custome
           code: line.code,
           name: line.name,
           unit: line.unit,
+          unitName: line.unitName,
           lastPrice: price,
           minPrice: price,
           maxPrice: price,
