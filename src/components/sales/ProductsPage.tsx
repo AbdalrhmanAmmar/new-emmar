@@ -11,7 +11,7 @@ import { SearchSelect } from "@/components/treasury/SearchSelect";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { money, num } from "@/lib/format";
-import { UNIT_LABEL, useDb, type Product } from "@/lib/mockDb";
+import { UNIT_LABEL, nextCode, useDb, type Product } from "@/lib/mockDb";
 import { printHtml } from "@/lib/printDoc";
 import { deleteProduct, saveProduct, toggleProductActive } from "@/lib/salesActions";
 
@@ -116,6 +116,16 @@ export function ProductsPage() {
       />
     </div>
   );
+}
+
+/** توليد باركود EAN-13 تسلسلى تلقائى */
+function autoBarcode(existing: string[]): string {
+  let max = 6221000000000;
+  for (const value of existing) {
+    const n = Number(String(value ?? "").trim());
+    if (!Number.isNaN(n) && n > max) max = n;
+  }
+  return String(max + 1);
 }
 
 export function ProductFormPage({ id }: { id?: string }) {

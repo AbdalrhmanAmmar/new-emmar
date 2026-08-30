@@ -11,7 +11,7 @@ import { SearchSelect } from "@/components/treasury/SearchSelect";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { money } from "@/lib/format";
-import { useDb, type Party } from "@/lib/mockDb";
+import { nextCode, useDb, type Party } from "@/lib/mockDb";
 import { customerStats } from "@/lib/sales";
 import { deleteCustomer, saveCustomer } from "@/lib/salesActions";
 
