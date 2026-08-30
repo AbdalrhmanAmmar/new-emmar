@@ -5,9 +5,17 @@ const numFmt = new Intl.NumberFormat("en-GB", {
 
 const intFmt = new Intl.NumberFormat("en-GB", { maximumFractionDigits: 0 });
 
-/** المبالغ بالجنيه المصري وبأرقام إنجليزية */
+/** رمز العملة من الإعدادات الرئيسية (مع قيمة افتراضية آمنة) */
+let currencySymbol = "ج.م";
+
+/** تُستدعى من قاعدة البيانات عند تحميل/حفظ الإعدادات */
+export function setCurrencyLabel(label: string | null | undefined) {
+  currencySymbol = String(label || "").trim() || "ج.م";
+}
+
+/** المبالغ بعملة البرنامج وبأرقام إنجليزية */
 export function money(value: number | null | undefined): string {
-  return `${numFmt.format(Number(value ?? 0))} ج.م`;
+  return `${numFmt.format(Number(value ?? 0))} ${currencySymbol}`;
 }
 
 export function num(value: number | null | undefined): string {
