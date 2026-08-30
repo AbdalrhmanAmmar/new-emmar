@@ -31,28 +31,25 @@ export function invoiceTotals(inv: {
   codePercent?: number;
 }): InvoiceTotals {
   let gross = 0;
-  let discount = 0;
+  let lineDiscount = 0;
   let net = 0;
+  let tax = 0;
   for (const line of inv.lines) {
     const t = lineTotals(line);
     gross += t.gross;
-    discount += t.discount;
+    lineDiscount += t.discount;
     net += t.net;
+    tax += t.tax;
   }
   const codeDiscount = (net * Number(inv.codePercent || 0)) / 100;
+  const factor = net > 0 ? (net - codeDiscount) / net : 1;
   net -= codeDiscount;
-  discount += codeDiscount;
-  let tax = 0;
-  const ratio = gross - discount > 0 ? net / (gross - discount + codeDiscount) : 1;
-  for (const line of inv.lines) {
-    const t = lineTotals(line);
-    tax += t.tax * (Number.isFinite(ratio) ? ratio : 1);
-  }
+  tax *= factor;
   const total = net + tax;
   const paid = paidAmount(inv.payMethod, inv.payCash, inv.payCard, total);
   return {
     gross,
-    discount,
+    discount: lineDiscount + codeDiscount,
     net,
     tax,
     total,
