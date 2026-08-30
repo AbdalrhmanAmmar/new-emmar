@@ -552,6 +552,7 @@ export interface DbShape {
   invoices: Invoice[];
   shifts: Shift[];
   warehouses: Warehouse[];
+  stockMoves: StockMove[];
   reps: SalesRep[];
   products: Product[];
   discountCodes: DiscountCode[];
@@ -892,10 +893,13 @@ function seed(): DbShape {
 
 
   const warehouses: Warehouse[] = [
-    { id: "wh1", code: "WH-01", name: "المخزن الرئيسي - القاهرة", branchId: "br1" },
-    { id: "wh2", code: "WH-02", name: "مخزن المنوفية", branchId: "br2" },
-    { id: "wh3", code: "WH-03", name: "مخزن الشرقية", branchId: "br3" },
+    { id: "wh1", code: "WH-01", name: "المخزن الرئيسي - القاهرة", branchId: "br1", type: "main", parentId: null, keeperId: "u2", address: "القاهرة — طريق مصر إسكندرية الزراعي", note: "", active: true },
+    { id: "wh2", code: "WH-02", name: "مخزن المنوفية", branchId: "br2", type: "sub", parentId: "wh1", keeperId: "u3", address: "المنوفية — شبين الكوم", note: "", active: true },
+    { id: "wh3", code: "WH-03", name: "مخزن الشرقية", branchId: "br3", type: "sub", parentId: "wh1", keeperId: "u3", address: "الشرقية — الزقازيق", note: "", active: true },
+    { id: "wh4", code: "WH-04", name: "مخزن الخام والمواد الأولية", branchId: "br1", type: "main", parentId: null, keeperId: "u2", address: "القاهرة — العاشر من رمضان", note: "ذرة وصويا وكسب", active: true },
   ];
+
+  const stockMoves: StockMove[] = [];
 
   const reps: SalesRep[] = [
     { id: "rp1", name: "خالد مصطفى", phone: "01011122233", branchId: "br1", commissionPct: 1 },
@@ -1136,6 +1140,7 @@ function seed(): DbShape {
     invoices,
     shifts,
     warehouses,
+    stockMoves,
     reps,
     products,
     discountCodes,
@@ -1170,6 +1175,8 @@ function load(): DbShape {
         ...base,
         ...parsed,
         purchaseInvoices: parsed.purchaseInvoices ?? base.purchaseInvoices,
+        warehouses: parsed.warehouses?.length ? parsed.warehouses : base.warehouses,
+        stockMoves: parsed.stockMoves ?? base.stockMoves,
         productCategories: parsed.productCategories?.length ? parsed.productCategories : base.productCategories,
         measureUnits: parsed.measureUnits?.length ? parsed.measureUnits : base.measureUnits,
         expenseItems: parsed.expenseItems?.length ? parsed.expenseItems : base.expenseItems,
