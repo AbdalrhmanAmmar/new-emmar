@@ -12,7 +12,7 @@ import {
   PanelRightClose,
   PanelRightOpen,
   PieChart,
-  RotateCcw,
+  
   Settings,
   ShoppingCart,
   Sliders,
