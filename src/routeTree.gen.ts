@@ -41,6 +41,7 @@ import { Route as SalesProductsNewRouteImport } from './routes/sales/products/ne
 import { Route as SalesReportsByCustomerRouteImport } from './routes/sales/reports/by-customer'
 import { Route as SalesReportsByProductRouteImport } from './routes/sales/reports/by-product'
 import { Route as SalesReportsByRepRouteImport } from './routes/sales/reports/by-rep'
+import { Route as SalesUnitsIndexRouteImport } from './routes/sales/units/index'
 import { Route as TreasuryInvoicesIndexRouteImport } from './routes/treasury/invoices/index'
 import { Route as TreasuryPaymentsIndexRouteImport } from './routes/treasury/payments/index'
 import { Route as TreasuryPaymentsIdRouteImport } from './routes/treasury/payments/$id'
@@ -226,6 +227,11 @@ const SalesReportsByRepRoute = SalesReportsByRepRouteImport.update({
   path: '/reports/by-rep',
   getParentRoute: () => SalesRouteRoute,
 } as any)
+const SalesUnitsIndexRoute = SalesUnitsIndexRouteImport.update({
+  id: '/units/',
+  path: '/units/',
+  getParentRoute: () => SalesRouteRoute,
+} as any)
 const TreasuryInvoicesIndexRoute = TreasuryInvoicesIndexRouteImport.update({
   id: '/invoices/',
   path: '/invoices/',
@@ -372,6 +378,7 @@ export interface FileRoutesByFullPath {
   '/sales/customers/': typeof SalesCustomersIndexRoute
   '/sales/invoices/': typeof SalesInvoicesIndexRoute
   '/sales/products/': typeof SalesProductsIndexRoute
+  '/sales/units/': typeof SalesUnitsIndexRoute
   '/treasury/invoices/': typeof TreasuryInvoicesIndexRoute
   '/treasury/payments/': typeof TreasuryPaymentsIndexRoute
   '/treasury/receipts/': typeof TreasuryReceiptsIndexRoute
@@ -422,6 +429,7 @@ export interface FileRoutesByTo {
   '/sales/customers': typeof SalesCustomersIndexRoute
   '/sales/invoices': typeof SalesInvoicesIndexRoute
   '/sales/products': typeof SalesProductsIndexRoute
+  '/sales/units': typeof SalesUnitsIndexRoute
   '/treasury/invoices': typeof TreasuryInvoicesIndexRoute
   '/treasury/payments': typeof TreasuryPaymentsIndexRoute
   '/treasury/receipts': typeof TreasuryReceiptsIndexRoute
@@ -477,6 +485,7 @@ export interface FileRoutesById {
   '/sales/customers/': typeof SalesCustomersIndexRoute
   '/sales/invoices/': typeof SalesInvoicesIndexRoute
   '/sales/products/': typeof SalesProductsIndexRoute
+  '/sales/units/': typeof SalesUnitsIndexRoute
   '/treasury/invoices/': typeof TreasuryInvoicesIndexRoute
   '/treasury/payments/': typeof TreasuryPaymentsIndexRoute
   '/treasury/receipts/': typeof TreasuryReceiptsIndexRoute
@@ -533,6 +542,7 @@ export interface FileRouteTypes {
     | '/sales/customers/'
     | '/sales/invoices/'
     | '/sales/products/'
+    | '/sales/units/'
     | '/treasury/invoices/'
     | '/treasury/payments/'
     | '/treasury/receipts/'
@@ -583,6 +593,7 @@ export interface FileRouteTypes {
     | '/sales/customers'
     | '/sales/invoices'
     | '/sales/products'
+    | '/sales/units'
     | '/treasury/invoices'
     | '/treasury/payments'
     | '/treasury/receipts'
@@ -637,6 +648,7 @@ export interface FileRouteTypes {
     | '/sales/customers/'
     | '/sales/invoices/'
     | '/sales/products/'
+    | '/sales/units/'
     | '/treasury/invoices/'
     | '/treasury/payments/'
     | '/treasury/receipts/'
@@ -882,6 +894,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SalesReportsByRepRouteImport
       parentRoute: typeof SalesRouteRoute
     }
+    '/sales/units/': {
+      id: '/sales/units/'
+      path: '/units'
+      fullPath: '/sales/units/'
+      preLoaderRoute: typeof SalesUnitsIndexRouteImport
+      parentRoute: typeof SalesRouteRoute
+    }
     '/treasury/invoices/': {
       id: '/treasury/invoices/'
       path: '/invoices'
@@ -1085,6 +1104,7 @@ interface SalesRouteRouteChildren {
   SalesCustomersIndexRoute: typeof SalesCustomersIndexRoute
   SalesInvoicesIndexRoute: typeof SalesInvoicesIndexRoute
   SalesProductsIndexRoute: typeof SalesProductsIndexRoute
+  SalesUnitsIndexRoute: typeof SalesUnitsIndexRoute
 }
 
 const SalesRouteRouteChildren: SalesRouteRouteChildren = {
@@ -1102,6 +1122,7 @@ const SalesRouteRouteChildren: SalesRouteRouteChildren = {
   SalesCustomersIndexRoute: SalesCustomersIndexRoute,
   SalesInvoicesIndexRoute: SalesInvoicesIndexRoute,
   SalesProductsIndexRoute: SalesProductsIndexRoute,
+  SalesUnitsIndexRoute: SalesUnitsIndexRoute,
 }
 
 const SalesRouteRouteWithChildren = SalesRouteRoute._addFileChildren(

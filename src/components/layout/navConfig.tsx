@@ -7,6 +7,7 @@ import {
   LayoutDashboard,
   ListChecks,
   Receipt,
+  Ruler,
   ScanBarcode,
   ScrollText,
   Settings2,
@@ -182,6 +183,7 @@ export const SETTINGS_GROUPS: SettingsGroup[] = [
       { to: "/sales/customers", label: "العملاء", icon: <Users className="size-4" /> },
       { to: "/purchases/suppliers", label: "الموردون", icon: <Truck className="size-4" /> },
       { to: "/sales/products", label: "الأصناف والأسعار", icon: <ListChecks className="size-4" /> },
+      { to: "/sales/units", label: "تكويد الوحدات", icon: <Ruler className="size-4" /> },
     ],
   },
 ];

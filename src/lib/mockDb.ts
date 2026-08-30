@@ -157,7 +157,22 @@ export interface Shift {
 
 /* ===================== العملاء والمبيعات ===================== */
 
-export type Unit = "kg" | "ton" | "bag" | "pcs";
+/** كود الوحدة — الأكواد الافتراضية موجودة، ويمكن للمستخدم تكويد وحدات جديدة من شاشة «تكويد الوحدات» */
+export type Unit = string;
+
+/** وحدة قياس مكوّدة فى النظام (بيانات رئيسية) */
+export interface MeasureUnit {
+  id: string;
+  /** كود مختصر بالإنجليزى (kg / ton / bag …) */
+  code: string;
+  /** الاسم العربى الظاهر فى الشاشات والطباعة */
+  name: string;
+  /** عدد الخانات العشرية المسموحة للكميات بهذه الوحدة */
+  decimals: number;
+  note: string;
+  active: boolean;
+}
+
 export type SalesPayMethod = "cash" | "card" | "credit" | "multi";
 export type InvoiceView = "professional" | "simple";
 
@@ -256,12 +271,36 @@ export interface SalesInvoice {
   status: DocStatus;
 }
 
-export const UNIT_LABEL: Record<Unit, string> = {
+/** الوحدات الافتراضية المكوّدة عند أول تشغيل */
+export const DEFAULT_UNIT_LABEL: Record<string, string> = {
   kg: "كيلو",
   ton: "طن",
   bag: "شيكارة",
   pcs: "عدد",
 };
+
+/** اسم الوحدة للعرض — يقرأ من الوحدات المكوّدة فى النظام ثم الافتراضية */
+export function unitLabel(code?: string | null): string {
+  const key = String(code ?? "").trim();
+  if (!key) return "";
+  const coded = getDb().measureUnits?.find((u) => u.code === key);
+  return coded?.name?.trim() || DEFAULT_UNIT_LABEL[key] || key;
+}
+
+/**
+ * خريطة أسماء الوحدات — تُقرأ ديناميكياً من الوحدات المكوّدة
+ * حتى تظهر الوحدات الجديدة فى كل الشاشات بدون تعديل.
+ */
+export const UNIT_LABEL: Record<string, string> = new Proxy(
+  {},
+  {
+    get: (_t, key: string) => unitLabel(key),
+    has: () => true,
+    ownKeys: () => Object.keys(DEFAULT_UNIT_LABEL),
+    getOwnPropertyDescriptor: () => ({ enumerable: true, configurable: true }),
+  },
+) as Record<string, string>;
+
 
 export const SALES_PAY_LABEL: Record<SalesPayMethod, string> = {
   cash: "نقدي",
@@ -308,6 +347,7 @@ export interface DbShape {
   salesInvoices: SalesInvoice[];
   purchaseInvoices: PurchaseInvoice[];
   productCategories: ProductCategory[];
+  measureUnits: MeasureUnit[];
   settings: OrgSettings;
 
 }
@@ -668,6 +708,16 @@ function seed(): DbShape {
     { id: "pc5", code: "CT-005", name: "مستلزمات", note: "أجولة وخيوط وأدوات", active: true },
   ];
 
+  const measureUnits: MeasureUnit[] = [
+    { id: "mu1", code: "ton", name: "طن", decimals: 3, note: "1 طن = 1000 كيلو", active: true },
+    { id: "mu2", code: "kg", name: "كيلو", decimals: 2, note: "وحدة الوزن الأساسية", active: true },
+    { id: "mu3", code: "bag", name: "شيكارة", decimals: 0, note: "شيكارة 50 / 40 / 25 كجم", active: true },
+    { id: "mu4", code: "pcs", name: "عدد", decimals: 0, note: "قطعة / وحدة", active: true },
+    { id: "mu5", code: "qnt", name: "قنطار", decimals: 2, note: "1 قنطار = 50 كيلو", active: true },
+    { id: "mu6", code: "box", name: "كرتونة", decimals: 0, note: "", active: true },
+    { id: "mu7", code: "ltr", name: "لتر", decimals: 2, note: "", active: true },
+  ];
+
   const settings: OrgSettings = {
     companyName: "الإيمان لتجارة الأعلاف",
     companyNameEn: "AL-IMAN FEED TRADING CO",
@@ -813,6 +863,7 @@ function seed(): DbShape {
     salesInvoices,
     purchaseInvoices,
     productCategories,
+    measureUnits,
     settings,
 
   };
@@ -836,6 +887,7 @@ function load(): DbShape {
         ...parsed,
         purchaseInvoices: parsed.purchaseInvoices ?? base.purchaseInvoices,
         productCategories: parsed.productCategories?.length ? parsed.productCategories : base.productCategories,
+        measureUnits: parsed.measureUnits?.length ? parsed.measureUnits : base.measureUnits,
         settings: { ...base.settings, ...(parsed.settings ?? {}) },
       };
 
