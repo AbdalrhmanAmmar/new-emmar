@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { dateFmt, money } from "@/lib/format";
 import { useDb } from "@/lib/mockDb";
+import { invoiceTotalsOf } from "@/lib/sales";
 
 interface Hit {
   to: string;
@@ -51,7 +52,7 @@ export function GlobalSearch() {
       if (`${so.no} ${so.customerName}`.toLowerCase().includes(q))
         out.push({
           to: "/sales/invoices",
-          title: `${so.no} — ${money(so.total)}`,
+          title: `${so.no} — ${money(invoiceTotalsOf(data, so).net)}`,
           sub: `فاتورة مبيعات — ${so.customerName} — ${dateFmt(so.date)}`,
         });
     }
