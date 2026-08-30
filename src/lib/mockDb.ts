@@ -1491,6 +1491,45 @@ export function mutate(fn: (data: DbShape) => void) {
   emit();
 }
 
+/** حذف كافة البيانات المسجلة فى البرنامج مع الاحتفاظ ببيانات إدارة المستخدمين (المستخدمون والأدوار) */
+export function wipeBusinessData(options?: { keepSettings?: boolean }) {
+  const currentUsers = getDb().users;
+  const currentRoles = getDb().roles;
+  const currentSettings = getDb().settings;
+  const fresh = seed();
+  db = {
+    ...fresh,
+    users: currentUsers,
+    roles: currentRoles,
+    settings: options?.keepSettings === false ? fresh.settings : currentSettings,
+    branches: fresh.branches,
+    customers: [],
+    suppliers: [],
+    categories: [],
+    safes: [],
+    vouchers: [],
+    transfers: [],
+    invoices: [],
+    shifts: [],
+    warehouses: [],
+    stockMoves: [],
+    reps: [],
+    products: [],
+    discountCodes: [],
+    salesInvoices: [],
+    purchaseInvoices: [],
+    returns: [],
+    productCategories: [],
+    measureUnits: [],
+    expenseItems: [],
+    expenses: [],
+    employees: [],
+    attendance: [],
+    adjustments: [],
+  };
+  emit();
+}
+
 export function resetDb() {
   db = seed();
   emit();

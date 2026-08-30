@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { AuthGate } from "@/components/auth/AuthGate";
 import { AppHeader } from "@/components/layout/AppHeader";
 import { AppSidebar } from "@/components/layout/AppSidebar";
+import { MobileTabBar } from "@/components/layout/MobileTabBar";
 import { MODULES, matchModule, matchNavItem } from "@/components/layout/navConfig";
 import { useOnline } from "@/components/layout/useOnline";
 import { cn } from "@/lib/utils";
@@ -83,10 +84,12 @@ export function AppLayout() {
           moduleLabel={activeModule.label}
           crumb={crumb}
           onOpenMobile={() => setMobileOpen(true)}
+          canGoBack={pathname.split("/").filter(Boolean).length > 1}
         />
-        <main className="page-transition mx-auto w-full max-w-[1400px] flex-1 p-3 sm:p-5">
+        <main className="page-transition mx-auto w-full max-w-[1400px] flex-1 p-3 pb-24 sm:p-5 lg:pb-5">
           <Outlet />
         </main>
+        <MobileTabBar pathname={pathname} onOpenMenu={() => setMobileOpen(true)} />
       </div>
     </div>
     </AuthGate>

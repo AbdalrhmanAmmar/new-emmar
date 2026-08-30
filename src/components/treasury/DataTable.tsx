@@ -105,7 +105,36 @@ export function DataTable<T>({
         </Button>
       </div>
 
-      <div className="table-scroll-x overflow-x-auto rounded-xl border border-border bg-card">
+      {/* عرض الموبيل: كل صف كبطاقة مقروءة بدل التمرير الأفقى */}
+      <div className="space-y-2 md:hidden">
+        {rows.length === 0 ? (
+          <div className="rounded-xl border border-border bg-card p-6 text-center text-sm text-muted-foreground">
+            {emptyText}
+          </div>
+        ) : (
+          rows.map((row) => {
+            const [first, ...rest] = columns;
+            return (
+              <div key={rowId(row)} className="rounded-xl border border-border bg-card p-3 shadow-sm">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0 flex-1 text-sm font-semibold">{first ? first.cell(row) : null}</div>
+                  {actions ? <div className="shrink-0">{actions(row)}</div> : null}
+                </div>
+                <dl className="mt-2 grid grid-cols-2 gap-x-3 gap-y-1.5 border-t border-border/70 pt-2">
+                  {rest.map((col) => (
+                    <div key={col.key} className="min-w-0">
+                      <dt className="truncate text-[10px] text-muted-foreground">{col.header}</dt>
+                      <dd className="truncate text-xs font-medium">{col.cell(row)}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+            );
+          })
+        )}
+      </div>
+
+      <div className="table-scroll-x hidden overflow-x-auto rounded-xl border border-border bg-card md:block">
         <Table>
           <TableHeader>
             <TableRow className="bg-muted/60">
