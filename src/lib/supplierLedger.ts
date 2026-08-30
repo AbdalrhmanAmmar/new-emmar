@@ -1,9 +1,10 @@
 import { purchaseTotalsOf } from "@/lib/purchases";
+import { returnTotals } from "@/lib/returns";
 import type { DbShape } from "@/lib/mockDb";
 
 export interface SupplierLedgerRow {
   date: string;
-  kind: "invoice" | "payment";
+  kind: "invoice" | "payment" | "return";
   ref: string;
   desc: string;
   /** مدفوع للمورد */
@@ -48,6 +49,21 @@ export function supplierLedger(
       desc: `فاتورة شراء — ${inv.lines.length} صنف`,
       debit: 0,
       credit: t.total,
+      balance: 0,
+    });
+  }
+
+  for (const doc of data.returns) {
+    if (doc.kind !== "purchase" || doc.partyId !== supplierId || doc.status !== "posted") continue;
+    if (doc.settle !== "credit") continue;
+    if (!inRange(doc.date, from, to)) continue;
+    rows.push({
+      date: doc.date,
+      kind: "return",
+      ref: doc.no,
+      desc: `مرتجع مشتريات — إشعار مدين${doc.refInvoiceNo ? ` عن فاتورة ${doc.refInvoiceNo}` : ""}`,
+      debit: returnTotals(doc.lines).total,
+      credit: 0,
       balance: 0,
     });
   }

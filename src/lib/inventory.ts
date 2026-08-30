@@ -60,8 +60,8 @@ export function moveKindLabel(kind: StockMoveKind): string {
 
 /** إشارة أثر الإذن على المخزون */
 export function moveSign(kind: StockMoveKind): number {
-  if (kind === "in") return 1;
-  if (kind === "out") return -1;
+  if (kind === "in" || kind === "return_in") return 1;
+  if (kind === "out" || kind === "return_out") return -1;
   return 0;
 }
 
@@ -118,7 +118,7 @@ export function warehouseBalance(data: DbShape, warehouseId?: string | null): Wa
         continue;
       }
       if (warehouseId && move.warehouseId !== warehouseId) continue;
-      add(line.productId, move.kind === "out" ? -q : q);
+      add(line.productId, moveSign(move.kind) < 0 ? -q : q);
     }
   }
 
@@ -163,8 +163,8 @@ export function inventoryKpis(data: DbShape): InventoryKpis {
     products: data.products.length,
     totalQty: rows.reduce((s, r) => s + r.qty, 0),
     totalValue: rows.reduce((s, r) => s + r.value, 0),
-    inMoves: posted.filter((m) => m.kind === "in").length,
-    outMoves: posted.filter((m) => m.kind === "out").length,
+    inMoves: posted.filter((m) => m.kind === "in" || m.kind === "return_in").length,
+    outMoves: posted.filter((m) => m.kind === "out" || m.kind === "return_out").length,
     lowStock: data.products.filter((p) => Number(p.stock || 0) <= Number(p.minStock || 0)).length,
   };
 }
