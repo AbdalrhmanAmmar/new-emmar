@@ -1,5 +1,5 @@
 import { Check, Plus, ShieldCheck, Trash2, X } from "lucide-react";
-import { useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import { toast } from "sonner";
 
 import { PageHeader, StatCard, StatusBadge } from "@/components/treasury/PageHeader";
@@ -161,8 +161,8 @@ export function PermissionsPage() {
             </thead>
             <tbody>
               {groups.map((group) => (
-                <>
-                  <tr key={group.module} className="bg-muted/50">
+                <Fragment key={group.module}>
+                  <tr className="bg-muted/50">
                     <td colSpan={PERM_ACTIONS.length + 2} className="px-3 py-1.5 text-xs font-bold text-primary">
                       {group.module}
                     </td>
@@ -192,7 +192,7 @@ export function PermissionsPage() {
                       </tr>
                     );
                   })}
-                </>
+                </Fragment>
               ))}
             </tbody>
           </table>
