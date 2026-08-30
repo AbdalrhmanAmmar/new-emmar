@@ -259,3 +259,24 @@ body,
   height: 0 !important;
   display: none !important;
 }
+
+/* ===== استثناء: الجداول العريضة تُظهر شريط تمرير أفقي رفيع ===== */
+.table-scroll-x {
+  scrollbar-width: thin !important;
+  -ms-overflow-style: auto !important;
+}
+.table-scroll-x::-webkit-scrollbar {
+  display: block !important;
+  width: 0 !important;
+  height: 8px !important;
+}
+.table-scroll-x::-webkit-scrollbar-track {
+  background: transparent;
+}
+.table-scroll-x::-webkit-scrollbar-thumb {
+  background: color-mix(in oklab, var(--muted-foreground) 35%, transparent);
+  border-radius: 999px;
+}
+.table-scroll-x::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in oklab, var(--muted-foreground) 55%, transparent);
+}
