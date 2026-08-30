@@ -148,15 +148,14 @@ export function GroupedBarChart({
     >
       <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.15} vertical={vertical} horizontal={!vertical} />
       {vertical ? (
-        <>
-          <XAxis type="number" {...axisProps} tickFormatter={compact} />
-          <YAxis type="category" dataKey="label" {...axisProps} width={110} />
-        </>
+        <XAxis type="number" {...axisProps} tickFormatter={compact} />
       ) : (
-        <>
-          <XAxis dataKey="label" {...axisProps} />
-          <YAxis {...axisProps} tickFormatter={compact} width={44} />
-        </>
+        <XAxis dataKey="label" {...axisProps} interval={0} />
+      )}
+      {vertical ? (
+        <YAxis type="category" dataKey="label" {...axisProps} width={110} />
+      ) : (
+        <YAxis {...axisProps} tickFormatter={compact} width={44} />
       )}
       <Tooltip {...tooltipProps} cursor={{ fillOpacity: 0.06 }} />
       {series.length > 1 ? <Legend wrapperStyle={{ fontSize: 12, direction: "rtl" }} /> : null}
