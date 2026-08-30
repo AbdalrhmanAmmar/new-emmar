@@ -83,6 +83,18 @@ const FLAGS: Array<{ key: keyof OrgSettings; label: string }> = [
 export function OrgSettingsForm() {
   const data = useDb();
   const [form, setForm] = useState<OrgSettings>(data.settings);
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  const pickLogo = async (file: File | undefined) => {
+    if (!file) return;
+    try {
+      const dataUrl = await fileToLogoDataUrl(file);
+      set("logoDataUrl", dataUrl);
+      toast.success("تم تحميل الشعار — احفظ الإعدادات لتطبيقه");
+    } catch {
+      toast.error("تعذر تحميل الصورة، جرّب ملفاً آخر");
+    }
+  };
 
   useEffect(() => {
     setForm(data.settings);
