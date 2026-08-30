@@ -36,6 +36,43 @@ export interface Category {
   kind: "revenue" | "expense";
 }
 
+/** تصنيفات الأصناف — تُدار من الإعدادات الرئيسية */
+export interface ProductCategory {
+  id: string;
+  code: string;
+  name: string;
+  note?: string;
+  active: boolean;
+}
+
+/** الإعدادات الرئيسية للبرنامج: بيانات الطباعة والضرائب والسياسات */
+export interface OrgSettings {
+  /* بيانات تظهر فى كل المطبوعات */
+  companyName: string;
+  companyNameEn: string;
+  activity: string;
+  taxNo: string;
+  commercialNo: string;
+  address: string;
+  phone: string;
+  phone2: string;
+  email: string;
+  website: string;
+  logoLetter: string;
+  printFooter: string;
+  invoiceTerms: string;
+  showSignatures: boolean;
+  /* الضرائب والسياسات المالية */
+  vatRate: number;
+  whtRate: number;
+  currencyLabel: string;
+  defaultPaymentDays: number;
+  allowNegativeStock: boolean;
+  priceEditInPos: boolean;
+  maxLineDiscountPct: number;
+}
+
+
 export interface Safe {
   id: string;
   code: string;
