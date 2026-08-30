@@ -1,4 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
+import logoAsset from "@/assets/al-iman-logo.jpeg.asset.json";
 import {
   Banknote,
   Boxes,
