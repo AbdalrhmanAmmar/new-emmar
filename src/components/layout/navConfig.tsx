@@ -7,6 +7,7 @@ import {
   LayoutDashboard,
   ListChecks,
   Receipt,
+  ScanBarcode,
   ScrollText,
   Settings2,
   ShoppingCart,
@@ -95,6 +96,7 @@ export const SALES_MODULE: NavModule = {
       items: [
         { to: "/sales/invoices", label: "فواتير المبيعات", icon: <Receipt className="size-4" /> },
         { to: "/sales/invoices/new", label: "فاتورة مبيعات جديدة", icon: <BadgeDollarSign className="size-4" /> },
+        { to: "/sales/pos", label: "الكاشير (نقطة بيع)", icon: <ScanBarcode className="size-4" /> },
       ],
     },
     {
