@@ -11,6 +11,7 @@ import {
   type SalesInvoice,
 } from "./mockDb";
 import { invoiceTotals, discountPercentOf } from "./sales";
+import { baseQty } from "./units";
 
 export interface ActionResult {
   ok: boolean;
@@ -32,7 +33,7 @@ function linkedVoucherId(inv: SalesInvoice) {
 function unpost(data: DbShape, inv: SalesInvoice) {
   for (const line of inv.lines) {
     const product = data.products.find((p) => p.id === line.productId);
-    if (product) product.stock += Number(line.qty || 0);
+    if (product) product.stock += baseQty(line);
   }
   data.invoices = data.invoices.filter((i) => i.id !== linkedInvoiceId(inv));
   data.vouchers = data.vouchers.filter((v) => v.id !== linkedVoucherId(inv));
@@ -42,7 +43,7 @@ function unpost(data: DbShape, inv: SalesInvoice) {
 function post(data: DbShape, inv: SalesInvoice) {
   for (const line of inv.lines) {
     const product = data.products.find((p) => p.id === line.productId);
-    if (product) product.stock -= Number(line.qty || 0);
+    if (product) product.stock -= baseQty(line);
   }
 
   const totals = invoiceTotals({ ...inv, codePercent: discountPercentOf(data, inv.discountCode) });
@@ -124,7 +125,7 @@ export function saveSalesInvoice(
         result = { ok: false, error: "صنف غير موجود" };
         return;
       }
-      if (input.status === "posted" && Number(line.qty) > product.stock + 0.0001) {
+      if (input.status === "posted" && baseQty(line) > product.stock + 0.0001) {
         result = {
           ok: false,
           error: `الكمية المطلوبة من ${product.name} أكبر من المتاح (${product.stock})`,
@@ -199,7 +200,7 @@ export function setSalesInvoiceStatus(id: string, status: DocStatus): ActionResu
     if (status === "posted") {
       for (const line of inv.lines) {
         const product = data.products.find((p) => p.id === line.productId);
-        if (product && Number(line.qty) > product.stock + 0.0001) {
+        if (product && baseQty(line) > product.stock + 0.0001) {
           result = { ok: false, error: `الكمية المطلوبة من ${product.name} أكبر من المتاح` };
           inv.status = "draft";
           return;
@@ -264,6 +265,16 @@ export function saveProduct(input: Omit<Product, "id"> & { id?: string }): Actio
       stock: Number(input.stock || 0),
       minStock: Number(input.minStock || 0),
       active: input.active ?? true,
+      units: (input.units ?? [])
+        .filter((u) => u.code?.trim() && Number(u.factor) > 0)
+        .map((u) => ({
+          id: u.id,
+          code: u.code.trim(),
+          name: u.name?.trim() || u.code.trim(),
+          factor: Number(u.factor),
+          price: Number(u.price || 0),
+          wholesalePrice: Number(u.wholesalePrice || 0),
+        })),
     };
 
     if (input.id) {
