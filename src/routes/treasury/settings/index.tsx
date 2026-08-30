@@ -101,14 +101,61 @@ function SettingsPage() {
         <StatCard label="بنود الإيراد/المصروف" value={String(data.categories.length)} />
       </div>
 
-      <Tabs defaultValue="branches" dir="rtl">
+      <Tabs defaultValue="org" dir="rtl">
         <TabsList className="flex-wrap">
+          <TabsTrigger value="org">الإعدادات الرئيسية</TabsTrigger>
+          <TabsTrigger value="prodcats">تصنيفات الأصناف</TabsTrigger>
           <TabsTrigger value="branches">الفروع</TabsTrigger>
           <TabsTrigger value="users">المستخدمون</TabsTrigger>
           <TabsTrigger value="categories">البنود</TabsTrigger>
           <TabsTrigger value="warehouses">المخازن</TabsTrigger>
           <TabsTrigger value="reps">المندوبون</TabsTrigger>
+          <TabsTrigger value="codes">أكواد الخصم</TabsTrigger>
         </TabsList>
+
+        <TabsContent value="org" className="mt-3">
+          <OrgSettingsForm />
+        </TabsContent>
+
+        <TabsContent value="prodcats" className="mt-3">
+          <EntityEditor<ProductCategory>
+            title="تصنيفات الأصناف"
+            description="التصنيفات المستخدمة فى شاشات الأصناف والكاشير والفواتير"
+            rows={data.productCategories}
+            fields={prodCatFields}
+            primary={(row) => `${row.code} — ${row.name}`}
+            secondary={(row) =>
+              `${row.note || "بدون وصف"} — أصناف: ${data.products.filter((p) => p.category === row.name).length}`
+            }
+            emptyRow={() => ({
+              id: uid("pc"),
+              code: nextCode("CT", data.productCategories.map((c) => c.code)),
+              name: "",
+              note: "",
+              active: true,
+            })}
+            onSave={(row, isNew) => saveInto("productCategories", row, isNew)}
+            onDelete={(row) => {
+              if (data.products.some((p) => p.category === row.name)) return "التصنيف مستخدم فى أصناف";
+              removeFrom("productCategories", row);
+            }}
+          />
+        </TabsContent>
+
+        <TabsContent value="codes" className="mt-3">
+          <EntityEditor<DiscountCode>
+            title="أكواد الخصم"
+            description="أكواد تُطبَّق على إجمالى الفاتورة"
+            rows={data.discountCodes}
+            fields={codeFields}
+            primary={(row) => row.code}
+            secondary={(row) => `${row.percent}% — ${row.active ? "مُفعّل" : "موقوف"}`}
+            emptyRow={() => ({ id: uid("dc"), code: "", percent: 0, active: true })}
+            onSave={(row, isNew) => saveInto("discountCodes", row, isNew)}
+            onDelete={(row) => removeFrom("discountCodes", row)}
+          />
+        </TabsContent>
+
 
         <TabsContent value="branches" className="mt-3">
           <EntityEditor<Branch>
