@@ -1,5 +1,9 @@
 import {
   ArrowLeftRight,
+  CalendarCheck,
+  HandCoins,
+  Tags,
+  UserCog,
   BadgeDollarSign,
   Banknote,
   FileText,
@@ -117,6 +121,57 @@ export const PURCHASES_MODULE: NavModule = {
   ],
 };
 
+export const EXPENSES_MODULE: NavModule = {
+  id: "expenses",
+  label: "المصروفات العامة والنثريات",
+  icon: <HandCoins className="size-4" />,
+  home: { to: "/expenses", label: "لوحة المصروفات", icon: <LayoutDashboard className="size-4" /> },
+  groups: [
+    {
+      id: "expenses-docs",
+      label: "حركات الصرف",
+      icon: <Receipt className="size-4" />,
+      items: [
+        { to: "/expenses/list", label: "سجل المصروفات", icon: <Receipt className="size-4" /> },
+        { to: "/expenses/new", label: "تسجيل مصروف جديد", icon: <Banknote className="size-4" /> },
+      ],
+    },
+    {
+      id: "expenses-master",
+      label: "البيانات الرئيسية",
+      icon: <Tags className="size-4" />,
+      items: [{ to: "/expenses/items", label: "تكويد بنود الصرف", icon: <Tags className="size-4" /> }],
+    },
+  ],
+};
+
+export const HR_MODULE: NavModule = {
+  id: "hr",
+  label: "الموظفون",
+  icon: <UserCog className="size-4" />,
+  home: { to: "/hr", label: "لوحة الموظفين", icon: <LayoutDashboard className="size-4" /> },
+  groups: [
+    {
+      id: "hr-employees",
+      label: "بيانات الموظفين",
+      icon: <Users className="size-4" />,
+      items: [
+        { to: "/hr/employees", label: "سجل الموظفين", icon: <Users className="size-4" /> },
+        { to: "/hr/employees/new", label: "موظف جديد", icon: <UserCog className="size-4" /> },
+      ],
+    },
+    {
+      id: "hr-attendance",
+      label: "الحضور والرواتب",
+      icon: <CalendarCheck className="size-4" />,
+      items: [
+        { to: "/hr/attendance", label: "تحضير الموظفين", icon: <CalendarCheck className="size-4" /> },
+        { to: "/hr/payroll", label: "مسير الرواتب", icon: <Wallet className="size-4" /> },
+      ],
+    },
+  ],
+};
+
 /** موديول التقارير: كل التقارير (خزينة + مبيعات) مجمّعة فى مكان واحد */
 export const REPORTS_MODULE: NavModule = {
   id: "reports",
@@ -144,6 +199,16 @@ export const REPORTS_MODULE: NavModule = {
         { to: "/sales/reports/by-rep", label: "المبيعات حسب المندوب", icon: <ScrollText className="size-4" /> },
         { to: "/sales/reports/by-customer", label: "المبيعات حسب العميل", icon: <ScrollText className="size-4" /> },
         { to: "/reports/customer-statement", label: "كشف حساب عميل", icon: <FileText className="size-4" /> },
+      ],
+    },
+    {
+      id: "reports-hr",
+      label: "تقارير الموظفين والمصروفات",
+      icon: <UserCog className="size-4" />,
+      items: [
+        { to: "/hr/statement", label: "كشف حساب موظف", icon: <FileText className="size-4" /> },
+        { to: "/hr/payroll", label: "مسير الرواتب", icon: <Wallet className="size-4" /> },
+        { to: "/expenses/list", label: "سجل المصروفات", icon: <Receipt className="size-4" /> },
       ],
     },
     {
@@ -190,7 +255,14 @@ export const SETTINGS_GROUPS: SettingsGroup[] = [
 
 export const SETTINGS_ITEMS: NavItem[] = SETTINGS_GROUPS.flatMap((g) => g.items);
 
-export const MODULES: NavModule[] = [TREASURY_MODULE, SALES_MODULE, PURCHASES_MODULE, REPORTS_MODULE];
+export const MODULES: NavModule[] = [
+  TREASURY_MODULE,
+  SALES_MODULE,
+  PURCHASES_MODULE,
+  EXPENSES_MODULE,
+  HR_MODULE,
+  REPORTS_MODULE,
+];
 
 export const ALL_NAV_ITEMS: NavItem[] = [
   ...MODULES.flatMap((module) => [module.home, ...module.groups.flatMap((group) => group.items)]),
