@@ -265,6 +265,9 @@ export interface DbShape {
   products: Product[];
   discountCodes: DiscountCode[];
   salesInvoices: SalesInvoice[];
+  productCategories: ProductCategory[];
+  settings: OrgSettings;
+
 }
 
 const STORAGE_KEY = "aliman_treasury_v1";
