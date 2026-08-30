@@ -106,10 +106,31 @@ export const SALES_MODULE: NavModule = {
         { to: "/sales/products", label: "الأصناف والأسعار", icon: <ListChecks className="size-4" /> },
       ],
     },
+  ],
+};
+
+/** موديول التقارير: كل التقارير (خزينة + مبيعات) مجمّعة فى مكان واحد */
+export const REPORTS_MODULE: NavModule = {
+  id: "reports",
+  label: "التقارير",
+  icon: <ScrollText className="size-4" />,
+  home: { to: "/reports", label: "مركز التقارير", icon: <LayoutDashboard className="size-4" /> },
+  groups: [
     {
-      id: "sales-reports",
+      id: "reports-treasury",
+      label: "تقارير الخزينة",
+      icon: <Wallet className="size-4" />,
+      items: [
+        { to: "/treasury/reports/cashflow", label: "التدفق النقدي", icon: <ScrollText className="size-4" /> },
+        { to: "/treasury/reports/vouchers", label: "تحليل السندات", icon: <Receipt className="size-4" /> },
+        { to: "/treasury/reports/aging", label: "أعمار الديون", icon: <FileText className="size-4" /> },
+        { to: "/treasury/reports/shift-diff", label: "فروقات التقفيل", icon: <ListChecks className="size-4" /> },
+      ],
+    },
+    {
+      id: "reports-sales",
       label: "تقارير المبيعات",
-      icon: <ScrollText className="size-4" />,
+      icon: <ShoppingCart className="size-4" />,
       items: [
         { to: "/sales/reports/by-product", label: "المبيعات حسب الصنف", icon: <ScrollText className="size-4" /> },
         { to: "/sales/reports/by-rep", label: "المبيعات حسب المندوب", icon: <ScrollText className="size-4" /> },
@@ -119,7 +140,7 @@ export const SALES_MODULE: NavModule = {
   ],
 };
 
-export const MODULES: NavModule[] = [TREASURY_MODULE, SALES_MODULE];
+export const MODULES: NavModule[] = [TREASURY_MODULE, SALES_MODULE, REPORTS_MODULE];
 
 export const ALL_NAV_ITEMS: NavItem[] = MODULES.flatMap((module) => [
   module.home,
@@ -134,5 +155,13 @@ export function matchNavItem(pathname: string): NavItem | undefined {
 }
 
 export function matchModule(pathname: string): NavModule {
+  // التقارير أولاً: مساراتها تحت /treasury/reports و /sales/reports
+  const byItem = MODULES.find((module) =>
+    module.groups.some((group) =>
+      group.items.some((item) => pathname === item.to || pathname.startsWith(`${item.to}/`)),
+    ),
+  );
+  if (byItem) return byItem;
   return MODULES.find((module) => pathname.startsWith(module.home.to)) ?? TREASURY_MODULE;
 }
+
