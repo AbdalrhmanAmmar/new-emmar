@@ -53,6 +53,16 @@ export function PayrollPage() {
     { key: "ot", header: "إضافى", cell: (r) => money(calc(r).overtimePay) },
     { key: "allow", header: "بدلات", cell: (r) => money(calc(r).allowances) },
     {
+      key: "extraAllow",
+      header: "بدلات الشهر",
+      cell: (r) => money(calc(r).extraAllowances),
+    },
+    {
+      key: "extraDed",
+      header: "خصومات الشهر",
+      cell: (r) => money(calc(r).extraDeductions),
+    },
+    {
       key: "ded",
       header: "خصومات",
       cell: (r) => money(calc(r).lateDeduction + calc(r).fixedDeductions),
@@ -125,6 +135,11 @@ export function PayrollPage() {
                 label: "صرف راتب",
                 icon: <Wallet className="size-4" />,
                 onSelect: () => navigate({ to: "/expenses/new" }),
+              },
+              {
+                label: "بدلات وخصومات الشهر",
+                icon: <Wallet className="size-4" />,
+                onSelect: () => navigate({ to: "/hr/adjustments" }),
               },
               {
                 label: "طباعة كشف الموظف",

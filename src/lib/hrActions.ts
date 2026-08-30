@@ -10,6 +10,7 @@ import {
   type Employee,
   type Expense,
   type ExpenseItem,
+  type PayrollAdjustment,
 } from "./mockDb";
 
 export interface ActionResult {
@@ -264,6 +265,70 @@ export function markAllAttendance(date: string, status: AttendanceStatus): Actio
 export function deleteAttendance(id: string): ActionResult {
   mutate((data) => {
     data.attendance = data.attendance.filter((a) => a.id !== id);
+  });
+  return { ok: true };
+}
+
+/* ===================== البدلات والخصومات الشهرية ===================== */
+
+export function savePayrollAdjustment(
+  input: Omit<PayrollAdjustment, "id"> & { id?: string },
+): ActionResult {
+  let result: ActionResult = { ok: true };
+  mutate((data) => {
+    if (!data.adjustments) data.adjustments = [];
+    if (!input.employeeId || !data.employees.some((e) => e.id === input.employeeId)) {
+      result = { ok: false, error: "يجب اختيار الموظف" };
+      return;
+    }
+    const month = (input.month || "").slice(0, 7);
+    if (!/^\d{4}-\d{2}$/.test(month)) {
+      result = { ok: false, error: "يجب تحديد الشهر" };
+      return;
+    }
+    const label = input.label.trim();
+    if (!label) {
+      result = { ok: false, error: "يجب تحديد نوع البدل أو الخصم" };
+      return;
+    }
+    if (!(Number(input.amount) > 0)) {
+      result = { ok: false, error: "المبلغ يجب أن يكون أكبر من صفر" };
+      return;
+    }
+    const duplicate = data.adjustments.some(
+      (a) =>
+        a.id !== input.id &&
+        a.employeeId === input.employeeId &&
+        a.month === month &&
+        a.kind === input.kind &&
+        a.label.trim() === label,
+    );
+    if (duplicate) {
+      result = { ok: false, error: "هذا البند مسجل بالفعل لنفس الموظف فى نفس الشهر" };
+      return;
+    }
+    const record: PayrollAdjustment = {
+      id: input.id ?? uid("adj"),
+      employeeId: input.employeeId,
+      month,
+      kind: input.kind,
+      label,
+      amount: Number(input.amount || 0),
+      note: input.note?.trim() ?? "",
+    };
+    if (input.id) {
+      data.adjustments = data.adjustments.map((a) => (a.id === record.id ? record : a));
+    } else {
+      data.adjustments.push(record);
+    }
+    result = { ok: true, id: record.id };
+  });
+  return result;
+}
+
+export function deletePayrollAdjustment(id: string): ActionResult {
+  mutate((data) => {
+    data.adjustments = (data.adjustments ?? []).filter((a) => a.id !== id);
   });
   return { ok: true };
 }

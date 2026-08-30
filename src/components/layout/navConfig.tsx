@@ -166,6 +166,7 @@ export const HR_MODULE: NavModule = {
       icon: <CalendarCheck className="size-4" />,
       items: [
         { to: "/hr/attendance", label: "تحضير الموظفين", icon: <CalendarCheck className="size-4" /> },
+        { to: "/hr/adjustments", label: "البدلات والخصومات", icon: <Wallet className="size-4" /> },
         { to: "/hr/payroll", label: "مسير الرواتب", icon: <Wallet className="size-4" /> },
       ],
     },

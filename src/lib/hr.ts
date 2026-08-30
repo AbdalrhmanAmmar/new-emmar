@@ -5,6 +5,7 @@ import type {
   Employee,
   Expense,
   ExpenseItem,
+  PayrollAdjustment,
 } from "@/lib/mockDb";
 
 /* ===================== حسابات الرواتب والحضور ===================== */
@@ -92,6 +93,30 @@ export function employeeExpenses(data: DbShape, employeeId: string, period: Peri
     .sort((a, b) => a.date.localeCompare(b.date));
 }
 
+/** أشهر الفترة (YYYY-MM) التى تدخل فى الحساب */
+function periodMonths(period: Period): { from: string; to: string } {
+  return {
+    from: (period.from ?? "0000-00").slice(0, 7),
+    to: (period.to ?? "9999-99").slice(0, 7),
+  };
+}
+
+/** بدلات وخصومات الموظف المرتبطة بشهر داخل الفترة */
+export function employeeAdjustments(
+  data: DbShape,
+  employeeId: string,
+  period: Period,
+): PayrollAdjustment[] {
+  const { from, to } = periodMonths(period);
+  return (data.adjustments ?? [])
+    .filter((a) => a.employeeId === employeeId && a.month >= from && a.month <= to)
+    .sort((a, b) => a.month.localeCompare(b.month) || a.kind.localeCompare(b.kind));
+}
+
+export function monthAdjustments(data: DbShape, month: string): PayrollAdjustment[] {
+  return (data.adjustments ?? []).filter((a) => a.month === month);
+}
+
 export interface PayrollResult {
   dayRate: number;
   attendance: AttendanceSummary;
@@ -102,6 +127,11 @@ export interface PayrollResult {
   lateDeduction: number;
   absenceDeduction: number;
   fixedDeductions: number;
+  /** بدلات الشهر المضافة يدويًا */
+  extraAllowances: number;
+  /** خصومات الشهر المضافة يدويًا */
+  extraDeductions: number;
+  adjustments: PayrollAdjustment[];
   advances: number;
   netDue: number;
   paidSalaries: number;
@@ -118,8 +148,16 @@ export function payroll(data: DbShape, emp: Employee, period: Period): PayrollRe
   const overtimePay = att.overtimeHours * hourRate(emp) * 1.5;
   const lateDeduction = (att.lateMinutes / 60) * hourRate(emp);
   const absenceDeduction = att.absent * rate;
-  const allowances = Number(emp.allowances || 0);
-  const fixedDeductions = Number(emp.deductions || 0);
+  const adjustments = employeeAdjustments(data, emp.id, period);
+  const extraAllowances = adjustments
+    .filter((a) => a.kind === "allowance")
+    .reduce((acc, a) => acc + Number(a.amount || 0), 0);
+  const extraDeductions = adjustments
+    .filter((a) => a.kind === "deduction")
+    .reduce((acc, a) => acc + Number(a.amount || 0), 0);
+
+  const allowances = Number(emp.allowances || 0) + extraAllowances;
+  const fixedDeductions = Number(emp.deductions || 0) + extraDeductions;
 
   const paid = employeeExpenses(data, emp.id, period);
   const paidSalaries = paid
@@ -142,6 +180,9 @@ export function payroll(data: DbShape, emp: Employee, period: Period): PayrollRe
     lateDeduction,
     absenceDeduction,
     fixedDeductions,
+    extraAllowances,
+    extraDeductions,
+    adjustments,
     advances,
     netDue: Math.max(0, netDue),
     paidSalaries,

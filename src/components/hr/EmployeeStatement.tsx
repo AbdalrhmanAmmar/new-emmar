@@ -74,6 +74,13 @@ export function EmployeeStatement({ employeeId: fixedId }: { employeeId?: string
     ["أجر الأيام المستحقة", result.basicEarned],
     ["أجر الساعات الإضافية", result.overtimePay],
     ["البدلات", result.allowances],
+    ...result.adjustments.map(
+      (a) =>
+        [
+          `${a.kind === "allowance" ? "بدل" : "خصم"}: ${a.label} (${a.month})`,
+          a.kind === "allowance" ? a.amount : -a.amount,
+        ] as [string, number],
+    ),
     ["خصم التأخير", -result.lateDeduction],
     ["الخصومات الثابتة", -result.fixedDeductions],
     ["السلف والعهد", -result.advances],
