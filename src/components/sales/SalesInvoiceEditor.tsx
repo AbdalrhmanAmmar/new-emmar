@@ -9,17 +9,18 @@ import { SearchSelect } from "@/components/treasury/SearchSelect";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { dateFmt, money, num, today } from "@/lib/format";
+import { money, num, today } from "@/lib/format";
 import {
   SALES_PAY_LABEL,
   UNIT_LABEL,
+  nextNo,
   uid,
   useDb,
   type SalesInvoice,
   type SalesLine,
   type SalesPayMethod,
 } from "@/lib/mockDb";
-import { printRecord } from "@/lib/printDoc";
+import { invoicePrintInput, printSalesInvoice } from "@/lib/printInvoice";
 import { discountPercentOf, emptyLine, invoiceTotals, lineTotals, productOptions } from "@/lib/sales";
 import { saveSalesInvoice } from "@/lib/salesActions";
 
@@ -50,6 +51,14 @@ export function SalesInvoiceEditor({ invoice }: Props) {
   const [safeId, setSafeId] = useState<string | null>(invoice?.safeId ?? data.safes[0]?.id ?? null);
   const [discountCode, setDiscountCode] = useState(invoice?.discountCode ?? "");
   const [note, setNote] = useState(invoice?.note ?? "");
+
+  const invoiceNo = useMemo(
+    () => invoice?.no ?? nextNo("SO", data.salesInvoices.map((i) => i.no)),
+    [invoice?.no, data.salesInvoices],
+  );
+
+  const filledLines = lines.filter((l) => l.productId);
+  const qtySum = filledLines.reduce((acc, l) => acc + Number(l.qty || 0), 0);
 
   const codePercent = discountPercentOf(data, discountCode);
   const products = useMemo(() => productOptions(data), [data]);
@@ -128,43 +137,26 @@ export function SalesInvoiceEditor({ invoice }: Props) {
   });
 
   const doPrint = () => {
-    printRecord(
-      `فاتورة مبيعات ${invoice?.no ?? "جديدة"}`,
-      [
-        ["رقم الفاتورة", invoice?.no ?? "—"],
-        ["التاريخ", dateFmt(date)],
-        ["العميل", customerKind === "registered"
-          ? data.customers.find((c) => c.id === customerId)?.name ?? "-"
-          : customerName || "عميل نقدي"],
-        ["تاريخ الاستحقاق", dateFmt(payMethod === "credit" ? dueDate : date)],
-        ["الفرع", data.branches.find((b) => b.id === branchId)?.name ?? "-"],
-        ["المخزن", data.warehouses.find((w) => w.id === warehouseId)?.name ?? "-"],
-        ["المندوب", data.reps.find((r) => r.id === repId)?.name ?? "-"],
-        ["طريقة الدفع", SALES_PAY_LABEL[payMethod]],
-      ],
-      {
-        headers: ["الكود", "الصنف", "الكمية", "الوحدة", "سعر الوحدة", "الخصم", "الضريبة", "الإجمالي"],
-        rows: lines
-          .filter((l) => l.productId)
-          .map((l) => {
-            const t = lineTotals(l);
-            return [
-              l.code,
-              l.name,
-              num(l.qty),
-              UNIT_LABEL[l.unit],
-              num(l.price),
-              num(t.discount),
-              num(t.tax),
-              num(t.total),
-            ];
-          }),
-      },
-      `الإجمالي: ${money(totals.gross)} — الخصم: ${money(totals.discount)} — الصافي: ${money(
-        totals.net,
-      )} — الضريبة: ${money(totals.tax)} — المستحق: ${money(totals.total)} — المدفوع: ${money(
-        totals.paid,
-      )} — المتبقي: ${money(totals.remaining)}`,
+    printSalesInvoice(
+      invoicePrintInput(
+        data,
+        {
+          no: invoiceNo,
+          date,
+          dueDate: payMethod === "credit" ? dueDate : date,
+          branchId,
+          warehouseId,
+          repId,
+          customerId: customerKind === "registered" ? customerId : null,
+          customerName: customerKind === "registered" ? "" : customerName,
+          lines: lines.filter((l) => l.productId),
+          payMethod,
+          discountCode,
+          note,
+          status: invoice?.status ?? "draft",
+        },
+        totals,
+      ),
     );
   };
 
@@ -192,7 +184,10 @@ export function SalesInvoiceEditor({ invoice }: Props) {
           <h1 className="text-xl font-bold text-foreground">
             {invoice ? `تعديل فاتورة مبيعات ${invoice.no}` : "فاتورة مبيعات جديدة"}
           </h1>
-          <p className="text-sm text-muted-foreground">
+          <p className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+            <span className="rounded-full border border-primary/30 bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary">
+              رقم الفاتورة (تلقائى): {invoiceNo}
+            </span>
             شاشة بيع متكاملة — أصناف، خصومات، ضريبة 14%، وتسوية فورية بالجنيه المصري
           </p>
         </div>
@@ -217,6 +212,20 @@ export function SalesInvoiceEditor({ invoice }: Props) {
             حفظ وطباعة
           </Button>
         </div>
+      </div>
+
+      {/* ===== شريط الملخص اللحظى — يتحدث أول بأول ===== */}
+      <div className="sticky top-14 z-20 grid grid-cols-2 gap-2 rounded-xl border border-border bg-card/95 p-3 backdrop-blur sm:grid-cols-3 lg:grid-cols-6">
+        <LiveStat label="عدد الأصناف" value={String(filledLines.length)} />
+        <LiveStat label="إجمالي الكميات" value={num(qtySum)} />
+        <LiveStat label="الصافي" value={money(totals.net)} />
+        <LiveStat label="الضريبة" value={money(totals.tax)} />
+        <LiveStat label="المستحق" value={money(totals.total)} tone="primary" />
+        <LiveStat
+          label="المتبقي"
+          value={money(totals.remaining)}
+          tone={totals.remaining > 0 ? "danger" : "ok"}
+        />
       </div>
 
       <div className="grid min-w-0 gap-4 xl:grid-cols-[minmax(0,1fr)_13.5rem]">
@@ -502,6 +511,29 @@ function SummaryRow({
       >
         {value}
       </span>
+    </div>
+  );
+}
+
+function LiveStat({
+  label,
+  value,
+  tone = "muted",
+}: {
+  label: string;
+  value: string;
+  tone?: "muted" | "primary" | "danger" | "ok";
+}) {
+  const tones: Record<string, string> = {
+    muted: "border-border bg-muted/40 text-foreground",
+    primary: "border-primary/30 bg-primary/10 text-primary",
+    danger: "border-destructive/30 bg-destructive/10 text-destructive",
+    ok: "border-primary/25 bg-primary/5 text-primary",
+  };
+  return (
+    <div className={`rounded-lg border px-3 py-2 ${tones[tone]}`}>
+      <div className="text-[11px] text-muted-foreground">{label}</div>
+      <div className="mt-0.5 text-sm font-bold">{value}</div>
     </div>
   );
 }

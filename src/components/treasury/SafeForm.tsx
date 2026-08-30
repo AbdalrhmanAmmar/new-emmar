@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   SAFE_TYPE_LABEL,
   isDuplicate,
+  nextCode,
   mutate,
   uid,
   useDb,
@@ -23,7 +24,9 @@ export function SafeForm({ safeId }: { safeId?: string }) {
   const navigate = useNavigate();
   const existing = safeId ? data.safes.find((s) => s.id === safeId) : undefined;
 
-  const [code, setCode] = useState(existing?.code ?? "");
+  const [code, setCode] = useState(
+    existing?.code ?? nextCode(existing?.type === "bank" ? "BANK" : "CASH", data.safes.map((s) => s.code)),
+  );
   const [name, setName] = useState(existing?.name ?? "");
   const [type, setType] = useState<SafeType>(existing?.type ?? "branch");
   const [branchId, setBranchId] = useState(existing?.branchId ?? data.branches[0]?.id ?? "");
@@ -80,8 +83,8 @@ export function SafeForm({ safeId }: { safeId?: string }) {
       onSubmit={submit}
     >
       <FormSection title="البيانات الأساسية">
-        <Field label="الكود">
-          <Input dir="rtl" value={code} onChange={(e) => setCode(e.target.value)} />
+        <Field label="الكود" hint="يتم توليده تلقائياً">
+          <Input dir="rtl" value={code} readOnly className="bg-muted/50" />
         </Field>
         <Field label="الاسم">
           <Input dir="rtl" value={name} onChange={(e) => setName(e.target.value)} />
