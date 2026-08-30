@@ -28,6 +28,7 @@ export function ReturnsPage({ kind }: { kind?: ReturnKind }) {
     .sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : a.no < b.no ? 1 : -1));
 
   const kpis = returnsKpis(data, kind);
+  const isPurchase = kind === "purchase";
 
   const columns: Array<Column<ReturnDoc>> = [
     { key: "no", header: "رقم المرتجع", cell: (r) => r.no, text: (r) => r.no },
@@ -87,7 +88,7 @@ export function ReturnsPage({ kind }: { kind?: ReturnKind }) {
         actions={
           <>
             <Button asChild className="gap-1.5">
-              <Link to="/returns/new">
+              <Link to={isPurchase ? "/purchases/returns/new" : "/sales/returns/new"}>
                 <Plus className="size-4" />
                 مرتجع جديد
               </Link>
@@ -131,7 +132,11 @@ export function ReturnsPage({ kind }: { kind?: ReturnKind }) {
               {
                 label: "تعديل",
                 icon: <Pencil className="size-4" />,
-                onSelect: () => navigate({ to: "/returns/$id", params: { id: row.id } }),
+                onSelect: () =>
+                  navigate({
+                    to: row.kind === "purchase" ? "/purchases/returns/$id" : "/sales/returns/$id",
+                    params: { id: row.id },
+                  }),
               },
               {
                 label: row.status === "posted" ? "إرجاع لمسودة" : "ترحيل",

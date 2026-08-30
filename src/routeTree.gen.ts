@@ -15,7 +15,6 @@ import { Route as HrRouteRouteImport } from './routes/hr/route'
 import { Route as InventoryRouteRouteImport } from './routes/inventory/route'
 import { Route as PurchasesRouteRouteImport } from './routes/purchases/route'
 import { Route as ReportsRouteRouteImport } from './routes/reports/route'
-import { Route as ReturnsRouteRouteImport } from './routes/returns/route'
 import { Route as SalesRouteRouteImport } from './routes/sales/route'
 import { Route as TreasuryRouteRouteImport } from './routes/treasury/route'
 import { Route as ExpensesIndexRouteImport } from './routes/expenses/index'
@@ -27,11 +26,6 @@ import { Route as InventoryBalanceRouteImport } from './routes/inventory/balance
 import { Route as PurchasesIndexRouteImport } from './routes/purchases/index'
 import { Route as ReportsIndexRouteImport } from './routes/reports/index'
 import { Route as ReportsCustomerStatementRouteImport } from './routes/reports/customer-statement'
-import { Route as ReturnsIndexRouteImport } from './routes/returns/index'
-import { Route as ReturnsIdRouteImport } from './routes/returns/$id'
-import { Route as ReturnsNewRouteImport } from './routes/returns/new'
-import { Route as ReturnsPurchaseRouteImport } from './routes/returns/purchase'
-import { Route as ReturnsSalesRouteImport } from './routes/returns/sales'
 import { Route as SalesIndexRouteImport } from './routes/sales/index'
 import { Route as SalesPosRouteImport } from './routes/sales/pos'
 import { Route as TreasuryIndexRouteImport } from './routes/treasury/index'
@@ -58,6 +52,9 @@ import { Route as PurchasesInvoicesNewRouteImport } from './routes/purchases/inv
 import { Route as PurchasesReportsByProductRouteImport } from './routes/purchases/reports/by-product'
 import { Route as PurchasesReportsBySupplierRouteImport } from './routes/purchases/reports/by-supplier'
 import { Route as PurchasesReportsSupplierStatementRouteImport } from './routes/purchases/reports/supplier-statement'
+import { Route as PurchasesReturnsIndexRouteImport } from './routes/purchases/returns/index'
+import { Route as PurchasesReturnsIdRouteImport } from './routes/purchases/returns/$id'
+import { Route as PurchasesReturnsNewRouteImport } from './routes/purchases/returns/new'
 import { Route as PurchasesSuppliersIndexRouteImport } from './routes/purchases/suppliers/index'
 import { Route as PurchasesSuppliersIdRouteImport } from './routes/purchases/suppliers/$id'
 import { Route as PurchasesSuppliersNewRouteImport } from './routes/purchases/suppliers/new'
@@ -73,6 +70,9 @@ import { Route as SalesProductsNewRouteImport } from './routes/sales/products/ne
 import { Route as SalesReportsByCustomerRouteImport } from './routes/sales/reports/by-customer'
 import { Route as SalesReportsByProductRouteImport } from './routes/sales/reports/by-product'
 import { Route as SalesReportsByRepRouteImport } from './routes/sales/reports/by-rep'
+import { Route as SalesReturnsIndexRouteImport } from './routes/sales/returns/index'
+import { Route as SalesReturnsIdRouteImport } from './routes/sales/returns/$id'
+import { Route as SalesReturnsNewRouteImport } from './routes/sales/returns/new'
 import { Route as SalesUnitsIndexRouteImport } from './routes/sales/units/index'
 import { Route as TreasuryInvoicesIndexRouteImport } from './routes/treasury/invoices/index'
 import { Route as TreasuryPaymentsIndexRouteImport } from './routes/treasury/payments/index'
@@ -125,11 +125,6 @@ const PurchasesRouteRoute = PurchasesRouteRouteImport.update({
 const ReportsRouteRoute = ReportsRouteRouteImport.update({
   id: '/reports',
   path: '/reports',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ReturnsRouteRoute = ReturnsRouteRouteImport.update({
-  id: '/returns',
-  path: '/returns',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SalesRouteRoute = SalesRouteRouteImport.update({
@@ -188,31 +183,6 @@ const ReportsCustomerStatementRoute =
     path: '/customer-statement',
     getParentRoute: () => ReportsRouteRoute,
   } as any)
-const ReturnsIndexRoute = ReturnsIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => ReturnsRouteRoute,
-} as any)
-const ReturnsIdRoute = ReturnsIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => ReturnsRouteRoute,
-} as any)
-const ReturnsNewRoute = ReturnsNewRouteImport.update({
-  id: '/new',
-  path: '/new',
-  getParentRoute: () => ReturnsRouteRoute,
-} as any)
-const ReturnsPurchaseRoute = ReturnsPurchaseRouteImport.update({
-  id: '/purchase',
-  path: '/purchase',
-  getParentRoute: () => ReturnsRouteRoute,
-} as any)
-const ReturnsSalesRoute = ReturnsSalesRouteImport.update({
-  id: '/sales',
-  path: '/sales',
-  getParentRoute: () => ReturnsRouteRoute,
-} as any)
 const SalesIndexRoute = SalesIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -347,6 +317,21 @@ const PurchasesReportsSupplierStatementRoute =
     path: '/reports/supplier-statement',
     getParentRoute: () => PurchasesRouteRoute,
   } as any)
+const PurchasesReturnsIndexRoute = PurchasesReturnsIndexRouteImport.update({
+  id: '/returns/',
+  path: '/returns/',
+  getParentRoute: () => PurchasesRouteRoute,
+} as any)
+const PurchasesReturnsIdRoute = PurchasesReturnsIdRouteImport.update({
+  id: '/returns/$id',
+  path: '/returns/$id',
+  getParentRoute: () => PurchasesRouteRoute,
+} as any)
+const PurchasesReturnsNewRoute = PurchasesReturnsNewRouteImport.update({
+  id: '/returns/new',
+  path: '/returns/new',
+  getParentRoute: () => PurchasesRouteRoute,
+} as any)
 const PurchasesSuppliersIndexRoute = PurchasesSuppliersIndexRouteImport.update({
   id: '/suppliers/',
   path: '/suppliers/',
@@ -420,6 +405,21 @@ const SalesReportsByProductRoute = SalesReportsByProductRouteImport.update({
 const SalesReportsByRepRoute = SalesReportsByRepRouteImport.update({
   id: '/reports/by-rep',
   path: '/reports/by-rep',
+  getParentRoute: () => SalesRouteRoute,
+} as any)
+const SalesReturnsIndexRoute = SalesReturnsIndexRouteImport.update({
+  id: '/returns/',
+  path: '/returns/',
+  getParentRoute: () => SalesRouteRoute,
+} as any)
+const SalesReturnsIdRoute = SalesReturnsIdRouteImport.update({
+  id: '/returns/$id',
+  path: '/returns/$id',
+  getParentRoute: () => SalesRouteRoute,
+} as any)
+const SalesReturnsNewRoute = SalesReturnsNewRouteImport.update({
+  id: '/returns/new',
+  path: '/returns/new',
   getParentRoute: () => SalesRouteRoute,
 } as any)
 const SalesUnitsIndexRoute = SalesUnitsIndexRouteImport.update({
@@ -546,24 +546,18 @@ export interface FileRoutesByFullPath {
   '/inventory': typeof InventoryRouteRouteWithChildren
   '/purchases': typeof PurchasesRouteRouteWithChildren
   '/reports': typeof ReportsRouteRouteWithChildren
-  '/returns': typeof ReturnsRouteRouteWithChildren
   '/sales': typeof SalesRouteRouteWithChildren
   '/treasury': typeof TreasuryRouteRouteWithChildren
   '/expenses/$id': typeof ExpensesIdRoute
   '/expenses/new': typeof ExpensesNewRoute
   '/inventory/balance': typeof InventoryBalanceRoute
   '/reports/customer-statement': typeof ReportsCustomerStatementRoute
-  '/returns/$id': typeof ReturnsIdRoute
-  '/returns/new': typeof ReturnsNewRoute
-  '/returns/purchase': typeof ReturnsPurchaseRoute
-  '/returns/sales': typeof ReturnsSalesRoute
   '/sales/pos': typeof SalesPosRoute
   '/expenses/': typeof ExpensesIndexRoute
   '/hr/': typeof HrIndexRoute
   '/inventory/': typeof InventoryIndexRoute
   '/purchases/': typeof PurchasesIndexRoute
   '/reports/': typeof ReportsIndexRoute
-  '/returns/': typeof ReturnsIndexRoute
   '/sales/': typeof SalesIndexRoute
   '/treasury/': typeof TreasuryIndexRoute
   '/hr/employees/new': typeof HrEmployeesNewRoute
@@ -579,6 +573,8 @@ export interface FileRoutesByFullPath {
   '/purchases/reports/by-product': typeof PurchasesReportsByProductRoute
   '/purchases/reports/by-supplier': typeof PurchasesReportsBySupplierRoute
   '/purchases/reports/supplier-statement': typeof PurchasesReportsSupplierStatementRoute
+  '/purchases/returns/$id': typeof PurchasesReturnsIdRoute
+  '/purchases/returns/new': typeof PurchasesReturnsNewRoute
   '/purchases/suppliers/$id': typeof PurchasesSuppliersIdRoute
   '/purchases/suppliers/new': typeof PurchasesSuppliersNewRoute
   '/sales/customers/$id': typeof SalesCustomersIdRoute
@@ -590,6 +586,8 @@ export interface FileRoutesByFullPath {
   '/sales/reports/by-customer': typeof SalesReportsByCustomerRoute
   '/sales/reports/by-product': typeof SalesReportsByProductRoute
   '/sales/reports/by-rep': typeof SalesReportsByRepRoute
+  '/sales/returns/$id': typeof SalesReturnsIdRoute
+  '/sales/returns/new': typeof SalesReturnsNewRoute
   '/treasury/payments/$id': typeof TreasuryPaymentsIdRoute
   '/treasury/payments/new': typeof TreasuryPaymentsNewRoute
   '/treasury/receipts/$id': typeof TreasuryReceiptsIdRoute
@@ -611,10 +609,12 @@ export interface FileRoutesByFullPath {
   '/inventory/moves/': typeof InventoryMovesIndexRoute
   '/inventory/warehouses/': typeof InventoryWarehousesIndexRoute
   '/purchases/invoices/': typeof PurchasesInvoicesIndexRoute
+  '/purchases/returns/': typeof PurchasesReturnsIndexRoute
   '/purchases/suppliers/': typeof PurchasesSuppliersIndexRoute
   '/sales/customers/': typeof SalesCustomersIndexRoute
   '/sales/invoices/': typeof SalesInvoicesIndexRoute
   '/sales/products/': typeof SalesProductsIndexRoute
+  '/sales/returns/': typeof SalesReturnsIndexRoute
   '/sales/units/': typeof SalesUnitsIndexRoute
   '/treasury/invoices/': typeof TreasuryInvoicesIndexRoute
   '/treasury/payments/': typeof TreasuryPaymentsIndexRoute
@@ -634,17 +634,12 @@ export interface FileRoutesByTo {
   '/expenses/new': typeof ExpensesNewRoute
   '/inventory/balance': typeof InventoryBalanceRoute
   '/reports/customer-statement': typeof ReportsCustomerStatementRoute
-  '/returns/$id': typeof ReturnsIdRoute
-  '/returns/new': typeof ReturnsNewRoute
-  '/returns/purchase': typeof ReturnsPurchaseRoute
-  '/returns/sales': typeof ReturnsSalesRoute
   '/sales/pos': typeof SalesPosRoute
   '/expenses': typeof ExpensesIndexRoute
   '/hr': typeof HrIndexRoute
   '/inventory': typeof InventoryIndexRoute
   '/purchases': typeof PurchasesIndexRoute
   '/reports': typeof ReportsIndexRoute
-  '/returns': typeof ReturnsIndexRoute
   '/sales': typeof SalesIndexRoute
   '/treasury': typeof TreasuryIndexRoute
   '/hr/employees/new': typeof HrEmployeesNewRoute
@@ -660,6 +655,8 @@ export interface FileRoutesByTo {
   '/purchases/reports/by-product': typeof PurchasesReportsByProductRoute
   '/purchases/reports/by-supplier': typeof PurchasesReportsBySupplierRoute
   '/purchases/reports/supplier-statement': typeof PurchasesReportsSupplierStatementRoute
+  '/purchases/returns/$id': typeof PurchasesReturnsIdRoute
+  '/purchases/returns/new': typeof PurchasesReturnsNewRoute
   '/purchases/suppliers/$id': typeof PurchasesSuppliersIdRoute
   '/purchases/suppliers/new': typeof PurchasesSuppliersNewRoute
   '/sales/customers/$id': typeof SalesCustomersIdRoute
@@ -671,6 +668,8 @@ export interface FileRoutesByTo {
   '/sales/reports/by-customer': typeof SalesReportsByCustomerRoute
   '/sales/reports/by-product': typeof SalesReportsByProductRoute
   '/sales/reports/by-rep': typeof SalesReportsByRepRoute
+  '/sales/returns/$id': typeof SalesReturnsIdRoute
+  '/sales/returns/new': typeof SalesReturnsNewRoute
   '/treasury/payments/$id': typeof TreasuryPaymentsIdRoute
   '/treasury/payments/new': typeof TreasuryPaymentsNewRoute
   '/treasury/receipts/$id': typeof TreasuryReceiptsIdRoute
@@ -692,10 +691,12 @@ export interface FileRoutesByTo {
   '/inventory/moves': typeof InventoryMovesIndexRoute
   '/inventory/warehouses': typeof InventoryWarehousesIndexRoute
   '/purchases/invoices': typeof PurchasesInvoicesIndexRoute
+  '/purchases/returns': typeof PurchasesReturnsIndexRoute
   '/purchases/suppliers': typeof PurchasesSuppliersIndexRoute
   '/sales/customers': typeof SalesCustomersIndexRoute
   '/sales/invoices': typeof SalesInvoicesIndexRoute
   '/sales/products': typeof SalesProductsIndexRoute
+  '/sales/returns': typeof SalesReturnsIndexRoute
   '/sales/units': typeof SalesUnitsIndexRoute
   '/treasury/invoices': typeof TreasuryInvoicesIndexRoute
   '/treasury/payments': typeof TreasuryPaymentsIndexRoute
@@ -717,24 +718,18 @@ export interface FileRoutesById {
   '/inventory': typeof InventoryRouteRouteWithChildren
   '/purchases': typeof PurchasesRouteRouteWithChildren
   '/reports': typeof ReportsRouteRouteWithChildren
-  '/returns': typeof ReturnsRouteRouteWithChildren
   '/sales': typeof SalesRouteRouteWithChildren
   '/treasury': typeof TreasuryRouteRouteWithChildren
   '/expenses/$id': typeof ExpensesIdRoute
   '/expenses/new': typeof ExpensesNewRoute
   '/inventory/balance': typeof InventoryBalanceRoute
   '/reports/customer-statement': typeof ReportsCustomerStatementRoute
-  '/returns/$id': typeof ReturnsIdRoute
-  '/returns/new': typeof ReturnsNewRoute
-  '/returns/purchase': typeof ReturnsPurchaseRoute
-  '/returns/sales': typeof ReturnsSalesRoute
   '/sales/pos': typeof SalesPosRoute
   '/expenses/': typeof ExpensesIndexRoute
   '/hr/': typeof HrIndexRoute
   '/inventory/': typeof InventoryIndexRoute
   '/purchases/': typeof PurchasesIndexRoute
   '/reports/': typeof ReportsIndexRoute
-  '/returns/': typeof ReturnsIndexRoute
   '/sales/': typeof SalesIndexRoute
   '/treasury/': typeof TreasuryIndexRoute
   '/hr/employees/new': typeof HrEmployeesNewRoute
@@ -750,6 +745,8 @@ export interface FileRoutesById {
   '/purchases/reports/by-product': typeof PurchasesReportsByProductRoute
   '/purchases/reports/by-supplier': typeof PurchasesReportsBySupplierRoute
   '/purchases/reports/supplier-statement': typeof PurchasesReportsSupplierStatementRoute
+  '/purchases/returns/$id': typeof PurchasesReturnsIdRoute
+  '/purchases/returns/new': typeof PurchasesReturnsNewRoute
   '/purchases/suppliers/$id': typeof PurchasesSuppliersIdRoute
   '/purchases/suppliers/new': typeof PurchasesSuppliersNewRoute
   '/sales/customers/$id': typeof SalesCustomersIdRoute
@@ -761,6 +758,8 @@ export interface FileRoutesById {
   '/sales/reports/by-customer': typeof SalesReportsByCustomerRoute
   '/sales/reports/by-product': typeof SalesReportsByProductRoute
   '/sales/reports/by-rep': typeof SalesReportsByRepRoute
+  '/sales/returns/$id': typeof SalesReturnsIdRoute
+  '/sales/returns/new': typeof SalesReturnsNewRoute
   '/treasury/payments/$id': typeof TreasuryPaymentsIdRoute
   '/treasury/payments/new': typeof TreasuryPaymentsNewRoute
   '/treasury/receipts/$id': typeof TreasuryReceiptsIdRoute
@@ -782,10 +781,12 @@ export interface FileRoutesById {
   '/inventory/moves/': typeof InventoryMovesIndexRoute
   '/inventory/warehouses/': typeof InventoryWarehousesIndexRoute
   '/purchases/invoices/': typeof PurchasesInvoicesIndexRoute
+  '/purchases/returns/': typeof PurchasesReturnsIndexRoute
   '/purchases/suppliers/': typeof PurchasesSuppliersIndexRoute
   '/sales/customers/': typeof SalesCustomersIndexRoute
   '/sales/invoices/': typeof SalesInvoicesIndexRoute
   '/sales/products/': typeof SalesProductsIndexRoute
+  '/sales/returns/': typeof SalesReturnsIndexRoute
   '/sales/units/': typeof SalesUnitsIndexRoute
   '/treasury/invoices/': typeof TreasuryInvoicesIndexRoute
   '/treasury/payments/': typeof TreasuryPaymentsIndexRoute
@@ -808,24 +809,18 @@ export interface FileRouteTypes {
     | '/inventory'
     | '/purchases'
     | '/reports'
-    | '/returns'
     | '/sales'
     | '/treasury'
     | '/expenses/$id'
     | '/expenses/new'
     | '/inventory/balance'
     | '/reports/customer-statement'
-    | '/returns/$id'
-    | '/returns/new'
-    | '/returns/purchase'
-    | '/returns/sales'
     | '/sales/pos'
     | '/expenses/'
     | '/hr/'
     | '/inventory/'
     | '/purchases/'
     | '/reports/'
-    | '/returns/'
     | '/sales/'
     | '/treasury/'
     | '/hr/employees/new'
@@ -841,6 +836,8 @@ export interface FileRouteTypes {
     | '/purchases/reports/by-product'
     | '/purchases/reports/by-supplier'
     | '/purchases/reports/supplier-statement'
+    | '/purchases/returns/$id'
+    | '/purchases/returns/new'
     | '/purchases/suppliers/$id'
     | '/purchases/suppliers/new'
     | '/sales/customers/$id'
@@ -852,6 +849,8 @@ export interface FileRouteTypes {
     | '/sales/reports/by-customer'
     | '/sales/reports/by-product'
     | '/sales/reports/by-rep'
+    | '/sales/returns/$id'
+    | '/sales/returns/new'
     | '/treasury/payments/$id'
     | '/treasury/payments/new'
     | '/treasury/receipts/$id'
@@ -873,10 +872,12 @@ export interface FileRouteTypes {
     | '/inventory/moves/'
     | '/inventory/warehouses/'
     | '/purchases/invoices/'
+    | '/purchases/returns/'
     | '/purchases/suppliers/'
     | '/sales/customers/'
     | '/sales/invoices/'
     | '/sales/products/'
+    | '/sales/returns/'
     | '/sales/units/'
     | '/treasury/invoices/'
     | '/treasury/payments/'
@@ -896,17 +897,12 @@ export interface FileRouteTypes {
     | '/expenses/new'
     | '/inventory/balance'
     | '/reports/customer-statement'
-    | '/returns/$id'
-    | '/returns/new'
-    | '/returns/purchase'
-    | '/returns/sales'
     | '/sales/pos'
     | '/expenses'
     | '/hr'
     | '/inventory'
     | '/purchases'
     | '/reports'
-    | '/returns'
     | '/sales'
     | '/treasury'
     | '/hr/employees/new'
@@ -922,6 +918,8 @@ export interface FileRouteTypes {
     | '/purchases/reports/by-product'
     | '/purchases/reports/by-supplier'
     | '/purchases/reports/supplier-statement'
+    | '/purchases/returns/$id'
+    | '/purchases/returns/new'
     | '/purchases/suppliers/$id'
     | '/purchases/suppliers/new'
     | '/sales/customers/$id'
@@ -933,6 +931,8 @@ export interface FileRouteTypes {
     | '/sales/reports/by-customer'
     | '/sales/reports/by-product'
     | '/sales/reports/by-rep'
+    | '/sales/returns/$id'
+    | '/sales/returns/new'
     | '/treasury/payments/$id'
     | '/treasury/payments/new'
     | '/treasury/receipts/$id'
@@ -954,10 +954,12 @@ export interface FileRouteTypes {
     | '/inventory/moves'
     | '/inventory/warehouses'
     | '/purchases/invoices'
+    | '/purchases/returns'
     | '/purchases/suppliers'
     | '/sales/customers'
     | '/sales/invoices'
     | '/sales/products'
+    | '/sales/returns'
     | '/sales/units'
     | '/treasury/invoices'
     | '/treasury/payments'
@@ -978,24 +980,18 @@ export interface FileRouteTypes {
     | '/inventory'
     | '/purchases'
     | '/reports'
-    | '/returns'
     | '/sales'
     | '/treasury'
     | '/expenses/$id'
     | '/expenses/new'
     | '/inventory/balance'
     | '/reports/customer-statement'
-    | '/returns/$id'
-    | '/returns/new'
-    | '/returns/purchase'
-    | '/returns/sales'
     | '/sales/pos'
     | '/expenses/'
     | '/hr/'
     | '/inventory/'
     | '/purchases/'
     | '/reports/'
-    | '/returns/'
     | '/sales/'
     | '/treasury/'
     | '/hr/employees/new'
@@ -1011,6 +1007,8 @@ export interface FileRouteTypes {
     | '/purchases/reports/by-product'
     | '/purchases/reports/by-supplier'
     | '/purchases/reports/supplier-statement'
+    | '/purchases/returns/$id'
+    | '/purchases/returns/new'
     | '/purchases/suppliers/$id'
     | '/purchases/suppliers/new'
     | '/sales/customers/$id'
@@ -1022,6 +1020,8 @@ export interface FileRouteTypes {
     | '/sales/reports/by-customer'
     | '/sales/reports/by-product'
     | '/sales/reports/by-rep'
+    | '/sales/returns/$id'
+    | '/sales/returns/new'
     | '/treasury/payments/$id'
     | '/treasury/payments/new'
     | '/treasury/receipts/$id'
@@ -1043,10 +1043,12 @@ export interface FileRouteTypes {
     | '/inventory/moves/'
     | '/inventory/warehouses/'
     | '/purchases/invoices/'
+    | '/purchases/returns/'
     | '/purchases/suppliers/'
     | '/sales/customers/'
     | '/sales/invoices/'
     | '/sales/products/'
+    | '/sales/returns/'
     | '/sales/units/'
     | '/treasury/invoices/'
     | '/treasury/payments/'
@@ -1068,7 +1070,6 @@ export interface RootRouteChildren {
   InventoryRouteRoute: typeof InventoryRouteRouteWithChildren
   PurchasesRouteRoute: typeof PurchasesRouteRouteWithChildren
   ReportsRouteRoute: typeof ReportsRouteRouteWithChildren
-  ReturnsRouteRoute: typeof ReturnsRouteRouteWithChildren
   SalesRouteRoute: typeof SalesRouteRouteWithChildren
   TreasuryRouteRoute: typeof TreasuryRouteRouteWithChildren
 }
@@ -1115,13 +1116,6 @@ declare module '@tanstack/react-router' {
       path: '/reports'
       fullPath: '/reports'
       preLoaderRoute: typeof ReportsRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/returns': {
-      id: '/returns'
-      path: '/returns'
-      fullPath: '/returns'
-      preLoaderRoute: typeof ReturnsRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sales': {
@@ -1200,41 +1194,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/reports/customer-statement'
       preLoaderRoute: typeof ReportsCustomerStatementRouteImport
       parentRoute: typeof ReportsRouteRoute
-    }
-    '/returns/': {
-      id: '/returns/'
-      path: '/'
-      fullPath: '/returns/'
-      preLoaderRoute: typeof ReturnsIndexRouteImport
-      parentRoute: typeof ReturnsRouteRoute
-    }
-    '/returns/$id': {
-      id: '/returns/$id'
-      path: '/$id'
-      fullPath: '/returns/$id'
-      preLoaderRoute: typeof ReturnsIdRouteImport
-      parentRoute: typeof ReturnsRouteRoute
-    }
-    '/returns/new': {
-      id: '/returns/new'
-      path: '/new'
-      fullPath: '/returns/new'
-      preLoaderRoute: typeof ReturnsNewRouteImport
-      parentRoute: typeof ReturnsRouteRoute
-    }
-    '/returns/purchase': {
-      id: '/returns/purchase'
-      path: '/purchase'
-      fullPath: '/returns/purchase'
-      preLoaderRoute: typeof ReturnsPurchaseRouteImport
-      parentRoute: typeof ReturnsRouteRoute
-    }
-    '/returns/sales': {
-      id: '/returns/sales'
-      path: '/sales'
-      fullPath: '/returns/sales'
-      preLoaderRoute: typeof ReturnsSalesRouteImport
-      parentRoute: typeof ReturnsRouteRoute
     }
     '/sales/': {
       id: '/sales/'
@@ -1418,6 +1377,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PurchasesReportsSupplierStatementRouteImport
       parentRoute: typeof PurchasesRouteRoute
     }
+    '/purchases/returns/': {
+      id: '/purchases/returns/'
+      path: '/returns'
+      fullPath: '/purchases/returns/'
+      preLoaderRoute: typeof PurchasesReturnsIndexRouteImport
+      parentRoute: typeof PurchasesRouteRoute
+    }
+    '/purchases/returns/$id': {
+      id: '/purchases/returns/$id'
+      path: '/returns/$id'
+      fullPath: '/purchases/returns/$id'
+      preLoaderRoute: typeof PurchasesReturnsIdRouteImport
+      parentRoute: typeof PurchasesRouteRoute
+    }
+    '/purchases/returns/new': {
+      id: '/purchases/returns/new'
+      path: '/returns/new'
+      fullPath: '/purchases/returns/new'
+      preLoaderRoute: typeof PurchasesReturnsNewRouteImport
+      parentRoute: typeof PurchasesRouteRoute
+    }
     '/purchases/suppliers/': {
       id: '/purchases/suppliers/'
       path: '/suppliers'
@@ -1521,6 +1501,27 @@ declare module '@tanstack/react-router' {
       path: '/reports/by-rep'
       fullPath: '/sales/reports/by-rep'
       preLoaderRoute: typeof SalesReportsByRepRouteImport
+      parentRoute: typeof SalesRouteRoute
+    }
+    '/sales/returns/': {
+      id: '/sales/returns/'
+      path: '/returns'
+      fullPath: '/sales/returns/'
+      preLoaderRoute: typeof SalesReturnsIndexRouteImport
+      parentRoute: typeof SalesRouteRoute
+    }
+    '/sales/returns/$id': {
+      id: '/sales/returns/$id'
+      path: '/returns/$id'
+      fullPath: '/sales/returns/$id'
+      preLoaderRoute: typeof SalesReturnsIdRouteImport
+      parentRoute: typeof SalesRouteRoute
+    }
+    '/sales/returns/new': {
+      id: '/sales/returns/new'
+      path: '/returns/new'
+      fullPath: '/sales/returns/new'
+      preLoaderRoute: typeof SalesReturnsNewRouteImport
       parentRoute: typeof SalesRouteRoute
     }
     '/sales/units/': {
@@ -1773,9 +1774,12 @@ interface PurchasesRouteRouteChildren {
   PurchasesReportsByProductRoute: typeof PurchasesReportsByProductRoute
   PurchasesReportsBySupplierRoute: typeof PurchasesReportsBySupplierRoute
   PurchasesReportsSupplierStatementRoute: typeof PurchasesReportsSupplierStatementRoute
+  PurchasesReturnsIdRoute: typeof PurchasesReturnsIdRoute
+  PurchasesReturnsNewRoute: typeof PurchasesReturnsNewRoute
   PurchasesSuppliersIdRoute: typeof PurchasesSuppliersIdRoute
   PurchasesSuppliersNewRoute: typeof PurchasesSuppliersNewRoute
   PurchasesInvoicesIndexRoute: typeof PurchasesInvoicesIndexRoute
+  PurchasesReturnsIndexRoute: typeof PurchasesReturnsIndexRoute
   PurchasesSuppliersIndexRoute: typeof PurchasesSuppliersIndexRoute
 }
 
@@ -1787,9 +1791,12 @@ const PurchasesRouteRouteChildren: PurchasesRouteRouteChildren = {
   PurchasesReportsBySupplierRoute: PurchasesReportsBySupplierRoute,
   PurchasesReportsSupplierStatementRoute:
     PurchasesReportsSupplierStatementRoute,
+  PurchasesReturnsIdRoute: PurchasesReturnsIdRoute,
+  PurchasesReturnsNewRoute: PurchasesReturnsNewRoute,
   PurchasesSuppliersIdRoute: PurchasesSuppliersIdRoute,
   PurchasesSuppliersNewRoute: PurchasesSuppliersNewRoute,
   PurchasesInvoicesIndexRoute: PurchasesInvoicesIndexRoute,
+  PurchasesReturnsIndexRoute: PurchasesReturnsIndexRoute,
   PurchasesSuppliersIndexRoute: PurchasesSuppliersIndexRoute,
 }
 
@@ -1811,26 +1818,6 @@ const ReportsRouteRouteWithChildren = ReportsRouteRoute._addFileChildren(
   ReportsRouteRouteChildren,
 )
 
-interface ReturnsRouteRouteChildren {
-  ReturnsIdRoute: typeof ReturnsIdRoute
-  ReturnsNewRoute: typeof ReturnsNewRoute
-  ReturnsPurchaseRoute: typeof ReturnsPurchaseRoute
-  ReturnsSalesRoute: typeof ReturnsSalesRoute
-  ReturnsIndexRoute: typeof ReturnsIndexRoute
-}
-
-const ReturnsRouteRouteChildren: ReturnsRouteRouteChildren = {
-  ReturnsIdRoute: ReturnsIdRoute,
-  ReturnsNewRoute: ReturnsNewRoute,
-  ReturnsPurchaseRoute: ReturnsPurchaseRoute,
-  ReturnsSalesRoute: ReturnsSalesRoute,
-  ReturnsIndexRoute: ReturnsIndexRoute,
-}
-
-const ReturnsRouteRouteWithChildren = ReturnsRouteRoute._addFileChildren(
-  ReturnsRouteRouteChildren,
-)
-
 interface SalesRouteRouteChildren {
   SalesPosRoute: typeof SalesPosRoute
   SalesIndexRoute: typeof SalesIndexRoute
@@ -1843,9 +1830,12 @@ interface SalesRouteRouteChildren {
   SalesReportsByCustomerRoute: typeof SalesReportsByCustomerRoute
   SalesReportsByProductRoute: typeof SalesReportsByProductRoute
   SalesReportsByRepRoute: typeof SalesReportsByRepRoute
+  SalesReturnsIdRoute: typeof SalesReturnsIdRoute
+  SalesReturnsNewRoute: typeof SalesReturnsNewRoute
   SalesCustomersIndexRoute: typeof SalesCustomersIndexRoute
   SalesInvoicesIndexRoute: typeof SalesInvoicesIndexRoute
   SalesProductsIndexRoute: typeof SalesProductsIndexRoute
+  SalesReturnsIndexRoute: typeof SalesReturnsIndexRoute
   SalesUnitsIndexRoute: typeof SalesUnitsIndexRoute
 }
 
@@ -1861,9 +1851,12 @@ const SalesRouteRouteChildren: SalesRouteRouteChildren = {
   SalesReportsByCustomerRoute: SalesReportsByCustomerRoute,
   SalesReportsByProductRoute: SalesReportsByProductRoute,
   SalesReportsByRepRoute: SalesReportsByRepRoute,
+  SalesReturnsIdRoute: SalesReturnsIdRoute,
+  SalesReturnsNewRoute: SalesReturnsNewRoute,
   SalesCustomersIndexRoute: SalesCustomersIndexRoute,
   SalesInvoicesIndexRoute: SalesInvoicesIndexRoute,
   SalesProductsIndexRoute: SalesProductsIndexRoute,
+  SalesReturnsIndexRoute: SalesReturnsIndexRoute,
   SalesUnitsIndexRoute: SalesUnitsIndexRoute,
 }
 
@@ -1930,7 +1923,6 @@ const rootRouteChildren: RootRouteChildren = {
   InventoryRouteRoute: InventoryRouteRouteWithChildren,
   PurchasesRouteRoute: PurchasesRouteRouteWithChildren,
   ReportsRouteRoute: ReportsRouteRouteWithChildren,
-  ReturnsRouteRoute: ReturnsRouteRouteWithChildren,
   SalesRouteRoute: SalesRouteRouteWithChildren,
   TreasuryRouteRoute: TreasuryRouteRouteWithChildren,
 }

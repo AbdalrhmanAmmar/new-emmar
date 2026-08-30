@@ -105,14 +105,14 @@ export function ReturnForm({ returnId, initialKind }: { returnId?: string; initi
     toast.success(
       status === "posted" ? "تم ترحيل المرتجع وتحديث المخزون والحساب" : "تم حفظ المرتجع كمسودة",
     );
-    navigate({ to: "/returns" });
+    navigate({ to: kind === "purchase" ? "/purchases/returns" : "/sales/returns" });
   };
 
   return (
     <FormPage
       title={existing ? `تعديل ${RETURN_KIND_LABEL[existing.kind]} — ${existing.no}` : "مرتجع جديد"}
       subtitle="مرتجع مبيعات (رد للمخزن) أو مرتجع مشتريات (خروج للمورد) مع إذن مخزني وتسوية مالية تلقائية"
-      onCancel={() => navigate({ to: "/returns" })}
+      onCancel={() => navigate({ to: kind === "purchase" ? "/purchases/returns" : "/sales/returns" })}
       onSubmit={() => submit("posted")}
       submitLabel="ترحيل المرتجع"
       extraActions={
