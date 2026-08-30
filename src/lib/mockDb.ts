@@ -1390,6 +1390,7 @@ function seed(): DbShape {
   return {
     branches,
     users,
+    roles,
     customers,
     suppliers,
     categories,
@@ -1434,6 +1435,11 @@ function load(): DbShape {
       return {
         ...base,
         ...parsed,
+        roles: parsed.roles?.length ? parsed.roles : base.roles,
+        // ترقية بيانات المستخدمين القديمة (قبل إضافة اليوزر والباسورد والصلاحيات)
+        users: parsed.users?.length
+          ? parsed.users.map((u) => ({ ...(base.users.find((b) => b.id === u.id) ?? {}), ...u }))
+          : base.users,
         purchaseInvoices: parsed.purchaseInvoices ?? base.purchaseInvoices,
         warehouses: parsed.warehouses?.length ? parsed.warehouses : base.warehouses,
         stockMoves: parsed.stockMoves ?? base.stockMoves,
