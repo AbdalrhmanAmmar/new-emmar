@@ -27,7 +27,7 @@ export const Dialog: React.FC<{
   // مزامنة الحالة مع الرابط
   useEffect(() => {
     if (open && !urlOpen) {
-      navigate({ to: ".", search: (prev: any) => ({ ...prev, [SEARCH_KEY]: "1" }), replace: false });
+      navigate({ to: ".", search: (prev: any) => ({ ...prev, [SEARCH_KEY]: 1 }), replace: false });
     } else if (!open && urlOpen) {
       navigate({
         to: ".",
