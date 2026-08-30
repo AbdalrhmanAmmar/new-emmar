@@ -483,6 +483,7 @@ export interface DbShape {
   expenses: Expense[];
   employees: Employee[];
   attendance: Attendance[];
+  adjustments: PayrollAdjustment[];
   settings: OrgSettings;
 
 }
@@ -897,6 +898,16 @@ function seed(): DbShape {
     }
   }
 
+  const thisMonth = d(0).slice(0, 7);
+  const prevMonth = d(-35).slice(0, 7);
+  const adjustments: PayrollAdjustment[] = [
+    { id: "adj1", employeeId: "em1", month: thisMonth, kind: "allowance", label: "بدل انتقالات", amount: 400, note: "" },
+    { id: "adj2", employeeId: "em2", month: thisMonth, kind: "allowance", label: "حافز إنتاج", amount: 600, note: "إنجاز إقفال الشهر" },
+    { id: "adj3", employeeId: "em3", month: thisMonth, kind: "deduction", label: "جزاء", amount: 200, note: "تأخير تسليم جرد" },
+    { id: "adj4", employeeId: "em5", month: thisMonth, kind: "allowance", label: "عمولة مبيعات", amount: 1200, note: "1% من التحصيل" },
+    { id: "adj5", employeeId: "em1", month: prevMonth, kind: "deduction", label: "تأمينات اجتماعية", amount: 350, note: "" },
+  ];
+
   const expenses: Expense[] = [
     { id: "exp1", no: "EXP-000001", date: d(-20), itemId: "ei1", kind: "salary", employeeId: "em1", beneficiary: "أحمد سالم عبد الله", amount: 9000, branchId: "br1", safeId: "sf1", payMethod: "cash", period: d(-35).slice(0, 7), note: "راتب الشهر السابق", status: "posted" },
     { id: "exp2", no: "EXP-000002", date: d(-20), itemId: "ei1", kind: "salary", employeeId: "em2", beneficiary: "منى عبد الله حسن", amount: 8500, branchId: "br1", safeId: "sf1", payMethod: "cash", period: d(-35).slice(0, 7), note: "راتب الشهر السابق", status: "posted" },
@@ -1056,6 +1067,7 @@ function seed(): DbShape {
     expenses,
     employees,
     attendance,
+    adjustments,
     settings,
 
   };
@@ -1084,6 +1096,7 @@ function load(): DbShape {
         expenses: parsed.expenses ?? base.expenses,
         employees: parsed.employees?.length ? parsed.employees : base.employees,
         attendance: parsed.attendance ?? base.attendance,
+        adjustments: parsed.adjustments ?? base.adjustments,
         settings: { ...base.settings, ...(parsed.settings ?? {}) },
       };
 
