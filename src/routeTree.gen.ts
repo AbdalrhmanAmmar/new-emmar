@@ -10,14 +10,22 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PurchasesRouteRouteImport } from './routes/purchases/route'
 import { Route as ReportsRouteRouteImport } from './routes/reports/route'
 import { Route as SalesRouteRouteImport } from './routes/sales/route'
 import { Route as TreasuryRouteRouteImport } from './routes/treasury/route'
+import { Route as PurchasesIndexRouteImport } from './routes/purchases/index'
 import { Route as ReportsIndexRouteImport } from './routes/reports/index'
 import { Route as ReportsCustomerStatementRouteImport } from './routes/reports/customer-statement'
 import { Route as SalesIndexRouteImport } from './routes/sales/index'
 import { Route as SalesPosRouteImport } from './routes/sales/pos'
 import { Route as TreasuryIndexRouteImport } from './routes/treasury/index'
+import { Route as PurchasesInvoicesIndexRouteImport } from './routes/purchases/invoices/index'
+import { Route as PurchasesInvoicesIdRouteImport } from './routes/purchases/invoices/$id'
+import { Route as PurchasesInvoicesNewRouteImport } from './routes/purchases/invoices/new'
+import { Route as PurchasesSuppliersIndexRouteImport } from './routes/purchases/suppliers/index'
+import { Route as PurchasesSuppliersIdRouteImport } from './routes/purchases/suppliers/$id'
+import { Route as PurchasesSuppliersNewRouteImport } from './routes/purchases/suppliers/new'
 import { Route as SalesCustomersIndexRouteImport } from './routes/sales/customers/index'
 import { Route as SalesCustomersIdRouteImport } from './routes/sales/customers/$id'
 import { Route as SalesCustomersNewRouteImport } from './routes/sales/customers/new'
@@ -56,6 +64,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PurchasesRouteRoute = PurchasesRouteRouteImport.update({
+  id: '/purchases',
+  path: '/purchases',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ReportsRouteRoute = ReportsRouteRouteImport.update({
   id: '/reports',
   path: '/reports',
@@ -70,6 +83,11 @@ const TreasuryRouteRoute = TreasuryRouteRouteImport.update({
   id: '/treasury',
   path: '/treasury',
   getParentRoute: () => rootRouteImport,
+} as any)
+const PurchasesIndexRoute = PurchasesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => PurchasesRouteRoute,
 } as any)
 const ReportsIndexRoute = ReportsIndexRouteImport.update({
   id: '/',
@@ -96,6 +114,36 @@ const TreasuryIndexRoute = TreasuryIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => TreasuryRouteRoute,
+} as any)
+const PurchasesInvoicesIndexRoute = PurchasesInvoicesIndexRouteImport.update({
+  id: '/invoices/',
+  path: '/invoices/',
+  getParentRoute: () => PurchasesRouteRoute,
+} as any)
+const PurchasesInvoicesIdRoute = PurchasesInvoicesIdRouteImport.update({
+  id: '/invoices/$id',
+  path: '/invoices/$id',
+  getParentRoute: () => PurchasesRouteRoute,
+} as any)
+const PurchasesInvoicesNewRoute = PurchasesInvoicesNewRouteImport.update({
+  id: '/invoices/new',
+  path: '/invoices/new',
+  getParentRoute: () => PurchasesRouteRoute,
+} as any)
+const PurchasesSuppliersIndexRoute = PurchasesSuppliersIndexRouteImport.update({
+  id: '/suppliers/',
+  path: '/suppliers/',
+  getParentRoute: () => PurchasesRouteRoute,
+} as any)
+const PurchasesSuppliersIdRoute = PurchasesSuppliersIdRouteImport.update({
+  id: '/suppliers/$id',
+  path: '/suppliers/$id',
+  getParentRoute: () => PurchasesRouteRoute,
+} as any)
+const PurchasesSuppliersNewRoute = PurchasesSuppliersNewRouteImport.update({
+  id: '/suppliers/new',
+  path: '/suppliers/new',
+  getParentRoute: () => PurchasesRouteRoute,
 } as any)
 const SalesCustomersIndexRoute = SalesCustomersIndexRouteImport.update({
   id: '/customers/',
@@ -261,14 +309,20 @@ const TreasuryTransfersNewRoute = TreasuryTransfersNewRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/purchases': typeof PurchasesRouteRouteWithChildren
   '/reports': typeof ReportsRouteRouteWithChildren
   '/sales': typeof SalesRouteRouteWithChildren
   '/treasury': typeof TreasuryRouteRouteWithChildren
   '/reports/customer-statement': typeof ReportsCustomerStatementRoute
   '/sales/pos': typeof SalesPosRoute
+  '/purchases/': typeof PurchasesIndexRoute
   '/reports/': typeof ReportsIndexRoute
   '/sales/': typeof SalesIndexRoute
   '/treasury/': typeof TreasuryIndexRoute
+  '/purchases/invoices/$id': typeof PurchasesInvoicesIdRoute
+  '/purchases/invoices/new': typeof PurchasesInvoicesNewRoute
+  '/purchases/suppliers/$id': typeof PurchasesSuppliersIdRoute
+  '/purchases/suppliers/new': typeof PurchasesSuppliersNewRoute
   '/sales/customers/$id': typeof SalesCustomersIdRoute
   '/sales/customers/new': typeof SalesCustomersNewRoute
   '/sales/invoices/$id': typeof SalesInvoicesIdRoute
@@ -289,6 +343,8 @@ export interface FileRoutesByFullPath {
   '/treasury/safes/$id': typeof TreasurySafesIdRoute
   '/treasury/safes/new': typeof TreasurySafesNewRoute
   '/treasury/transfers/new': typeof TreasuryTransfersNewRoute
+  '/purchases/invoices/': typeof PurchasesInvoicesIndexRoute
+  '/purchases/suppliers/': typeof PurchasesSuppliersIndexRoute
   '/sales/customers/': typeof SalesCustomersIndexRoute
   '/sales/invoices/': typeof SalesInvoicesIndexRoute
   '/sales/products/': typeof SalesProductsIndexRoute
@@ -306,9 +362,14 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/reports/customer-statement': typeof ReportsCustomerStatementRoute
   '/sales/pos': typeof SalesPosRoute
+  '/purchases': typeof PurchasesIndexRoute
   '/reports': typeof ReportsIndexRoute
   '/sales': typeof SalesIndexRoute
   '/treasury': typeof TreasuryIndexRoute
+  '/purchases/invoices/$id': typeof PurchasesInvoicesIdRoute
+  '/purchases/invoices/new': typeof PurchasesInvoicesNewRoute
+  '/purchases/suppliers/$id': typeof PurchasesSuppliersIdRoute
+  '/purchases/suppliers/new': typeof PurchasesSuppliersNewRoute
   '/sales/customers/$id': typeof SalesCustomersIdRoute
   '/sales/customers/new': typeof SalesCustomersNewRoute
   '/sales/invoices/$id': typeof SalesInvoicesIdRoute
@@ -329,6 +390,8 @@ export interface FileRoutesByTo {
   '/treasury/safes/$id': typeof TreasurySafesIdRoute
   '/treasury/safes/new': typeof TreasurySafesNewRoute
   '/treasury/transfers/new': typeof TreasuryTransfersNewRoute
+  '/purchases/invoices': typeof PurchasesInvoicesIndexRoute
+  '/purchases/suppliers': typeof PurchasesSuppliersIndexRoute
   '/sales/customers': typeof SalesCustomersIndexRoute
   '/sales/invoices': typeof SalesInvoicesIndexRoute
   '/sales/products': typeof SalesProductsIndexRoute
@@ -345,14 +408,20 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/purchases': typeof PurchasesRouteRouteWithChildren
   '/reports': typeof ReportsRouteRouteWithChildren
   '/sales': typeof SalesRouteRouteWithChildren
   '/treasury': typeof TreasuryRouteRouteWithChildren
   '/reports/customer-statement': typeof ReportsCustomerStatementRoute
   '/sales/pos': typeof SalesPosRoute
+  '/purchases/': typeof PurchasesIndexRoute
   '/reports/': typeof ReportsIndexRoute
   '/sales/': typeof SalesIndexRoute
   '/treasury/': typeof TreasuryIndexRoute
+  '/purchases/invoices/$id': typeof PurchasesInvoicesIdRoute
+  '/purchases/invoices/new': typeof PurchasesInvoicesNewRoute
+  '/purchases/suppliers/$id': typeof PurchasesSuppliersIdRoute
+  '/purchases/suppliers/new': typeof PurchasesSuppliersNewRoute
   '/sales/customers/$id': typeof SalesCustomersIdRoute
   '/sales/customers/new': typeof SalesCustomersNewRoute
   '/sales/invoices/$id': typeof SalesInvoicesIdRoute
@@ -373,6 +442,8 @@ export interface FileRoutesById {
   '/treasury/safes/$id': typeof TreasurySafesIdRoute
   '/treasury/safes/new': typeof TreasurySafesNewRoute
   '/treasury/transfers/new': typeof TreasuryTransfersNewRoute
+  '/purchases/invoices/': typeof PurchasesInvoicesIndexRoute
+  '/purchases/suppliers/': typeof PurchasesSuppliersIndexRoute
   '/sales/customers/': typeof SalesCustomersIndexRoute
   '/sales/invoices/': typeof SalesInvoicesIndexRoute
   '/sales/products/': typeof SalesProductsIndexRoute
@@ -390,14 +461,20 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/purchases'
     | '/reports'
     | '/sales'
     | '/treasury'
     | '/reports/customer-statement'
     | '/sales/pos'
+    | '/purchases/'
     | '/reports/'
     | '/sales/'
     | '/treasury/'
+    | '/purchases/invoices/$id'
+    | '/purchases/invoices/new'
+    | '/purchases/suppliers/$id'
+    | '/purchases/suppliers/new'
     | '/sales/customers/$id'
     | '/sales/customers/new'
     | '/sales/invoices/$id'
@@ -418,6 +495,8 @@ export interface FileRouteTypes {
     | '/treasury/safes/$id'
     | '/treasury/safes/new'
     | '/treasury/transfers/new'
+    | '/purchases/invoices/'
+    | '/purchases/suppliers/'
     | '/sales/customers/'
     | '/sales/invoices/'
     | '/sales/products/'
@@ -435,9 +514,14 @@ export interface FileRouteTypes {
     | '/'
     | '/reports/customer-statement'
     | '/sales/pos'
+    | '/purchases'
     | '/reports'
     | '/sales'
     | '/treasury'
+    | '/purchases/invoices/$id'
+    | '/purchases/invoices/new'
+    | '/purchases/suppliers/$id'
+    | '/purchases/suppliers/new'
     | '/sales/customers/$id'
     | '/sales/customers/new'
     | '/sales/invoices/$id'
@@ -458,6 +542,8 @@ export interface FileRouteTypes {
     | '/treasury/safes/$id'
     | '/treasury/safes/new'
     | '/treasury/transfers/new'
+    | '/purchases/invoices'
+    | '/purchases/suppliers'
     | '/sales/customers'
     | '/sales/invoices'
     | '/sales/products'
@@ -473,14 +559,20 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/purchases'
     | '/reports'
     | '/sales'
     | '/treasury'
     | '/reports/customer-statement'
     | '/sales/pos'
+    | '/purchases/'
     | '/reports/'
     | '/sales/'
     | '/treasury/'
+    | '/purchases/invoices/$id'
+    | '/purchases/invoices/new'
+    | '/purchases/suppliers/$id'
+    | '/purchases/suppliers/new'
     | '/sales/customers/$id'
     | '/sales/customers/new'
     | '/sales/invoices/$id'
@@ -501,6 +593,8 @@ export interface FileRouteTypes {
     | '/treasury/safes/$id'
     | '/treasury/safes/new'
     | '/treasury/transfers/new'
+    | '/purchases/invoices/'
+    | '/purchases/suppliers/'
     | '/sales/customers/'
     | '/sales/invoices/'
     | '/sales/products/'
@@ -517,6 +611,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  PurchasesRouteRoute: typeof PurchasesRouteRouteWithChildren
   ReportsRouteRoute: typeof ReportsRouteRouteWithChildren
   SalesRouteRoute: typeof SalesRouteRouteWithChildren
   TreasuryRouteRoute: typeof TreasuryRouteRouteWithChildren
@@ -529,6 +624,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/purchases': {
+      id: '/purchases'
+      path: '/purchases'
+      fullPath: '/purchases'
+      preLoaderRoute: typeof PurchasesRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reports': {
@@ -551,6 +653,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/treasury'
       preLoaderRoute: typeof TreasuryRouteRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/purchases/': {
+      id: '/purchases/'
+      path: '/'
+      fullPath: '/purchases/'
+      preLoaderRoute: typeof PurchasesIndexRouteImport
+      parentRoute: typeof PurchasesRouteRoute
     }
     '/reports/': {
       id: '/reports/'
@@ -586,6 +695,48 @@ declare module '@tanstack/react-router' {
       fullPath: '/treasury/'
       preLoaderRoute: typeof TreasuryIndexRouteImport
       parentRoute: typeof TreasuryRouteRoute
+    }
+    '/purchases/invoices/': {
+      id: '/purchases/invoices/'
+      path: '/invoices'
+      fullPath: '/purchases/invoices/'
+      preLoaderRoute: typeof PurchasesInvoicesIndexRouteImport
+      parentRoute: typeof PurchasesRouteRoute
+    }
+    '/purchases/invoices/$id': {
+      id: '/purchases/invoices/$id'
+      path: '/invoices/$id'
+      fullPath: '/purchases/invoices/$id'
+      preLoaderRoute: typeof PurchasesInvoicesIdRouteImport
+      parentRoute: typeof PurchasesRouteRoute
+    }
+    '/purchases/invoices/new': {
+      id: '/purchases/invoices/new'
+      path: '/invoices/new'
+      fullPath: '/purchases/invoices/new'
+      preLoaderRoute: typeof PurchasesInvoicesNewRouteImport
+      parentRoute: typeof PurchasesRouteRoute
+    }
+    '/purchases/suppliers/': {
+      id: '/purchases/suppliers/'
+      path: '/suppliers'
+      fullPath: '/purchases/suppliers/'
+      preLoaderRoute: typeof PurchasesSuppliersIndexRouteImport
+      parentRoute: typeof PurchasesRouteRoute
+    }
+    '/purchases/suppliers/$id': {
+      id: '/purchases/suppliers/$id'
+      path: '/suppliers/$id'
+      fullPath: '/purchases/suppliers/$id'
+      preLoaderRoute: typeof PurchasesSuppliersIdRouteImport
+      parentRoute: typeof PurchasesRouteRoute
+    }
+    '/purchases/suppliers/new': {
+      id: '/purchases/suppliers/new'
+      path: '/suppliers/new'
+      fullPath: '/purchases/suppliers/new'
+      preLoaderRoute: typeof PurchasesSuppliersNewRouteImport
+      parentRoute: typeof PurchasesRouteRoute
     }
     '/sales/customers/': {
       id: '/sales/customers/'
@@ -814,6 +965,30 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface PurchasesRouteRouteChildren {
+  PurchasesIndexRoute: typeof PurchasesIndexRoute
+  PurchasesInvoicesIdRoute: typeof PurchasesInvoicesIdRoute
+  PurchasesInvoicesNewRoute: typeof PurchasesInvoicesNewRoute
+  PurchasesSuppliersIdRoute: typeof PurchasesSuppliersIdRoute
+  PurchasesSuppliersNewRoute: typeof PurchasesSuppliersNewRoute
+  PurchasesInvoicesIndexRoute: typeof PurchasesInvoicesIndexRoute
+  PurchasesSuppliersIndexRoute: typeof PurchasesSuppliersIndexRoute
+}
+
+const PurchasesRouteRouteChildren: PurchasesRouteRouteChildren = {
+  PurchasesIndexRoute: PurchasesIndexRoute,
+  PurchasesInvoicesIdRoute: PurchasesInvoicesIdRoute,
+  PurchasesInvoicesNewRoute: PurchasesInvoicesNewRoute,
+  PurchasesSuppliersIdRoute: PurchasesSuppliersIdRoute,
+  PurchasesSuppliersNewRoute: PurchasesSuppliersNewRoute,
+  PurchasesInvoicesIndexRoute: PurchasesInvoicesIndexRoute,
+  PurchasesSuppliersIndexRoute: PurchasesSuppliersIndexRoute,
+}
+
+const PurchasesRouteRouteWithChildren = PurchasesRouteRoute._addFileChildren(
+  PurchasesRouteRouteChildren,
+)
+
 interface ReportsRouteRouteChildren {
   ReportsCustomerStatementRoute: typeof ReportsCustomerStatementRoute
   ReportsIndexRoute: typeof ReportsIndexRoute
@@ -920,6 +1095,7 @@ const TreasuryRouteRouteWithChildren = TreasuryRouteRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  PurchasesRouteRoute: PurchasesRouteRouteWithChildren,
   ReportsRouteRoute: ReportsRouteRouteWithChildren,
   SalesRouteRoute: SalesRouteRouteWithChildren,
   TreasuryRouteRoute: TreasuryRouteRouteWithChildren,
