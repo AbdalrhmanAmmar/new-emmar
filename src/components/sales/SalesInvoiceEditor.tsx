@@ -211,6 +211,20 @@ export function SalesInvoiceEditor({ invoice }: Props) {
         </div>
       </div>
 
+      {/* ===== شريط الملخص اللحظى — يتحدث أول بأول ===== */}
+      <div className="sticky top-14 z-20 grid grid-cols-2 gap-2 rounded-xl border border-border bg-card/95 p-3 backdrop-blur sm:grid-cols-3 lg:grid-cols-6">
+        <LiveStat label="عدد الأصناف" value={String(filledLines.length)} />
+        <LiveStat label="إجمالي الكميات" value={num(qtySum)} />
+        <LiveStat label="الصافي" value={money(totals.net)} />
+        <LiveStat label="الضريبة" value={money(totals.tax)} />
+        <LiveStat label="المستحق" value={money(totals.total)} tone="primary" />
+        <LiveStat
+          label="المتبقي"
+          value={money(totals.remaining)}
+          tone={totals.remaining > 0 ? "danger" : "ok"}
+        />
+      </div>
+
       <div className="grid min-w-0 gap-4 xl:grid-cols-[minmax(0,1fr)_13.5rem]">
         <div className="min-w-0 space-y-4">
           {/* ===== الهيدر والمعاملات ===== */}
