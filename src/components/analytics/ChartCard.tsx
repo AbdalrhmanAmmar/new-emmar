@@ -67,11 +67,13 @@ export function ChartCard({
   );
 }
 
+const AXIS_COLOR = "#6b7280";
+
 const axisProps = {
-  tick: { fontSize: 11, fill: "currentColor" },
-  stroke: "currentColor",
-  strokeOpacity: 0.2,
-  className: "text-muted-foreground",
+  tick: { fontSize: 11, fill: AXIS_COLOR },
+  stroke: AXIS_COLOR,
+  strokeOpacity: 0.35,
+  tickLine: false,
 } as const;
 
 const tooltipProps = {
@@ -200,13 +202,15 @@ export function DonutChart({ data }: { data: SeriesPoint[] }) {
     <ResponsiveContainer width="100%" height="100%">
     <PieChart>
       <Tooltip {...tooltipProps} />
-      <Legend wrapperStyle={{ fontSize: 12, direction: "rtl" }} />
+      <Legend verticalAlign="bottom" height={36} wrapperStyle={{ fontSize: 11, direction: "rtl" }} />
       <Pie
         data={data}
         dataKey="value"
         nameKey="label"
-        innerRadius="52%"
-        outerRadius="80%"
+        cx="50%"
+        cy="45%"
+        innerRadius={52}
+        outerRadius={82}
         paddingAngle={2}
         stroke="none"
       >
