@@ -13,6 +13,7 @@ import {
 import { purchaseTotals } from "./purchases";
 import { baseQty, lineFactor } from "./units";
 import type { ActionResult } from "./salesActions";
+import { removeInvoiceMove, syncInvoiceMove } from "./inventoryActions";
 
 function linkedInvoiceId(inv: PurchaseInvoice) {
   return `plink_${inv.id}`;
@@ -30,6 +31,7 @@ function unpost(data: DbShape, inv: PurchaseInvoice) {
   }
   data.invoices = data.invoices.filter((i) => i.id !== linkedInvoiceId(inv));
   data.vouchers = data.vouchers.filter((v) => v.id !== linkedVoucherId(inv));
+  removeInvoiceMove(data, inv.id);
 }
 
 /** تطبيق أثر فاتورة شراء: زيادة المخزون وتحديث التكلفة وإنشاء المستحق وسند الصرف */
@@ -45,6 +47,19 @@ function post(data: DbShape, inv: PurchaseInvoice) {
     product.cost = qty + oldQty > 0 ? (product.cost * oldQty + newCost * qty) / (qty + oldQty) : newCost;
     product.stock += qty;
   }
+
+  // إذن إضافة مخزون تلقائى بالرقم المرجعى لرقم وكود الفاتورة
+  syncInvoiceMove(data, {
+    invoiceId: inv.id,
+    invoiceNo: inv.no,
+    source: "purchase",
+    date: inv.date,
+    warehouseId: inv.warehouseId,
+    branchId: inv.branchId,
+    userId: inv.userId,
+    partyName: inv.supplierName,
+    lines: inv.lines,
+  });
 
   const totals = purchaseTotals(inv);
 

@@ -13,6 +13,7 @@ import {
 import { addDays } from "./settingsRules";
 import { invoiceTotals, discountPercentOf } from "./sales";
 import { baseQty } from "./units";
+import { removeInvoiceMove, syncInvoiceMove } from "./inventoryActions";
 
 export interface ActionResult {
   ok: boolean;
@@ -38,6 +39,7 @@ function unpost(data: DbShape, inv: SalesInvoice) {
   }
   data.invoices = data.invoices.filter((i) => i.id !== linkedInvoiceId(inv));
   data.vouchers = data.vouchers.filter((v) => v.id !== linkedVoucherId(inv));
+  removeInvoiceMove(data, inv.id);
 }
 
 /** تطبيق أثر فاتورة مُرحّلة: خصم المخزون وإنشاء المتبقي الآجل وسند القبض */
@@ -46,6 +48,19 @@ function post(data: DbShape, inv: SalesInvoice) {
     const product = data.products.find((p) => p.id === line.productId);
     if (product) product.stock -= baseQty(line);
   }
+
+  // إذن صرف مخزني تلقائى بالرقم المرجعى لرقم وكود الفاتورة
+  syncInvoiceMove(data, {
+    invoiceId: inv.id,
+    invoiceNo: inv.no,
+    source: "sales",
+    date: inv.date,
+    warehouseId: inv.warehouseId,
+    branchId: inv.branchId,
+    userId: inv.userId,
+    partyName: inv.customerName,
+    lines: inv.lines,
+  });
 
   const totals = invoiceTotals({ ...inv, codePercent: discountPercentOf(data, inv.discountCode) });
 
