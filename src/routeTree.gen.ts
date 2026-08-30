@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ExpensesRouteRouteImport } from './routes/expenses/route'
+import { Route as HrRouteRouteImport } from './routes/hr/route'
 import { Route as PurchasesRouteRouteImport } from './routes/purchases/route'
 import { Route as ReportsRouteRouteImport } from './routes/reports/route'
 import { Route as SalesRouteRouteImport } from './routes/sales/route'
@@ -18,6 +19,7 @@ import { Route as TreasuryRouteRouteImport } from './routes/treasury/route'
 import { Route as ExpensesIndexRouteImport } from './routes/expenses/index'
 import { Route as ExpensesIdRouteImport } from './routes/expenses/$id'
 import { Route as ExpensesNewRouteImport } from './routes/expenses/new'
+import { Route as HrIndexRouteImport } from './routes/hr/index'
 import { Route as PurchasesIndexRouteImport } from './routes/purchases/index'
 import { Route as ReportsIndexRouteImport } from './routes/reports/index'
 import { Route as ReportsCustomerStatementRouteImport } from './routes/reports/customer-statement'
@@ -26,6 +28,11 @@ import { Route as SalesPosRouteImport } from './routes/sales/pos'
 import { Route as TreasuryIndexRouteImport } from './routes/treasury/index'
 import { Route as ExpensesItemsIndexRouteImport } from './routes/expenses/items/index'
 import { Route as ExpensesListIndexRouteImport } from './routes/expenses/list/index'
+import { Route as HrAttendanceIndexRouteImport } from './routes/hr/attendance/index'
+import { Route as HrEmployeesIndexRouteImport } from './routes/hr/employees/index'
+import { Route as HrEmployeesNewRouteImport } from './routes/hr/employees/new'
+import { Route as HrPayrollIndexRouteImport } from './routes/hr/payroll/index'
+import { Route as HrStatementIndexRouteImport } from './routes/hr/statement/index'
 import { Route as PurchasesInvoicesIndexRouteImport } from './routes/purchases/invoices/index'
 import { Route as PurchasesInvoicesIdRouteImport } from './routes/purchases/invoices/$id'
 import { Route as PurchasesInvoicesNewRouteImport } from './routes/purchases/invoices/new'
@@ -68,6 +75,8 @@ import { Route as TreasuryShiftsIndexRouteImport } from './routes/treasury/shift
 import { Route as TreasuryStatementIndexRouteImport } from './routes/treasury/statement/index'
 import { Route as TreasuryTransfersIndexRouteImport } from './routes/treasury/transfers/index'
 import { Route as TreasuryTransfersNewRouteImport } from './routes/treasury/transfers/new'
+import { Route as HrEmployeesIdIndexRouteImport } from './routes/hr/employees/$id/index'
+import { Route as HrEmployeesIdEditRouteImport } from './routes/hr/employees/$id/edit'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -77,6 +86,11 @@ const IndexRoute = IndexRouteImport.update({
 const ExpensesRouteRoute = ExpensesRouteRouteImport.update({
   id: '/expenses',
   path: '/expenses',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HrRouteRoute = HrRouteRouteImport.update({
+  id: '/hr',
+  path: '/hr',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PurchasesRouteRoute = PurchasesRouteRouteImport.update({
@@ -113,6 +127,11 @@ const ExpensesNewRoute = ExpensesNewRouteImport.update({
   id: '/new',
   path: '/new',
   getParentRoute: () => ExpensesRouteRoute,
+} as any)
+const HrIndexRoute = HrIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => HrRouteRoute,
 } as any)
 const PurchasesIndexRoute = PurchasesIndexRouteImport.update({
   id: '/',
@@ -154,6 +173,31 @@ const ExpensesListIndexRoute = ExpensesListIndexRouteImport.update({
   id: '/list/',
   path: '/list/',
   getParentRoute: () => ExpensesRouteRoute,
+} as any)
+const HrAttendanceIndexRoute = HrAttendanceIndexRouteImport.update({
+  id: '/attendance/',
+  path: '/attendance/',
+  getParentRoute: () => HrRouteRoute,
+} as any)
+const HrEmployeesIndexRoute = HrEmployeesIndexRouteImport.update({
+  id: '/employees/',
+  path: '/employees/',
+  getParentRoute: () => HrRouteRoute,
+} as any)
+const HrEmployeesNewRoute = HrEmployeesNewRouteImport.update({
+  id: '/employees/new',
+  path: '/employees/new',
+  getParentRoute: () => HrRouteRoute,
+} as any)
+const HrPayrollIndexRoute = HrPayrollIndexRouteImport.update({
+  id: '/payroll/',
+  path: '/payroll/',
+  getParentRoute: () => HrRouteRoute,
+} as any)
+const HrStatementIndexRoute = HrStatementIndexRouteImport.update({
+  id: '/statement/',
+  path: '/statement/',
+  getParentRoute: () => HrRouteRoute,
 } as any)
 const PurchasesInvoicesIndexRoute = PurchasesInvoicesIndexRouteImport.update({
   id: '/invoices/',
@@ -369,10 +413,21 @@ const TreasuryTransfersNewRoute = TreasuryTransfersNewRouteImport.update({
   path: '/transfers/new',
   getParentRoute: () => TreasuryRouteRoute,
 } as any)
+const HrEmployeesIdIndexRoute = HrEmployeesIdIndexRouteImport.update({
+  id: '/employees/$id/',
+  path: '/employees/$id/',
+  getParentRoute: () => HrRouteRoute,
+} as any)
+const HrEmployeesIdEditRoute = HrEmployeesIdEditRouteImport.update({
+  id: '/employees/$id/edit',
+  path: '/employees/$id/edit',
+  getParentRoute: () => HrRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/expenses': typeof ExpensesRouteRouteWithChildren
+  '/hr': typeof HrRouteRouteWithChildren
   '/purchases': typeof PurchasesRouteRouteWithChildren
   '/reports': typeof ReportsRouteRouteWithChildren
   '/sales': typeof SalesRouteRouteWithChildren
@@ -382,10 +437,12 @@ export interface FileRoutesByFullPath {
   '/reports/customer-statement': typeof ReportsCustomerStatementRoute
   '/sales/pos': typeof SalesPosRoute
   '/expenses/': typeof ExpensesIndexRoute
+  '/hr/': typeof HrIndexRoute
   '/purchases/': typeof PurchasesIndexRoute
   '/reports/': typeof ReportsIndexRoute
   '/sales/': typeof SalesIndexRoute
   '/treasury/': typeof TreasuryIndexRoute
+  '/hr/employees/new': typeof HrEmployeesNewRoute
   '/purchases/invoices/$id': typeof PurchasesInvoicesIdRoute
   '/purchases/invoices/new': typeof PurchasesInvoicesNewRoute
   '/purchases/reports/by-product': typeof PurchasesReportsByProductRoute
@@ -415,6 +472,10 @@ export interface FileRoutesByFullPath {
   '/treasury/transfers/new': typeof TreasuryTransfersNewRoute
   '/expenses/items/': typeof ExpensesItemsIndexRoute
   '/expenses/list/': typeof ExpensesListIndexRoute
+  '/hr/attendance/': typeof HrAttendanceIndexRoute
+  '/hr/employees/': typeof HrEmployeesIndexRoute
+  '/hr/payroll/': typeof HrPayrollIndexRoute
+  '/hr/statement/': typeof HrStatementIndexRoute
   '/purchases/invoices/': typeof PurchasesInvoicesIndexRoute
   '/purchases/suppliers/': typeof PurchasesSuppliersIndexRoute
   '/sales/customers/': typeof SalesCustomersIndexRoute
@@ -430,6 +491,8 @@ export interface FileRoutesByFullPath {
   '/treasury/shifts/': typeof TreasuryShiftsIndexRoute
   '/treasury/statement/': typeof TreasuryStatementIndexRoute
   '/treasury/transfers/': typeof TreasuryTransfersIndexRoute
+  '/hr/employees/$id/edit': typeof HrEmployeesIdEditRoute
+  '/hr/employees/$id/': typeof HrEmployeesIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -438,10 +501,12 @@ export interface FileRoutesByTo {
   '/reports/customer-statement': typeof ReportsCustomerStatementRoute
   '/sales/pos': typeof SalesPosRoute
   '/expenses': typeof ExpensesIndexRoute
+  '/hr': typeof HrIndexRoute
   '/purchases': typeof PurchasesIndexRoute
   '/reports': typeof ReportsIndexRoute
   '/sales': typeof SalesIndexRoute
   '/treasury': typeof TreasuryIndexRoute
+  '/hr/employees/new': typeof HrEmployeesNewRoute
   '/purchases/invoices/$id': typeof PurchasesInvoicesIdRoute
   '/purchases/invoices/new': typeof PurchasesInvoicesNewRoute
   '/purchases/reports/by-product': typeof PurchasesReportsByProductRoute
@@ -471,6 +536,10 @@ export interface FileRoutesByTo {
   '/treasury/transfers/new': typeof TreasuryTransfersNewRoute
   '/expenses/items': typeof ExpensesItemsIndexRoute
   '/expenses/list': typeof ExpensesListIndexRoute
+  '/hr/attendance': typeof HrAttendanceIndexRoute
+  '/hr/employees': typeof HrEmployeesIndexRoute
+  '/hr/payroll': typeof HrPayrollIndexRoute
+  '/hr/statement': typeof HrStatementIndexRoute
   '/purchases/invoices': typeof PurchasesInvoicesIndexRoute
   '/purchases/suppliers': typeof PurchasesSuppliersIndexRoute
   '/sales/customers': typeof SalesCustomersIndexRoute
@@ -486,11 +555,14 @@ export interface FileRoutesByTo {
   '/treasury/shifts': typeof TreasuryShiftsIndexRoute
   '/treasury/statement': typeof TreasuryStatementIndexRoute
   '/treasury/transfers': typeof TreasuryTransfersIndexRoute
+  '/hr/employees/$id/edit': typeof HrEmployeesIdEditRoute
+  '/hr/employees/$id': typeof HrEmployeesIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/expenses': typeof ExpensesRouteRouteWithChildren
+  '/hr': typeof HrRouteRouteWithChildren
   '/purchases': typeof PurchasesRouteRouteWithChildren
   '/reports': typeof ReportsRouteRouteWithChildren
   '/sales': typeof SalesRouteRouteWithChildren
@@ -500,10 +572,12 @@ export interface FileRoutesById {
   '/reports/customer-statement': typeof ReportsCustomerStatementRoute
   '/sales/pos': typeof SalesPosRoute
   '/expenses/': typeof ExpensesIndexRoute
+  '/hr/': typeof HrIndexRoute
   '/purchases/': typeof PurchasesIndexRoute
   '/reports/': typeof ReportsIndexRoute
   '/sales/': typeof SalesIndexRoute
   '/treasury/': typeof TreasuryIndexRoute
+  '/hr/employees/new': typeof HrEmployeesNewRoute
   '/purchases/invoices/$id': typeof PurchasesInvoicesIdRoute
   '/purchases/invoices/new': typeof PurchasesInvoicesNewRoute
   '/purchases/reports/by-product': typeof PurchasesReportsByProductRoute
@@ -533,6 +607,10 @@ export interface FileRoutesById {
   '/treasury/transfers/new': typeof TreasuryTransfersNewRoute
   '/expenses/items/': typeof ExpensesItemsIndexRoute
   '/expenses/list/': typeof ExpensesListIndexRoute
+  '/hr/attendance/': typeof HrAttendanceIndexRoute
+  '/hr/employees/': typeof HrEmployeesIndexRoute
+  '/hr/payroll/': typeof HrPayrollIndexRoute
+  '/hr/statement/': typeof HrStatementIndexRoute
   '/purchases/invoices/': typeof PurchasesInvoicesIndexRoute
   '/purchases/suppliers/': typeof PurchasesSuppliersIndexRoute
   '/sales/customers/': typeof SalesCustomersIndexRoute
@@ -548,12 +626,15 @@ export interface FileRoutesById {
   '/treasury/shifts/': typeof TreasuryShiftsIndexRoute
   '/treasury/statement/': typeof TreasuryStatementIndexRoute
   '/treasury/transfers/': typeof TreasuryTransfersIndexRoute
+  '/hr/employees/$id/edit': typeof HrEmployeesIdEditRoute
+  '/hr/employees/$id/': typeof HrEmployeesIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/expenses'
+    | '/hr'
     | '/purchases'
     | '/reports'
     | '/sales'
@@ -563,10 +644,12 @@ export interface FileRouteTypes {
     | '/reports/customer-statement'
     | '/sales/pos'
     | '/expenses/'
+    | '/hr/'
     | '/purchases/'
     | '/reports/'
     | '/sales/'
     | '/treasury/'
+    | '/hr/employees/new'
     | '/purchases/invoices/$id'
     | '/purchases/invoices/new'
     | '/purchases/reports/by-product'
@@ -596,6 +679,10 @@ export interface FileRouteTypes {
     | '/treasury/transfers/new'
     | '/expenses/items/'
     | '/expenses/list/'
+    | '/hr/attendance/'
+    | '/hr/employees/'
+    | '/hr/payroll/'
+    | '/hr/statement/'
     | '/purchases/invoices/'
     | '/purchases/suppliers/'
     | '/sales/customers/'
@@ -611,6 +698,8 @@ export interface FileRouteTypes {
     | '/treasury/shifts/'
     | '/treasury/statement/'
     | '/treasury/transfers/'
+    | '/hr/employees/$id/edit'
+    | '/hr/employees/$id/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -619,10 +708,12 @@ export interface FileRouteTypes {
     | '/reports/customer-statement'
     | '/sales/pos'
     | '/expenses'
+    | '/hr'
     | '/purchases'
     | '/reports'
     | '/sales'
     | '/treasury'
+    | '/hr/employees/new'
     | '/purchases/invoices/$id'
     | '/purchases/invoices/new'
     | '/purchases/reports/by-product'
@@ -652,6 +743,10 @@ export interface FileRouteTypes {
     | '/treasury/transfers/new'
     | '/expenses/items'
     | '/expenses/list'
+    | '/hr/attendance'
+    | '/hr/employees'
+    | '/hr/payroll'
+    | '/hr/statement'
     | '/purchases/invoices'
     | '/purchases/suppliers'
     | '/sales/customers'
@@ -667,10 +762,13 @@ export interface FileRouteTypes {
     | '/treasury/shifts'
     | '/treasury/statement'
     | '/treasury/transfers'
+    | '/hr/employees/$id/edit'
+    | '/hr/employees/$id'
   id:
     | '__root__'
     | '/'
     | '/expenses'
+    | '/hr'
     | '/purchases'
     | '/reports'
     | '/sales'
@@ -680,10 +778,12 @@ export interface FileRouteTypes {
     | '/reports/customer-statement'
     | '/sales/pos'
     | '/expenses/'
+    | '/hr/'
     | '/purchases/'
     | '/reports/'
     | '/sales/'
     | '/treasury/'
+    | '/hr/employees/new'
     | '/purchases/invoices/$id'
     | '/purchases/invoices/new'
     | '/purchases/reports/by-product'
@@ -713,6 +813,10 @@ export interface FileRouteTypes {
     | '/treasury/transfers/new'
     | '/expenses/items/'
     | '/expenses/list/'
+    | '/hr/attendance/'
+    | '/hr/employees/'
+    | '/hr/payroll/'
+    | '/hr/statement/'
     | '/purchases/invoices/'
     | '/purchases/suppliers/'
     | '/sales/customers/'
@@ -728,11 +832,14 @@ export interface FileRouteTypes {
     | '/treasury/shifts/'
     | '/treasury/statement/'
     | '/treasury/transfers/'
+    | '/hr/employees/$id/edit'
+    | '/hr/employees/$id/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ExpensesRouteRoute: typeof ExpensesRouteRouteWithChildren
+  HrRouteRoute: typeof HrRouteRouteWithChildren
   PurchasesRouteRoute: typeof PurchasesRouteRouteWithChildren
   ReportsRouteRoute: typeof ReportsRouteRouteWithChildren
   SalesRouteRoute: typeof SalesRouteRouteWithChildren
@@ -753,6 +860,13 @@ declare module '@tanstack/react-router' {
       path: '/expenses'
       fullPath: '/expenses'
       preLoaderRoute: typeof ExpensesRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hr': {
+      id: '/hr'
+      path: '/hr'
+      fullPath: '/hr'
+      preLoaderRoute: typeof HrRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/purchases': {
@@ -803,6 +917,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/expenses/new'
       preLoaderRoute: typeof ExpensesNewRouteImport
       parentRoute: typeof ExpensesRouteRoute
+    }
+    '/hr/': {
+      id: '/hr/'
+      path: '/'
+      fullPath: '/hr/'
+      preLoaderRoute: typeof HrIndexRouteImport
+      parentRoute: typeof HrRouteRoute
     }
     '/purchases/': {
       id: '/purchases/'
@@ -859,6 +980,41 @@ declare module '@tanstack/react-router' {
       fullPath: '/expenses/list/'
       preLoaderRoute: typeof ExpensesListIndexRouteImport
       parentRoute: typeof ExpensesRouteRoute
+    }
+    '/hr/attendance/': {
+      id: '/hr/attendance/'
+      path: '/attendance'
+      fullPath: '/hr/attendance/'
+      preLoaderRoute: typeof HrAttendanceIndexRouteImport
+      parentRoute: typeof HrRouteRoute
+    }
+    '/hr/employees/': {
+      id: '/hr/employees/'
+      path: '/employees'
+      fullPath: '/hr/employees/'
+      preLoaderRoute: typeof HrEmployeesIndexRouteImport
+      parentRoute: typeof HrRouteRoute
+    }
+    '/hr/employees/new': {
+      id: '/hr/employees/new'
+      path: '/employees/new'
+      fullPath: '/hr/employees/new'
+      preLoaderRoute: typeof HrEmployeesNewRouteImport
+      parentRoute: typeof HrRouteRoute
+    }
+    '/hr/payroll/': {
+      id: '/hr/payroll/'
+      path: '/payroll'
+      fullPath: '/hr/payroll/'
+      preLoaderRoute: typeof HrPayrollIndexRouteImport
+      parentRoute: typeof HrRouteRoute
+    }
+    '/hr/statement/': {
+      id: '/hr/statement/'
+      path: '/statement'
+      fullPath: '/hr/statement/'
+      preLoaderRoute: typeof HrStatementIndexRouteImport
+      parentRoute: typeof HrRouteRoute
     }
     '/purchases/invoices/': {
       id: '/purchases/invoices/'
@@ -1154,6 +1310,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TreasuryTransfersNewRouteImport
       parentRoute: typeof TreasuryRouteRoute
     }
+    '/hr/employees/$id/': {
+      id: '/hr/employees/$id/'
+      path: '/employees/$id'
+      fullPath: '/hr/employees/$id/'
+      preLoaderRoute: typeof HrEmployeesIdIndexRouteImport
+      parentRoute: typeof HrRouteRoute
+    }
+    '/hr/employees/$id/edit': {
+      id: '/hr/employees/$id/edit'
+      path: '/employees/$id/edit'
+      fullPath: '/hr/employees/$id/edit'
+      preLoaderRoute: typeof HrEmployeesIdEditRouteImport
+      parentRoute: typeof HrRouteRoute
+    }
   }
 }
 
@@ -1176,6 +1346,31 @@ const ExpensesRouteRouteChildren: ExpensesRouteRouteChildren = {
 const ExpensesRouteRouteWithChildren = ExpensesRouteRoute._addFileChildren(
   ExpensesRouteRouteChildren,
 )
+
+interface HrRouteRouteChildren {
+  HrIndexRoute: typeof HrIndexRoute
+  HrEmployeesNewRoute: typeof HrEmployeesNewRoute
+  HrAttendanceIndexRoute: typeof HrAttendanceIndexRoute
+  HrEmployeesIndexRoute: typeof HrEmployeesIndexRoute
+  HrPayrollIndexRoute: typeof HrPayrollIndexRoute
+  HrStatementIndexRoute: typeof HrStatementIndexRoute
+  HrEmployeesIdEditRoute: typeof HrEmployeesIdEditRoute
+  HrEmployeesIdIndexRoute: typeof HrEmployeesIdIndexRoute
+}
+
+const HrRouteRouteChildren: HrRouteRouteChildren = {
+  HrIndexRoute: HrIndexRoute,
+  HrEmployeesNewRoute: HrEmployeesNewRoute,
+  HrAttendanceIndexRoute: HrAttendanceIndexRoute,
+  HrEmployeesIndexRoute: HrEmployeesIndexRoute,
+  HrPayrollIndexRoute: HrPayrollIndexRoute,
+  HrStatementIndexRoute: HrStatementIndexRoute,
+  HrEmployeesIdEditRoute: HrEmployeesIdEditRoute,
+  HrEmployeesIdIndexRoute: HrEmployeesIdIndexRoute,
+}
+
+const HrRouteRouteWithChildren =
+  HrRouteRoute._addFileChildren(HrRouteRouteChildren)
 
 interface PurchasesRouteRouteChildren {
   PurchasesIndexRoute: typeof PurchasesIndexRoute
@@ -1317,6 +1512,7 @@ const TreasuryRouteRouteWithChildren = TreasuryRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ExpensesRouteRoute: ExpensesRouteRouteWithChildren,
+  HrRouteRoute: HrRouteRouteWithChildren,
   PurchasesRouteRoute: PurchasesRouteRouteWithChildren,
   ReportsRouteRoute: ReportsRouteRouteWithChildren,
   SalesRouteRoute: SalesRouteRouteWithChildren,
