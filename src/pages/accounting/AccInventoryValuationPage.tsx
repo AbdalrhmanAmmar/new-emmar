@@ -132,10 +132,59 @@ const AccInventoryValuationPage: React.FC = () => {
     qc.invalidateQueries({ queryKey: ['acc_inventory_valuation'] });
   };
 
+  // احتساب تلقائي لتقييم المخزون من حركات المخزون الفعلية للفترة المحددة
+  const autoBuild = async () => {
+    if (!confirm(`سيتم احتساب تقييم المخزون للفترة ${fMonth}/${fYear} من حركات المخزون، واستبدال صفوف المسودة الحالية. متابعة؟`)) return;
+    try {
+      const { data: allMoves = [] } = await (supabase as any).from('acc_stock_moves').select('*');
+      const start = new Date(Date.UTC(fYear, fMonth - 1, 1));
+      const end = new Date(Date.UTC(fYear, fMonth, 1));
+      const key = (w: string, i: string) => `${w}||${i}`;
+      const acc: Record<string, any> = {};
+      const ensure = (m: any) => {
+        const k = key(m.warehouse_id || '-', m.item_id || m.item_code || '-');
+        acc[k] = acc[k] || {
+          warehouse_code: m.warehouse_id || '-', warehouse_name: m.warehouse_name || '-',
+          item_code: m.item_code || '-', item_name: m.item_name || '-', uom: 'كجم',
+          opening_qty: 0, opening_value: 0, receipts_qty: 0, receipts_value: 0, issues_qty: 0, issues_value: 0,
+        };
+        return acc[k];
+      };
+      for (const m of allMoves) {
+        const d = new Date(m.move_date);
+        const qty = Number(m.quantity_kg || 0);
+        const val = Number(m.total_cost || qty * Number(m.unit_cost || 0));
+        const row = ensure(m);
+        const sign = m.move_type === 'out' ? -1 : 1;
+        if (d < start) { row.opening_qty += sign * qty; row.opening_value += sign * val; }
+        else if (d < end) {
+          if (sign > 0) { row.receipts_qty += qty; row.receipts_value += val; }
+          else { row.issues_qty += qty; row.issues_value += val; }
+        }
+      }
+      const built = Object.values(acc);
+      if (built.length === 0) { toast.error('لا توجد حركات مخزون في هذه الفترة'); return; }
+      // حذف المسودات القديمة لنفس الفترة لمنع تكرار البيانات
+      for (const r of rows.filter(r => r.status === 'draft')) {
+        await (supabase as any).from('acc_inventory_valuation').delete().eq('id', r.id);
+      }
+      for (const b of built as any[]) {
+        const d = calc(b);
+        await (supabase as any).from('acc_inventory_valuation').insert({
+          ...b, ...d, period_year: fYear, period_month: fMonth,
+          valuation_method: 'WAC', status: 'draft', created_by: user?.id,
+        });
+      }
+      toast.success(`تم احتساب ${built.length} صنف/مخزن من حركات المخزون`);
+      qc.invalidateQueries({ queryKey: ['acc_inventory_valuation'] });
+    } catch (e: any) { toast.error(e?.message || 'فشل الاحتساب'); }
+  };
+
   if (!canView) return <div className="p-8 text-center text-muted-foreground">لا تملك صلاحية الوصول</div>;
 
   const monthOptions = Array.from({ length: 12 }, (_, i) => i + 1);
   const yearOptions = Array.from({ length: 6 }, (_, i) => now.getFullYear() - 3 + i);
+
 
   return (
     <div className="container mx-auto p-6 space-y-4">
