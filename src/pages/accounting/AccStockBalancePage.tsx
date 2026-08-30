@@ -86,7 +86,7 @@ const AccStockBalancePage: React.FC = () => {
                 {warehouses.map((w) => <SelectItem key={w.id} value={w.id}>{w.name_ar}</SelectItem>)}
               </SelectContent>
             </Select>
-            <Input placeholder="بحث" value={search} onChange={(e) => setSearch(e.target.value)} className="max-w-[180px]" />
+            <Input dir="rtl" placeholder="بحث" value={search} onChange={(e) => setSearch(e.target.value)} className="max-w-[180px]" />
           </div>
         </CardHeader>
         <CardContent>

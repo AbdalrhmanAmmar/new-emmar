@@ -167,7 +167,7 @@ const AccItemsPage: React.FC = () => {
       <Card>
         <CardHeader className="flex-row items-center justify-between gap-3">
           <CardTitle>الأصناف ({filtered.length})</CardTitle>
-          <Input placeholder="بحث بالكود أو الاسم" value={search} onChange={(e) => setSearch(e.target.value)} className="max-w-xs" />
+          <Input dir="rtl" placeholder="بحث بالكود أو الاسم" value={search} onChange={(e) => setSearch(e.target.value)} className="max-w-xs" />
         </CardHeader>
         <CardContent>
           <Table>
