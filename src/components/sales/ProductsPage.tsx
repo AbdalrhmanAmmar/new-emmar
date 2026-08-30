@@ -220,7 +220,9 @@ export function ProductFormPage({ id }: { id?: string }) {
         </Field>
         <Field label="وحدة القياس">
           <SearchSelect
-            options={Object.entries(UNIT_LABEL).map(([value, label]) => ({ value, label }))}
+            options={data.measureUnits
+              .filter((u) => u.active)
+              .map((u) => ({ value: u.code, label: u.name, hint: u.code }))}
             value={form.unit}
             onChange={(v) => set("unit", v)}
           />
@@ -252,7 +254,13 @@ export function ProductFormPage({ id }: { id?: string }) {
       </FormSection>
 
       <FormSection title="وحدات البيع ومعاملات التحويل" className="grid-cols-1 sm:grid-cols-1 lg:grid-cols-1">
-        <ProductUnitsEditor baseUnit={form.unit as Product["unit"]} units={units} onChange={setUnits} />
+        <ProductUnitsEditor
+          baseUnit={form.unit as Product["unit"]}
+          units={units}
+          onChange={setUnits}
+          basePrice={Number(form.unitPrice || 0)}
+          baseWholesale={Number(form.wholesalePrice || 0)}
+        />
       </FormSection>
     </FormPage>
   );
