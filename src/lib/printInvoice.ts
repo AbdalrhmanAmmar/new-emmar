@@ -1,3 +1,4 @@
+import { downloadHtmlDoc } from "@/lib/exportExcel";
 import { dateFmt, money, num } from "@/lib/format";
 import { lineUnitLabel } from "@/lib/units";
 import { SALES_PAY_LABEL, type DbShape, type OrgSettings, type SalesInvoice, type SalesLine } from "@/lib/mockDb";
@@ -138,11 +139,8 @@ export function invoicePrintInput(
 
 /* ===================== الطباعة الاحترافية ===================== */
 
-export function printSalesInvoice(input: InvoicePrintInput) {
-  if (typeof window === "undefined") return;
-  const win = window.open("", "_blank", "width=980,height=1100");
-  if (!win) return;
-
+/** يبنى مستند الفاتورة الاحترافى كنص HTML كامل (يُستخدم للطباعة والتنزيل) */
+export function salesInvoiceHtml(input: InvoicePrintInput): string {
   const rows = input.lines
     .map((line, index) => {
       const t = lineTotals(line);
@@ -173,9 +171,9 @@ export function printSalesInvoice(input: InvoicePrintInput) {
     ["المتبقي", money(t.remaining), true],
   ];
 
-  win.document.write(`<!doctype html>
+  return `<!doctype html>
 <html lang="ar" dir="rtl"><head><meta charset="utf-8" />
-<title>فاتورة مبيعات ${input.no}</title>
+<title>${input.docTitle ?? "فاتورة مبيعات"} ${input.no}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <style>
@@ -274,9 +272,20 @@ export function printSalesInvoice(input: InvoicePrintInput) {
 
   ${org.showSignatures ? `<div class="sig"><div>المحاسب</div><div>أمين المخزن</div><div>توقيع العميل</div></div>` : ""}
   <div class="foot">${org.printFooter} ${org.website ? `— ${org.website}` : ""} — تاريخ الطباعة ${new Date().toLocaleString("en-GB")}</div>
-</div></body></html>`);
+</div></body></html>`;
+}
 
+export function printSalesInvoice(input: InvoicePrintInput) {
+  if (typeof window === "undefined") return;
+  const win = window.open("", "_blank", "width=980,height=1100");
+  if (!win) return;
+  win.document.write(salesInvoiceHtml(input));
   win.document.close();
   win.focus();
   setTimeout(() => win.print(), 450);
+}
+
+/** تنزيل الفاتورة كملف على جهاز المستخدم (يمكن فتحه وطباعته أو حفظه PDF) */
+export function downloadSalesInvoice(input: InvoicePrintInput) {
+  downloadHtmlDoc(`${input.docTitle ?? "فاتورة"}-${input.no}`, salesInvoiceHtml(input));
 }

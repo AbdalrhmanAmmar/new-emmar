@@ -141,6 +141,37 @@ export function OrgSettingsForm() {
         </CardContent>
       </Card>
 
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm">رسائل الفواتير للعملاء (واتساب)</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <label className="flex cursor-pointer items-center justify-between rounded-lg border border-border px-3 py-2 text-sm">
+            <span>إرسال رسالة الفاتورة تلقائياً عند ترحيل فاتورة مبيعات</span>
+            <input
+              type="checkbox"
+              className="size-4 accent-primary"
+              checked={Boolean(form.autoSendInvoiceMsg)}
+              onChange={(e) => set("autoSendInvoiceMsg", e.target.checked)}
+            />
+          </label>
+          <div className="space-y-1.5">
+            <Label className="text-xs">صيغة الرسالة</Label>
+            <Textarea
+              dir="rtl"
+              rows={6}
+              value={form.invoiceMsgTemplate ?? ""}
+              onChange={(e) => set("invoiceMsgTemplate", e.target.value)}
+            />
+            <p className="text-[11px] leading-6 text-muted-foreground">
+              المتغيرات المتاحة: {"{customer}"} {"{no}"} {"{date}"} {"{items}"} {"{total}"} {"{paid}"}{" "}
+              {"{remaining}"} {"{company}"} {"{phone}"} — يتم إرسالها فقط للعملاء المُفعّل لهم خيار «إرسال رسالة
+              بالفاتورة» فى صفحة تكويد العملاء.
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+
       <div className="flex justify-end">
         <Button className="gap-1.5" onClick={submit}>
           <Save className="size-4" /> حفظ الإعدادات

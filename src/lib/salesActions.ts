@@ -379,6 +379,7 @@ export function saveCustomer(input: Omit<Party, "id"> & { id?: string }): Action
       name: input.name.trim(),
       phone: input.phone?.trim() ?? "",
       branchId: input.branchId,
+      notifyInvoice: input.notifyInvoice ?? false,
     };
 
     if (input.id) {

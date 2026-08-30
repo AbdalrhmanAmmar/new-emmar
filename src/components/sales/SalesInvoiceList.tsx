@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Pencil, Plus, Printer, Send, Trash2, Undo2 } from "lucide-react";
+import { Download, MessageCircle, Pencil, Plus, Printer, Send, Trash2, Undo2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { DataTable, type Column } from "@/components/treasury/DataTable";
@@ -8,7 +8,8 @@ import { RowActions } from "@/components/treasury/RowActions";
 import { Button } from "@/components/ui/button";
 import { dateFmt, money } from "@/lib/format";
 import { SALES_PAY_LABEL, useDb, type SalesInvoice } from "@/lib/mockDb";
-import { invoicePrintInput, printSalesInvoice } from "@/lib/printInvoice";
+import { sendInvoiceMessage } from "@/lib/notifyInvoice";
+import { downloadSalesInvoice, invoicePrintInput, printSalesInvoice } from "@/lib/printInvoice";
 import { invoiceTotalsOf } from "@/lib/sales";
 import { deleteSalesInvoice, setSalesInvoiceStatus } from "@/lib/salesActions";
 
@@ -26,6 +27,17 @@ export function SalesInvoiceList() {
 
   const doPrint = (inv: SalesInvoice) => {
     printSalesInvoice(invoicePrintInput(data, inv, invoiceTotalsOf(data, inv)));
+  };
+
+  const doDownload = (inv: SalesInvoice) => {
+    downloadSalesInvoice(invoicePrintInput(data, inv, invoiceTotalsOf(data, inv)));
+    toast.success(`تم تنزيل الفاتورة ${inv.no} على جهازك`);
+  };
+
+  const doSend = (inv: SalesInvoice) => {
+    const t = invoiceTotalsOf(data, inv);
+    const res = sendInvoiceMessage(inv, t);
+    res.sent ? toast.success("تم تجهيز رسالة الفاتورة للعميل") : toast.error(res.reason ?? "تعذر الإرسال");
   };
 
   const columns: Array<Column<SalesInvoice>> = [
@@ -105,6 +117,12 @@ export function SalesInvoiceList() {
                 onSelect: () => navigate({ to: "/sales/invoices/$id", params: { id: row.id } }),
               },
               { label: "طباعة", icon: <Printer className="size-4" />, onSelect: () => doPrint(row) },
+              { label: "تنزيل الفاتورة", icon: <Download className="size-4" />, onSelect: () => doDownload(row) },
+              {
+                label: "إرسال رسالة للعميل",
+                icon: <MessageCircle className="size-4" />,
+                onSelect: () => doSend(row),
+              },
               row.status === "draft"
                 ? {
                     label: "ترحيل",

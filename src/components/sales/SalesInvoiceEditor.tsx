@@ -24,6 +24,7 @@ import {
 } from "@/lib/mockDb";
 import { invoicePrintInput, printSalesInvoice } from "@/lib/printInvoice";
 import { discountPercentOf, emptyLine, invoiceTotals, lineTotals, productOptions } from "@/lib/sales";
+import { autoNotifyOnPost } from "@/lib/notifyInvoice";
 import { saveSalesInvoice } from "@/lib/salesActions";
 import { baseQty, lineUnitLabel, stockInUnit, unitOptions, unitPatch } from "@/lib/units";
 
@@ -166,12 +167,17 @@ export function SalesInvoiceEditor({ invoice }: Props) {
   };
 
   const submit = (status: SalesInvoice["status"], andPrint = false) => {
-    const res = saveSalesInvoice(buildPayload(status));
+    const payload = buildPayload(status);
+    const res = saveSalesInvoice(payload);
     if (!res.ok) {
       toast.error(res.error ?? "تعذر الحفظ");
       return;
     }
     toast.success(status === "posted" ? "تم حفظ وترحيل الفاتورة" : "تم حفظ الفاتورة كمسودة");
+    if (status === "posted") {
+      const notified = autoNotifyOnPost({ ...payload, no: payload.no ?? invoice?.no ?? "", status }, totals);
+      if (notified.sent) toast.success("تم إرسال رسالة الفاتورة للعميل");
+    }
     if (andPrint) doPrint();
     navigate({ to: "/sales/invoices" });
   };

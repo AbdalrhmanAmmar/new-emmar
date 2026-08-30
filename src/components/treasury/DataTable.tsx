@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight, Printer, Search } from "lucide-react";
+import { ChevronLeft, ChevronRight, FileSpreadsheet, Printer, Search } from "lucide-react";
 import { useMemo, useState, type ReactNode } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -18,6 +18,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { exportTableToExcel } from "@/lib/exportExcel";
 import { printTable } from "@/lib/printDoc";
 
 export interface Column<T> {
@@ -82,6 +83,14 @@ export function DataTable<T>({
     );
   };
 
+  const doExcel = () => {
+    exportTableToExcel({
+      title: title ?? "تقرير",
+      headers: columns.map((c) => c.header),
+      rows: filtered.map((row) => columns.map((c) => (c.text ? c.text(row) : ""))),
+    });
+  };
+
   return (
     <div className="space-y-3">
       <div className="flex flex-wrap items-center gap-2">
@@ -102,6 +111,16 @@ export function DataTable<T>({
         <Button type="button" variant="outline" size="sm" onClick={doPrint} className="gap-1.5">
           <Printer className="size-4" />
           طباعة الجدول
+        </Button>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={doExcel}
+          className="gap-1.5 border-primary/30 text-primary hover:bg-primary/5"
+        >
+          <FileSpreadsheet className="size-4" />
+          تحميل Excel
         </Button>
       </div>
 

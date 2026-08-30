@@ -121,6 +121,8 @@ export interface Party {
   name: string;
   phone: string;
   branchId: string;
+  /** إرسال رسالة واتساب بالفاتورة للعميل تلقائياً عند الترحيل */
+  notifyInvoice?: boolean;
 }
 
 export interface Category {
@@ -163,6 +165,10 @@ export interface OrgSettings {
   allowNegativeStock: boolean;
   priceEditInPos: boolean;
   maxLineDiscountPct: number;
+  /** صيغة رسالة الفاتورة المرسلة للعميل (متغيرات: {customer} {no} {date} {total} {paid} {remaining} {items} {company} {phone}) */
+  invoiceMsgTemplate: string;
+  /** إرسال الرسالة تلقائياً عند ترحيل فاتورة المبيعات */
+  autoSendInvoiceMsg: boolean;
 }
 
 
@@ -856,10 +862,10 @@ function seed(): DbShape {
   ];
 
   const customers: Party[] = [
-    { id: "c1", code: "CU-001", name: "مزرعة النيل للدواجن", phone: "01001234567", branchId: "br1" },
-    { id: "c2", code: "CU-002", name: "مزرعة الوادي الأخضر", phone: "01112345678", branchId: "br2" },
-    { id: "c3", code: "CU-003", name: "شركة دلتا للألبان", phone: "01223456789", branchId: "br3" },
-    { id: "c4", code: "CU-004", name: "تجارة أعلاف الصفا", phone: "01098765432", branchId: "br1" },
+    { id: "c1", code: "CU-001", name: "مزرعة النيل للدواجن", phone: "01001234567", branchId: "br1", notifyInvoice: true },
+    { id: "c2", code: "CU-002", name: "مزرعة الوادي الأخضر", phone: "01112345678", branchId: "br2", notifyInvoice: true },
+    { id: "c3", code: "CU-003", name: "شركة دلتا للألبان", phone: "01223456789", branchId: "br3", notifyInvoice: true },
+    { id: "c4", code: "CU-004", name: "تجارة أعلاف الصفا", phone: "01098765432", branchId: "br1", notifyInvoice: true },
   ];
 
   const suppliers: Party[] = [
@@ -1280,6 +1286,9 @@ function seed(): DbShape {
     allowNegativeStock: false,
     priceEditInPos: true,
     maxLineDiscountPct: 25,
+    invoiceMsgTemplate:
+      "عميلنا العزيز {customer}\nتم إصدار فاتورة مبيعات رقم {no} بتاريخ {date}\nالأصناف: {items}\nالإجمالي: {total}\nالمدفوع: {paid}\nالمتبقي: {remaining}\nشكراً لتعاملكم مع {company} — {phone}",
+    autoSendInvoiceMsg: true,
   };
 
 

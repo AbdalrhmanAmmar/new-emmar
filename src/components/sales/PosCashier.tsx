@@ -11,6 +11,7 @@ import { lineUnitLabel, productUnits, unitPatch } from "@/lib/units";
 import { CustomerHistoryButton } from "@/components/sales/CustomerHistoryButton";
 import { invoicePrintInput, printSalesInvoice } from "@/lib/printInvoice";
 import { discountPercentOf, invoiceTotals, lineTotals } from "@/lib/sales";
+import { autoNotifyOnPost } from "@/lib/notifyInvoice";
 import { saveSalesInvoice } from "@/lib/salesActions";
 import { cn } from "@/lib/utils";
 
@@ -168,12 +169,15 @@ export function PosCashier() {
       toast.error("المبلغ المدفوع أقل من الإجمالي");
       return;
     }
-    const res = saveSalesInvoice(payload("posted"));
+    const doc = payload("posted");
+    const res = saveSalesInvoice(doc);
     if (!res.ok) {
       toast.error(res.error ?? "تعذر إتمام البيع");
       return;
     }
     toast.success(`تم إتمام الفاتورة ${invoiceNo}`);
+    const notified = autoNotifyOnPost({ ...doc, no: invoiceNo, status: "posted" }, totals);
+    if (notified.sent) toast.success("تم إرسال رسالة الفاتورة للعميل");
     if (andPrint) doPrint();
     clearCart();
   };
