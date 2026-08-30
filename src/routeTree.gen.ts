@@ -15,6 +15,7 @@ import { Route as HrRouteRouteImport } from './routes/hr/route'
 import { Route as InventoryRouteRouteImport } from './routes/inventory/route'
 import { Route as PurchasesRouteRouteImport } from './routes/purchases/route'
 import { Route as ReportsRouteRouteImport } from './routes/reports/route'
+import { Route as ReturnsRouteRouteImport } from './routes/returns/route'
 import { Route as SalesRouteRouteImport } from './routes/sales/route'
 import { Route as TreasuryRouteRouteImport } from './routes/treasury/route'
 import { Route as ExpensesIndexRouteImport } from './routes/expenses/index'
@@ -26,6 +27,11 @@ import { Route as InventoryBalanceRouteImport } from './routes/inventory/balance
 import { Route as PurchasesIndexRouteImport } from './routes/purchases/index'
 import { Route as ReportsIndexRouteImport } from './routes/reports/index'
 import { Route as ReportsCustomerStatementRouteImport } from './routes/reports/customer-statement'
+import { Route as ReturnsIndexRouteImport } from './routes/returns/index'
+import { Route as ReturnsIdRouteImport } from './routes/returns/$id'
+import { Route as ReturnsNewRouteImport } from './routes/returns/new'
+import { Route as ReturnsPurchaseRouteImport } from './routes/returns/purchase'
+import { Route as ReturnsSalesRouteImport } from './routes/returns/sales'
 import { Route as SalesIndexRouteImport } from './routes/sales/index'
 import { Route as SalesPosRouteImport } from './routes/sales/pos'
 import { Route as TreasuryIndexRouteImport } from './routes/treasury/index'
@@ -121,6 +127,11 @@ const ReportsRouteRoute = ReportsRouteRouteImport.update({
   path: '/reports',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ReturnsRouteRoute = ReturnsRouteRouteImport.update({
+  id: '/returns',
+  path: '/returns',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SalesRouteRoute = SalesRouteRouteImport.update({
   id: '/sales',
   path: '/sales',
@@ -177,6 +188,31 @@ const ReportsCustomerStatementRoute =
     path: '/customer-statement',
     getParentRoute: () => ReportsRouteRoute,
   } as any)
+const ReturnsIndexRoute = ReturnsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ReturnsRouteRoute,
+} as any)
+const ReturnsIdRoute = ReturnsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => ReturnsRouteRoute,
+} as any)
+const ReturnsNewRoute = ReturnsNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => ReturnsRouteRoute,
+} as any)
+const ReturnsPurchaseRoute = ReturnsPurchaseRouteImport.update({
+  id: '/purchase',
+  path: '/purchase',
+  getParentRoute: () => ReturnsRouteRoute,
+} as any)
+const ReturnsSalesRoute = ReturnsSalesRouteImport.update({
+  id: '/sales',
+  path: '/sales',
+  getParentRoute: () => ReturnsRouteRoute,
+} as any)
 const SalesIndexRoute = SalesIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -510,18 +546,24 @@ export interface FileRoutesByFullPath {
   '/inventory': typeof InventoryRouteRouteWithChildren
   '/purchases': typeof PurchasesRouteRouteWithChildren
   '/reports': typeof ReportsRouteRouteWithChildren
+  '/returns': typeof ReturnsRouteRouteWithChildren
   '/sales': typeof SalesRouteRouteWithChildren
   '/treasury': typeof TreasuryRouteRouteWithChildren
   '/expenses/$id': typeof ExpensesIdRoute
   '/expenses/new': typeof ExpensesNewRoute
   '/inventory/balance': typeof InventoryBalanceRoute
   '/reports/customer-statement': typeof ReportsCustomerStatementRoute
+  '/returns/$id': typeof ReturnsIdRoute
+  '/returns/new': typeof ReturnsNewRoute
+  '/returns/purchase': typeof ReturnsPurchaseRoute
+  '/returns/sales': typeof ReturnsSalesRoute
   '/sales/pos': typeof SalesPosRoute
   '/expenses/': typeof ExpensesIndexRoute
   '/hr/': typeof HrIndexRoute
   '/inventory/': typeof InventoryIndexRoute
   '/purchases/': typeof PurchasesIndexRoute
   '/reports/': typeof ReportsIndexRoute
+  '/returns/': typeof ReturnsIndexRoute
   '/sales/': typeof SalesIndexRoute
   '/treasury/': typeof TreasuryIndexRoute
   '/hr/employees/new': typeof HrEmployeesNewRoute
@@ -592,12 +634,17 @@ export interface FileRoutesByTo {
   '/expenses/new': typeof ExpensesNewRoute
   '/inventory/balance': typeof InventoryBalanceRoute
   '/reports/customer-statement': typeof ReportsCustomerStatementRoute
+  '/returns/$id': typeof ReturnsIdRoute
+  '/returns/new': typeof ReturnsNewRoute
+  '/returns/purchase': typeof ReturnsPurchaseRoute
+  '/returns/sales': typeof ReturnsSalesRoute
   '/sales/pos': typeof SalesPosRoute
   '/expenses': typeof ExpensesIndexRoute
   '/hr': typeof HrIndexRoute
   '/inventory': typeof InventoryIndexRoute
   '/purchases': typeof PurchasesIndexRoute
   '/reports': typeof ReportsIndexRoute
+  '/returns': typeof ReturnsIndexRoute
   '/sales': typeof SalesIndexRoute
   '/treasury': typeof TreasuryIndexRoute
   '/hr/employees/new': typeof HrEmployeesNewRoute
@@ -670,18 +717,24 @@ export interface FileRoutesById {
   '/inventory': typeof InventoryRouteRouteWithChildren
   '/purchases': typeof PurchasesRouteRouteWithChildren
   '/reports': typeof ReportsRouteRouteWithChildren
+  '/returns': typeof ReturnsRouteRouteWithChildren
   '/sales': typeof SalesRouteRouteWithChildren
   '/treasury': typeof TreasuryRouteRouteWithChildren
   '/expenses/$id': typeof ExpensesIdRoute
   '/expenses/new': typeof ExpensesNewRoute
   '/inventory/balance': typeof InventoryBalanceRoute
   '/reports/customer-statement': typeof ReportsCustomerStatementRoute
+  '/returns/$id': typeof ReturnsIdRoute
+  '/returns/new': typeof ReturnsNewRoute
+  '/returns/purchase': typeof ReturnsPurchaseRoute
+  '/returns/sales': typeof ReturnsSalesRoute
   '/sales/pos': typeof SalesPosRoute
   '/expenses/': typeof ExpensesIndexRoute
   '/hr/': typeof HrIndexRoute
   '/inventory/': typeof InventoryIndexRoute
   '/purchases/': typeof PurchasesIndexRoute
   '/reports/': typeof ReportsIndexRoute
+  '/returns/': typeof ReturnsIndexRoute
   '/sales/': typeof SalesIndexRoute
   '/treasury/': typeof TreasuryIndexRoute
   '/hr/employees/new': typeof HrEmployeesNewRoute
@@ -755,18 +808,24 @@ export interface FileRouteTypes {
     | '/inventory'
     | '/purchases'
     | '/reports'
+    | '/returns'
     | '/sales'
     | '/treasury'
     | '/expenses/$id'
     | '/expenses/new'
     | '/inventory/balance'
     | '/reports/customer-statement'
+    | '/returns/$id'
+    | '/returns/new'
+    | '/returns/purchase'
+    | '/returns/sales'
     | '/sales/pos'
     | '/expenses/'
     | '/hr/'
     | '/inventory/'
     | '/purchases/'
     | '/reports/'
+    | '/returns/'
     | '/sales/'
     | '/treasury/'
     | '/hr/employees/new'
@@ -837,12 +896,17 @@ export interface FileRouteTypes {
     | '/expenses/new'
     | '/inventory/balance'
     | '/reports/customer-statement'
+    | '/returns/$id'
+    | '/returns/new'
+    | '/returns/purchase'
+    | '/returns/sales'
     | '/sales/pos'
     | '/expenses'
     | '/hr'
     | '/inventory'
     | '/purchases'
     | '/reports'
+    | '/returns'
     | '/sales'
     | '/treasury'
     | '/hr/employees/new'
@@ -914,18 +978,24 @@ export interface FileRouteTypes {
     | '/inventory'
     | '/purchases'
     | '/reports'
+    | '/returns'
     | '/sales'
     | '/treasury'
     | '/expenses/$id'
     | '/expenses/new'
     | '/inventory/balance'
     | '/reports/customer-statement'
+    | '/returns/$id'
+    | '/returns/new'
+    | '/returns/purchase'
+    | '/returns/sales'
     | '/sales/pos'
     | '/expenses/'
     | '/hr/'
     | '/inventory/'
     | '/purchases/'
     | '/reports/'
+    | '/returns/'
     | '/sales/'
     | '/treasury/'
     | '/hr/employees/new'
@@ -998,6 +1068,7 @@ export interface RootRouteChildren {
   InventoryRouteRoute: typeof InventoryRouteRouteWithChildren
   PurchasesRouteRoute: typeof PurchasesRouteRouteWithChildren
   ReportsRouteRoute: typeof ReportsRouteRouteWithChildren
+  ReturnsRouteRoute: typeof ReturnsRouteRouteWithChildren
   SalesRouteRoute: typeof SalesRouteRouteWithChildren
   TreasuryRouteRoute: typeof TreasuryRouteRouteWithChildren
 }
@@ -1044,6 +1115,13 @@ declare module '@tanstack/react-router' {
       path: '/reports'
       fullPath: '/reports'
       preLoaderRoute: typeof ReportsRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/returns': {
+      id: '/returns'
+      path: '/returns'
+      fullPath: '/returns'
+      preLoaderRoute: typeof ReturnsRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sales': {
@@ -1122,6 +1200,41 @@ declare module '@tanstack/react-router' {
       fullPath: '/reports/customer-statement'
       preLoaderRoute: typeof ReportsCustomerStatementRouteImport
       parentRoute: typeof ReportsRouteRoute
+    }
+    '/returns/': {
+      id: '/returns/'
+      path: '/'
+      fullPath: '/returns/'
+      preLoaderRoute: typeof ReturnsIndexRouteImport
+      parentRoute: typeof ReturnsRouteRoute
+    }
+    '/returns/$id': {
+      id: '/returns/$id'
+      path: '/$id'
+      fullPath: '/returns/$id'
+      preLoaderRoute: typeof ReturnsIdRouteImport
+      parentRoute: typeof ReturnsRouteRoute
+    }
+    '/returns/new': {
+      id: '/returns/new'
+      path: '/new'
+      fullPath: '/returns/new'
+      preLoaderRoute: typeof ReturnsNewRouteImport
+      parentRoute: typeof ReturnsRouteRoute
+    }
+    '/returns/purchase': {
+      id: '/returns/purchase'
+      path: '/purchase'
+      fullPath: '/returns/purchase'
+      preLoaderRoute: typeof ReturnsPurchaseRouteImport
+      parentRoute: typeof ReturnsRouteRoute
+    }
+    '/returns/sales': {
+      id: '/returns/sales'
+      path: '/sales'
+      fullPath: '/returns/sales'
+      preLoaderRoute: typeof ReturnsSalesRouteImport
+      parentRoute: typeof ReturnsRouteRoute
     }
     '/sales/': {
       id: '/sales/'
@@ -1698,6 +1811,26 @@ const ReportsRouteRouteWithChildren = ReportsRouteRoute._addFileChildren(
   ReportsRouteRouteChildren,
 )
 
+interface ReturnsRouteRouteChildren {
+  ReturnsIdRoute: typeof ReturnsIdRoute
+  ReturnsNewRoute: typeof ReturnsNewRoute
+  ReturnsPurchaseRoute: typeof ReturnsPurchaseRoute
+  ReturnsSalesRoute: typeof ReturnsSalesRoute
+  ReturnsIndexRoute: typeof ReturnsIndexRoute
+}
+
+const ReturnsRouteRouteChildren: ReturnsRouteRouteChildren = {
+  ReturnsIdRoute: ReturnsIdRoute,
+  ReturnsNewRoute: ReturnsNewRoute,
+  ReturnsPurchaseRoute: ReturnsPurchaseRoute,
+  ReturnsSalesRoute: ReturnsSalesRoute,
+  ReturnsIndexRoute: ReturnsIndexRoute,
+}
+
+const ReturnsRouteRouteWithChildren = ReturnsRouteRoute._addFileChildren(
+  ReturnsRouteRouteChildren,
+)
+
 interface SalesRouteRouteChildren {
   SalesPosRoute: typeof SalesPosRoute
   SalesIndexRoute: typeof SalesIndexRoute
@@ -1797,6 +1930,7 @@ const rootRouteChildren: RootRouteChildren = {
   InventoryRouteRoute: InventoryRouteRouteWithChildren,
   PurchasesRouteRoute: PurchasesRouteRouteWithChildren,
   ReportsRouteRoute: ReportsRouteRouteWithChildren,
+  ReturnsRouteRoute: ReturnsRouteRouteWithChildren,
   SalesRouteRoute: SalesRouteRouteWithChildren,
   TreasuryRouteRoute: TreasuryRouteRouteWithChildren,
 }
