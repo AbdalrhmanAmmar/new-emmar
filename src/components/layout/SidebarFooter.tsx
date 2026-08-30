@@ -47,7 +47,7 @@ export function SidebarFooter({ collapsed, online }: Props) {
               <Settings2 className="size-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent dir="rtl" align="start" side="top" className="w-60">
+          <DropdownMenuContent align="start" side="top" className="w-60">
             {SETTINGS_GROUPS.map((group, index) => (
               <div key={group.id}>
                 {index > 0 ? <DropdownMenuSeparator /> : null}
