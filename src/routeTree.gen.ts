@@ -28,6 +28,7 @@ import { Route as SalesPosRouteImport } from './routes/sales/pos'
 import { Route as TreasuryIndexRouteImport } from './routes/treasury/index'
 import { Route as ExpensesItemsIndexRouteImport } from './routes/expenses/items/index'
 import { Route as ExpensesListIndexRouteImport } from './routes/expenses/list/index'
+import { Route as HrAdjustmentsIndexRouteImport } from './routes/hr/adjustments/index'
 import { Route as HrAttendanceIndexRouteImport } from './routes/hr/attendance/index'
 import { Route as HrEmployeesIndexRouteImport } from './routes/hr/employees/index'
 import { Route as HrEmployeesNewRouteImport } from './routes/hr/employees/new'
@@ -173,6 +174,11 @@ const ExpensesListIndexRoute = ExpensesListIndexRouteImport.update({
   id: '/list/',
   path: '/list/',
   getParentRoute: () => ExpensesRouteRoute,
+} as any)
+const HrAdjustmentsIndexRoute = HrAdjustmentsIndexRouteImport.update({
+  id: '/adjustments/',
+  path: '/adjustments/',
+  getParentRoute: () => HrRouteRoute,
 } as any)
 const HrAttendanceIndexRoute = HrAttendanceIndexRouteImport.update({
   id: '/attendance/',
@@ -472,6 +478,7 @@ export interface FileRoutesByFullPath {
   '/treasury/transfers/new': typeof TreasuryTransfersNewRoute
   '/expenses/items/': typeof ExpensesItemsIndexRoute
   '/expenses/list/': typeof ExpensesListIndexRoute
+  '/hr/adjustments/': typeof HrAdjustmentsIndexRoute
   '/hr/attendance/': typeof HrAttendanceIndexRoute
   '/hr/employees/': typeof HrEmployeesIndexRoute
   '/hr/payroll/': typeof HrPayrollIndexRoute
@@ -536,6 +543,7 @@ export interface FileRoutesByTo {
   '/treasury/transfers/new': typeof TreasuryTransfersNewRoute
   '/expenses/items': typeof ExpensesItemsIndexRoute
   '/expenses/list': typeof ExpensesListIndexRoute
+  '/hr/adjustments': typeof HrAdjustmentsIndexRoute
   '/hr/attendance': typeof HrAttendanceIndexRoute
   '/hr/employees': typeof HrEmployeesIndexRoute
   '/hr/payroll': typeof HrPayrollIndexRoute
@@ -607,6 +615,7 @@ export interface FileRoutesById {
   '/treasury/transfers/new': typeof TreasuryTransfersNewRoute
   '/expenses/items/': typeof ExpensesItemsIndexRoute
   '/expenses/list/': typeof ExpensesListIndexRoute
+  '/hr/adjustments/': typeof HrAdjustmentsIndexRoute
   '/hr/attendance/': typeof HrAttendanceIndexRoute
   '/hr/employees/': typeof HrEmployeesIndexRoute
   '/hr/payroll/': typeof HrPayrollIndexRoute
@@ -679,6 +688,7 @@ export interface FileRouteTypes {
     | '/treasury/transfers/new'
     | '/expenses/items/'
     | '/expenses/list/'
+    | '/hr/adjustments/'
     | '/hr/attendance/'
     | '/hr/employees/'
     | '/hr/payroll/'
@@ -743,6 +753,7 @@ export interface FileRouteTypes {
     | '/treasury/transfers/new'
     | '/expenses/items'
     | '/expenses/list'
+    | '/hr/adjustments'
     | '/hr/attendance'
     | '/hr/employees'
     | '/hr/payroll'
@@ -813,6 +824,7 @@ export interface FileRouteTypes {
     | '/treasury/transfers/new'
     | '/expenses/items/'
     | '/expenses/list/'
+    | '/hr/adjustments/'
     | '/hr/attendance/'
     | '/hr/employees/'
     | '/hr/payroll/'
@@ -980,6 +992,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/expenses/list/'
       preLoaderRoute: typeof ExpensesListIndexRouteImport
       parentRoute: typeof ExpensesRouteRoute
+    }
+    '/hr/adjustments/': {
+      id: '/hr/adjustments/'
+      path: '/adjustments'
+      fullPath: '/hr/adjustments/'
+      preLoaderRoute: typeof HrAdjustmentsIndexRouteImport
+      parentRoute: typeof HrRouteRoute
     }
     '/hr/attendance/': {
       id: '/hr/attendance/'
@@ -1350,6 +1369,7 @@ const ExpensesRouteRouteWithChildren = ExpensesRouteRoute._addFileChildren(
 interface HrRouteRouteChildren {
   HrIndexRoute: typeof HrIndexRoute
   HrEmployeesNewRoute: typeof HrEmployeesNewRoute
+  HrAdjustmentsIndexRoute: typeof HrAdjustmentsIndexRoute
   HrAttendanceIndexRoute: typeof HrAttendanceIndexRoute
   HrEmployeesIndexRoute: typeof HrEmployeesIndexRoute
   HrPayrollIndexRoute: typeof HrPayrollIndexRoute
@@ -1361,6 +1381,7 @@ interface HrRouteRouteChildren {
 const HrRouteRouteChildren: HrRouteRouteChildren = {
   HrIndexRoute: HrIndexRoute,
   HrEmployeesNewRoute: HrEmployeesNewRoute,
+  HrAdjustmentsIndexRoute: HrAdjustmentsIndexRoute,
   HrAttendanceIndexRoute: HrAttendanceIndexRoute,
   HrEmployeesIndexRoute: HrEmployeesIndexRoute,
   HrPayrollIndexRoute: HrPayrollIndexRoute,
