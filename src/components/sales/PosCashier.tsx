@@ -252,7 +252,7 @@ export function PosCashier() {
         {customerKind === "registered" ? (
           <SearchSelect
             value={customerId}
-            onChange={setCustomerId}
+            onChange={(v) => setCustomerId(v || null)}
             options={data.customers.map((c) => ({ value: c.id, label: c.name, hint: `${c.code} — ${c.phone}` }))}
             placeholder="اختر العميل"
           />
@@ -374,13 +374,13 @@ export function PosCashier() {
         <div className="grid grid-cols-2 gap-2 border-t border-border pt-2">
           <SearchSelect
             value={branchId}
-            onChange={(v) => setBranchId(v ?? "")}
+            onChange={(v) => setBranchId(v)}
             options={data.branches.map((b) => ({ value: b.id, label: b.name }))}
             placeholder="الفرع"
           />
           <SearchSelect
             value={warehouseId}
-            onChange={(v) => setWarehouseId(v ?? "")}
+            onChange={(v) => setWarehouseId(v)}
             options={data.warehouses.map((w) => ({ value: w.id, label: w.name }))}
             placeholder="المخزن"
           />
@@ -388,7 +388,7 @@ export function PosCashier() {
             <div className="col-span-2">
               <SearchSelect
                 value={safeId}
-                onChange={setSafeId}
+                onChange={(v) => setSafeId(v || null)}
                 options={data.safes.map((s) => ({ value: s.id, label: s.name }))}
                 placeholder="الخزينة"
               />

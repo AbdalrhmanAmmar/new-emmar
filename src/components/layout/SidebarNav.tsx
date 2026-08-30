@@ -15,7 +15,7 @@ interface Props {
 }
 
 function isActive(pathname: string, to: string) {
-  return pathname === to || pathname.startsWith(`${to}/`);
+  return pathname === to;
 }
 
 function ItemLink({
