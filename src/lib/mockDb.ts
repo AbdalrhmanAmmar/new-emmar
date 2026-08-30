@@ -618,6 +618,40 @@ function seed(): DbShape {
     { id: "p10", code: "IT-5001", name: "أجولة بلاستيك فارغة", barcode: "6221000050019", serial: "SR-5001", unit: "pcs", unitPrice: 12, wholesalePrice: 10.5, cost: 8, taxRate: 14, category: "مستلزمات", stock: 5200, minStock: 500, active: true },
   ];
 
+  const productCategories: ProductCategory[] = [
+    { id: "pc1", code: "CT-001", name: "أعلاف دواجن", note: "بادي / نامي / ناهي", active: true },
+    { id: "pc2", code: "CT-002", name: "أعلاف ماشية", note: "مركزات وتسمين", active: true },
+    { id: "pc3", code: "CT-003", name: "أعلاف أرانب", note: "شيكارات جاهزة", active: true },
+    { id: "pc4", code: "CT-004", name: "خامات", note: "ذرة — صويا — ردة", active: true },
+    { id: "pc5", code: "CT-005", name: "مستلزمات", note: "أجولة وخيوط وأدوات", active: true },
+  ];
+
+  const settings: OrgSettings = {
+    companyName: "الإيمان لتجارة الأعلاف",
+    companyNameEn: "AL-IMAN FEED TRADING CO",
+    activity: "أعلاف دواجن وماشية وخامات — بيع جملة وتجزئة",
+    taxNo: "100-200-300",
+    commercialNo: "12345",
+    address: "القاهرة — جمهورية مصر العربية",
+    phone: "01000000000",
+    phone2: "",
+    email: "info@aliman-feed.com",
+    website: "www.aliman-feed.com",
+    logoLetter: "إ",
+    printFooter: "هذه الفاتورة صادرة من نظام الإيمان المحاسبي",
+    invoiceTerms: "البضاعة المبيعة لا تُرد ولا تُستبدل بعد 24 ساعة من الاستلام.",
+    showSignatures: true,
+    vatRate: 14,
+    whtRate: 1,
+    currencyLabel: "ج.م",
+    defaultPaymentDays: 30,
+    allowNegativeStock: false,
+    priceEditInPos: true,
+    maxLineDiscountPct: 25,
+  };
+
+
+
   const discountCodes: DiscountCode[] = [
     { id: "dc1", code: "FEED5", percent: 5, active: true },
     { id: "dc2", code: "SUMMER10", percent: 10, active: true },
