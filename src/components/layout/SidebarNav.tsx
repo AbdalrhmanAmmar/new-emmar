@@ -10,6 +10,8 @@ interface Props {
   collapsed: boolean;
   openGroup: string;
   onToggleGroup: (id: string) => void;
+  openModule: string;
+  onToggleModule: (id: string) => void;
 }
 
 function isActive(pathname: string, to: string) {
@@ -95,45 +97,86 @@ function Group({
   );
 }
 
-export function SidebarNav({ modules, pathname, collapsed, openGroup, onToggleGroup }: Props) {
+export function SidebarNav({
+  modules,
+  pathname,
+  collapsed,
+  openGroup,
+  onToggleGroup,
+  openModule,
+  onToggleModule,
+}: Props) {
   return (
-    <div className="flex-1 space-y-3 overflow-y-auto px-2 pb-3">
+    <div className="flex-1 space-y-2 overflow-y-auto px-2 pb-3">
       {modules.map((module) => {
-        const moduleActive = pathname.startsWith(module.home.to);
+        const moduleActive = pathname.startsWith(module.home.to) || openModule === module.id;
+        const expanded = openModule === module.id;
+        const itemsCount = module.groups.reduce((acc, g) => acc + g.items.length, 0) + 1;
+
         return (
           <section
             key={module.id}
             className={cn(
-              "rounded-xl border border-transparent transition-colors",
-              moduleActive && !collapsed && "border-sidebar-border/70 bg-sidebar-accent/25 p-1.5",
+              "rounded-xl border transition-colors",
+              expanded
+                ? "border-sidebar-border/70 bg-sidebar-accent/25 p-1.5"
+                : "border-transparent hover:border-sidebar-border/50",
             )}
           >
-            {!collapsed ? (
-              <div className="flex items-center gap-2 px-2 pb-1 pt-1.5 text-[11px] font-bold uppercase tracking-wide text-sidebar-foreground/50">
+            <button
+              type="button"
+              onClick={() => onToggleModule(expanded ? "" : module.id)}
+              title={module.label}
+              className={cn(
+                "flex w-full items-center gap-2 rounded-lg px-2 py-2 text-[12px] font-bold uppercase tracking-wide transition-colors",
+                expanded
+                  ? "text-sidebar-primary"
+                  : "text-sidebar-foreground/55 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground/80",
+              )}
+            >
+              <span
+                className={cn(
+                  "grid size-7 shrink-0 place-items-center rounded-lg",
+                  moduleActive
+                    ? "bg-sidebar-primary text-sidebar-primary-foreground"
+                    : "bg-sidebar-accent/60 text-sidebar-foreground/70",
+                )}
+              >
                 {module.icon}
-                <span className="truncate">{module.label}</span>
+              </span>
+              {!collapsed && (
+                <>
+                  <span className="flex-1 truncate text-right">{module.label}</span>
+                  <span className="rounded-full bg-sidebar-accent/70 px-1.5 py-0.5 text-[10px] font-semibold text-sidebar-foreground/70">
+                    {itemsCount}
+                  </span>
+                  <ChevronDown className={cn("size-4 transition-transform", expanded && "rotate-180")} />
+                </>
+              )}
+            </button>
+
+            {expanded ? (
+              <div className="mt-1">
+                <ItemLink
+                  to={module.home.to}
+                  label={module.home.label}
+                  icon={module.home.icon}
+                  collapsed={collapsed}
+                  active={pathname === module.home.to}
+                  size="md"
+                />
+                {module.groups.map((group) => (
+                  <Group
+                    key={group.id}
+                    group={group}
+                    pathname={pathname}
+                    collapsed={collapsed}
+                    isOpen={openGroup === group.id}
+                    onToggle={() => onToggleGroup(openGroup === group.id ? "" : group.id)}
+                  />
+                ))}
               </div>
             ) : null}
-
-            <ItemLink
-              to={module.home.to}
-              label={module.home.label}
-              icon={module.home.icon}
-              collapsed={collapsed}
-              active={pathname === module.home.to}
-              size="md"
-            />
-
-            {module.groups.map((group) => (
-              <Group
-                key={group.id}
-                group={group}
-                pathname={pathname}
-                collapsed={collapsed}
-                isOpen={openGroup === group.id}
-                onToggle={() => onToggleGroup(openGroup === group.id ? "" : group.id)}
-              />
-            ))}
           </section>
         );
       })}

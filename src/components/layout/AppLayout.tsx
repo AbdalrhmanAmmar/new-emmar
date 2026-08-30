@@ -32,6 +32,9 @@ export function AppLayout() {
   const activeModule = matchModule(pathname);
   const crumb = matchNavItem(pathname)?.label ?? activeModule.home.label;
 
+  const [openModule, setOpenModule] = useState(activeModule.id);
+  useEffect(() => setOpenModule(activeModule.id), [activeModule.id]);
+
   const sidebar = (
     <AppSidebar
       pathname={pathname}
@@ -39,6 +42,8 @@ export function AppLayout() {
       onToggleCollapsed={() => setCollapsed((value) => !value)}
       openGroup={openGroup}
       onToggleGroup={setOpenGroup}
+      openModule={openModule}
+      onToggleModule={setOpenModule}
       online={online}
     />
   );

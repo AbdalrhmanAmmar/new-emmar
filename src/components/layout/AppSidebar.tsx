@@ -9,6 +9,8 @@ interface Props {
   onToggleCollapsed: () => void;
   openGroup: string;
   onToggleGroup: (id: string) => void;
+  openModule: string;
+  onToggleModule: (id: string) => void;
   online: boolean;
 }
 
@@ -18,6 +20,8 @@ export function AppSidebar({
   onToggleCollapsed,
   openGroup,
   onToggleGroup,
+  openModule,
+  onToggleModule,
   online,
 }: Props) {
   return (
@@ -29,6 +33,8 @@ export function AppSidebar({
         collapsed={collapsed}
         openGroup={openGroup}
         onToggleGroup={onToggleGroup}
+        openModule={openModule}
+        onToggleModule={onToggleModule}
       />
       <SidebarFooter collapsed={collapsed} online={online} />
     </nav>
