@@ -10,7 +10,7 @@ export function ReportsHub() {
     <div className="space-y-5">
       <PageHeader
         title="التقارير"
-        subtitle="كل تقارير البرنامج مجمّعة فى موديول واحد — تقارير الخزينة والمبيعات بالجنيه المصري"
+        description="كل تقارير البرنامج مجمّعة فى موديول واحد — تقارير الخزينة والمبيعات بالجنيه المصري"
       />
 
       {REPORTS_MODULE.groups.map((group) => (
