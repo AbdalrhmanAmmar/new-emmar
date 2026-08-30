@@ -399,6 +399,47 @@ export interface Attendance {
   note: string;
 }
 
+/** بدل أو خصم مرتبط بموظف وشهر محدد */
+export type AdjustmentKind = "allowance" | "deduction";
+
+export interface PayrollAdjustment {
+  id: string;
+  employeeId: string;
+  /** شهر الاستحقاق YYYY-MM */
+  month: string;
+  kind: AdjustmentKind;
+  /** نوع البدل أو الخصم */
+  label: string;
+  amount: number;
+  note: string;
+}
+
+export const ADJUSTMENT_KIND_LABEL: Record<AdjustmentKind, string> = {
+  allowance: "بدل",
+  deduction: "خصم",
+};
+
+export const ALLOWANCE_PRESETS = [
+  "بدل انتقالات",
+  "بدل موبايل",
+  "بدل وجبة",
+  "بدل سكن",
+  "حافز إنتاج",
+  "مكافأة",
+  "عمولة مبيعات",
+];
+
+export const DEDUCTION_PRESETS = [
+  "جزاء",
+  "تأمينات اجتماعية",
+  "ضريبة كسب عمل",
+  "خصم تأخير إضافى",
+  "استقطاع سلفة",
+  "تلفيات",
+];
+
+
+
 export const EXPENSE_KIND_LABEL: Record<ExpenseKind, string> = {
   general: "مصروف عام",
   petty: "نثريات",
