@@ -314,7 +314,11 @@ export const SETTINGS_GROUPS: SettingsGroup[] = [
   {
     id: "settings-system",
     label: "إعدادات النظام",
-    items: [{ to: "/treasury/settings", label: "الإعدادات الرئيسية وبيانات النظام", icon: <Settings2 className="size-4" /> }],
+    items: [
+      { to: "/treasury/settings", label: "الإعدادات الرئيسية وبيانات النظام", icon: <Settings2 className="size-4" /> },
+      { to: "/users", label: "المستخدمون", icon: <Users className="size-4" /> },
+      { to: "/users/permissions", label: "الصلاحيات", icon: <ShieldCheck className="size-4" /> },
+    ],
   },
   {
     id: "settings-master",
@@ -338,6 +342,7 @@ export const MODULES: NavModule[] = [
   INVENTORY_MODULE,
   EXPENSES_MODULE,
   HR_MODULE,
+  USERS_MODULE,
   REPORTS_MODULE,
 ];
 
