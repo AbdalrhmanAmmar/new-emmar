@@ -240,3 +240,22 @@ main[data-form-open="true"] > *:not([data-form-outlet]) {
   }
 }
 
+
+/* ===== إخفاء أشرطة التمرير تماماً (بدون قفزة في التخطيط) ===== */
+html {
+  scrollbar-gutter: stable;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
+}
+
+html,
+body,
+* {
+  scrollbar-width: none;
+}
+
+*::-webkit-scrollbar {
+  width: 0 !important;
+  height: 0 !important;
+  display: none !important;
+}
