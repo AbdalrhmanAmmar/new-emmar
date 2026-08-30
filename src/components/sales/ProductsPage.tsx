@@ -3,6 +3,7 @@ import { Barcode, Pencil, Plus, Power, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
+import { ProductUnitsEditor } from "@/components/sales/ProductUnitsEditor";
 import { DataTable, type Column } from "@/components/treasury/DataTable";
 import { Field, FormPage, FormSection } from "@/components/treasury/FormPage";
 import { PageHeader, StatCard, StatusBadge } from "@/components/treasury/PageHeader";
@@ -11,7 +12,7 @@ import { SearchSelect } from "@/components/treasury/SearchSelect";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { money, num } from "@/lib/format";
-import { UNIT_LABEL, nextCode, useDb, type Product } from "@/lib/mockDb";
+import { UNIT_LABEL, nextCode, useDb, type Product, type ProductUnit } from "@/lib/mockDb";
 import { printHtml } from "@/lib/printDoc";
 import { deleteProduct, saveProduct, toggleProductActive } from "@/lib/salesActions";
 
@@ -42,6 +43,16 @@ export function ProductsPage() {
     { key: "barcode", header: "الباركود", cell: (r) => r.barcode || "-", text: (r) => r.barcode },
     { key: "category", header: "التصنيف", cell: (r) => r.category || "-", text: (r) => r.category },
     { key: "unit", header: "الوحدة", cell: (r) => UNIT_LABEL[r.unit], align: "center" },
+    {
+      key: "units",
+      header: "وحدات البيع",
+      align: "center",
+      cell: (r) =>
+        r.units?.length
+          ? r.units.map((u) => u.name || u.code).join(" / ")
+          : "—",
+      text: (r) => (r.units ?? []).map((u) => `${u.code} ${u.name}`).join(" "),
+    },
     { key: "price", header: "سعر البيع", cell: (r) => money(r.unitPrice), text: (r) => String(r.unitPrice) },
     { key: "wholesale", header: "سعر الجملة", cell: (r) => money(r.wholesalePrice) },
     { key: "cost", header: "التكلفة", cell: (r) => money(r.cost) },
@@ -147,6 +158,7 @@ export function ProductFormPage({ id }: { id?: string }) {
     stock: String(existing?.stock ?? 0),
     minStock: String(existing?.minStock ?? 0),
   });
+  const [units, setUnits] = useState<ProductUnit[]>(existing?.units ?? []);
   const set = (key: keyof typeof form, value: string) => setForm((f) => ({ ...f, [key]: value }));
 
   const submit = () => {
@@ -165,6 +177,7 @@ export function ProductFormPage({ id }: { id?: string }) {
       stock: Number(form.stock || 0),
       minStock: Number(form.minStock || 0),
       active: existing?.active ?? true,
+      units,
     });
     if (!res.ok) {
       toast.error(res.error ?? "تعذر الحفظ");
@@ -236,6 +249,10 @@ export function ProductFormPage({ id }: { id?: string }) {
         <Field label="حد الطلب">
           <Input type="number" value={form.minStock} onChange={(e) => set("minStock", e.target.value)} />
         </Field>
+      </FormSection>
+
+      <FormSection title="وحدات البيع ومعاملات التحويل" className="grid-cols-1 sm:grid-cols-1 lg:grid-cols-1">
+        <ProductUnitsEditor baseUnit={form.unit as Product["unit"]} units={units} onChange={setUnits} />
       </FormSection>
     </FormPage>
   );
