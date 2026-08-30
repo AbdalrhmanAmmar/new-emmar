@@ -75,6 +75,19 @@ function SettingsPage() {
     { key: "commissionPct", label: "نسبة العمولة %", type: "number" },
   ];
 
+  const prodCatFields: FieldDef<ProductCategory>[] = [
+    { key: "code", label: "الكود (تلقائى)", required: true },
+    { key: "name", label: "اسم التصنيف", required: true },
+    { key: "note", label: "وصف مختصر" },
+  ];
+
+  const codeFields: FieldDef<DiscountCode>[] = [
+    { key: "code", label: "كود الخصم", required: true },
+    { key: "percent", label: "النسبة %", type: "number", required: true },
+  ];
+
+
+
   function saveInto<T extends { id: string }>(list: keyof typeof data, row: T, isNew: boolean) {
     mutate((db) => {
       const target = db[list] as unknown as T[];
