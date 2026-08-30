@@ -258,6 +258,7 @@ export function printSalesInvoice(input: InvoicePrintInput) {
     <div class="words">
       <b>المبلغ كتابةً:</b> ${amountInWords(t.total)}
       ${input.note ? `<br/><b>ملاحظات:</b> ${input.note}` : ""}
+      ${org.invoiceTerms ? `<br/><b>الشروط:</b> ${org.invoiceTerms}` : ""}
     </div>
     <table class="tot">
       ${totalsRows
@@ -266,9 +267,10 @@ export function printSalesInvoice(input: InvoicePrintInput) {
     </table>
   </div>
 
-  <div class="sig"><div>المحاسب</div><div>أمين المخزن</div><div>توقيع العميل</div></div>
-  <div class="foot">هذه الفاتورة صادرة من نظام الإيمان المحاسبي — تاريخ الطباعة ${new Date().toLocaleString("en-GB")}</div>
+  ${org.showSignatures ? `<div class="sig"><div>المحاسب</div><div>أمين المخزن</div><div>توقيع العميل</div></div>` : ""}
+  <div class="foot">${org.printFooter} ${org.website ? `— ${org.website}` : ""} — تاريخ الطباعة ${new Date().toLocaleString("en-GB")}</div>
 </div></body></html>`);
+
   win.document.close();
   win.focus();
   setTimeout(() => win.print(), 450);
