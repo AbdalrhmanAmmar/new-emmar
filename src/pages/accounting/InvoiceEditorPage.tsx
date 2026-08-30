@@ -243,14 +243,26 @@ const InvoiceEditorPage: React.FC<Props> = ({ mode, pageTitle, pageDescription }
 
       <InlineFormPage title="فاتورة جديدة">
           <div className="grid md:grid-cols-4 gap-3">
-            {mode === 'b2b' ? (
+            {mode === 'b2c' && (
+              <div>
+                <Label>نوع العميل</Label>
+                <Select value={custType} onValueChange={(v) => setCustType(v as 'cash' | 'customer')}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="cash">عميل نقدي</SelectItem>
+                    <SelectItem value="customer">عميل مسجل (آجل)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+            {custType === 'customer' ? (
               <div>
                 <Label>العميل</Label>
                 <Select value={customerId} onValueChange={setCustomerId}>
                   <SelectTrigger><SelectValue placeholder="اختر العميل" /></SelectTrigger>
                   <SelectContent>
                     {customers.map((c) => (
-                      <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
+                      <SelectItem key={c.id} value={c.id}>{c.name}{c.code ? ` — ${c.code}` : ''}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
