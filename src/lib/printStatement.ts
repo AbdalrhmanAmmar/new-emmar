@@ -1,6 +1,7 @@
 import { dateFmt, money, num } from "@/lib/format";
 import { printHtml } from "@/lib/printDoc";
 import type { CustomerLedger } from "@/lib/customerLedger";
+import type { SupplierLedger } from "@/lib/supplierLedger";
 
 export interface StatementParty {
   name: string;
@@ -63,5 +64,64 @@ export function printCustomerStatement(
     `كشف حساب — ${party.name}`,
     `<h1>كشف حساب عميل</h1>${info}${table}${summary}
      <div class="sig"><div>المحاسب</div><div>مدير الحسابات</div><div>العميل</div></div>`,
+  );
+}
+
+/** طباعة كشف حساب مورد احترافى A4 — كل عمليات الشراء والمدفوعات والرصيد */
+export function printSupplierStatement(
+  party: StatementParty,
+  ledger: SupplierLedger,
+  range: { from?: string; to?: string },
+) {
+  const period =
+    range.from || range.to
+      ? `${range.from ? dateFmt(range.from) : "البداية"} — ${range.to ? dateFmt(range.to) : "حتى الآن"}`
+      : "كل الفترات";
+
+  const info = `<table class="kv">
+    <tr><td>اسم المورد</td><td>${party.name}</td><td>كود المورد</td><td>${party.code || "—"}</td></tr>
+    <tr><td>الهاتف</td><td>${party.phone || "—"}</td><td>الفترة</td><td>${period}</td></tr>
+  </table>`;
+
+  const rows = ledger.rows.length
+    ? ledger.rows
+        .map(
+          (r, i) => `<tr>
+        <td style="text-align:center">${i + 1}</td>
+        <td style="text-align:center">${dateFmt(r.date)}</td>
+        <td style="text-align:center">${r.kind === "invoice" ? "فاتورة شراء" : "سند صرف / دفعة"}</td>
+        <td style="text-align:center">${r.ref}</td>
+        <td>${r.desc}</td>
+        <td style="text-align:center">${r.debit ? num(r.debit) : "—"}</td>
+        <td style="text-align:center">${r.credit ? num(r.credit) : "—"}</td>
+        <td style="text-align:center;font-weight:600">${num(r.balance)}</td>
+      </tr>`,
+        )
+        .join("")
+    : `<tr><td colspan="8" style="text-align:center">لا توجد حركات فى هذه الفترة</td></tr>`;
+
+  const table = `<table>
+    <thead><tr>
+      <th>م</th><th>التاريخ</th><th>نوع الحركة</th><th>المستند</th><th>البيان</th>
+      <th>مدين (مدفوع)</th><th>دائن (شراء)</th><th>الرصيد</th>
+    </tr></thead>
+    <tbody>${rows}</tbody>
+    <tfoot><tr>
+      <th colspan="5">الإجماليات</th>
+      <th>${num(ledger.totalDebit)}</th>
+      <th>${num(ledger.totalCredit)}</th>
+      <th>${num(ledger.balance)}</th>
+    </tr></tfoot>
+  </table>`;
+
+  const summary = `<div class="tot">
+    إجمالى المشتريات: ${money(ledger.totalCredit)} &nbsp;|&nbsp; إجمالى المدفوع: ${money(ledger.totalDebit)}<br/>
+    الرصيد الحالى المستحق للمورد: ${money(ledger.balance)}
+  </div>`;
+
+  printHtml(
+    `كشف حساب مورد — ${party.name}`,
+    `<h1>كشف حساب مورد</h1>${info}${table}${summary}
+     <div class="sig"><div>المحاسب</div><div>مدير الحسابات</div><div>المورد</div></div>`,
   );
 }
