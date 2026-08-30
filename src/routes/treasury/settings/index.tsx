@@ -3,6 +3,7 @@ import { RotateCcw } from "lucide-react";
 import { toast } from "sonner";
 
 import { EntityEditor, type FieldDef } from "@/components/treasury/EntityEditor";
+import { OrgSettingsForm } from "@/components/treasury/OrgSettingsForm";
 import { PageHeader, StatCard } from "@/components/treasury/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,6 +13,8 @@ import {
   type AppUser,
   type Branch,
   type Category,
+  type DiscountCode,
+  type ProductCategory,
   type SalesRep,
   type Warehouse,
   mutate,
@@ -20,6 +23,7 @@ import {
   uid,
   useDb,
 } from "@/lib/mockDb";
+
 
 export const Route = createFileRoute("/treasury/settings/")({
   head: () => ({
@@ -71,6 +75,19 @@ function SettingsPage() {
     { key: "commissionPct", label: "نسبة العمولة %", type: "number" },
   ];
 
+  const prodCatFields: FieldDef<ProductCategory>[] = [
+    { key: "code", label: "الكود (تلقائى)", required: true },
+    { key: "name", label: "اسم التصنيف", required: true },
+    { key: "note", label: "وصف مختصر" },
+  ];
+
+  const codeFields: FieldDef<DiscountCode>[] = [
+    { key: "code", label: "كود الخصم", required: true },
+    { key: "percent", label: "النسبة %", type: "number", required: true },
+  ];
+
+
+
   function saveInto<T extends { id: string }>(list: keyof typeof data, row: T, isNew: boolean) {
     mutate((db) => {
       const target = db[list] as unknown as T[];
@@ -101,14 +118,61 @@ function SettingsPage() {
         <StatCard label="بنود الإيراد/المصروف" value={String(data.categories.length)} />
       </div>
 
-      <Tabs defaultValue="branches" dir="rtl">
+      <Tabs defaultValue="org" dir="rtl">
         <TabsList className="flex-wrap">
+          <TabsTrigger value="org">الإعدادات الرئيسية</TabsTrigger>
+          <TabsTrigger value="prodcats">تصنيفات الأصناف</TabsTrigger>
           <TabsTrigger value="branches">الفروع</TabsTrigger>
           <TabsTrigger value="users">المستخدمون</TabsTrigger>
           <TabsTrigger value="categories">البنود</TabsTrigger>
           <TabsTrigger value="warehouses">المخازن</TabsTrigger>
           <TabsTrigger value="reps">المندوبون</TabsTrigger>
+          <TabsTrigger value="codes">أكواد الخصم</TabsTrigger>
         </TabsList>
+
+        <TabsContent value="org" className="mt-3">
+          <OrgSettingsForm />
+        </TabsContent>
+
+        <TabsContent value="prodcats" className="mt-3">
+          <EntityEditor<ProductCategory>
+            title="تصنيفات الأصناف"
+            description="التصنيفات المستخدمة فى شاشات الأصناف والكاشير والفواتير"
+            rows={data.productCategories}
+            fields={prodCatFields}
+            primary={(row) => `${row.code} — ${row.name}`}
+            secondary={(row) =>
+              `${row.note || "بدون وصف"} — أصناف: ${data.products.filter((p) => p.category === row.name).length}`
+            }
+            emptyRow={() => ({
+              id: uid("pc"),
+              code: nextCode("CT", data.productCategories.map((c) => c.code)),
+              name: "",
+              note: "",
+              active: true,
+            })}
+            onSave={(row, isNew) => saveInto("productCategories", row, isNew)}
+            onDelete={(row) => {
+              if (data.products.some((p) => p.category === row.name)) return "التصنيف مستخدم فى أصناف";
+              removeFrom("productCategories", row);
+            }}
+          />
+        </TabsContent>
+
+        <TabsContent value="codes" className="mt-3">
+          <EntityEditor<DiscountCode>
+            title="أكواد الخصم"
+            description="أكواد تُطبَّق على إجمالى الفاتورة"
+            rows={data.discountCodes}
+            fields={codeFields}
+            primary={(row) => row.code}
+            secondary={(row) => `${row.percent}% — ${row.active ? "مُفعّل" : "موقوف"}`}
+            emptyRow={() => ({ id: uid("dc"), code: "", percent: 0, active: true })}
+            onSave={(row, isNew) => saveInto("discountCodes", row, isNew)}
+            onDelete={(row) => removeFrom("discountCodes", row)}
+          />
+        </TabsContent>
+
 
         <TabsContent value="branches" className="mt-3">
           <EntityEditor<Branch>

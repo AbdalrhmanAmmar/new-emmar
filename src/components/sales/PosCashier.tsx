@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { money, num, today } from "@/lib/format";
 import { UNIT_LABEL, nextNo, uid, useDb, type Product, type SalesLine, type SalesPayMethod } from "@/lib/mockDb";
+import { CustomerHistoryButton } from "@/components/sales/CustomerHistoryButton";
 import { invoicePrintInput, printSalesInvoice } from "@/lib/printInvoice";
 import { discountPercentOf, invoiceTotals, lineTotals } from "@/lib/sales";
 import { saveSalesInvoice } from "@/lib/salesActions";
@@ -29,10 +30,12 @@ export function PosCashier() {
   const [discountCode, setDiscountCode] = useState("");
 
   const categories = useMemo(() => {
-    const set = new Set<string>();
+    const names = data.productCategories.filter((c) => c.active).map((c) => c.name);
+    const set = new Set<string>(names);
     for (const p of data.products) if (p.active && p.category) set.add(p.category);
     return ["all", ...Array.from(set)];
-  }, [data.products]);
+  }, [data.products, data.productCategories]);
+
 
   const products = useMemo(() => {
     const q = term.trim().toLowerCase();
@@ -250,13 +253,19 @@ export function PosCashier() {
           ))}
         </div>
         {customerKind === "registered" ? (
-          <SearchSelect
-            value={customerId}
-            onChange={(v) => setCustomerId(v || null)}
-            options={data.customers.map((c) => ({ value: c.id, label: c.name, hint: `${c.code} — ${c.phone}` }))}
-            placeholder="اختر العميل"
-          />
+          <div className="flex items-center gap-1.5">
+            <div className="min-w-0 flex-1">
+              <SearchSelect
+                value={customerId}
+                onChange={(v) => setCustomerId(v || null)}
+                options={data.customers.map((c) => ({ value: c.id, label: c.name, hint: `${c.code} — ${c.phone}` }))}
+                placeholder="اختر العميل"
+              />
+            </div>
+            <CustomerHistoryButton customerId={customerId} />
+          </div>
         ) : null}
+
 
         <div className="max-h-[46vh] space-y-2 overflow-y-auto">
           {lines.length === 0 ? (

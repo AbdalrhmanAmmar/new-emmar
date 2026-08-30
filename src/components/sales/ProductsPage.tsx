@@ -188,9 +188,17 @@ export function ProductFormPage({ id }: { id?: string }) {
         <Field label="اسم الصنف">
           <Input dir="rtl" value={form.name} onChange={(e) => set("name", e.target.value)} />
         </Field>
-        <Field label="التصنيف">
-          <Input dir="rtl" value={form.category} onChange={(e) => set("category", e.target.value)} />
+        <Field label="التصنيف" hint="التصنيفات من الإعدادات الرئيسية">
+          <SearchSelect
+            value={form.category}
+            onChange={(v) => set("category", v)}
+            options={data.productCategories
+              .filter((c) => c.active)
+              .map((c) => ({ value: c.name, label: c.name, hint: c.code }))}
+            placeholder="اختر التصنيف"
+          />
         </Field>
+
         <Field label="الباركود">
           <Input dir="rtl" value={form.barcode} onChange={(e) => set("barcode", e.target.value)} />
         </Field>

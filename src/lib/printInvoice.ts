@@ -1,5 +1,5 @@
 import { dateFmt, money, num } from "@/lib/format";
-import { SALES_PAY_LABEL, UNIT_LABEL, type DbShape, type SalesInvoice, type SalesLine } from "@/lib/mockDb";
+import { SALES_PAY_LABEL, UNIT_LABEL, type DbShape, type OrgSettings, type SalesInvoice, type SalesLine } from "@/lib/mockDb";
 import { lineTotals } from "@/lib/sales";
 
 export interface InvoicePrintTotals {
@@ -27,7 +27,9 @@ export interface InvoicePrintInput {
   status?: string;
   lines: SalesLine[];
   totals: InvoicePrintTotals;
+  org: OrgSettings;
 }
+
 
 /* ===================== تفقيط المبالغ بالعربي ===================== */
 
@@ -124,7 +126,9 @@ export function invoicePrintInput(
     status: inv.status === "posted" ? "مرحّلة" : inv.status === "draft" ? "مسودة" : "ملغاة",
     lines: inv.lines,
     totals,
+    org: data.settings,
   };
+
 }
 
 /* ===================== الطباعة الاحترافية ===================== */
@@ -152,11 +156,13 @@ export function printSalesInvoice(input: InvoicePrintInput) {
     .join("");
 
   const t = input.totals;
+  const org = input.org;
   const totalsRows: Array<[string, string, boolean]> = [
     ["الإجمالي قبل الخصم", money(t.gross), false],
     ["إجمالي الخصم", money(t.discount), false],
     ["الصافي بعد الخصم", money(t.net), false],
-    ["ضريبة القيمة المضافة (14%)", money(t.tax), false],
+    [`ضريبة القيمة المضافة (${num(org.vatRate)}%)`, money(t.tax), false],
+
     ["الإجمالي المستحق", money(t.total), true],
     ["المدفوع", money(t.paid), false],
     ["المتبقي", money(t.remaining), true],
@@ -208,12 +214,14 @@ export function printSalesInvoice(input: InvoicePrintInput) {
 </style></head><body><div class="doc">
   <div class="top">
     <div class="brand">
-      <div class="mark">إ</div>
+      <div class="mark">${org.logoLetter || "إ"}</div>
       <div>
-        <div class="co">الإيمان لتجارة الأعلاف</div>
-        <div class="sub">AL-IMAN FEED TRADING CO — جمهورية مصر العربية<br/>أعلاف دواجن وماشية وخامات — بيع جملة وتجزئة</div>
+        <div class="co">${org.companyName}</div>
+        <div class="sub">${org.companyNameEn} — ${org.address}<br/>${org.activity}<br/>
+        س.ت: ${org.commercialNo || "—"} • رقم ضريبى: ${org.taxNo || "—"} • ت: ${[org.phone, org.phone2].filter(Boolean).join(" / ") || "—"}</div>
       </div>
     </div>
+
     <div class="doctag">
       <h1>فاتورة مبيعات</h1>
       <div class="sub">رقم: <b>${input.no}</b><br/>تاريخ: ${dateFmt(input.date)}</div>
@@ -250,6 +258,7 @@ export function printSalesInvoice(input: InvoicePrintInput) {
     <div class="words">
       <b>المبلغ كتابةً:</b> ${amountInWords(t.total)}
       ${input.note ? `<br/><b>ملاحظات:</b> ${input.note}` : ""}
+      ${org.invoiceTerms ? `<br/><b>الشروط:</b> ${org.invoiceTerms}` : ""}
     </div>
     <table class="tot">
       ${totalsRows
@@ -258,9 +267,10 @@ export function printSalesInvoice(input: InvoicePrintInput) {
     </table>
   </div>
 
-  <div class="sig"><div>المحاسب</div><div>أمين المخزن</div><div>توقيع العميل</div></div>
-  <div class="foot">هذه الفاتورة صادرة من نظام الإيمان المحاسبي — تاريخ الطباعة ${new Date().toLocaleString("en-GB")}</div>
+  ${org.showSignatures ? `<div class="sig"><div>المحاسب</div><div>أمين المخزن</div><div>توقيع العميل</div></div>` : ""}
+  <div class="foot">${org.printFooter} ${org.website ? `— ${org.website}` : ""} — تاريخ الطباعة ${new Date().toLocaleString("en-GB")}</div>
 </div></body></html>`);
+
   win.document.close();
   win.focus();
   setTimeout(() => win.print(), 450);
