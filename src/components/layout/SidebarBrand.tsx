@@ -1,6 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { PanelRightClose, PanelRightOpen } from "lucide-react";
 
+import logoAsset from "@/assets/logo.jpeg.asset.json";
+
 interface Props {
   collapsed: boolean;
   onToggleCollapsed: () => void;
@@ -9,14 +11,17 @@ interface Props {
 export function SidebarBrand({ collapsed, onToggleCollapsed }: Props) {
   return (
     <div className="flex items-center justify-between gap-2 px-3 py-3">
-      {!collapsed ? (
-        <Link to="/treasury" className="flex items-center gap-2 text-sidebar-foreground">
-          <span className="grid size-9 place-items-center rounded-full bg-sidebar-primary font-bold text-sidebar-primary-foreground">
-            إ
-          </span>
-          <span className="text-sm font-bold">الإيمان لتجارة الأعلاف</span>
-        </Link>
-      ) : null}
+      <Link
+        to="/treasury"
+        className={`flex items-center gap-2 text-sidebar-foreground ${collapsed ? "mx-auto" : ""}`}
+      >
+        <img
+          src={logoAsset.url}
+          alt="شعار الإيمان لتجارة الأعلاف"
+          className="size-9 shrink-0 rounded-full bg-white object-cover ring-1 ring-sidebar-border"
+        />
+        {!collapsed ? <span className="text-sm font-bold">الإيمان لتجارة الأعلاف</span> : null}
+      </Link>
       <button
         type="button"
         onClick={onToggleCollapsed}
