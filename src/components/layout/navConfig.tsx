@@ -278,6 +278,31 @@ export const REPORTS_MODULE: NavModule = {
   ],
 };
 
+/** موديول إدارة المستخدمين والصلاحيات */
+export const USERS_MODULE: NavModule = {
+  id: "users",
+  label: "إدارة المستخدمين",
+  icon: <ShieldCheck className="size-4" />,
+  home: { to: "/users", label: "سجل المستخدمين", icon: <Users className="size-4" /> },
+  groups: [
+    {
+      id: "users-accounts",
+      label: "حسابات المستخدمين",
+      icon: <Users className="size-4" />,
+      items: [
+        { to: "/users", label: "سجل المستخدمين", icon: <Users className="size-4" /> },
+        { to: "/users/new", label: "مستخدم جديد", icon: <UserPlus className="size-4" /> },
+      ],
+    },
+    {
+      id: "users-perms",
+      label: "الأدوار والصلاحيات",
+      icon: <ShieldCheck className="size-4" />,
+      items: [{ to: "/users/permissions", label: "الصلاحيات", icon: <ShieldCheck className="size-4" /> }],
+    },
+  ],
+};
+
 /** قائمة الترس: كل الإعدادات والبيانات الرئيسية فى مكان واحد */
 export interface SettingsGroup {
   id: string;
