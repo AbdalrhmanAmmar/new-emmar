@@ -1,5 +1,7 @@
 import * as React from "react";
-import { ChevronLeft, ChevronRight, Search, X as XIcon } from "lucide-react";
+import { ChevronLeft, ChevronRight, Printer as PrinterIcon, Search, X as XIcon } from "lucide-react";
+
+import { printTableElement } from "@/lib/printRecord";
 
 import { cn } from "@/lib/utils";
 
@@ -57,6 +59,7 @@ const Table = React.forwardRef<HTMLTableElement, TableProps>(
     },
     ref,
   ) => {
+    const wrapRef = React.useRef<HTMLDivElement>(null);
     const [page, setPage] = React.useState(1);
     const [pageSize, setPageSize] = React.useState(defaultPageSize);
     const [total, setTotal] = React.useState(0);
@@ -77,8 +80,8 @@ const Table = React.forwardRef<HTMLTableElement, TableProps>(
 
     return (
       <TableContext.Provider value={ctx}>
-        {searchable && (
-          <div className="mb-3 flex items-center justify-end">
+        <div className="mb-3 flex flex-wrap items-center justify-end gap-2">
+          {searchable && (
             <div className="relative w-full sm:w-72">
               <Search className="pointer-events-none absolute inset-y-0 end-3 my-auto h-4 w-4 text-muted-foreground" />
               <input
@@ -103,9 +106,20 @@ const Table = React.forwardRef<HTMLTableElement, TableProps>(
                 </button>
               )}
             </div>
-          </div>
-        )}
-        <div className="table-scroll-x relative w-full overflow-x-auto [-webkit-overflow-scrolling:touch]">
+          )}
+          <button
+            type="button"
+            title="طباعة الجدول"
+            onClick={() => printTableElement(wrapRef.current?.querySelector("table") ?? null)}
+            className="inline-flex h-10 items-center gap-1.5 rounded-xl border border-border bg-card px-3 text-sm text-foreground shadow-sm transition-colors hover:bg-primary hover:text-primary-foreground"
+          >
+            <PrinterIcon className="h-4 w-4" /> طباعة
+          </button>
+        </div>
+        <div
+          ref={wrapRef}
+          className="table-scroll-x relative w-full overflow-x-auto [-webkit-overflow-scrolling:touch]"
+        >
           <table
             ref={ref}
             data-resizable={resizableColumns ? "true" : undefined}
@@ -113,6 +127,7 @@ const Table = React.forwardRef<HTMLTableElement, TableProps>(
             {...props}
           />
         </div>
+
         {paginate && total > 1 && (
           <div className="mt-3 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-3">
             <div className="flex items-center gap-1.5">

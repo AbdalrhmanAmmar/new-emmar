@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Settings2 } from "lucide-react";
+import { Printer, Settings2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -8,13 +8,50 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { printTableRow } from "@/lib/printRecord";
 
 /**
  * Groups per-row action buttons behind a single gear icon.
  * Children are rendered inside the dropdown as a compact icon rail.
  */
-export const RowActions = ({ children }: { children: React.ReactNode }) => {
+export const RowActions = ({
+  children,
+  printTitle = "مستند",
+  showPrint = true,
+}: {
+  children?: React.ReactNode;
+  /** عنوان المستند عند الطباعة (مثال: "إذن صرف مخزني") */
+  printTitle?: string;
+  /** إخفاء زر الطباعة التلقائي (لو الصفحة بها طباعة مخصصة) */
+  showPrint?: boolean;
+}) => {
+  const anchorRef = React.useRef<HTMLDivElement>(null);
   const items = React.Children.toArray(children).filter(Boolean);
+
+  const hasCustomPrint = items.some(
+    (c) =>
+      React.isValidElement(c) &&
+      String(
+        ((c.props as Record<string, unknown>)["title"] ??
+          (c.props as Record<string, unknown>)["aria-label"] ??
+          "") as string,
+      ).includes("طباعة"),
+  );
+
+  if (showPrint && !hasCustomPrint) {
+    items.push(
+      <Button
+        key="__print"
+        variant="ghost"
+        size="icon"
+        title="طباعة"
+        onClick={() => printTableRow(anchorRef.current, printTitle)}
+      >
+        <Printer className="h-4 w-4" />
+      </Button>,
+    );
+  }
+
   if (items.length === 0) return null;
 
   // Extract a readable label for each action (title / aria-label) so the
@@ -40,7 +77,7 @@ export const RowActions = ({ children }: { children: React.ReactNode }) => {
   });
 
   return (
-    <div className="flex justify-center">
+    <div ref={anchorRef} className="flex justify-center">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
