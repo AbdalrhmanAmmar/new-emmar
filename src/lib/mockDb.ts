@@ -347,6 +347,7 @@ export interface DbShape {
   salesInvoices: SalesInvoice[];
   purchaseInvoices: PurchaseInvoice[];
   productCategories: ProductCategory[];
+  measureUnits: MeasureUnit[];
   settings: OrgSettings;
 
 }
@@ -707,6 +708,16 @@ function seed(): DbShape {
     { id: "pc5", code: "CT-005", name: "مستلزمات", note: "أجولة وخيوط وأدوات", active: true },
   ];
 
+  const measureUnits: MeasureUnit[] = [
+    { id: "mu1", code: "ton", name: "طن", decimals: 3, note: "1 طن = 1000 كيلو", active: true },
+    { id: "mu2", code: "kg", name: "كيلو", decimals: 2, note: "وحدة الوزن الأساسية", active: true },
+    { id: "mu3", code: "bag", name: "شيكارة", decimals: 0, note: "شيكارة 50 / 40 / 25 كجم", active: true },
+    { id: "mu4", code: "pcs", name: "عدد", decimals: 0, note: "قطعة / وحدة", active: true },
+    { id: "mu5", code: "qnt", name: "قنطار", decimals: 2, note: "1 قنطار = 50 كيلو", active: true },
+    { id: "mu6", code: "box", name: "كرتونة", decimals: 0, note: "", active: true },
+    { id: "mu7", code: "ltr", name: "لتر", decimals: 2, note: "", active: true },
+  ];
+
   const settings: OrgSettings = {
     companyName: "الإيمان لتجارة الأعلاف",
     companyNameEn: "AL-IMAN FEED TRADING CO",
@@ -852,6 +863,7 @@ function seed(): DbShape {
     salesInvoices,
     purchaseInvoices,
     productCategories,
+    measureUnits,
     settings,
 
   };
@@ -875,6 +887,7 @@ function load(): DbShape {
         ...parsed,
         purchaseInvoices: parsed.purchaseInvoices ?? base.purchaseInvoices,
         productCategories: parsed.productCategories?.length ? parsed.productCategories : base.productCategories,
+        measureUnits: parsed.measureUnits?.length ? parsed.measureUnits : base.measureUnits,
         settings: { ...base.settings, ...(parsed.settings ?? {}) },
       };
 
