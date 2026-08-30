@@ -42,7 +42,7 @@ export function returnedQty(
 ): number {
   let sum = 0;
   for (const doc of data.returns) {
-    if (doc.refInvoiceId !== invoiceId || doc.status === "void") continue;
+    if (doc.refInvoiceId !== invoiceId || doc.status === "cancelled") continue;
     if (excludeReturnId && doc.id === excludeReturnId) continue;
     for (const line of doc.lines) {
       if (line.productId === productId) sum += baseQty(line);
