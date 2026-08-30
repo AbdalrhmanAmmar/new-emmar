@@ -59,9 +59,7 @@ export function ChartCard({
       </CardHeader>
       <CardContent dir="ltr" className="pb-4 pt-2">
         <div className="w-full" style={{ height }}>
-          <ResponsiveContainer width="100%" height="100%">
-            {children as never}
-          </ResponsiveContainer>
+          {children}
         </div>
       </CardContent>
 
@@ -99,6 +97,7 @@ export function FlowAreaChart({
   series: Array<{ key: string; name: string; color?: string }>;
 }) {
   return (
+    <ResponsiveContainer width="100%" height="100%">
     <AreaChart data={data} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
       <defs>
         {series.map((s, i) => (
@@ -125,6 +124,7 @@ export function FlowAreaChart({
         />
       ))}
     </AreaChart>
+    </ResponsiveContainer>
   );
 }
 
@@ -138,6 +138,7 @@ export function GroupedBarChart({
   vertical?: boolean;
 }) {
   return (
+    <ResponsiveContainer width="100%" height="100%">
     <BarChart
       data={data}
       layout={vertical ? "vertical" : "horizontal"}
@@ -168,11 +169,13 @@ export function GroupedBarChart({
         />
       ))}
     </BarChart>
+    </ResponsiveContainer>
   );
 }
 
 export function TrendLineChart({ data, dataKey, name }: { data: SeriesPoint[]; dataKey: string; name: string }) {
   return (
+    <ResponsiveContainer width="100%" height="100%">
     <LineChart data={data} margin={{ top: 6, right: 10, left: 0, bottom: 0 }}>
       <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.15} vertical={false} />
       <XAxis dataKey="label" {...axisProps} />
@@ -188,11 +191,13 @@ export function TrendLineChart({ data, dataKey, name }: { data: SeriesPoint[]; d
         activeDot={{ r: 5 }}
       />
     </LineChart>
+    </ResponsiveContainer>
   );
 }
 
 export function DonutChart({ data }: { data: SeriesPoint[] }) {
   return (
+    <ResponsiveContainer width="100%" height="100%">
     <PieChart>
       <Tooltip {...tooltipProps} />
       <Legend wrapperStyle={{ fontSize: 12, direction: "rtl" }} />
@@ -210,5 +215,6 @@ export function DonutChart({ data }: { data: SeriesPoint[] }) {
         ))}
       </Pie>
     </PieChart>
+    </ResponsiveContainer>
   );
 }
