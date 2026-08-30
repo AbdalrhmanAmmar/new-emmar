@@ -188,21 +188,8 @@ export function AccountingLayout({ children }: { children: ReactNode }) {
             <span className="truncate font-semibold text-accent">{activeItem?.label ?? "لوحة المتابعة"}</span>
           </nav>
 
-          <div className="flex shrink-0 items-center gap-2 lg:ms-auto">
-            <GlobalSearch />
-            <OfflineIndicator />
-            <Button
-              variant="outline"
-              size="sm"
-              className="hidden border-white/15 bg-transparent text-sidebar-foreground shadow-sm hover:bg-white/10 hover:text-sidebar-foreground sm:inline-flex"
-              onClick={() => {
-                resetDb();
-                window.location.reload();
-              }}
-            >
-              <RotateCcw className="me-1 h-4 w-4" />
-              <span className="hidden sm:inline">إعادة تعيين البيانات</span>
-            </Button>
+          <div className="flex min-w-0 flex-1 items-center justify-end lg:ms-auto lg:max-w-md lg:flex-initial">
+            <GlobalSearch className="max-w-md" />
           </div>
         </div>
       </header>
@@ -334,6 +321,7 @@ export function AccountingLayout({ children }: { children: ReactNode }) {
                     <span className="truncate text-[12px] font-bold">مدير النظام</span>
                     <span className="truncate text-[10px] text-sidebar-foreground/55">الوضع التجريبي</span>
                   </div>
+                  <OfflineIndicator light />
                 </div>
               </div>
             )}
