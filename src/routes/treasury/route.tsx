@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { TreasuryLayout } from "@/components/treasury/TreasuryLayout";
 
 export const Route = createFileRoute("/treasury")({
+  ssr: false,
   head: () => ({
     meta: [
       { title: "الخزينة والمعاملات المالية — الإيمان لتجارة الأعلاف" },

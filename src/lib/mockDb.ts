@@ -497,7 +497,7 @@ function persist() {
 }
 
 export function getDb(): DbShape {
-  if (!db) db = seed();
+  if (!db) db = load();
   return db;
 }
 
