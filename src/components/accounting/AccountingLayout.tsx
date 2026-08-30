@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 
+import { GlobalSearch } from "@/components/accounting/GlobalSearch";
 import { OfflineIndicator } from "@/components/accounting/OfflineIndicator";
 import { Button } from "@/components/ui/button";
 import { accountingNav } from "@/lib/accountingNav";
@@ -185,6 +186,7 @@ export function AccountingLayout({ children }: { children: ReactNode }) {
           </nav>
 
           <div className="flex shrink-0 items-center gap-2 lg:ms-auto">
+            <GlobalSearch />
             <OfflineIndicator />
             <Button
               variant="outline"
