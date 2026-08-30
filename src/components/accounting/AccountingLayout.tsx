@@ -345,11 +345,13 @@ export function AccountingLayout({ children }: { children: ReactNode }) {
           />
         )}
 
-        <main className="min-w-0 flex-1 p-3 pb-[calc(4.5rem+env(safe-area-inset-bottom))] sm:p-4 lg:p-6 lg:pb-6">
+        <main id="acc-main" className="min-w-0 flex-1 p-3 pb-[calc(4.5rem+env(safe-area-inset-bottom))] sm:p-4 lg:p-6 lg:pb-6">
           <div key={pathname} className="page-transition">
             {children}
           </div>
+          <div data-form-outlet id="acc-form-outlet" />
         </main>
+
       </div>
 
       {/* شريط التنقل السفلي بأسلوب تطبيقات الموبيل */}
