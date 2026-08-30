@@ -1,4 +1,4 @@
-import { useSyncExternalStore } from "react";
+import { useEffect, useSyncExternalStore } from "react";
 
 /* ============================================================
  * قاعدة بيانات محلية (الوضع الافتراضي) — تعمل بدون إنترنت
