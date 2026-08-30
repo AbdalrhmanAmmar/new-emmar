@@ -13,6 +13,7 @@ import { Loader2, Plus, Save, Trash2, PackageCheck } from 'lucide-react';
 import { toast } from 'sonner';
 import ExportPdfButton from '@/components/accounting/ExportPdfButton';
 import RowActions from '@/components/accounting/RowActions';
+import { InlineFormPage } from '@/components/accounting/InlineFormPage';
 
 const VAT_RATE = 14;
 const money = (n: any) => Number(n || 0).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -172,9 +173,7 @@ const AccPurchaseOrdersPage: React.FC = () => {
         />
       </div>
 
-      <Card>
-        <CardHeader><CardTitle>أمر شراء جديد</CardTitle></CardHeader>
-        <CardContent className="space-y-4">
+      <InlineFormPage title="أمر شراء جديد">
           <div className="grid md:grid-cols-4 gap-3">
             <div>
               <Label>المورد</Label>
@@ -251,9 +250,8 @@ const AccPurchaseOrdersPage: React.FC = () => {
               {saving ? <Loader2 className="h-4 w-4 animate-spin me-1" /> : <Save className="h-4 w-4 me-1" />} حفظ أمر الشراء
             </Button>
           </div>
-        </CardContent>
-      </Card>
 
+      </InlineFormPage>
       <Card>
         <CardHeader><CardTitle>أوامر الشراء ({orders.length})</CardTitle></CardHeader>
         <CardContent>

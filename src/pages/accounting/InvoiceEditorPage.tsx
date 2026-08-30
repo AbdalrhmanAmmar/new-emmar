@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { Loader2, Plus, Save, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import ExportPdfButton from '@/components/accounting/ExportPdfButton';
+import { InlineFormPage } from '@/components/accounting/InlineFormPage';
 
 const VAT_RATE = 14;
 
@@ -239,9 +240,7 @@ const InvoiceEditorPage: React.FC<Props> = ({ mode, pageTitle, pageDescription }
         />
       </div>
 
-      <Card>
-        <CardHeader><CardTitle>فاتورة جديدة</CardTitle></CardHeader>
-        <CardContent className="space-y-4">
+      <InlineFormPage title="فاتورة جديدة">
           <div className="grid md:grid-cols-4 gap-3">
             {mode === 'b2b' ? (
               <div>
@@ -359,9 +358,8 @@ const InvoiceEditorPage: React.FC<Props> = ({ mode, pageTitle, pageDescription }
               إصدار الفاتورة وصرف المخزون
             </Button>
           </div>
-        </CardContent>
-      </Card>
 
+      </InlineFormPage>
       <Card>
         <CardHeader><CardTitle>سجل الفواتير</CardTitle></CardHeader>
         <CardContent>

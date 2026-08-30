@@ -13,6 +13,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { useRefresh, useTable } from '@/hooks/useTable';
 import { supabase } from '@/integrations/supabase/externalClient';
 import { GL, money, nextDocNo, num, postJournal, qty, todayStr } from '@/lib/docFlow';
+import { InlineFormPage } from '@/components/accounting/InlineFormPage';
 
 const COST_TYPES = ['نولون نقل', 'تحميل وتنزيل', 'رسوم ميزان', 'تأمين', 'مصاريف جمركية', 'أخرى'];
 
@@ -102,9 +103,7 @@ const AccLandedCostsPage: React.FC = () => {
         />
       </div>
 
-      <Card>
-        <CardHeader><CardTitle>تحميل مصروف جديد</CardTitle></CardHeader>
-        <CardContent className="space-y-4">
+      <InlineFormPage title="تحميل مصروف جديد">
           <div className="grid md:grid-cols-5 gap-3">
             <div>
               <Label>إذن الاستلام</Label>
@@ -167,9 +166,8 @@ const AccLandedCostsPage: React.FC = () => {
               {saving ? <Loader2 className="h-4 w-4 animate-spin me-1" /> : <Save className="h-4 w-4 me-1" />} تحميل وترحيل
             </Button>
           </div>
-        </CardContent>
-      </Card>
 
+      </InlineFormPage>
       <Card>
         <CardHeader><CardTitle>المصاريف المحمّلة ({costs.length})</CardTitle></CardHeader>
         <CardContent>

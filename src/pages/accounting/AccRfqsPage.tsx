@@ -14,6 +14,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { useRefresh, useTable } from '@/hooks/useTable';
 import { supabase } from '@/integrations/supabase/externalClient';
 import { calcTotals, money, nextDocNo, num, qty, todayStr } from '@/lib/docFlow';
+import { InlineFormPage } from '@/components/accounting/InlineFormPage';
 
 type Line = { key: string; item_id: string; quantity_kg: number; target_price: number };
 const newLine = (): Line => ({ key: Math.random().toString(36).slice(2), item_id: '', quantity_kg: 0, target_price: 0 });
@@ -163,9 +164,7 @@ const AccRfqsPage: React.FC = () => {
         />
       </div>
 
-      <Card>
-        <CardHeader><CardTitle>طلب عرض سعر جديد</CardTitle></CardHeader>
-        <CardContent className="space-y-4">
+      <InlineFormPage title="طلب عرض سعر جديد">
           <div className="grid md:grid-cols-4 gap-3">
             <div>
               <Label>المخزن المستلم</Label>
@@ -214,9 +213,8 @@ const AccRfqsPage: React.FC = () => {
               {saving ? <Loader2 className="h-4 w-4 animate-spin me-1" /> : <Save className="h-4 w-4 me-1" />} حفظ الطلب
             </Button>
           </div>
-        </CardContent>
-      </Card>
 
+      </InlineFormPage>
       <Card>
         <CardHeader><CardTitle>تسجيل عرض مورد</CardTitle></CardHeader>
         <CardContent className="grid md:grid-cols-5 gap-3 items-end">

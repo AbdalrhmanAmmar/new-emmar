@@ -13,6 +13,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { useRefresh, useTable } from '@/hooks/useTable';
 import { supabase } from '@/integrations/supabase/externalClient';
 import { GL, createStockMove, money, nextDocNo, num, onHandKg, postJournal, qty, todayStr } from '@/lib/docFlow';
+import { InlineFormPage } from '@/components/accounting/InlineFormPage';
 
 const REASONS = ['نسبة رطوبة أعلى من المواصفة', 'شوائب أو تكسير', 'اختلاف في المواصفة', 'فرق وزن', 'تلف أثناء النقل'];
 
@@ -96,9 +97,7 @@ const AccPurchaseReturnsPage: React.FC = () => {
         />
       </div>
 
-      <Card>
-        <CardHeader><CardTitle>مرتجع جديد</CardTitle></CardHeader>
-        <CardContent className="space-y-4">
+      <InlineFormPage title="مرتجع جديد">
           <div className="grid md:grid-cols-5 gap-3">
             <div>
               <Label>إذن الاستلام</Label>
@@ -134,9 +133,8 @@ const AccPurchaseReturnsPage: React.FC = () => {
               {saving ? <Loader2 className="h-4 w-4 animate-spin me-1" /> : <Save className="h-4 w-4 me-1" />} ترحيل المرتجع
             </Button>
           </div>
-        </CardContent>
-      </Card>
 
+      </InlineFormPage>
       <Card>
         <CardHeader><CardTitle>المرتجعات ({returns.length})</CardTitle></CardHeader>
         <CardContent>

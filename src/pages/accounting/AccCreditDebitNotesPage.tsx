@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { Loader2, Send } from 'lucide-react';
 import { toast } from 'sonner';
 import ExportPdfButton from '@/components/accounting/ExportPdfButton';
+import { InlineFormPage } from '@/components/accounting/InlineFormPage';
 
 const REASONS = [
   { code: '1', text: 'مرتجع أعلاف من العميل (كلي أو جزئي)' },
@@ -179,9 +180,7 @@ const AccCreditDebitNotesPage: React.FC = () => {
       </div>
 
 
-      <Card>
-        <CardHeader><CardTitle>إصدار إشعار جديد</CardTitle></CardHeader>
-        <CardContent className="space-y-4">
+      <InlineFormPage title="إصدار إشعار جديد">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <Label>نوع الإشعار</Label>
@@ -242,9 +241,9 @@ const AccCreditDebitNotesPage: React.FC = () => {
               إصدار الإشعار
             </Button>
           </div>
-        </CardContent>
-      </Card>
 
+
+      </InlineFormPage>
       <Card>
         <CardHeader><CardTitle>سجل الإشعارات</CardTitle></CardHeader>
         <CardContent>
