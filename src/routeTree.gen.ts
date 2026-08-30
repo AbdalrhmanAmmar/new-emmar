@@ -31,6 +31,7 @@ import { Route as SalesIndexRouteImport } from './routes/sales/index'
 import { Route as SalesPosRouteImport } from './routes/sales/pos'
 import { Route as TreasuryIndexRouteImport } from './routes/treasury/index'
 import { Route as UsersIndexRouteImport } from './routes/users/index'
+import { Route as UsersIdRouteImport } from './routes/users/$id'
 import { Route as UsersNewRouteImport } from './routes/users/new'
 import { Route as UsersPermissionsRouteImport } from './routes/users/permissions'
 import { Route as ExpensesItemsIndexRouteImport } from './routes/expenses/items/index'
@@ -210,6 +211,11 @@ const TreasuryIndexRoute = TreasuryIndexRouteImport.update({
 const UsersIndexRoute = UsersIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => UsersRouteRoute,
+} as any)
+const UsersIdRoute = UsersIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
   getParentRoute: () => UsersRouteRoute,
 } as any)
 const UsersNewRoute = UsersNewRouteImport.update({
@@ -578,6 +584,7 @@ export interface FileRoutesByFullPath {
   '/inventory/balance': typeof InventoryBalanceRoute
   '/reports/customer-statement': typeof ReportsCustomerStatementRoute
   '/sales/pos': typeof SalesPosRoute
+  '/users/$id': typeof UsersIdRoute
   '/users/new': typeof UsersNewRoute
   '/users/permissions': typeof UsersPermissionsRoute
   '/expenses/': typeof ExpensesIndexRoute
@@ -663,6 +670,7 @@ export interface FileRoutesByTo {
   '/inventory/balance': typeof InventoryBalanceRoute
   '/reports/customer-statement': typeof ReportsCustomerStatementRoute
   '/sales/pos': typeof SalesPosRoute
+  '/users/$id': typeof UsersIdRoute
   '/users/new': typeof UsersNewRoute
   '/users/permissions': typeof UsersPermissionsRoute
   '/expenses': typeof ExpensesIndexRoute
@@ -757,6 +765,7 @@ export interface FileRoutesById {
   '/inventory/balance': typeof InventoryBalanceRoute
   '/reports/customer-statement': typeof ReportsCustomerStatementRoute
   '/sales/pos': typeof SalesPosRoute
+  '/users/$id': typeof UsersIdRoute
   '/users/new': typeof UsersNewRoute
   '/users/permissions': typeof UsersPermissionsRoute
   '/expenses/': typeof ExpensesIndexRoute
@@ -852,6 +861,7 @@ export interface FileRouteTypes {
     | '/inventory/balance'
     | '/reports/customer-statement'
     | '/sales/pos'
+    | '/users/$id'
     | '/users/new'
     | '/users/permissions'
     | '/expenses/'
@@ -937,6 +947,7 @@ export interface FileRouteTypes {
     | '/inventory/balance'
     | '/reports/customer-statement'
     | '/sales/pos'
+    | '/users/$id'
     | '/users/new'
     | '/users/permissions'
     | '/expenses'
@@ -1030,6 +1041,7 @@ export interface FileRouteTypes {
     | '/inventory/balance'
     | '/reports/customer-statement'
     | '/sales/pos'
+    | '/users/$id'
     | '/users/new'
     | '/users/permissions'
     | '/expenses/'
@@ -1275,6 +1287,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/users/'
       preLoaderRoute: typeof UsersIndexRouteImport
+      parentRoute: typeof UsersRouteRoute
+    }
+    '/users/$id': {
+      id: '/users/$id'
+      path: '/$id'
+      fullPath: '/users/$id'
+      preLoaderRoute: typeof UsersIdRouteImport
       parentRoute: typeof UsersRouteRoute
     }
     '/users/new': {
@@ -1992,12 +2011,14 @@ const TreasuryRouteRouteWithChildren = TreasuryRouteRoute._addFileChildren(
 )
 
 interface UsersRouteRouteChildren {
+  UsersIdRoute: typeof UsersIdRoute
   UsersNewRoute: typeof UsersNewRoute
   UsersPermissionsRoute: typeof UsersPermissionsRoute
   UsersIndexRoute: typeof UsersIndexRoute
 }
 
 const UsersRouteRouteChildren: UsersRouteRouteChildren = {
+  UsersIdRoute: UsersIdRoute,
   UsersNewRoute: UsersNewRoute,
   UsersPermissionsRoute: UsersPermissionsRoute,
   UsersIndexRoute: UsersIndexRoute,
