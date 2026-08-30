@@ -247,12 +247,12 @@ const AccJournalEntriesPage: React.FC = () => {
                     <TableCell><Badge className={statusColor[e.status]}>{statusAr[e.status] ?? e.status}</Badge></TableCell>
                     <TableCell>
                       <RowActions>
-                        <Button size="icon" variant="ghost" onClick={() => setViewEntry(e)}><Eye className="w-4 h-4" /></Button>
+                        <Button title="عرض" aria-label="عرض" size="icon" variant="ghost" onClick={() => setViewEntry(e)}><Eye className="w-4 h-4" /></Button>
                         {canEdit && e.status === 'draft' && (
                           <>
-                            <Button size="icon" variant="ghost" onClick={() => openEdit(e)}><Pencil className="w-4 h-4" /></Button>
+                            <Button title="تعديل" aria-label="تعديل" size="icon" variant="ghost" onClick={() => openEdit(e)}><Pencil className="w-4 h-4" /></Button>
                             <Button size="icon" variant="ghost" onClick={() => postEntry(e)} title="ترحيل"><CheckCircle2 className="w-4 h-4 text-emerald-600" /></Button>
-                            <Button size="icon" variant="ghost" onClick={() => deleteEntry(e)}><Trash2 className="w-4 h-4 text-red-600" /></Button>
+                            <Button title="حذف" aria-label="حذف" size="icon" variant="ghost" onClick={() => deleteEntry(e)}><Trash2 className="w-4 h-4 text-red-600" /></Button>
                           </>
                         )}
                       </RowActions>

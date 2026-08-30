@@ -209,8 +209,8 @@ const AccChequesPage: React.FC = () => {
                             <Button size="sm" variant="ghost" title="تحصيل / صرف" onClick={() => setStatus(r, 'cleared', { cleared_date: new Date().toISOString().slice(0, 10) })}><CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /></Button>}
                           {canEdit && ['deposited', 'pending', 'handed_over'].includes(r.status) &&
                             <Button size="sm" variant="ghost" title="ارتداد" onClick={() => { const reason = prompt('سبب الارتداد:'); if (reason) setStatus(r, 'bounced', { bounced_date: new Date().toISOString().slice(0, 10), bounce_reason: reason }); }}><XCircle className="w-3.5 h-3.5 text-red-600" /></Button>}
-                          {canEdit && <Button size="sm" variant="ghost" onClick={() => openEdit(r)}><Pencil className="w-3.5 h-3.5" /></Button>}
-                          {canDelete && <Button size="sm" variant="ghost" onClick={() => del(r)}><Trash2 className="w-3.5 h-3.5 text-destructive" /></Button>}
+                          {canEdit && <Button title="تعديل" aria-label="تعديل" size="sm" variant="ghost" onClick={() => openEdit(r)}><Pencil className="w-3.5 h-3.5" /></Button>}
+                          {canDelete && <Button title="حذف" aria-label="حذف" size="sm" variant="ghost" onClick={() => del(r)}><Trash2 className="w-3.5 h-3.5 text-destructive" /></Button>}
                         </RowActions>
                       </TableCell>
                     </TableRow>
