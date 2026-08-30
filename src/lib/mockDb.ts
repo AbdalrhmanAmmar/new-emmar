@@ -117,6 +117,101 @@ export interface Shift {
   status: "open" | "closed";
 }
 
+
+/* ===================== العملاء والمبيعات ===================== */
+
+export type Unit = "kg" | "ton" | "bag" | "pcs";
+export type SalesPayMethod = "cash" | "card" | "credit" | "multi";
+export type InvoiceView = "professional" | "simple";
+
+export interface Warehouse {
+  id: string;
+  code: string;
+  name: string;
+  branchId: string;
+}
+
+export interface SalesRep {
+  id: string;
+  name: string;
+  phone: string;
+  branchId: string;
+  commissionPct: number;
+}
+
+export interface Product {
+  id: string;
+  code: string;
+  name: string;
+  barcode: string;
+  serial: string;
+  unit: Unit;
+  unitPrice: number;
+  wholesalePrice: number;
+  cost: number;
+  taxRate: number;
+  category: string;
+  stock: number;
+  minStock: number;
+  active: boolean;
+}
+
+export interface DiscountCode {
+  id: string;
+  code: string;
+  percent: number;
+  active: boolean;
+}
+
+export interface SalesLine {
+  id: string;
+  productId: string;
+  code: string;
+  name: string;
+  qty: number;
+  unit: Unit;
+  price: number;
+  discountPct: number;
+  discountAmt: number;
+  taxRate: number;
+}
+
+export interface SalesInvoice {
+  id: string;
+  no: string;
+  date: string;
+  dueDate: string;
+  view: InvoiceView;
+  branchId: string;
+  warehouseId: string;
+  repId: string | null;
+  userId: string;
+  customerId: string | null;
+  customerName: string;
+  lines: SalesLine[];
+  payMethod: SalesPayMethod;
+  payCash: number;
+  payCard: number;
+  safeId: string | null;
+  discountCode: string;
+  note: string;
+  status: DocStatus;
+}
+
+export const UNIT_LABEL: Record<Unit, string> = {
+  kg: "كيلو",
+  ton: "طن",
+  bag: "شيكارة",
+  pcs: "عدد",
+};
+
+export const SALES_PAY_LABEL: Record<SalesPayMethod, string> = {
+  cash: "نقدي",
+  card: "شبكة",
+  credit: "آجل",
+  multi: "متعدد",
+};
+
 export interface DbShape {
   branches: Branch[];
   users: AppUser[];
@@ -128,6 +223,11 @@ export interface DbShape {
   transfers: Transfer[];
   invoices: Invoice[];
   shifts: Shift[];
+  warehouses: Warehouse[];
+  reps: SalesRep[];
+  products: Product[];
+  discountCodes: DiscountCode[];
+  salesInvoices: SalesInvoice[];
 }
 
 const STORAGE_KEY = "aliman_treasury_v1";
@@ -452,6 +552,88 @@ function seed(): DbShape {
     },
   ];
 
+
+  const warehouses: Warehouse[] = [
+    { id: "wh1", code: "WH-01", name: "المخزن الرئيسي - القاهرة", branchId: "br1" },
+    { id: "wh2", code: "WH-02", name: "مخزن المنوفية", branchId: "br2" },
+    { id: "wh3", code: "WH-03", name: "مخزن الشرقية", branchId: "br3" },
+  ];
+
+  const reps: SalesRep[] = [
+    { id: "rp1", name: "خالد مصطفى", phone: "01011122233", branchId: "br1", commissionPct: 1 },
+    { id: "rp2", name: "سيد الشيمي", phone: "01122233344", branchId: "br2", commissionPct: 1.5 },
+    { id: "rp3", name: "عمرو زكي", phone: "01233344455", branchId: "br3", commissionPct: 1.25 },
+  ];
+
+  const products: Product[] = [
+    { id: "p1", code: "IT-1001", name: "علف بادي دواجن 21%", barcode: "6221000010013", serial: "SR-1001", unit: "ton", unitPrice: 21500, wholesalePrice: 20800, cost: 19200, taxRate: 14, category: "أعلاف دواجن", stock: 120, minStock: 20, active: true },
+    { id: "p2", code: "IT-1002", name: "علف نامي دواجن 19%", barcode: "6221000010020", serial: "SR-1002", unit: "ton", unitPrice: 20200, wholesalePrice: 19600, cost: 18100, taxRate: 14, category: "أعلاف دواجن", stock: 85, minStock: 15, active: true },
+    { id: "p3", code: "IT-1003", name: "علف ناهي دواجن 17%", barcode: "6221000010037", serial: "SR-1003", unit: "ton", unitPrice: 19400, wholesalePrice: 18900, cost: 17400, taxRate: 14, category: "أعلاف دواجن", stock: 64, minStock: 15, active: true },
+    { id: "p4", code: "IT-2001", name: "علف مركز ألبان 21%", barcode: "6221000020012", serial: "SR-2001", unit: "ton", unitPrice: 18700, wholesalePrice: 18200, cost: 16800, taxRate: 14, category: "أعلاف ماشية", stock: 48, minStock: 10, active: true },
+    { id: "p5", code: "IT-2002", name: "علف تسمين ماشية 16%", barcode: "6221000020029", serial: "SR-2002", unit: "ton", unitPrice: 17300, wholesalePrice: 16900, cost: 15600, taxRate: 14, category: "أعلاف ماشية", stock: 30, minStock: 10, active: true },
+    { id: "p6", code: "IT-3001", name: "كسب صويا 46%", barcode: "6221000030011", serial: "SR-3001", unit: "ton", unitPrice: 32500, wholesalePrice: 31800, cost: 30100, taxRate: 14, category: "خامات", stock: 22, minStock: 8, active: true },
+    { id: "p7", code: "IT-3002", name: "ذرة صفراء مجروشة", barcode: "6221000030028", serial: "SR-3002", unit: "ton", unitPrice: 14200, wholesalePrice: 13800, cost: 12900, taxRate: 14, category: "خامات", stock: 150, minStock: 25, active: true },
+    { id: "p8", code: "IT-3003", name: "ردة ناعمة", barcode: "6221000030035", serial: "SR-3003", unit: "ton", unitPrice: 9800, wholesalePrice: 9500, cost: 8900, taxRate: 14, category: "خامات", stock: 90, minStock: 20, active: true },
+    { id: "p9", code: "IT-4001", name: "شيكارة علف أرانب 40 كجم", barcode: "6221000040010", serial: "SR-4001", unit: "bag", unitPrice: 780, wholesalePrice: 755, cost: 700, taxRate: 14, category: "أعلاف أرانب", stock: 640, minStock: 100, active: true },
+    { id: "p10", code: "IT-5001", name: "أجولة بلاستيك فارغة", barcode: "6221000050019", serial: "SR-5001", unit: "pcs", unitPrice: 12, wholesalePrice: 10.5, cost: 8, taxRate: 14, category: "مستلزمات", stock: 5200, minStock: 500, active: true },
+  ];
+
+  const discountCodes: DiscountCode[] = [
+    { id: "dc1", code: "FEED5", percent: 5, active: true },
+    { id: "dc2", code: "SUMMER10", percent: 10, active: true },
+    { id: "dc3", code: "VIP3", percent: 3, active: true },
+  ];
+
+  const salesInvoices: SalesInvoice[] = [
+    {
+      id: "si1",
+      no: "SO-000001",
+      date: d(-5),
+      dueDate: d(25),
+      view: "professional",
+      branchId: "br1",
+      warehouseId: "wh1",
+      repId: "rp1",
+      userId: "u1",
+      customerId: "c1",
+      customerName: "مزرعة النيل للدواجن",
+      lines: [
+        { id: "sl1", productId: "p1", code: "IT-1001", name: "علف بادي دواجن 21%", qty: 5, unit: "ton", price: 21500, discountPct: 2, discountAmt: 0, taxRate: 14 },
+        { id: "sl2", productId: "p7", code: "IT-3002", name: "ذرة صفراء مجروشة", qty: 3, unit: "ton", price: 14200, discountPct: 0, discountAmt: 500, taxRate: 14 },
+      ],
+      payMethod: "credit",
+      payCash: 0,
+      payCard: 0,
+      safeId: null,
+      discountCode: "",
+      note: "توريد للمزرعة رقم 2",
+      status: "posted",
+    },
+    {
+      id: "si2",
+      no: "SO-000002",
+      date: d(-2),
+      dueDate: d(-2),
+      view: "professional",
+      branchId: "br2",
+      warehouseId: "wh2",
+      repId: "rp2",
+      userId: "u3",
+      customerId: null,
+      customerName: "عميل نقدي",
+      lines: [
+        { id: "sl3", productId: "p9", code: "IT-4001", name: "شيكارة علف أرانب 40 كجم", qty: 40, unit: "bag", price: 780, discountPct: 0, discountAmt: 0, taxRate: 14 },
+      ],
+      payMethod: "cash",
+      payCash: 35568,
+      payCard: 0,
+      safeId: "sf2",
+      discountCode: "",
+      note: "",
+      status: "posted",
+    },
+  ];
+
   return {
     branches,
     users,
@@ -463,6 +645,11 @@ function seed(): DbShape {
     transfers,
     invoices,
     shifts,
+    warehouses,
+    reps,
+    products,
+    discountCodes,
+    salesInvoices,
   };
 }
 
