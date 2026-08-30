@@ -1,8 +1,7 @@
 import { useNavigate } from "@tanstack/react-router";
-import { FileText, Search } from "lucide-react";
+import { FileText, Search, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 
-import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { accountingNav } from "@/lib/accountingNav";
 import { getTable } from "@/lib/mockDb";
 
@@ -36,25 +35,29 @@ export function GlobalSearch({ className = "" }: { className?: string }) {
   const [q, setQ] = useState("");
   const [active, setActive] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
 
+  // Ctrl+K يركز على نفس الحقل
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
-        setOpen((v) => !v);
+        inputRef.current?.focus();
+        setOpen(true);
       }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
+  // إغلاق عند الضغط خارج الحقل
   useEffect(() => {
-    if (open) setTimeout(() => inputRef.current?.focus(), 40);
-    else {
-      setQ("");
-      setActive(0);
-    }
-  }, [open]);
+    const onDown = (e: MouseEvent) => {
+      if (rootRef.current && !rootRef.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", onDown);
+    return () => document.removeEventListener("mousedown", onDown);
+  }, []);
 
   const hits = useMemo<Hit[]>(() => {
     const term = q.trim().toLowerCase();
@@ -100,58 +103,74 @@ export function GlobalSearch({ className = "" }: { className?: string }) {
     const target = hit ?? hits[active];
     if (!target) return;
     setOpen(false);
+    setQ("");
+    setActive(0);
     navigate({ to: target.path });
   };
 
   return (
-    <>
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        title="بحث شامل (Ctrl + K)"
-        className={`flex h-10 w-full items-center gap-2.5 rounded-full border border-white/10 bg-white/10 px-4 text-sidebar-foreground/75 shadow-inner backdrop-blur transition-all hover:bg-white/15 hover:shadow-md ${className}`}
+    <div ref={rootRef} className={`relative w-full ${className}`}>
+      {/* حقل البحث نفسه — بدون نافذة منبثقة */}
+      <div
+        className={`flex h-10 w-full items-center gap-2.5 rounded-full border px-4 shadow-inner backdrop-blur transition-all ${
+          open
+            ? "border-white/30 bg-white/15 shadow-md"
+            : "border-white/10 bg-white/10 hover:bg-white/15 hover:shadow-md"
+        }`}
       >
-        <Search className="h-4 w-4 shrink-0 opacity-70" />
-        <span className="flex-1 truncate text-start text-xs md:text-[13px]">بحث شامل…</span>
-        <kbd className="hidden shrink-0 rounded-md border border-white/20 bg-white/5 px-1.5 py-0.5 font-sans text-[10px] lg:inline">
-          Ctrl K
-        </kbd>
-      </button>
-
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent
+        <Search className="h-4 w-4 shrink-0 text-sidebar-foreground/70" />
+        <input
+          ref={inputRef}
           dir="rtl"
-          className="top-[18%] max-w-2xl translate-y-0 gap-0 overflow-hidden rounded-2xl border-white/20 bg-card/95 p-0 shadow-2xl backdrop-blur-xl"
-          aria-describedby={undefined}
-        >
-          <div className="flex items-center gap-2 border-b border-border px-4">
-            <Search className="h-4 w-4 shrink-0 text-muted-foreground" />
-            <input
-              ref={inputRef}
-              dir="rtl"
-              value={q}
-              onChange={(e) => {
-                setQ(e.target.value);
-                setActive(0);
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "ArrowDown") {
-                  e.preventDefault();
-                  setActive((i) => Math.min(hits.length - 1, i + 1));
-                } else if (e.key === "ArrowUp") {
-                  e.preventDefault();
-                  setActive((i) => Math.max(0, i - 1));
-                } else if (e.key === "Enter") {
-                  e.preventDefault();
-                  go();
-                }
-              }}
-              placeholder="ابحث عن فاتورة، إذن، عميل، صنف، قيد، شاشة…"
-              className="h-14 w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground"
-            />
-            <span className="hidden shrink-0 text-[11px] text-muted-foreground sm:inline">Esc للإغلاق</span>
-          </div>
+          value={q}
+          onFocus={() => setOpen(true)}
+          onChange={(e) => {
+            setQ(e.target.value);
+            setActive(0);
+            setOpen(true);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "ArrowDown") {
+              e.preventDefault();
+              setActive((i) => Math.min(hits.length - 1, i + 1));
+            } else if (e.key === "ArrowUp") {
+              e.preventDefault();
+              setActive((i) => Math.max(0, i - 1));
+            } else if (e.key === "Enter") {
+              e.preventDefault();
+              go();
+            } else if (e.key === "Escape") {
+              setOpen(false);
+              inputRef.current?.blur();
+            }
+          }}
+          placeholder="بحث شامل…"
+          title="بحث شامل (Ctrl + K)"
+          className="h-full min-w-0 flex-1 bg-transparent text-start text-xs text-sidebar-foreground outline-none placeholder:text-sidebar-foreground/60 md:text-[13px]"
+        />
+        {q ? (
+          <button
+            type="button"
+            aria-label="مسح البحث"
+            onClick={() => {
+              setQ("");
+              setActive(0);
+              inputRef.current?.focus();
+            }}
+            className="shrink-0 rounded-full p-0.5 text-sidebar-foreground/60 hover:bg-white/10 hover:text-sidebar-foreground"
+          >
+            <X className="h-3.5 w-3.5" />
+          </button>
+        ) : (
+          <kbd className="hidden shrink-0 rounded-md border border-white/20 bg-white/5 px-1.5 py-0.5 font-sans text-[10px] text-sidebar-foreground/70 lg:inline">
+            Ctrl K
+          </kbd>
+        )}
+      </div>
 
+      {/* نتائج منسدلة أسفل الحقل مباشرة */}
+      {open && (
+        <div className="absolute inset-x-0 top-full z-50 mt-2 overflow-hidden rounded-2xl border border-white/20 bg-card/95 shadow-2xl backdrop-blur-xl">
           <div className="max-h-[60vh] overflow-y-auto p-2">
             {!q.trim() ? (
               <p className="p-6 text-center text-sm text-muted-foreground">
@@ -190,9 +209,9 @@ export function GlobalSearch({ className = "" }: { className?: string }) {
               ))
             )}
           </div>
-        </DialogContent>
-      </Dialog>
-    </>
+        </div>
+      )}
+    </div>
   );
 }
 
