@@ -98,3 +98,70 @@ export function purchaseTrendSeries(data: DbShape, days = 14) {
   }
   return out;
 }
+
+/** فواتير مورد معيّن مع الإجماليات */
+export function supplierInvoices(data: DbShape, supplierId: string) {
+  return [...data.purchaseInvoices]
+    .filter((i) => i.supplierId === supplierId)
+    .sort((a, b) => (a.date < b.date ? 1 : -1))
+    .map((invoice) => {
+      const t = purchaseTotals(invoice);
+      return { invoice, total: t.total, paid: t.paid, remaining: t.remaining };
+    });
+}
+
+export interface SupplierPriceRow {
+  productId: string;
+  code: string;
+  name: string;
+  unit: PurchaseInvoice["lines"][number]["unit"];
+  lastPrice: number;
+  minPrice: number;
+  maxPrice: number;
+  avgPrice: number;
+  qty: number;
+  lastInvoiceNo: string;
+  lastDate: string;
+}
+
+/** تاريخ أسعار الشراء من مورد معيّن */
+export function supplierPriceHistory(data: DbShape, supplierId: string): SupplierPriceRow[] {
+  const map = new Map<string, SupplierPriceRow & { sum: number; n: number }>();
+  const invoices = [...data.purchaseInvoices]
+    .filter((i) => i.supplierId === supplierId && i.status === "posted")
+    .sort((a, b) => (a.date < b.date ? -1 : 1));
+  for (const inv of invoices) {
+    for (const line of inv.lines) {
+      const price = Number(line.price || 0);
+      const prev = map.get(line.productId);
+      if (!prev) {
+        map.set(line.productId, {
+          productId: line.productId,
+          code: line.code,
+          name: line.name,
+          unit: line.unit,
+          lastPrice: price,
+          minPrice: price,
+          maxPrice: price,
+          avgPrice: price,
+          qty: Number(line.qty || 0),
+          lastInvoiceNo: inv.no,
+          lastDate: inv.date,
+          sum: price,
+          n: 1,
+        });
+        continue;
+      }
+      prev.lastPrice = price;
+      prev.minPrice = Math.min(prev.minPrice, price);
+      prev.maxPrice = Math.max(prev.maxPrice, price);
+      prev.qty += Number(line.qty || 0);
+      prev.sum += price;
+      prev.n += 1;
+      prev.avgPrice = prev.sum / prev.n;
+      prev.lastInvoiceNo = inv.no;
+      prev.lastDate = inv.date;
+    }
+  }
+  return [...map.values()].map(({ sum: _s, n: _n, ...row }) => row);
+}
