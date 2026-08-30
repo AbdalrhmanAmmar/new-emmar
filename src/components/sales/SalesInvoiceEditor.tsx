@@ -24,6 +24,7 @@ import {
 import { invoicePrintInput, printSalesInvoice } from "@/lib/printInvoice";
 import { discountPercentOf, emptyLine, invoiceTotals, lineTotals, productOptions } from "@/lib/sales";
 import { saveSalesInvoice } from "@/lib/salesActions";
+import { baseQty, lineUnitLabel, stockInUnit, unitOptions, unitPatch } from "@/lib/units";
 
 interface Props {
   invoice?: SalesInvoice;
@@ -87,8 +88,8 @@ export function SalesInvoiceEditor({ invoice }: Props) {
       code: product.code,
       name: product.name,
       unit: product.unit,
-      price: product.unitPrice,
       taxRate: product.taxRate,
+      ...unitPatch(product),
     });
   };
 
@@ -108,7 +109,7 @@ export function SalesInvoiceEditor({ invoice }: Props) {
       name: product.name,
       qty,
       unit: product.unit,
-      price: product.unitPrice,
+      ...unitPatch(product),
       discountPct: 0,
       discountAmt: 0,
       taxRate: product.taxRate,
@@ -360,7 +361,10 @@ export function SalesInvoiceEditor({ invoice }: Props) {
                           />
                           {product ? (
                             <p className="mt-1 text-xs text-muted-foreground">
-                              المتاح: {num(product.stock)} {UNIT_LABEL[product.unit]}
+                              المتاح: {num(stockInUnit(product, line.unitCode))} {lineUnitLabel(line)}
+                              {line.unitFactor && line.unitFactor !== 1
+                                ? ` — يخصم ${num(baseQty(line))} ${UNIT_LABEL[product.unit]} من الرصيد`
+                                : ""}
                             </p>
                           ) : null}
                         </td>
@@ -372,7 +376,19 @@ export function SalesInvoiceEditor({ invoice }: Props) {
                             onChange={(e) => setLine(line.id, { qty: Number(e.target.value) })}
                           />
                         </td>
-                        <td className="px-2 py-2 text-center text-xs">{UNIT_LABEL[line.unit]}</td>
+                        <td className="w-32 px-2 py-2">
+                          {product ? (
+                            <SearchSelect
+                              options={unitOptions(product)}
+                              value={line.unitCode ?? product.unit}
+                              onChange={(v) => setLine(line.id, unitPatch(product, v))}
+                            />
+                          ) : (
+                            <span className="block text-center text-xs text-muted-foreground">
+                              {lineUnitLabel(line)}
+                            </span>
+                          )}
+                        </td>
                         <td className="w-28 px-2 py-2">
                           <Input
                             type="number"

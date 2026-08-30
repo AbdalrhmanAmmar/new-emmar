@@ -115,6 +115,7 @@ export interface SupplierPriceRow {
   code: string;
   name: string;
   unit: PurchaseInvoice["lines"][number]["unit"];
+  unitName?: string;
   lastPrice: number;
   minPrice: number;
   maxPrice: number;
@@ -140,6 +141,7 @@ export function supplierPriceHistory(data: DbShape, supplierId: string): Supplie
           code: line.code,
           name: line.name,
           unit: line.unit,
+          unitName: line.unitName,
           lastPrice: price,
           minPrice: price,
           maxPrice: price,

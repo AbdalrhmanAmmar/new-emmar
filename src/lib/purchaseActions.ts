@@ -10,6 +10,7 @@ import {
   type PurchaseInvoice,
 } from "./mockDb";
 import { purchaseTotals } from "./purchases";
+import { baseQty, lineFactor } from "./units";
 import type { ActionResult } from "./salesActions";
 
 function linkedInvoiceId(inv: PurchaseInvoice) {
@@ -24,7 +25,7 @@ function linkedVoucherId(inv: PurchaseInvoice) {
 function unpost(data: DbShape, inv: PurchaseInvoice) {
   for (const line of inv.lines) {
     const product = data.products.find((p) => p.id === line.productId);
-    if (product) product.stock -= Number(line.qty || 0);
+    if (product) product.stock -= baseQty(line);
   }
   data.invoices = data.invoices.filter((i) => i.id !== linkedInvoiceId(inv));
   data.vouchers = data.vouchers.filter((v) => v.id !== linkedVoucherId(inv));
@@ -35,9 +36,10 @@ function post(data: DbShape, inv: PurchaseInvoice) {
   for (const line of inv.lines) {
     const product = data.products.find((p) => p.id === line.productId);
     if (!product) continue;
-    const qty = Number(line.qty || 0);
+    const qty = baseQty(line);
     const oldQty = Math.max(0, product.stock);
-    const newCost = Number(line.price || 0);
+    // تكلفة الوحدة الأساسية = سعر وحدة الشراء ÷ معامل التحويل
+    const newCost = Number(line.price || 0) / lineFactor(line);
     // متوسط التكلفة المرجح
     product.cost = qty + oldQty > 0 ? (product.cost * oldQty + newCost * qty) / (qty + oldQty) : newCost;
     product.stock += qty;
@@ -189,7 +191,7 @@ export function setPurchaseInvoiceStatus(id: string, status: DocStatus): ActionR
     if (inv.status === "posted") {
       for (const line of inv.lines) {
         const product = data.products.find((p) => p.id === line.productId);
-        if (product && Number(line.qty) > product.stock + 0.0001) {
+        if (product && baseQty(line) > product.stock + 0.0001) {
           result = { ok: false, error: `لا يمكن إلغاء الترحيل: تم بيع كميات من ${product.name}` };
           return;
         }
@@ -215,7 +217,7 @@ export function deletePurchaseInvoice(id: string): ActionResult {
     if (inv.status === "posted") {
       for (const line of inv.lines) {
         const product = data.products.find((p) => p.id === line.productId);
-        if (product && Number(line.qty) > product.stock + 0.0001) {
+        if (product && baseQty(line) > product.stock + 0.0001) {
           result = { ok: false, error: `لا يمكن الحذف: تم بيع كميات من ${product.name}` };
           return;
         }

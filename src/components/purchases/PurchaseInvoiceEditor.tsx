@@ -23,6 +23,7 @@ import {
 import { printSalesInvoice } from "@/lib/printInvoice";
 import { purchasePrintInput } from "@/lib/printPurchase";
 import { savePurchaseInvoice } from "@/lib/purchaseActions";
+import { baseQty, lineUnitLabel, unitOptions, unitPatch } from "@/lib/units";
 import { purchaseTotals } from "@/lib/purchases";
 import { emptyLine, lineTotals, productOptions } from "@/lib/sales";
 
@@ -81,6 +82,9 @@ export function PurchaseInvoiceEditor({ invoice }: Props) {
       code: product.code,
       name: product.name,
       unit: product.unit,
+      unitCode: product.unit,
+      unitName: UNIT_LABEL[product.unit],
+      unitFactor: 1,
       price: product.cost,
       taxRate: product.taxRate,
     });
@@ -296,6 +300,9 @@ export function PurchaseInvoiceEditor({ invoice }: Props) {
                         {product ? (
                           <p className="mt-1 text-xs text-muted-foreground">
                             الرصيد الحالى: {num(product.stock)} {UNIT_LABEL[product.unit]} — آخر تكلفة: {num(product.cost)}
+                            {line.unitFactor && line.unitFactor !== 1
+                              ? ` — يضاف ${num(baseQty(line))} ${UNIT_LABEL[product.unit]}`
+                              : ""}
                           </p>
                         ) : null}
                       </td>
@@ -307,7 +314,23 @@ export function PurchaseInvoiceEditor({ invoice }: Props) {
                           onChange={(e) => setLine(line.id, { qty: Number(e.target.value) })}
                         />
                       </td>
-                      <td className="px-2 py-2 text-center text-xs">{UNIT_LABEL[line.unit]}</td>
+                      <td className="w-32 px-2 py-2">
+                        {product ? (
+                          <SearchSelect
+                            options={unitOptions(product)}
+                            value={line.unitCode ?? product.unit}
+                            onChange={(v) => {
+                              const patch = unitPatch(product, v);
+                              setLine(line.id, {
+                                ...patch,
+                                price: Number((product.cost * (patch.unitFactor || 1)).toFixed(2)),
+                              });
+                            }}
+                          />
+                        ) : (
+                          <span className="block text-center text-xs text-muted-foreground">{lineUnitLabel(line)}</span>
+                        )}
+                      </td>
                       <td className="w-28 px-2 py-2">
                         <Input
                           type="number"
