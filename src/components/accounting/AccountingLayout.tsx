@@ -1,4 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
+import logoAsset from "@/assets/al-iman-logo.jpeg.asset.json";
 import {
   Banknote,
   Boxes,
@@ -140,9 +141,11 @@ export function AccountingLayout({ children }: { children: ReactNode }) {
 
           {/* الهوية: كاملة على الشاشات الكبيرة، مختصرة على الموبيل */}
           <Link to="/accounting" className="group hidden items-center gap-2.5 lg:flex">
-            <span className="grid h-10 w-10 place-items-center rounded-xl bg-accent text-accent-foreground shadow-sm transition-transform group-hover:scale-105">
-              <Wallet className="h-5 w-5" />
-            </span>
+            <img
+              src={logoAsset.url}
+              alt="شعار الإيمان لتجارة الأعلاف"
+              className="h-10 w-10 rounded-full object-cover shadow-sm ring-1 ring-white/20 transition-transform group-hover:scale-105"
+            />
             <span className="flex flex-col leading-tight">
               <span className="text-lg font-bold tracking-tight">الإيمان لتجارة الأعلاف</span>
               <span className="text-[11px] text-sidebar-foreground/60">AL-IMAN FEED TRADING CO</span>
