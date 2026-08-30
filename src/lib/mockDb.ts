@@ -176,6 +176,19 @@ export interface SalesRep {
   commissionPct: number;
 }
 
+/** وحدة بيع/شراء إضافية للصنف مع معامل التحويل إلى الوحدة الأساسية */
+export interface ProductUnit {
+  id: string;
+  code: string;
+  name: string;
+  /** عدد الوحدات الأساسية داخل هذه الوحدة (مثال: طن = 1000 كيلو → 1000) */
+  factor: number;
+  /** سعر بيع هذه الوحدة */
+  price: number;
+  /** سعر جملة هذه الوحدة (اختيارى) */
+  wholesalePrice?: number;
+}
+
 export interface Product {
   id: string;
   code: string;
@@ -191,6 +204,8 @@ export interface Product {
   stock: number;
   minStock: number;
   active: boolean;
+  /** وحدات إضافية للصنف مع معاملات التحويل للوحدة الأساسية */
+  units?: ProductUnit[];
 }
 
 export interface DiscountCode {
@@ -207,6 +222,12 @@ export interface SalesLine {
   name: string;
   qty: number;
   unit: Unit;
+  /** كود الوحدة المستخدمة فى السطر (الأساسية أو وحدة تحويل) */
+  unitCode?: string;
+  /** مسمى الوحدة المستخدمة فى السطر */
+  unitName?: string;
+  /** معامل التحويل للوحدة الأساسية (1 للوحدة الأساسية) */
+  unitFactor?: number;
   price: number;
   discountPct: number;
   discountAmt: number;
@@ -627,7 +648,7 @@ function seed(): DbShape {
   ];
 
   const products: Product[] = [
-    { id: "p1", code: "IT-1001", name: "علف بادي دواجن 21%", barcode: "6221000010013", serial: "SR-1001", unit: "ton", unitPrice: 21500, wholesalePrice: 20800, cost: 19200, taxRate: 14, category: "أعلاف دواجن", stock: 120, minStock: 20, active: true },
+    { id: "p1", code: "IT-1001", name: "علف بادي دواجن 21%", barcode: "6221000010013", serial: "SR-1001", unit: "ton", unitPrice: 21500, wholesalePrice: 20800, cost: 19200, taxRate: 14, category: "أعلاف دواجن", stock: 120, minStock: 20, active: true, units: [ { id: "pu1", code: "kg", name: "كيلو", factor: 0.001, price: 22.5, wholesalePrice: 21.5 }, { id: "pu2", code: "bag50", name: "شيكارة 50 كجم", factor: 0.05, price: 1120, wholesalePrice: 1080 } ] },
     { id: "p2", code: "IT-1002", name: "علف نامي دواجن 19%", barcode: "6221000010020", serial: "SR-1002", unit: "ton", unitPrice: 20200, wholesalePrice: 19600, cost: 18100, taxRate: 14, category: "أعلاف دواجن", stock: 85, minStock: 15, active: true },
     { id: "p3", code: "IT-1003", name: "علف ناهي دواجن 17%", barcode: "6221000010037", serial: "SR-1003", unit: "ton", unitPrice: 19400, wholesalePrice: 18900, cost: 17400, taxRate: 14, category: "أعلاف دواجن", stock: 64, minStock: 15, active: true },
     { id: "p4", code: "IT-2001", name: "علف مركز ألبان 21%", barcode: "6221000020012", serial: "SR-2001", unit: "ton", unitPrice: 18700, wholesalePrice: 18200, cost: 16800, taxRate: 14, category: "أعلاف ماشية", stock: 48, minStock: 10, active: true },
@@ -635,7 +656,7 @@ function seed(): DbShape {
     { id: "p6", code: "IT-3001", name: "كسب صويا 46%", barcode: "6221000030011", serial: "SR-3001", unit: "ton", unitPrice: 32500, wholesalePrice: 31800, cost: 30100, taxRate: 14, category: "خامات", stock: 22, minStock: 8, active: true },
     { id: "p7", code: "IT-3002", name: "ذرة صفراء مجروشة", barcode: "6221000030028", serial: "SR-3002", unit: "ton", unitPrice: 14200, wholesalePrice: 13800, cost: 12900, taxRate: 14, category: "خامات", stock: 150, minStock: 25, active: true },
     { id: "p8", code: "IT-3003", name: "ردة ناعمة", barcode: "6221000030035", serial: "SR-3003", unit: "ton", unitPrice: 9800, wholesalePrice: 9500, cost: 8900, taxRate: 14, category: "خامات", stock: 90, minStock: 20, active: true },
-    { id: "p9", code: "IT-4001", name: "شيكارة علف أرانب 40 كجم", barcode: "6221000040010", serial: "SR-4001", unit: "bag", unitPrice: 780, wholesalePrice: 755, cost: 700, taxRate: 14, category: "أعلاف أرانب", stock: 640, minStock: 100, active: true },
+    { id: "p9", code: "IT-4001", name: "شيكارة علف أرانب 40 كجم", barcode: "6221000040010", serial: "SR-4001", unit: "bag", unitPrice: 780, wholesalePrice: 755, cost: 700, taxRate: 14, category: "أعلاف أرانب", stock: 640, minStock: 100, active: true, units: [ { id: "pu3", code: "kg", name: "كيلو", factor: 0.025, price: 21, wholesalePrice: 20 } ] },
     { id: "p10", code: "IT-5001", name: "أجولة بلاستيك فارغة", barcode: "6221000050019", serial: "SR-5001", unit: "pcs", unitPrice: 12, wholesalePrice: 10.5, cost: 8, taxRate: 14, category: "مستلزمات", stock: 5200, minStock: 500, active: true },
   ];
 
