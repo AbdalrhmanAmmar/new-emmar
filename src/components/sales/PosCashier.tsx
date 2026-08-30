@@ -176,7 +176,7 @@ export function PosCashier() {
       return;
     }
     toast.success(`تم إتمام الفاتورة ${invoiceNo}`);
-    const notified = autoNotifyOnPost({ ...doc, status: "posted" }, totals);
+    const notified = autoNotifyOnPost({ ...doc, no: invoiceNo, status: "posted" }, totals);
     if (notified.sent) toast.success("تم إرسال رسالة الفاتورة للعميل");
     if (andPrint) doPrint();
     clearCart();

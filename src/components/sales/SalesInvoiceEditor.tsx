@@ -175,7 +175,7 @@ export function SalesInvoiceEditor({ invoice }: Props) {
     }
     toast.success(status === "posted" ? "تم حفظ وترحيل الفاتورة" : "تم حفظ الفاتورة كمسودة");
     if (status === "posted") {
-      const notified = autoNotifyOnPost({ ...payload, status }, totals);
+      const notified = autoNotifyOnPost({ ...payload, no: payload.no ?? invoice?.no ?? "", status }, totals);
       if (notified.sent) toast.success("تم إرسال رسالة الفاتورة للعميل");
     }
     if (andPrint) doPrint();
