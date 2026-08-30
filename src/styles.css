@@ -60,6 +60,53 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+
+  /* توحيد درجات Tailwind القديمة مع هوية الإيمان الزراعية */
+  --color-blue-50: oklch(0.96 0.025 153);
+  --color-blue-100: oklch(0.91 0.055 153);
+  --color-blue-500: oklch(0.48 0.105 153);
+  --color-blue-600: oklch(0.4 0.1 153);
+  --color-blue-700: oklch(0.33 0.085 153);
+  --color-blue-800: oklch(0.27 0.07 153);
+  --color-blue-950: oklch(0.17 0.045 153);
+  --color-cyan-100: oklch(0.91 0.05 163);
+  --color-cyan-700: oklch(0.34 0.08 163);
+  --color-emerald-50: oklch(0.965 0.025 145);
+  --color-emerald-100: oklch(0.91 0.06 145);
+  --color-emerald-300: oklch(0.75 0.1 145);
+  --color-emerald-500: oklch(0.51 0.115 145);
+  --color-emerald-600: oklch(0.42 0.105 145);
+  --color-emerald-700: oklch(0.34 0.09 145);
+  --color-emerald-800: oklch(0.28 0.07 145);
+  --color-emerald-950: oklch(0.17 0.045 145);
+  --color-indigo-100: oklch(0.91 0.05 153);
+  --color-indigo-700: oklch(0.32 0.085 153);
+  --color-purple-100: oklch(0.92 0.045 92);
+  --color-purple-700: oklch(0.42 0.085 82);
+  --color-purple-800: oklch(0.34 0.07 82);
+  --color-amber-50: oklch(0.975 0.025 88);
+  --color-amber-100: oklch(0.93 0.065 86);
+  --color-amber-200: oklch(0.87 0.1 84);
+  --color-amber-300: oklch(0.81 0.13 82);
+  --color-amber-500: oklch(0.7 0.145 78);
+  --color-amber-600: oklch(0.59 0.125 75);
+  --color-amber-700: oklch(0.48 0.105 72);
+  --color-amber-800: oklch(0.39 0.085 70);
+  --color-amber-900: oklch(0.32 0.07 68);
+  --color-orange-50: oklch(0.975 0.025 84);
+  --color-orange-100: oklch(0.93 0.06 82);
+  --color-orange-600: oklch(0.58 0.12 72);
+  --color-orange-700: oklch(0.47 0.1 70);
+  --color-orange-800: oklch(0.38 0.08 68);
+  --color-orange-950: oklch(0.22 0.05 65);
+  --color-slate-100: oklch(0.94 0.012 105);
+  --color-slate-200: oklch(0.88 0.018 105);
+  --color-slate-400: oklch(0.64 0.025 135);
+  --color-slate-700: oklch(0.38 0.035 145);
+  --color-slate-800: oklch(0.29 0.04 150);
+  --color-gray-100: oklch(0.94 0.01 98);
+  --color-gray-200: oklch(0.88 0.015 98);
+  --color-gray-700: oklch(0.4 0.028 145);
 }
 
 :root {
