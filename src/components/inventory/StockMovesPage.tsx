@@ -35,6 +35,8 @@ const KIND_TONE: Record<StockMoveKind, "green" | "gold" | "red" | "gray"> = {
   out: "red",
   transfer: "gold",
   adjust: "gray",
+  return_in: "green",
+  return_out: "red",
 };
 
 export function StockMovesPage({ kind }: { kind?: StockMoveKind }) {
