@@ -3,6 +3,7 @@ import { ArrowLeft, Plus, Printer, Save, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
+import { CustomerHistoryButton } from "@/components/sales/CustomerHistoryButton";
 import { QuickActions } from "@/components/sales/QuickActions";
 import { Field } from "@/components/treasury/FormPage";
 import { SearchSelect } from "@/components/treasury/SearchSelect";
@@ -282,12 +283,17 @@ export function SalesInvoiceEditor({ invoice }: Props) {
               </Field>
               <Field label={customerKind === "registered" ? "العميل" : "اسم العميل النقدي"} className="lg:col-span-2">
                 {customerKind === "registered" ? (
-                  <SearchSelect
-                    options={customerOptions}
-                    value={customerId}
-                    onChange={setCustomerId}
-                    placeholder="اختر العميل"
-                  />
+                  <div className="flex items-center gap-2">
+                    <div className="min-w-0 flex-1">
+                      <SearchSelect
+                        options={customerOptions}
+                        value={customerId}
+                        onChange={setCustomerId}
+                        placeholder="اختر العميل"
+                      />
+                    </div>
+                    <CustomerHistoryButton customerId={customerId} />
+                  </div>
                 ) : (
                   <Input dir="rtl" value={customerName} onChange={(e) => setCustomerName(e.target.value)} />
                 )}
