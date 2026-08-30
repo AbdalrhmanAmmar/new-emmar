@@ -152,6 +152,11 @@ export const REPORTS_MODULE: NavModule = {
       items: [
         { to: "/purchases/reports/by-product", label: "المشتريات حسب الصنف", icon: <ScrollText className="size-4" /> },
         { to: "/purchases/reports/by-supplier", label: "المشتريات حسب المورد", icon: <ScrollText className="size-4" /> },
+        {
+          to: "/purchases/reports/supplier-statement",
+          label: "كشف حساب مورد",
+          icon: <FileText className="size-4" />,
+        },
       ],
     },
   ],
