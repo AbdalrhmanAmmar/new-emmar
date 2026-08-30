@@ -155,7 +155,9 @@ function TreasuryDashboard() {
           <CardHeader className="flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm">أحدث الحركات</CardTitle>
             <Button asChild size="sm" variant="ghost">
-              <Link to="/treasury/statement">كشف الحركة</Link>
+              <Link to="/treasury/statement" search={{ safe: undefined }}>
+                كشف الحركة
+              </Link>
             </Button>
           </CardHeader>
           <CardContent className="space-y-1.5">
