@@ -249,6 +249,26 @@ export const SALES_PAY_LABEL: Record<SalesPayMethod, string> = {
   multi: "متعدد",
 };
 
+export interface PurchaseInvoice {
+  id: string;
+  no: string;
+  date: string;
+  dueDate: string;
+  branchId: string;
+  warehouseId: string;
+  userId: string;
+  supplierId: string | null;
+  supplierName: string;
+  supplierInvoiceNo: string;
+  lines: SalesLine[];
+  payMethod: SalesPayMethod;
+  payCash: number;
+  payCard: number;
+  safeId: string | null;
+  note: string;
+  status: DocStatus;
+}
+
 export interface DbShape {
   branches: Branch[];
   users: AppUser[];
@@ -265,6 +285,7 @@ export interface DbShape {
   products: Product[];
   discountCodes: DiscountCode[];
   salesInvoices: SalesInvoice[];
+  purchaseInvoices: PurchaseInvoice[];
   productCategories: ProductCategory[];
   settings: OrgSettings;
 
@@ -708,6 +729,51 @@ function seed(): DbShape {
     },
   ];
 
+  const purchaseInvoices: PurchaseInvoice[] = [
+    {
+      id: "pi1",
+      no: "PO-000001",
+      date: d(-12),
+      dueDate: d(18),
+      branchId: "br1",
+      warehouseId: "wh1",
+      userId: "u1",
+      supplierId: "s1",
+      supplierName: "مصانع الدلتا للأعلاف",
+      supplierInvoiceNo: "DL-9931",
+      lines: [
+        { id: "pl1", productId: "p1", code: "IT-1001", name: "علف بادي دواجن 21%", qty: 20, unit: "ton", price: 19800, discountPct: 0, discountAmt: 0, taxRate: 14 },
+      ],
+      payMethod: "credit",
+      payCash: 0,
+      payCard: 0,
+      safeId: null,
+      note: "توريد شهري",
+      status: "posted",
+    },
+    {
+      id: "pi2",
+      no: "PO-000002",
+      date: d(-4),
+      dueDate: d(-4),
+      branchId: "br3",
+      warehouseId: "wh3",
+      userId: "u3",
+      supplierId: "s3",
+      supplierName: "مطاحن الشرق للذرة",
+      supplierInvoiceNo: "SH-1204",
+      lines: [
+        { id: "pl2", productId: "p7", code: "IT-3002", name: "ذرة صفراء مجروشة", qty: 15, unit: "ton", price: 13100, discountPct: 1, discountAmt: 0, taxRate: 14 },
+      ],
+      payMethod: "cash",
+      payCash: 221800,
+      payCard: 0,
+      safeId: "sf1",
+      note: "",
+      status: "posted",
+    },
+  ];
+
   return {
     branches,
     users,
@@ -724,6 +790,7 @@ function seed(): DbShape {
     products,
     discountCodes,
     salesInvoices,
+    purchaseInvoices,
     productCategories,
     settings,
 
