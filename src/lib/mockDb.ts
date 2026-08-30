@@ -157,7 +157,22 @@ export interface Shift {
 
 /* ===================== العملاء والمبيعات ===================== */
 
-export type Unit = "kg" | "ton" | "bag" | "pcs";
+/** كود الوحدة — الأكواد الافتراضية موجودة، ويمكن للمستخدم تكويد وحدات جديدة من شاشة «تكويد الوحدات» */
+export type Unit = string;
+
+/** وحدة قياس مكوّدة فى النظام (بيانات رئيسية) */
+export interface MeasureUnit {
+  id: string;
+  /** كود مختصر بالإنجليزى (kg / ton / bag …) */
+  code: string;
+  /** الاسم العربى الظاهر فى الشاشات والطباعة */
+  name: string;
+  /** عدد الخانات العشرية المسموحة للكميات بهذه الوحدة */
+  decimals: number;
+  note: string;
+  active: boolean;
+}
+
 export type SalesPayMethod = "cash" | "card" | "credit" | "multi";
 export type InvoiceView = "professional" | "simple";
 
