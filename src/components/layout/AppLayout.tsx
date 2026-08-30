@@ -88,5 +88,6 @@ export function AppLayout() {
         </main>
       </div>
     </div>
+    </AuthGate>
   );
 }
