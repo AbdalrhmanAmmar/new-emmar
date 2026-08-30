@@ -121,7 +121,7 @@ export function GlobalSearch({ className = "" }: { className?: string }) {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent
           dir="rtl"
-          className="top-[12%] max-w-2xl translate-y-0 gap-0 overflow-hidden p-0"
+          className="top-[18%] max-w-2xl translate-y-0 gap-0 overflow-hidden rounded-2xl border-white/20 bg-card/95 p-0 shadow-2xl backdrop-blur-xl"
           aria-describedby={undefined}
         >
           <div className="flex items-center gap-2 border-b border-border px-4">
