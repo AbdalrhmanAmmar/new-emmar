@@ -1,5 +1,4 @@
 import {
-  ScanBarcode,
   ArrowLeftRight,
   BadgeDollarSign,
   Banknote,
@@ -8,6 +7,7 @@ import {
   LayoutDashboard,
   ListChecks,
   Receipt,
+  ScanBarcode,
   ScrollText,
   Settings2,
   ShoppingCart,
