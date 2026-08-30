@@ -1,9 +1,10 @@
 import { invoiceTotalsOf, lineTotals } from "@/lib/sales";
+import { returnTotals } from "@/lib/returns";
 import type { DbShape, SalesInvoice, Unit } from "@/lib/mockDb";
 
 export interface LedgerRow {
   date: string;
-  kind: "invoice" | "receipt";
+  kind: "invoice" | "receipt" | "return";
   ref: string;
   desc: string;
   debit: number;
@@ -46,6 +47,21 @@ export function customerLedger(
       desc: `فاتورة مبيعات — ${inv.lines.length} صنف`,
       debit: t.total,
       credit: 0,
+      balance: 0,
+    });
+  }
+
+  for (const doc of data.returns) {
+    if (doc.kind !== "sales" || doc.partyId !== customerId || doc.status !== "posted") continue;
+    if (doc.settle !== "credit") continue;
+    if (!inRange(doc.date, from, to)) continue;
+    rows.push({
+      date: doc.date,
+      kind: "return",
+      ref: doc.no,
+      desc: `مرتجع مبيعات — إشعار دائن${doc.refInvoiceNo ? ` عن فاتورة ${doc.refInvoiceNo}` : ""}`,
+      debit: 0,
+      credit: returnTotals(doc.lines).total,
       balance: 0,
     });
   }
