@@ -41,6 +41,12 @@ export function printEmployeeStatement(
       <tr><td>أجر أيام العمل (${num(result.earnedDays)} يوم)</td><td style="text-align:center">${money(result.basicEarned)}</td></tr>
       <tr><td>أجر ساعات إضافية</td><td style="text-align:center">${money(result.overtimePay)}</td></tr>
       <tr><td>بدلات</td><td style="text-align:center">${money(result.allowances)}</td></tr>
+      ${result.adjustments
+        .map(
+          (a) =>
+            `<tr><td>${a.kind === "allowance" ? "بدل" : "خصم"}: ${a.label} (${a.month})</td><td style="text-align:center">${a.kind === "allowance" ? "" : "- "}${money(a.amount)}</td></tr>`,
+        )
+        .join("")}
       <tr><td>خصم تأخير</td><td style="text-align:center">- ${money(result.lateDeduction)}</td></tr>
       <tr><td>خصومات ثابتة</td><td style="text-align:center">- ${money(result.fixedDeductions)}</td></tr>
       <tr><td>سلف وعهد</td><td style="text-align:center">- ${money(result.advances)}</td></tr>
