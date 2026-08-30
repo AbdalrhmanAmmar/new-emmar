@@ -911,7 +911,10 @@ function persist() {
 }
 
 export function getDb(): DbShape {
-  if (!db) db = load();
+  if (!db) {
+    db = load();
+    setCurrencyLabel(db.settings?.currencyLabel);
+  }
   return db;
 }
 
