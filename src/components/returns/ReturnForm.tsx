@@ -62,9 +62,9 @@ export function ReturnForm({ returnId, initialKind }: { returnId?: string; initi
       code: product.code,
       name: product.name,
       unit: product.unit,
-      price: kind === "sales" ? Number(product.unitPrice || 0) : Number(product.cost || 0),
       taxRate: Number(product.taxRate ?? data.settings.vatRate),
       ...unitPatch(product, product.unit),
+      price: kind === "sales" ? Number(product.unitPrice || 0) : Number(product.cost || 0),
     });
   };
 

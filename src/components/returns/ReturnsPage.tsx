@@ -87,7 +87,7 @@ export function ReturnsPage({ kind }: { kind?: ReturnKind }) {
         actions={
           <>
             <Button asChild className="gap-1.5">
-              <Link to="/returns/new" search={kind ? { kind } : undefined}>
+              <Link to="/returns/new">
                 <Plus className="size-4" />
                 مرتجع جديد
               </Link>
