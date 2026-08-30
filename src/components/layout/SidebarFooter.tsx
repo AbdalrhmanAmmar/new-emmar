@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { LogOut, Settings2, Wifi, WifiOff } from "lucide-react";
 
 import { SETTINGS_GROUPS } from "@/components/layout/navConfig";
@@ -20,6 +20,7 @@ interface Props {
 
 export function SidebarFooter({ collapsed, online }: Props) {
   const current = useCurrentUser();
+  const navigate = useNavigate();
   const name = current?.user.name ?? "مستخدم";
   const roleName = current?.role?.name ?? "";
   const settingsGroups = SETTINGS_GROUPS.map((group) => ({
@@ -31,7 +32,7 @@ export function SidebarFooter({ collapsed, online }: Props) {
 
   const handleSignOut = () => {
     signOut();
-    if (typeof window !== "undefined") window.location.replace("/login");
+    navigate({ to: "/login", replace: true });
   };
 
   return (

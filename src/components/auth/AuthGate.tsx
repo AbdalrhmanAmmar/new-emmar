@@ -1,4 +1,4 @@
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { Lock, ShieldAlert } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -9,15 +9,14 @@ import { hasPerm, screenForPath, signOut, useCurrentUser } from "@/lib/session";
 export function AuthGate({ children }: { children: React.ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const current = useCurrentUser();
+  const navigate = useNavigate();
   const [ready, setReady] = useState(false);
 
   useEffect(() => setReady(true), []);
 
   useEffect(() => {
-    if (ready && !current && typeof window !== "undefined") {
-      window.location.replace("/login");
-    }
-  }, [ready, current]);
+    if (ready && !current) navigate({ to: "/login", replace: true });
+  }, [ready, current, navigate]);
 
   if (!ready) {
     return (
