@@ -271,12 +271,36 @@ export interface SalesInvoice {
   status: DocStatus;
 }
 
-export const UNIT_LABEL: Record<Unit, string> = {
+/** الوحدات الافتراضية المكوّدة عند أول تشغيل */
+export const DEFAULT_UNIT_LABEL: Record<string, string> = {
   kg: "كيلو",
   ton: "طن",
   bag: "شيكارة",
   pcs: "عدد",
 };
+
+/** اسم الوحدة للعرض — يقرأ من الوحدات المكوّدة فى النظام ثم الافتراضية */
+export function unitLabel(code?: string | null): string {
+  const key = String(code ?? "").trim();
+  if (!key) return "";
+  const coded = getDb().measureUnits?.find((u) => u.code === key);
+  return coded?.name?.trim() || DEFAULT_UNIT_LABEL[key] || key;
+}
+
+/**
+ * خريطة أسماء الوحدات — تُقرأ ديناميكياً من الوحدات المكوّدة
+ * حتى تظهر الوحدات الجديدة فى كل الشاشات بدون تعديل.
+ */
+export const UNIT_LABEL: Record<string, string> = new Proxy(
+  {},
+  {
+    get: (_t, key: string) => unitLabel(key),
+    has: () => true,
+    ownKeys: () => Object.keys(DEFAULT_UNIT_LABEL),
+    getOwnPropertyDescriptor: () => ({ enumerable: true, configurable: true }),
+  },
+) as Record<string, string>;
+
 
 export const SALES_PAY_LABEL: Record<SalesPayMethod, string> = {
   cash: "نقدي",
