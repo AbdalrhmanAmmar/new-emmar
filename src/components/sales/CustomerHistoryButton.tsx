@@ -160,7 +160,7 @@ export function CustomerHistoryButton({ customerId }: { customerId: string | nul
                     <tr key={row.productId} className="border-t border-border/60">
                       <td className="px-3 py-2 text-center text-xs text-muted-foreground">{row.code}</td>
                       <td className="px-3 py-2 text-right font-semibold">{row.name}</td>
-                      <td className="px-3 py-2 text-center text-xs">{UNIT_LABEL[row.unit]}</td>
+                      <td className="px-3 py-2 text-center text-xs">{row.unitName || UNIT_LABEL[row.unit]}</td>
                       <td className="px-3 py-2 text-center font-semibold text-primary">{num(row.lastPrice)}</td>
                       <td className="px-3 py-2 text-center">{num(row.minPrice)}</td>
                       <td className="px-3 py-2 text-center">{num(row.maxPrice)}</td>

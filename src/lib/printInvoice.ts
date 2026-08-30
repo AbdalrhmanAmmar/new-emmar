@@ -1,5 +1,6 @@
 import { dateFmt, money, num } from "@/lib/format";
-import { SALES_PAY_LABEL, UNIT_LABEL, type DbShape, type OrgSettings, type SalesInvoice, type SalesLine } from "@/lib/mockDb";
+import { lineUnitLabel } from "@/lib/units";
+import { SALES_PAY_LABEL, type DbShape, type OrgSettings, type SalesInvoice, type SalesLine } from "@/lib/mockDb";
 import { lineTotals } from "@/lib/sales";
 
 export interface InvoicePrintTotals {
@@ -150,7 +151,7 @@ export function printSalesInvoice(input: InvoicePrintInput) {
         <td class="c">${line.code || "—"}</td>
         <td>${line.name}</td>
         <td class="c">${num(line.qty)}</td>
-        <td class="c">${UNIT_LABEL[line.unit]}</td>
+        <td class="c">${lineUnitLabel(line)}</td>
         <td class="n">${num(line.price)}</td>
         <td class="n">${num(t.discount)}</td>
         <td class="n">${num(t.tax)}</td>

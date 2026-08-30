@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { money, num, today } from "@/lib/format";
 import { UNIT_LABEL, nextNo, uid, useDb, type Product, type SalesLine, type SalesPayMethod } from "@/lib/mockDb";
+import { lineUnitLabel, productUnits, unitPatch } from "@/lib/units";
 import { CustomerHistoryButton } from "@/components/sales/CustomerHistoryButton";
 import { invoicePrintInput, printSalesInvoice } from "@/lib/printInvoice";
 import { discountPercentOf, invoiceTotals, lineTotals } from "@/lib/sales";
@@ -79,7 +80,7 @@ export function PosCashier() {
           name: product.name,
           qty: 1,
           unit: product.unit,
-          price: product.unitPrice,
+          ...unitPatch(product),
           discountPct: 0,
           discountAmt: 0,
           taxRate: product.taxRate,
@@ -91,6 +92,16 @@ export function PosCashier() {
   const setQty = (id: string, qty: number) =>
     setLines((rows) =>
       rows.flatMap((l) => (l.id === id ? (qty > 0 ? [{ ...l, qty }] : []) : [l])),
+    );
+
+  /** تغيير وحدة البيع فى سطر السلة مع تحديث السعر تلقائياً */
+  const setUnit = (id: string, code: string) =>
+    setLines((rows) =>
+      rows.map((l) => {
+        if (l.id !== id) return l;
+        const product = data.products.find((p) => p.id === l.productId);
+        return product ? { ...l, ...unitPatch(product, code) } : l;
+      }),
     );
 
   const setPrice = (id: string, price: number) =>
@@ -297,10 +308,30 @@ export function PosCashier() {
                         <Plus className="size-3.5" />
                       </Button>
                     </div>
+                    {(() => {
+                      const product = data.products.find((p) => p.id === l.productId);
+                      const units = product ? productUnits(product) : [];
+                      return units.length > 1 ? (
+                        <select
+                          dir="rtl"
+                          value={l.unitCode ?? l.unit}
+                          onChange={(e) => setUnit(l.id, e.target.value)}
+                          className="h-7 rounded-md border border-input bg-background px-1.5 text-xs"
+                        >
+                          {units.map((u) => (
+                            <option key={u.code} value={u.code}>
+                              {u.name}
+                            </option>
+                          ))}
+                        </select>
+                      ) : (
+                        <span className="text-xs text-muted-foreground">{lineUnitLabel(l)}</span>
+                      );
+                    })()}
                     <Input
                       value={String(l.price)}
                       onChange={(e) => setPrice(l.id, Number(e.target.value || 0))}
-                      className="h-7 w-24 text-center text-xs"
+                      className="h-7 w-20 text-center text-xs"
                     />
                     <span className="text-xs font-bold text-primary">{money(t.total)}</span>
                   </div>
