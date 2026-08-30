@@ -10,6 +10,7 @@ import {
   ScanBarcode,
   ScrollText,
   Settings2,
+  Truck,
   ShoppingCart,
   Users,
   Wallet,
@@ -74,12 +75,6 @@ export const TREASURY_MODULE: NavModule = {
         { to: "/treasury/reconcile", label: "المطابقة البنكية", icon: <Landmark className="size-4" /> },
       ],
     },
-    {
-      id: "treasury-settings",
-      label: "إعدادات الخزينة",
-      icon: <Settings2 className="size-4" />,
-      items: [{ to: "/treasury/settings", label: "إعدادات وبيانات النظام", icon: <Settings2 className="size-4" /> }],
-    },
   ],
 };
 
@@ -99,13 +94,23 @@ export const SALES_MODULE: NavModule = {
         { to: "/sales/pos", label: "الكاشير (نقطة بيع)", icon: <ScanBarcode className="size-4" /> },
       ],
     },
+  ],
+};
+
+
+export const PURCHASES_MODULE: NavModule = {
+  id: "purchases",
+  label: "الموردون والمشتريات",
+  icon: <Truck className="size-4" />,
+  home: { to: "/purchases", label: "لوحة المشتريات", icon: <LayoutDashboard className="size-4" /> },
+  groups: [
     {
-      id: "sales-master",
-      label: "البيانات الأساسية",
-      icon: <Users className="size-4" />,
+      id: "purchases-docs",
+      label: "فواتير الشراء",
+      icon: <Receipt className="size-4" />,
       items: [
-        { to: "/sales/customers", label: "العملاء", icon: <Users className="size-4" /> },
-        { to: "/sales/products", label: "الأصناف والأسعار", icon: <ListChecks className="size-4" /> },
+        { to: "/purchases/invoices", label: "فواتير المشتريات", icon: <Receipt className="size-4" /> },
+        { to: "/purchases/invoices/new", label: "فاتورة مشتريات جديدة", icon: <BadgeDollarSign className="size-4" /> },
       ],
     },
   ],
@@ -140,15 +145,50 @@ export const REPORTS_MODULE: NavModule = {
         { to: "/reports/customer-statement", label: "كشف حساب عميل", icon: <FileText className="size-4" /> },
       ],
     },
+    {
+      id: "reports-purchases",
+      label: "تقارير المشتريات",
+      icon: <Truck className="size-4" />,
+      items: [
+        { to: "/purchases/reports/by-product", label: "المشتريات حسب الصنف", icon: <ScrollText className="size-4" /> },
+        { to: "/purchases/reports/by-supplier", label: "المشتريات حسب المورد", icon: <ScrollText className="size-4" /> },
+      ],
+    },
   ],
 };
 
-export const MODULES: NavModule[] = [TREASURY_MODULE, SALES_MODULE, REPORTS_MODULE];
+/** قائمة الترس: كل الإعدادات والبيانات الرئيسية فى مكان واحد */
+export interface SettingsGroup {
+  id: string;
+  label: string;
+  items: NavItem[];
+}
 
-export const ALL_NAV_ITEMS: NavItem[] = MODULES.flatMap((module) => [
-  module.home,
-  ...module.groups.flatMap((group) => group.items),
-]);
+export const SETTINGS_GROUPS: SettingsGroup[] = [
+  {
+    id: "settings-system",
+    label: "إعدادات النظام",
+    items: [{ to: "/treasury/settings", label: "الإعدادات الرئيسية وبيانات النظام", icon: <Settings2 className="size-4" /> }],
+  },
+  {
+    id: "settings-master",
+    label: "البيانات الرئيسية",
+    items: [
+      { to: "/sales/customers", label: "العملاء", icon: <Users className="size-4" /> },
+      { to: "/purchases/suppliers", label: "الموردون", icon: <Truck className="size-4" /> },
+      { to: "/sales/products", label: "الأصناف والأسعار", icon: <ListChecks className="size-4" /> },
+    ],
+  },
+];
+
+export const SETTINGS_ITEMS: NavItem[] = SETTINGS_GROUPS.flatMap((g) => g.items);
+
+export const MODULES: NavModule[] = [TREASURY_MODULE, SALES_MODULE, PURCHASES_MODULE, REPORTS_MODULE];
+
+export const ALL_NAV_ITEMS: NavItem[] = [
+  ...MODULES.flatMap((module) => [module.home, ...module.groups.flatMap((group) => group.items)]),
+  ...SETTINGS_ITEMS,
+];
 
 /** أفضل تطابق للمسار الحالى (أطول مسار مطابق) */
 export function matchNavItem(pathname: string): NavItem | undefined {
