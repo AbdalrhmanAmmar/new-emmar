@@ -497,7 +497,7 @@ function persist() {
 }
 
 export function getDb(): DbShape {
-  if (!db) db = load();
+  if (!db) db = seed();
   return db;
 }
 
@@ -527,11 +527,24 @@ function getVersion() {
   return version;
 }
 
+/** تحميل البيانات المحفوظة بعد الـ hydration فقط لتجنّب اختلاف الخادم والمتصفح */
+let hydrated = false;
+function hydrateDb() {
+  if (hydrated || typeof window === "undefined") return;
+  hydrated = true;
+  db = load();
+  emit();
+}
+
 /** يعيد قراءة البيانات ويعيد الرسم عند أي تعديل */
 export function useDb(): DbShape {
   useSyncExternalStore(subscribe, getVersion, () => 0);
+  useEffect(() => {
+    hydrateDb();
+  }, []);
   return getDb();
 }
+
 
 /* ===================== أدوات مساعدة ===================== */
 
