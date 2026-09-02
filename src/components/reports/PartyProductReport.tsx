@@ -1,10 +1,18 @@
-import { Printer, X } from "lucide-react";
+import { Info, Printer, X } from "lucide-react";
 import { useMemo, useState } from "react";
 
 import { DataTable, type Column } from "@/components/treasury/DataTable";
 import { PageHeader, StatCard } from "@/components/treasury/PageHeader";
 import { SearchSelect } from "@/components/treasury/SearchSelect";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { money, num } from "@/lib/format";
@@ -17,6 +25,7 @@ interface ReportRow {
   invoiceNo: string;
   date: string;
   partyName: string;
+  productId: string;
   code: string;
   name: string;
   unit: string;
@@ -89,6 +98,7 @@ export function PartyProductReport({ kind }: { kind: "sales" | "purchases" }) {
           invoiceNo: inv.no,
           date: inv.date,
           partyName: inv.partyName,
+          productId: line.productId,
           code: line.code,
           name: line.name,
           unit: lineUnitLabel(line),
@@ -115,7 +125,17 @@ export function PartyProductReport({ kind }: { kind: "sales" | "purchases" }) {
     { key: "code", header: "كود الصنف", cell: (r) => r.code, text: (r) => r.code },
     { key: "name", header: "الصنف", cell: (r) => r.name, text: (r) => r.name },
     { key: "unit", header: "الوحدة", align: "center", cell: (r) => r.unit, text: (r) => r.unit },
-    { key: "qty", header: "الكمية", cell: (r) => num(r.qty) },
+    {
+      key: "qty",
+      header: "الكمية",
+      cell: (r) => (
+        <span className="inline-flex items-center gap-1.5">
+          {num(r.qty)}
+          <QtyInvoicesDialog row={r} rows={rows} isSales={isSales} />
+        </span>
+      ),
+      text: (r) => num(r.qty),
+    },
     { key: "price", header: isSales ? "سعر البيع" : "سعر الشراء", cell: (r) => money(r.price) },
     { key: "discount", header: "الخصم", cell: (r) => money(r.discount) },
     { key: "tax", header: "الضريبة", cell: (r) => money(r.tax) },
@@ -217,5 +237,87 @@ export function PartyProductReport({ kind }: { kind: "sales" | "purchases" }) {
         footerNote={`إجمالى الكمية ${num(totalQty)} — إجمالى القيمة ${money(totalValue)}`}
       />
     </div>
+  );
+}
+
+function QtyInvoicesDialog({
+  row,
+  rows,
+  isSales,
+}: {
+  row: ReportRow;
+  rows: ReportRow[];
+  isSales: boolean;
+}) {
+  const related = rows.filter((r) => r.productId === row.productId && r.partyName === row.partyName);
+  const qty = related.reduce((s, r) => s + r.qty, 0);
+  const value = related.reduce((s, r) => s + r.total, 0);
+  const avg = qty > 0 ? related.reduce((s, r) => s + r.qty * r.price, 0) / qty : 0;
+
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <button
+          type="button"
+          aria-label="فواتير هذه الكمية"
+          title="عرض كل الفواتير الخاصة بالكمية"
+          className="inline-flex size-5 items-center justify-center rounded-full border border-primary/30 text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
+        >
+          <Info className="size-3" />
+        </button>
+      </DialogTrigger>
+      <DialogContent className="max-w-2xl" dir="rtl">
+        <DialogHeader>
+          <DialogTitle>فواتير الصنف: {row.name}</DialogTitle>
+          <DialogDescription>
+            {isSales ? "العميل" : "المورد"}: {row.partyName} — عدد الفواتير {num(related.length)}
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="grid grid-cols-3 gap-2 text-center">
+          <div className="rounded-lg border bg-muted/40 p-2">
+            <p className="text-xs text-muted-foreground">إجمالى الكمية</p>
+            <p className="font-semibold">{num(qty)}</p>
+          </div>
+          <div className="rounded-lg border bg-muted/40 p-2">
+            <p className="text-xs text-muted-foreground">متوسط السعر</p>
+            <p className="font-semibold">{money(avg)}</p>
+          </div>
+          <div className="rounded-lg border bg-muted/40 p-2">
+            <p className="text-xs text-muted-foreground">إجمالى القيمة</p>
+            <p className="font-semibold">{money(value)}</p>
+          </div>
+        </div>
+
+        <div className="max-h-[50vh] overflow-auto rounded-lg border">
+          <table className="w-full text-sm">
+            <thead className="bg-muted/60 text-center text-xs">
+              <tr>
+                <th className="p-2">التاريخ</th>
+                <th className="p-2">رقم الفاتورة</th>
+                <th className="p-2">الوحدة</th>
+                <th className="p-2">الكمية</th>
+                <th className="p-2">السعر</th>
+                <th className="p-2">الإجمالى</th>
+              </tr>
+            </thead>
+            <tbody>
+              {related.map((r) => (
+                <tr key={r.id} className="border-t text-right">
+                  <td className="p-2 text-center" dir="ltr">
+                    {r.date}
+                  </td>
+                  <td className="p-2 font-medium">{r.invoiceNo}</td>
+                  <td className="p-2 text-center">{r.unit}</td>
+                  <td className="p-2">{num(r.qty)}</td>
+                  <td className="p-2">{money(r.price)}</td>
+                  <td className="p-2">{money(r.total)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
