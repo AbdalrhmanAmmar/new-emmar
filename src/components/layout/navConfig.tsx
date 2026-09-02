@@ -156,6 +156,7 @@ export const INVENTORY_MODULE: NavModule = {
       items: [
         { to: "/inventory/warehouses", label: "تكويد المخازن", icon: <Warehouse className="size-4" /> },
         { to: "/inventory/balance", label: "أرصدة المخازن", icon: <ListChecks className="size-4" /> },
+        { to: "/inventory/stocktake", label: "جرد المخازن", icon: <ClipboardCheck className="size-4" /> },
       ],
     },
   ],
