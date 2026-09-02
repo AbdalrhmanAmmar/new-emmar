@@ -188,6 +188,7 @@ export function saveSalesInvoice(
         ? data.customers.find((c) => c.id === input.customerId)?.name ?? input.customerName
         : input.customerName?.trim() || "عميل نقدي",
       lines,
+      charges: (input.charges ?? []).filter((c) => Number(c.amount || 0) !== 0),
       payMethod: input.payMethod,
       payCash: Number(input.payCash || 0),
       payCard: Number(input.payCard || 0),
