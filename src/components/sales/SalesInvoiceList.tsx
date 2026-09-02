@@ -26,12 +26,12 @@ export function SalesInvoiceList() {
     inv.customerId ? data.customers.find((c) => c.id === inv.customerId)?.name ?? "-" : inv.customerName || "عميل نقدي";
 
   const doPrint = (inv: SalesInvoice) => {
-    printSalesInvoice(invoicePrintInput(data, inv, invoiceTotalsOf(data, inv)));
+    printSalesInvoice(invoicePrintInput(data, inv, invoiceTotalsOf(data, inv)), paper);
   };
 
   const doDownload = (inv: SalesInvoice) => {
-    downloadSalesInvoice(invoicePrintInput(data, inv, invoiceTotalsOf(data, inv)));
-    toast.success(`تم تنزيل الفاتورة ${inv.no} على جهازك`);
+    downloadSalesInvoice(invoicePrintInput(data, inv, invoiceTotalsOf(data, inv)), paper);
+    toast.success(`تم تنزيل الفاتورة ${inv.no} بمقاس ${paper}`);
   };
 
   const doSend = (inv: SalesInvoice) => {
