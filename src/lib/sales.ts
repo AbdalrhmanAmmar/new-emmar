@@ -18,6 +18,8 @@ export function lineTotals(line: SalesLine): LineTotals {
 
 export interface InvoiceTotals extends LineTotals {
   codeDiscount: number;
+  /** إجمالى البنود الإضافية (تحميل / نقل ... ) */
+  charges: number;
   paid: number;
   remaining: number;
 }
@@ -29,6 +31,7 @@ export function invoiceTotals(inv: {
   payCard: number;
   discountCode?: string;
   codePercent?: number;
+  charges?: InvoiceCharge[];
 }): InvoiceTotals {
   let gross = 0;
   let lineDiscount = 0;
@@ -45,7 +48,8 @@ export function invoiceTotals(inv: {
   const factor = net > 0 ? (net - codeDiscount) / net : 1;
   net -= codeDiscount;
   tax *= factor;
-  const total = net + tax;
+  const charges = (inv.charges ?? []).reduce((acc, c) => acc + Number(c.amount || 0), 0);
+  const total = net + tax + charges;
   const paid = paidAmount(inv.payMethod, inv.payCash, inv.payCard, total);
   return {
     gross,
@@ -54,10 +58,12 @@ export function invoiceTotals(inv: {
     tax,
     total,
     codeDiscount,
+    charges,
     paid,
     remaining: Math.max(0, total - paid),
   };
 }
+
 
 export function paidAmount(
   method: SalesInvoice["payMethod"],
