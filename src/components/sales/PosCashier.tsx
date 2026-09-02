@@ -6,7 +6,8 @@ import { SearchSelect } from "@/components/treasury/SearchSelect";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { money, num, today } from "@/lib/format";
-import { UNIT_LABEL, nextNo, uid, useDb, type Product, type SalesLine, type SalesPayMethod } from "@/lib/mockDb";
+import { UNIT_LABEL, nextNo, uid, useDb, type InvoiceCharge, type Product, type SalesLine, type SalesPayMethod } from "@/lib/mockDb";
+import { ChargesEditor } from "@/components/sales/ChargesEditor";
 import { lineUnitLabel, productUnits, unitPatch } from "@/lib/units";
 import { CustomerHistoryButton } from "@/components/sales/CustomerHistoryButton";
 import { invoicePrintInput, printSalesInvoice } from "@/lib/printInvoice";
@@ -26,6 +27,7 @@ export interface PosDraft {
   warehouseId?: string;
   safeId?: string | null;
   discountCode?: string;
+  charges?: InvoiceCharge[];
 }
 
 interface PosProps {
@@ -51,6 +53,7 @@ export function PosCashier({ draftSeed, onDraftChange, onSaved }: PosProps = {})
   const [warehouseId, setWarehouseId] = useState(seed?.warehouseId ?? data.warehouses[0]?.id ?? "");
   const [safeId, setSafeId] = useState<string | null>(seed?.safeId ?? data.safes[0]?.id ?? null);
   const [discountCode, setDiscountCode] = useState(seed?.discountCode ?? "");
+  const [charges, setCharges] = useState<InvoiceCharge[]>(seed?.charges ?? []);
   const [paper, setPaper] = usePaperSize();
 
 
@@ -84,6 +87,7 @@ export function PosCashier({ draftSeed, onDraftChange, onSaved }: PosProps = {})
     payCash: payMethod === "card" ? 0 : payAmount,
     payCard: payMethod === "card" ? payAmount : 0,
     codePercent,
+    charges,
   });
 
   const invoiceNo = useMemo(
@@ -92,8 +96,8 @@ export function PosCashier({ draftSeed, onDraftChange, onSaved }: PosProps = {})
   );
 
   const snapshot = useMemo<PosDraft>(
-    () => ({ lines, payMethod, payInput, customerKind, customerId, branchId, warehouseId, safeId, discountCode }),
-    [lines, payMethod, payInput, customerKind, customerId, branchId, warehouseId, safeId, discountCode],
+    () => ({ lines, payMethod, payInput, customerKind, customerId, branchId, warehouseId, safeId, discountCode, charges }),
+    [lines, payMethod, payInput, customerKind, customerId, branchId, warehouseId, safeId, discountCode, charges],
   );
 
   useEffect(() => {
@@ -144,6 +148,7 @@ export function PosCashier({ draftSeed, onDraftChange, onSaved }: PosProps = {})
     setLines([]);
     setPayInput("");
     setDiscountCode("");
+    setCharges([]);
     setCustomerKind("cash");
     setCustomerId(null);
   };
@@ -159,6 +164,7 @@ export function PosCashier({ draftSeed, onDraftChange, onSaved }: PosProps = {})
     customerId: customerKind === "registered" ? customerId : null,
     customerName: customerKind === "registered" ? "" : "عميل نقدي",
     lines,
+    charges,
     payMethod,
     payCash: payMethod === "card" ? 0 : payMethod === "credit" ? 0 : payAmount,
     payCard: payMethod === "card" ? payAmount : 0,
@@ -182,6 +188,7 @@ export function PosCashier({ draftSeed, onDraftChange, onSaved }: PosProps = {})
           customerId: customerKind === "registered" ? customerId : null,
           customerName: customerKind === "registered" ? "" : "عميل نقدي",
           lines,
+          charges,
           payMethod,
           discountCode,
           note: "بيع كاشير",
@@ -387,10 +394,15 @@ export function PosCashier({ draftSeed, onDraftChange, onSaved }: PosProps = {})
           <Row label="الإجمالي قبل الخصم" value={money(totals.gross)} />
           <Row label="الخصم" value={money(totals.discount)} />
           <Row label="الضريبة" value={money(totals.tax)} />
+          {totals.charges ? <Row label="بنود إضافية" value={money(totals.charges)} /> : null}
           <div className="flex items-center justify-between border-t border-border pt-1.5 text-sm font-bold text-primary">
             <span>الإجمالي المستحق</span>
             <span>{money(totals.total)}</span>
           </div>
+        </div>
+
+        <div className="rounded-lg border border-border/70 bg-background p-2">
+          <ChargesEditor charges={charges} onChange={setCharges} compact />
         </div>
 
         <Input dir="rtl" value={discountCode} onChange={(e) => setDiscountCode(e.target.value)} placeholder="كود خصم (اختياري)" className="h-8 text-xs" />
