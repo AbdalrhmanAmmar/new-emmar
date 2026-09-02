@@ -10,6 +10,7 @@ import { UNIT_LABEL, nextNo, uid, useDb, type Product, type SalesLine, type Sale
 import { lineUnitLabel, productUnits, unitPatch } from "@/lib/units";
 import { CustomerHistoryButton } from "@/components/sales/CustomerHistoryButton";
 import { invoicePrintInput, printSalesInvoice } from "@/lib/printInvoice";
+import { PaperSizeToggle, usePaperSize } from "@/components/sales/PaperSizeToggle";
 import { discountPercentOf, invoiceTotals, lineTotals } from "@/lib/sales";
 import { autoNotifyOnPost } from "@/lib/notifyInvoice";
 import { saveSalesInvoice } from "@/lib/salesActions";
@@ -157,6 +158,7 @@ export function PosCashier() {
         },
         totals,
       ),
+      paper,
     );
   };
 
