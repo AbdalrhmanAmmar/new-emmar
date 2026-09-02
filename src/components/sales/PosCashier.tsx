@@ -137,8 +137,8 @@ export function PosCashier({ draftSeed, onDraftChange, onSaved }: PosProps = {})
       }),
     );
 
-  const setPrice = (id: string, price: number) =>
-    setLines((rows) => rows.map((l) => (l.id === id ? { ...l, price } : l)));
+
+
 
   const clearCart = () => {
     setLines([]);
@@ -335,17 +335,17 @@ export function PosCashier({ draftSeed, onDraftChange, onSaved }: PosProps = {})
                       <Trash2 className="size-3.5" />
                     </button>
                   </div>
-                  <div className="mt-1.5 flex items-center justify-between gap-2">
+                  <div className="mt-1.5 flex flex-wrap items-center gap-2">
                     <div className="flex items-center gap-1">
-                      <Button type="button" size="icon" variant="outline" className="size-7" onClick={() => setQty(l.id, Number(l.qty) - 1)}>
+                      <Button type="button" size="icon" variant="outline" className="size-7 shrink-0" onClick={() => setQty(l.id, Number(l.qty) - 1)}>
                         <Minus className="size-3.5" />
                       </Button>
                       <Input
                         value={String(l.qty)}
                         onChange={(e) => setQty(l.id, Number(e.target.value || 0))}
-                        className="h-7 w-14 text-center text-xs"
+                        className="h-7 w-14 shrink-0 text-center text-xs"
                       />
-                      <Button type="button" size="icon" variant="outline" className="size-7" onClick={() => setQty(l.id, Number(l.qty) + 1)}>
+                      <Button type="button" size="icon" variant="outline" className="size-7 shrink-0" onClick={() => setQty(l.id, Number(l.qty) + 1)}>
                         <Plus className="size-3.5" />
                       </Button>
                     </div>
@@ -357,7 +357,7 @@ export function PosCashier({ draftSeed, onDraftChange, onSaved }: PosProps = {})
                           dir="rtl"
                           value={l.unitCode ?? l.unit}
                           onChange={(e) => setUnit(l.id, e.target.value)}
-                          className="h-7 rounded-md border border-input bg-background px-1.5 text-xs"
+                          className="h-7 shrink-0 rounded-md border border-input bg-background px-1.5 text-xs"
                         >
                           {units.map((u) => (
                             <option key={u.code} value={u.code}>
@@ -366,20 +366,17 @@ export function PosCashier({ draftSeed, onDraftChange, onSaved }: PosProps = {})
                           ))}
                         </select>
                       ) : (
-                        <span className="text-xs text-muted-foreground">{lineUnitLabel(l)}</span>
+                        <span className="shrink-0 text-xs text-muted-foreground">{lineUnitLabel(l)}</span>
                       );
                     })()}
-                    {data.settings.priceEditInPos ? (
-                      <Input
-                        value={String(l.price)}
-                        onChange={(e) => setPrice(l.id, Number(e.target.value || 0))}
-                        className="h-7 w-20 text-center text-xs"
-                      />
-                    ) : (
-                      <span className="w-20 text-center text-xs font-semibold">{money(l.price)}</span>
-                    )}
-                    <span className="text-xs font-bold text-primary">{money(t.total)}</span>
                   </div>
+                  <div className="mt-1.5 flex items-center justify-between gap-2 border-t border-dashed border-border/60 pt-1.5 text-xs">
+                    <span className="text-muted-foreground">
+                      السعر: <span className="font-semibold text-foreground">{money(l.price)}</span>
+                    </span>
+                    <span className="font-bold text-primary">{money(t.total)}</span>
+                  </div>
+
                 </div>
               );
             })
