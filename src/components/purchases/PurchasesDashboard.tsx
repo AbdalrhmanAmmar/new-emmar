@@ -3,6 +3,7 @@ import { Banknote, Package, Plus, ScrollText, Truck } from "lucide-react";
 
 import { ChartCard, GroupedBarChart, TrendLineChart } from "@/components/analytics/ChartCard";
 import { KpiCard } from "@/components/analytics/KpiCard";
+import { PeriodFilter, periodText, usePeriodDb } from "@/components/analytics/PeriodFilter";
 import { DataTable, type Column } from "@/components/treasury/DataTable";
 import { PageHeader, StatCard } from "@/components/treasury/PageHeader";
 import { Button } from "@/components/ui/button";
@@ -12,7 +13,8 @@ import type { SalesByKeyRow } from "@/lib/sales";
 import { purchaseKpis, purchaseTotalsOf, purchaseTrendSeries, purchasesByProduct, purchasesBySupplier, supplierStats } from "@/lib/purchases";
 
 export function PurchasesDashboard() {
-  const data = useDb();
+  const rawDb = useDb();
+  const { range, setRange, scoped: data } = usePeriodDb(rawDb, "period:purchases");
   const kpis = purchaseKpis(data);
   const trend = purchaseTrendSeries(data, 14);
   const topProducts = purchasesByProduct(data)
@@ -62,6 +64,11 @@ export function PurchasesDashboard() {
           </>
         }
       />
+
+      <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-border/70 bg-card/60 px-3 py-2">
+        <PeriodFilter value={range} onChange={setRange} />
+        <span className="text-xs font-semibold text-muted-foreground">{periodText(range)}</span>
+      </div>
 
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <KpiCard label="إجمالي المشتريات" value={money(kpis.purchases)} icon={<Truck className="size-4" />} spark={trend} />

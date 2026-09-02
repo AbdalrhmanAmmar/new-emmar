@@ -10,6 +10,7 @@ import { useEffect } from "react";
 
 import { ChartCard, GroupedBarChart, TrendLineChart } from "@/components/analytics/ChartCard";
 import { KpiCard } from "@/components/analytics/KpiCard";
+import { PeriodFilter, periodText, usePeriodDb } from "@/components/analytics/PeriodFilter";
 import { DataTable, type Column } from "@/components/treasury/DataTable";
 import { PageHeader, StatusBadge } from "@/components/treasury/PageHeader";
 import { Button } from "@/components/ui/button";
@@ -26,7 +27,8 @@ import { backfillInvoiceMoves } from "@/lib/inventoryActions";
 import { MOVE_KIND_LABEL, MOVE_SOURCE_LABEL, useDb, type StockMove, type Warehouse } from "@/lib/mockDb";
 
 export function InventoryDashboard() {
-  const data = useDb();
+  const rawDb = useDb();
+  const { range, setRange, scoped: data } = usePeriodDb(rawDb, "period:inventory");
 
   useEffect(() => {
     backfillInvoiceMoves();
@@ -106,6 +108,11 @@ export function InventoryDashboard() {
           </>
         }
       />
+
+      <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-border/70 bg-card/60 px-3 py-2">
+        <PeriodFilter value={range} onChange={setRange} />
+        <span className="text-xs font-semibold text-muted-foreground">{periodText(range)}</span>
+      </div>
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <KpiCard label="عدد المخازن النشطة" value={num(kpis.warehouses)} icon={<WarehouseIcon className="size-4" />} />

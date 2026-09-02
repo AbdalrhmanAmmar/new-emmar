@@ -3,6 +3,7 @@ import { Plus, Receipt, Tags, Wallet } from "lucide-react";
 
 import { ChartCard, DonutChart, GroupedBarChart } from "@/components/analytics/ChartCard";
 import { KpiCard } from "@/components/analytics/KpiCard";
+import { PeriodFilter, periodText, usePeriodDb } from "@/components/analytics/PeriodFilter";
 import { PageHeader } from "@/components/treasury/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -22,7 +23,8 @@ function lastMonths(count: number): string[] {
 
 /** لوحة المصروفات: مؤشرات ورسومات تحليلية */
 export function ExpensesDashboard() {
-  const data = useDb();
+  const rawDb = useDb();
+  const { range, setRange, scoped: data } = usePeriodDb(rawDb, "period:expenses");
   const navigate = useNavigate();
 
   const posted = data.expenses.filter((e) => e.status !== "cancelled");
@@ -81,6 +83,11 @@ export function ExpensesDashboard() {
           </div>
         }
       />
+
+      <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-border/70 bg-card/60 px-3 py-2">
+        <PeriodFilter value={range} onChange={setRange} />
+        <span className="text-xs font-semibold text-muted-foreground">{periodText(range)}</span>
+      </div>
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <KpiCard label="مصروفات الشهر" value={money(monthTotal)} icon={<Receipt className="size-4" />} spark={trend} sparkKey="المصروفات" deltaGoodWhenUp={false} />
