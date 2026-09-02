@@ -337,3 +337,99 @@ export function deleteStockMove(id: string): ActionResult {
   });
   return result;
 }
+
+/* ===================== الجرد الفعلى (Stocktake) ===================== */
+
+export interface StocktakeRow {
+  productId: string;
+  /** الرصيد الدفترى وقت الجرد */
+  book: number;
+  /** الرصيد الفعلى المُدخل */
+  actual: number;
+}
+
+export interface StocktakeInput {
+  warehouseId: string;
+  date: string;
+  branchId: string;
+  userId: string;
+  note?: string;
+  rows: StocktakeRow[];
+}
+
+/**
+ * ترحيل الجرد: يقارن الرصيد الفعلى بالدفترى ويُنشئ أذون تسوية
+ * (إضافة للزيادة وصرف للنقص) تُعدّل أرصدة المخزن والأصناف تلقائياً.
+ */
+export function postStocktake(input: StocktakeInput): ActionResult & { surplus?: number; shortage?: number } {
+  let result: ActionResult & { surplus?: number; shortage?: number } = { ok: true };
+  mutate((data) => {
+    if (!input.warehouseId) {
+      result = { ok: false, error: "يجب اختيار المخزن" };
+      return;
+    }
+    const diffs = input.rows
+      .map((r) => ({ ...r, diff: Number(r.actual || 0) - Number(r.book || 0) }))
+      .filter((r) => Math.abs(r.diff) > 0.0001);
+    if (diffs.length === 0) {
+      result = { ok: false, error: "لا توجد فروق بين الرصيد الدفترى والفعلى" };
+      return;
+    }
+
+    const date = input.date || today();
+    const buildLines = (rows: typeof diffs) =>
+      rows.map((r) => {
+        const product = data.products.find((p) => p.id === r.productId);
+        return {
+          id: uid("ml"),
+          productId: r.productId,
+          code: product?.code ?? "",
+          name: product?.name ?? "",
+          qty: Math.abs(r.diff),
+          unit: product?.unit ?? "ton",
+          unitFactor: 1,
+          cost: Number(product?.cost || 0),
+        };
+      });
+
+    const push = (kind: StockMoveKind, rows: typeof diffs) => {
+      if (rows.length === 0) return;
+      const move: StockMove = {
+        id: uid("mv"),
+        no: nextMoveNo(data, kind),
+        date,
+        kind,
+        source: "manual",
+        warehouseId: input.warehouseId,
+        toWarehouseId: null,
+        refNo: `STK-${date}`,
+        refCode: "جرد فعلى",
+        refId: null,
+        partyName: "",
+        branchId: input.branchId,
+        userId: input.userId,
+        lines: buildLines(rows),
+        note: input.note?.trim() || (kind === "in" ? "تسوية زيادة جرد" : "تسوية نقص جرد"),
+        status: "posted",
+      };
+      data.stockMoves.push(move);
+      for (const line of move.lines) {
+        const product = data.products.find((p) => p.id === line.productId);
+        if (!product) continue;
+        product.stock += (kind === "in" ? 1 : -1) * moveLineBaseQty(line);
+      }
+    };
+
+    const surplusRows = diffs.filter((r) => r.diff > 0);
+    const shortageRows = diffs.filter((r) => r.diff < 0);
+    push("in", surplusRows);
+    push("out", shortageRows);
+
+    result = {
+      ok: true,
+      surplus: surplusRows.reduce((s, r) => s + r.diff, 0),
+      shortage: shortageRows.reduce((s, r) => s + Math.abs(r.diff), 0),
+    };
+  });
+  return result;
+}
