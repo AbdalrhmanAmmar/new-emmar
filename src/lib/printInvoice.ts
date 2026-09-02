@@ -285,17 +285,30 @@ export function salesInvoiceHtml(input: InvoicePrintInput): string {
 
   const t = input.totals;
   const org = input.org;
+  const chargeList = (input.charges ?? []).filter((c) => Number(c.amount || 0) !== 0 || (c.label || "").trim());
+  const chargesTotal = chargeList.reduce((sum, c) => sum + Number(c.amount || 0), 0);
+  const chargesTable = chargeList.length
+    ? `<table class="items charges">
+    <thead><tr><th>م</th><th>البند الإضافي</th><th>القيمة</th></tr></thead>
+    <tbody>${chargeList
+      .map((c, i) => `<tr><td class="c">${i + 1}</td><td>${c.label || "بند إضافى"}</td><td class="n b">${num(c.amount)}</td></tr>`)
+      .join("")}
+    <tr class="sumrow"><td class="c">—</td><td>إجمالي البنود الإضافية</td><td class="n b">${num(chargesTotal)}</td></tr></tbody>
+  </table>`
+    : "";
+
   const totalsRows: Array<[string, string, boolean]> = [
     ["الإجمالي قبل الخصم", money(t.gross), false],
     ["إجمالي الخصم", money(t.discount), false],
     ["الصافي بعد الخصم", money(t.net), false],
     [`ضريبة القيمة المضافة (${num(org.vatRate)}%)`, money(t.tax), false],
-    ...(input.charges ?? []).map((c) => [c.label || "بند إضافى", money(c.amount), false] as [string, string, boolean]),
-
+    ...chargeList.map((c) => [`بند إضافي: ${c.label || "بند إضافى"}`, money(c.amount), false] as [string, string, boolean]),
+    ...(chargeList.length ? [["إجمالي البنود الإضافية", money(chargesTotal), false] as [string, string, boolean]] : []),
     ["الإجمالي المستحق", money(t.total), true],
     ["المدفوع", money(t.paid), false],
     ["المتبقي", money(t.remaining), true],
   ];
+
 
   const paper: PaperSize = input.paper ?? "A4";
   const a5 = paper === "A5";
@@ -338,6 +351,9 @@ export function salesInvoiceHtml(input: InvoicePrintInput): string {
   table.tot{width:100%;border-collapse:collapse;font-size:12px}
   table.tot td{border:1px solid #d7e2da;padding:7px 9px}
   table.tot td:first-child{background:#f4f8f5;color:#4a5a50}
+  table.items.charges{margin-top:10px}
+  table.items.charges tr.sumrow td{background:#f4f8f5;font-weight:700;color:#1d5c3f}
+
   table.tot td:last-child{text-align:left;font-weight:600;font-variant-numeric:tabular-nums}
   table.tot tr.big td{background:#1d5c3f;color:#fff;font-size:13px;font-weight:700}
   .sig{margin-top:38px;display:flex;justify-content:space-between;font-size:11.5px}
@@ -419,6 +435,9 @@ export function salesInvoiceHtml(input: InvoicePrintInput): string {
     </tr></thead>
     <tbody>${rows || `<tr><td colspan="9" class="c">لا توجد أصناف</td></tr>`}</tbody>
   </table>
+
+  ${chargesTable}
+
 
   <div class="bottom">
     <div class="words">
