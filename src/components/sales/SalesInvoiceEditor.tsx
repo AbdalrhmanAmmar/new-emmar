@@ -444,13 +444,11 @@ export function SalesInvoiceEditor({ invoice, draftSeed, onDraftChange, onSaved,
                           )}
                         </td>
                         <td className="w-28 px-2 py-2">
-                          <Input
-                            type="number"
-                            className="h-9 text-center"
-                            value={line.price}
-                            onChange={(e) => setLine(line.id, { price: Number(e.target.value) })}
-                          />
+                          <span className="block text-center text-sm font-semibold text-foreground">
+                            {line.price.toLocaleString("en-GB", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                          </span>
                         </td>
+
                         <td className="w-20 px-2 py-2">
                           <Input
                             type="number"
