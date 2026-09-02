@@ -3,6 +3,7 @@ import { ArrowLeft, Plus, Printer, Save, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
+import { ChargesEditor } from "@/components/sales/ChargesEditor";
 import { CustomerHistoryButton } from "@/components/sales/CustomerHistoryButton";
 import { QuickActions } from "@/components/sales/QuickActions";
 import { Field } from "@/components/treasury/FormPage";
@@ -18,6 +19,7 @@ import {
   nextNo,
   uid,
   useDb,
+  type InvoiceCharge,
   type SalesInvoice,
   type SalesLine,
   type SalesPayMethod,
@@ -68,6 +70,7 @@ export function SalesInvoiceEditor({ invoice, draftSeed, onDraftChange, onSaved,
   const [discountCode, setDiscountCode] = useState(seed?.discountCode ?? "");
   const [paper, setPaper] = usePaperSize();
   const [note, setNote] = useState(seed?.note ?? "");
+  const [charges, setCharges] = useState<InvoiceCharge[]>(seed?.charges ?? invoice?.charges ?? []);
 
   const invoiceNo = useMemo(
     () => invoice?.no ?? nextNo("SO", data.salesInvoices.map((i) => i.no)),
@@ -86,6 +89,7 @@ export function SalesInvoiceEditor({ invoice, draftSeed, onDraftChange, onSaved,
     payCash: Number(payCash || 0),
     payCard: Number(payCard || 0),
     codePercent,
+    charges,
   });
 
   /** لقطة الفاتورة الحالية — تُحفظ فى التاب المفتوح أول بأول */
@@ -100,6 +104,7 @@ export function SalesInvoiceEditor({ invoice, draftSeed, onDraftChange, onSaved,
       customerId: customerKind === "registered" ? customerId : null,
       customerName: customerKind === "registered" ? "" : customerName,
       lines,
+      charges,
       payMethod,
       payCash: Number(payCash || 0),
       payCard: Number(payCard || 0),
@@ -107,7 +112,7 @@ export function SalesInvoiceEditor({ invoice, draftSeed, onDraftChange, onSaved,
       discountCode,
       note,
     }),
-    [view, branchId, warehouseId, repId, date, dueDate, customerKind, customerId, customerName, lines, payMethod, payCash, payCard, safeId, discountCode, note],
+    [view, branchId, warehouseId, repId, date, dueDate, customerKind, customerId, customerName, lines, charges, payMethod, payCash, payCard, safeId, discountCode, note],
   );
 
   useEffect(() => {
@@ -193,6 +198,7 @@ export function SalesInvoiceEditor({ invoice, draftSeed, onDraftChange, onSaved,
           customerId: customerKind === "registered" ? customerId : null,
           customerName: customerKind === "registered" ? "" : customerName,
           lines: lines.filter((l) => l.productId),
+          charges,
           payMethod,
           discountCode,
           note,
@@ -551,9 +557,13 @@ export function SalesInvoiceEditor({ invoice, draftSeed, onDraftChange, onSaved,
               <SummaryRow label="الخصم" value={money(totals.discount)} />
               <SummaryRow label="الصافي" value={money(totals.net)} />
               <SummaryRow label={`الضريبة (${data.settings.vatRate}%)`} value={money(totals.tax)} />
+              {totals.charges ? <SummaryRow label="بنود إضافية" value={money(totals.charges)} /> : null}
               <SummaryRow label="المستحق" value={money(totals.total)} strong />
               <SummaryRow label="إجمالي المدفوع" value={money(totals.paid)} />
               <SummaryRow label="المتبقي" value={money(totals.remaining)} strong danger={totals.remaining > 0} />
+              <div className="border-t border-border pt-2">
+                <ChargesEditor charges={charges} onChange={setCharges} compact />
+              </div>
             </div>
           </section>
         </div>
