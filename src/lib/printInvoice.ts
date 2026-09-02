@@ -255,8 +255,15 @@ export function salesInvoiceHtml(input: InvoicePrintInput): string {
   <div class="grid">
     <div class="box">
       <h2>بيانات ${input.partyLabel ?? "العميل"}</h2>
-      <div class="row"><span>الاسم</span><span>${input.customer}</span></div>
+      <div class="row"><span>الاسم</span><span>${input.customer}${input.customerCode ? ` (${input.customerCode})` : ""}</span></div>
       <div class="row"><span>الهاتف</span><span>${input.customerPhone ?? "—"}</span></div>
+      ${partyRow("العنوان", [input.customerAddress, input.customerCity].filter(Boolean).join(" — "))}
+      ${partyRow("مسؤول التعامل", input.customerContact)}
+      ${partyRow("البريد الإلكتروني", input.customerEmail)}
+      ${partyRow("السجل التجاري", input.customerCommercialNo)}
+      ${partyRow("الرقم الضريبي", input.customerTaxNo)}
+      ${partyRow("المأمورية الضريبية", input.customerTaxOffice)}
+      ${partyRow("النشاط", input.customerActivity)}
       <div class="row"><span>تاريخ الاستحقاق</span><span>${dateFmt(input.dueDate)}</span></div>
       <div class="row"><span>كود الخصم</span><span>${input.discountCode || "—"}</span></div>
     </div>
