@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { dateFmt, money } from "@/lib/format";
 import { SALES_PAY_LABEL, useDb, type SalesInvoice } from "@/lib/mockDb";
 import { sendInvoiceMessage } from "@/lib/notifyInvoice";
+import { PaperSizeToggle, usePaperSize } from "@/components/sales/PaperSizeToggle";
 import { downloadSalesInvoice, invoicePrintInput, printSalesInvoice } from "@/lib/printInvoice";
 import { invoiceTotalsOf } from "@/lib/sales";
 import { deleteSalesInvoice, setSalesInvoiceStatus } from "@/lib/salesActions";
