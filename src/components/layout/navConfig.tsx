@@ -9,6 +9,7 @@ import {
   FileText,
   Landmark,
   LayoutDashboard,
+  ClipboardCheck,
   ListChecks,
   Receipt,
   Ruler,
