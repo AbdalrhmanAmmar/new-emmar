@@ -31,6 +31,8 @@ export function PosCashier() {
   const [warehouseId, setWarehouseId] = useState(data.warehouses[0]?.id ?? "");
   const [safeId, setSafeId] = useState<string | null>(data.safes[0]?.id ?? null);
   const [discountCode, setDiscountCode] = useState("");
+  const [paper, setPaper] = usePaperSize();
+
 
   const categories = useMemo(() => {
     const names = data.productCategories.filter((c) => c.active).map((c) => c.name);
