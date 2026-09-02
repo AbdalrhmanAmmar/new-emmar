@@ -242,6 +242,11 @@ export const REPORTS_MODULE: NavModule = {
         { to: "/sales/reports/by-product", label: "المبيعات حسب الصنف", icon: <ScrollText className="size-4" /> },
         { to: "/sales/reports/by-rep", label: "المبيعات حسب المندوب", icon: <ScrollText className="size-4" /> },
         { to: "/sales/reports/by-customer", label: "المبيعات حسب العميل", icon: <ScrollText className="size-4" /> },
+        {
+          to: "/sales/reports/customer-products",
+          label: "تقرير أصناف العميل",
+          icon: <ScrollText className="size-4" />,
+        },
         { to: "/reports/customer-statement", label: "كشف حساب عميل", icon: <FileText className="size-4" /> },
       ],
     },
@@ -272,6 +277,11 @@ export const REPORTS_MODULE: NavModule = {
       items: [
         { to: "/purchases/reports/by-product", label: "المشتريات حسب الصنف", icon: <ScrollText className="size-4" /> },
         { to: "/purchases/reports/by-supplier", label: "المشتريات حسب المورد", icon: <ScrollText className="size-4" /> },
+        {
+          to: "/purchases/reports/supplier-products",
+          label: "تقرير أصناف المورد",
+          icon: <ScrollText className="size-4" />,
+        },
         {
           to: "/purchases/reports/supplier-statement",
           label: "كشف حساب مورد",
