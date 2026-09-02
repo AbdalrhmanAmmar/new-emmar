@@ -1,4 +1,4 @@
-import type { DbShape, Product, SalesInvoice, SalesLine } from "@/lib/mockDb";
+import type { DbShape, InvoiceCharge, Product, SalesInvoice, SalesLine } from "@/lib/mockDb";
 
 export interface LineTotals {
   gross: number;
