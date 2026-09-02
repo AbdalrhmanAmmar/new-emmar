@@ -57,6 +57,7 @@ export function SalesInvoiceEditor({ invoice }: Props) {
   const [payCard, setPayCard] = useState(String(invoice?.payCard ?? 0));
   const [safeId, setSafeId] = useState<string | null>(invoice?.safeId ?? data.safes[0]?.id ?? null);
   const [discountCode, setDiscountCode] = useState(invoice?.discountCode ?? "");
+  const [paper, setPaper] = usePaperSize();
   const [note, setNote] = useState(invoice?.note ?? "");
 
   const invoiceNo = useMemo(

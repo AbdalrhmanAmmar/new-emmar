@@ -341,17 +341,19 @@ export function salesInvoiceHtml(input: InvoicePrintInput): string {
 </div></body></html>`;
 }
 
-export function printSalesInvoice(input: InvoicePrintInput) {
+export function printSalesInvoice(input: InvoicePrintInput, paper?: PaperSize) {
   if (typeof window === "undefined") return;
-  const win = window.open("", "_blank", "width=980,height=1100");
+  const doc = { ...input, paper: paper ?? input.paper ?? "A4" };
+  const win = window.open("", "_blank", doc.paper === "A5" ? "width=760,height=920" : "width=980,height=1100");
   if (!win) return;
-  win.document.write(salesInvoiceHtml(input));
+  win.document.write(salesInvoiceHtml(doc));
   win.document.close();
   win.focus();
   setTimeout(() => win.print(), 450);
 }
 
 /** تنزيل الفاتورة كملف على جهاز المستخدم (يمكن فتحه وطباعته أو حفظه PDF) */
-export function downloadSalesInvoice(input: InvoicePrintInput) {
-  downloadHtmlDoc(`${input.docTitle ?? "فاتورة"}-${input.no}`, salesInvoiceHtml(input));
+export function downloadSalesInvoice(input: InvoicePrintInput, paper?: PaperSize) {
+  const doc = { ...input, paper: paper ?? input.paper ?? "A4" };
+  downloadHtmlDoc(`${doc.docTitle ?? "فاتورة"}-${doc.no}-${doc.paper}`, salesInvoiceHtml(doc));
 }
