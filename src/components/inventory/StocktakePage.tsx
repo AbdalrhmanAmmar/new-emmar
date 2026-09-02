@@ -172,7 +172,7 @@ export function StocktakePage() {
                       ) : Math.abs(diff) < 0.0001 ? (
                         <StatusBadge label="مطابق" tone="green" />
                       ) : diff > 0 ? (
-                        <StatusBadge label="زيادة" tone="blue" />
+                        <StatusBadge label="زيادة" tone="gold" />
                       ) : (
                         <StatusBadge label="نقص" tone="red" />
                       )}
