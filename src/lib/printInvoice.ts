@@ -200,12 +200,16 @@ export function salesInvoiceHtml(input: InvoicePrintInput): string {
     ["المتبقي", money(t.remaining), true],
   ];
 
+  const paper: PaperSize = input.paper ?? "A4";
+  const a5 = paper === "A5";
+
   return `<!doctype html>
 <html lang="ar" dir="rtl"><head><meta charset="utf-8" />
-<title>${input.docTitle ?? "فاتورة مبيعات"} ${input.no}</title>
+<title>${input.docTitle ?? "فاتورة مبيعات"} ${input.no} — ${paper}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <style>
+  @page{size:${a5 ? "A5 portrait" : "A4 portrait"};margin:${a5 ? "7mm" : "12mm"}}
   *{box-sizing:border-box}
   body{font-family:'IBM Plex Sans Arabic',sans-serif;margin:0;padding:26px;color:#13251c;background:#fff}
   .doc{max-width:820px;margin:0 auto}
