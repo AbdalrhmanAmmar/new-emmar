@@ -45,7 +45,9 @@ export function rangeOf(key: Exclude<PeriodKey, "custom">): { from: string; to: 
 
 /** حالة الفترة المختارة محفوظة لكل شاشة على حدة */
 export function usePeriod(storageKey = "period:default", initial: PeriodKey = "quarter") {
-  const [range, setRange] = useState<PeriodRange>(() => ({ key: initial, ...rangeOf(initial) }));
+  const [range, setRange] = useState<PeriodRange>(() =>
+    initial === "custom" ? { key: "custom", ...rangeOf("quarter") } : { key: initial, ...rangeOf(initial) },
+  );
 
   useEffect(() => {
     try {
