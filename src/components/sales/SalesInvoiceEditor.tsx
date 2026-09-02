@@ -175,6 +175,8 @@ export function SalesInvoiceEditor({ invoice, draftSeed, onDraftChange, onSaved,
     customerId: customerKind === "registered" ? customerId : null,
     customerName: customerKind === "registered" ? "" : customerName,
     lines: lines.filter((l) => l.productId),
+    charges,
+
     payMethod,
     payCash: payMethod === "card" ? 0 : Number(payCash || 0),
     payCard: payMethod === "cash" ? 0 : Number(payCard || 0),
