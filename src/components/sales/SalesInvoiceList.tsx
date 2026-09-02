@@ -121,7 +121,7 @@ export function SalesInvoiceList() {
                 icon: <Pencil className="size-4" />,
                 onSelect: () => navigate({ to: "/sales/invoices/$id", params: { id: row.id } }),
               },
-              { label: "طباعة", icon: <Printer className="size-4" />, onSelect: () => doPrint(row) },
+              { label: `طباعة (${paper})`, icon: <Printer className="size-4" />, onSelect: () => doPrint(row) },
               { label: "تنزيل الفاتورة", icon: <Download className="size-4" />, onSelect: () => doDownload(row) },
               {
                 label: "إرسال رسالة للعميل",
