@@ -35,6 +35,6 @@ export function purchasePrintInput(data: DbShape, inv: PurchaseInvoice): Invoice
   };
 }
 
-export function printPurchaseInvoice(data: DbShape, inv: PurchaseInvoice) {
-  printSalesInvoice(purchasePrintInput(data, inv));
+export function printPurchaseInvoice(data: DbShape, inv: PurchaseInvoice, paper?: "A4" | "A5") {
+  printSalesInvoice(purchasePrintInput(data, inv), paper);
 }
