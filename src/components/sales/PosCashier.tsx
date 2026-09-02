@@ -137,8 +137,8 @@ export function PosCashier({ draftSeed, onDraftChange, onSaved }: PosProps = {})
       }),
     );
 
-  const setPrice = (id: string, price: number) =>
-    setLines((rows) => rows.map((l) => (l.id === id ? { ...l, price } : l)));
+
+
 
   const clearCart = () => {
     setLines([]);

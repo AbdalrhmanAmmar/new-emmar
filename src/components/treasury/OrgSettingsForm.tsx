@@ -76,7 +76,6 @@ const NUMBERS: Array<{ key: keyof OrgSettings; label: string; hint?: string }> =
 const FLAGS: Array<{ key: keyof OrgSettings; label: string }> = [
   { key: "showSignatures", label: "طباعة خانات التوقيعات" },
   { key: "allowNegativeStock", label: "السماح بالبيع بأكثر من المتاح" },
-  { key: "priceEditInPos", label: "السماح بتعديل السعر فى الكاشير" },
 ];
 
 /** الإعدادات الرئيسية: بيانات الطباعة والضرائب والسياسات */
