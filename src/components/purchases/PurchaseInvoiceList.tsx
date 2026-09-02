@@ -8,6 +8,7 @@ import { RowActions } from "@/components/treasury/RowActions";
 import { Button } from "@/components/ui/button";
 import { dateFmt, money } from "@/lib/format";
 import { SALES_PAY_LABEL, useDb, type PurchaseInvoice } from "@/lib/mockDb";
+import { PaperSizeToggle, usePaperSize } from "@/components/sales/PaperSizeToggle";
 import { downloadSalesInvoice } from "@/lib/printInvoice";
 import { printPurchaseInvoice, purchasePrintInput } from "@/lib/printPurchase";
 import { deletePurchaseInvoice, setPurchaseInvoiceStatus } from "@/lib/purchaseActions";
@@ -16,6 +17,7 @@ import { purchaseTotalsOf } from "@/lib/purchases";
 export function PurchaseInvoiceList() {
   const data = useDb();
   const navigate = useNavigate();
+  const [paper, setPaper] = usePaperSize();
 
   const posted = data.purchaseInvoices.filter((i) => i.status === "posted");
   const totalPurchases = posted.reduce((sum, inv) => sum + purchaseTotalsOf(data, inv).total, 0);
