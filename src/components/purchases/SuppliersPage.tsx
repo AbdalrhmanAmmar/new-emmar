@@ -116,6 +116,16 @@ export function SupplierFormPage({ id }: { id?: string }) {
     name: existing?.name ?? "",
     phone: existing?.phone ?? "",
     branchId: existing?.branchId ?? data.branches[0]?.id ?? "",
+    phone2: existing?.phone2 ?? "",
+    email: existing?.email ?? "",
+    contactPerson: existing?.contactPerson ?? "",
+    address: existing?.address ?? "",
+    city: existing?.city ?? "",
+    commercialNo: existing?.commercialNo ?? "",
+    taxNo: existing?.taxNo ?? "",
+    taxOffice: existing?.taxOffice ?? "",
+    activity: existing?.activity ?? "",
+    notes: existing?.notes ?? "",
   });
   const set = (key: keyof typeof form, value: string) => setForm((f) => ({ ...f, [key]: value }));
 
