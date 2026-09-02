@@ -14,7 +14,7 @@ import { ATTENDANCE_LABEL, useDb, type AttendanceStatus } from "@/lib/mockDb";
 /** لوحة الموظفين: مؤشرات الحضور والمستحقات */
 export function HrDashboard() {
   const rawDb = useDb();
-  const { range, setRange, scoped: data } = usePeriodDb(rawDb, "period:hr");
+  const { range: period, setRange: setPeriod, scoped: data } = usePeriodDb(rawDb, "period:hr");
   const navigate = useNavigate();
 
   const month = currentMonth();
@@ -74,8 +74,8 @@ export function HrDashboard() {
       />
 
       <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-border/70 bg-card/60 px-3 py-2">
-        <PeriodFilter value={range} onChange={setRange} />
-        <span className="text-xs font-semibold text-muted-foreground">{periodText(range)}</span>
+        <PeriodFilter value={period} onChange={setPeriod} />
+        <span className="text-xs font-semibold text-muted-foreground">{periodText(period)}</span>
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
