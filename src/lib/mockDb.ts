@@ -123,6 +123,26 @@ export interface Party {
   branchId: string;
   /** إرسال رسالة واتساب بالفاتورة للعميل تلقائياً عند الترحيل */
   notifyInvoice?: boolean;
+  /** هاتف إضافي */
+  phone2?: string;
+  /** البريد الإلكتروني */
+  email?: string;
+  /** مسؤول التعامل */
+  contactPerson?: string;
+  /** العنوان بالتفصيل */
+  address?: string;
+  /** المدينة / المحافظة */
+  city?: string;
+  /** رقم السجل التجاري */
+  commercialNo?: string;
+  /** الرقم الضريبي (بطاقة ضريبية) */
+  taxNo?: string;
+  /** رقم الملف/المأمورية الضريبية */
+  taxOffice?: string;
+  /** نشاط الطرف */
+  activity?: string;
+  /** ملاحظات تظهر أسفل بيانات الطرف */
+  notes?: string;
 }
 
 export interface Category {

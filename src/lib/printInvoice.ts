@@ -20,6 +20,15 @@ export interface InvoicePrintInput {
   dueDate: string;
   customer: string;
   customerPhone?: string;
+  customerCode?: string;
+  customerAddress?: string;
+  customerCity?: string;
+  customerEmail?: string;
+  customerContact?: string;
+  customerCommercialNo?: string;
+  customerTaxNo?: string;
+  customerTaxOffice?: string;
+  customerActivity?: string;
   branch: string;
   warehouse: string;
   rep: string;
@@ -122,7 +131,16 @@ export function invoicePrintInput(
     date: inv.date,
     dueDate: inv.dueDate,
     customer: customer?.name ?? (inv.customerName || "عميل نقدي"),
-    customerPhone: customer?.phone,
+    customerPhone: [customer?.phone, customer?.phone2].filter(Boolean).join(" / ") || undefined,
+    customerCode: customer?.code,
+    customerAddress: customer?.address,
+    customerCity: customer?.city,
+    customerEmail: customer?.email,
+    customerContact: customer?.contactPerson,
+    customerCommercialNo: customer?.commercialNo,
+    customerTaxNo: customer?.taxNo,
+    customerTaxOffice: customer?.taxOffice,
+    customerActivity: customer?.activity,
     branch: data.branches.find((b) => b.id === inv.branchId)?.name ?? "-",
     warehouse: data.warehouses.find((w) => w.id === inv.warehouseId)?.name ?? "-",
     rep: data.reps.find((r) => r.id === inv.repId)?.name ?? "-",
@@ -140,6 +158,11 @@ export function invoicePrintInput(
 /* ===================== الطباعة الاحترافية ===================== */
 
 /** يبنى مستند الفاتورة الاحترافى كنص HTML كامل (يُستخدم للطباعة والتنزيل) */
+function partyRow(label: string, value?: string): string {
+  if (!value || !value.trim()) return "";
+  return `<div class="row"><span>${label}</span><span>${value}</span></div>`;
+}
+
 export function salesInvoiceHtml(input: InvoicePrintInput): string {
   const rows = input.lines
     .map((line, index) => {
@@ -237,8 +260,15 @@ export function salesInvoiceHtml(input: InvoicePrintInput): string {
   <div class="grid">
     <div class="box">
       <h2>بيانات ${input.partyLabel ?? "العميل"}</h2>
-      <div class="row"><span>الاسم</span><span>${input.customer}</span></div>
+      <div class="row"><span>الاسم</span><span>${input.customer}${input.customerCode ? ` (${input.customerCode})` : ""}</span></div>
       <div class="row"><span>الهاتف</span><span>${input.customerPhone ?? "—"}</span></div>
+      ${partyRow("العنوان", [input.customerAddress, input.customerCity].filter(Boolean).join(" — "))}
+      ${partyRow("مسؤول التعامل", input.customerContact)}
+      ${partyRow("البريد الإلكتروني", input.customerEmail)}
+      ${partyRow("السجل التجاري", input.customerCommercialNo)}
+      ${partyRow("الرقم الضريبي", input.customerTaxNo)}
+      ${partyRow("المأمورية الضريبية", input.customerTaxOffice)}
+      ${partyRow("النشاط", input.customerActivity)}
       <div class="row"><span>تاريخ الاستحقاق</span><span>${dateFmt(input.dueDate)}</span></div>
       <div class="row"><span>كود الخصم</span><span>${input.discountCode || "—"}</span></div>
     </div>

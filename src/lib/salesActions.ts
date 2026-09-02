@@ -380,6 +380,16 @@ export function saveCustomer(input: Omit<Party, "id"> & { id?: string }): Action
       phone: input.phone?.trim() ?? "",
       branchId: input.branchId,
       notifyInvoice: input.notifyInvoice ?? false,
+      phone2: input.phone2?.trim() || undefined,
+      email: input.email?.trim() || undefined,
+      contactPerson: input.contactPerson?.trim() || undefined,
+      address: input.address?.trim() || undefined,
+      city: input.city?.trim() || undefined,
+      commercialNo: input.commercialNo?.trim() || undefined,
+      taxNo: input.taxNo?.trim() || undefined,
+      taxOffice: input.taxOffice?.trim() || undefined,
+      activity: input.activity?.trim() || undefined,
+      notes: input.notes?.trim() || undefined,
     };
 
     if (input.id) {
