@@ -164,6 +164,42 @@ export function SupplierFormPage({ id }: { id?: string }) {
           />
         </Field>
       </FormSection>
+
+      <FormSection title="بيانات الاتصال والعنوان">
+        <Field label="هاتف إضافي">
+          <Input dir="rtl" value={form.phone2} onChange={(e) => set("phone2", e.target.value)} />
+        </Field>
+        <Field label="البريد الإلكتروني">
+          <Input dir="ltr" value={form.email} onChange={(e) => set("email", e.target.value)} />
+        </Field>
+        <Field label="مسؤول التعامل">
+          <Input dir="rtl" value={form.contactPerson} onChange={(e) => set("contactPerson", e.target.value)} />
+        </Field>
+        <Field label="المدينة / المحافظة">
+          <Input dir="rtl" value={form.city} onChange={(e) => set("city", e.target.value)} />
+        </Field>
+        <Field label="العنوان بالتفصيل" hint="يظهر في مطبوعات الفواتير">
+          <Input dir="rtl" value={form.address} onChange={(e) => set("address", e.target.value)} />
+        </Field>
+        <Field label="النشاط">
+          <Input dir="rtl" value={form.activity} onChange={(e) => set("activity", e.target.value)} />
+        </Field>
+      </FormSection>
+
+      <FormSection title="البيانات الضريبية والقانونية">
+        <Field label="رقم السجل التجاري">
+          <Input dir="rtl" value={form.commercialNo} onChange={(e) => set("commercialNo", e.target.value)} />
+        </Field>
+        <Field label="الرقم الضريبي (البطاقة الضريبية)">
+          <Input dir="rtl" value={form.taxNo} onChange={(e) => set("taxNo", e.target.value)} />
+        </Field>
+        <Field label="المأمورية / الملف الضريبي">
+          <Input dir="rtl" value={form.taxOffice} onChange={(e) => set("taxOffice", e.target.value)} />
+        </Field>
+        <Field label="ملاحظات">
+          <Input dir="rtl" value={form.notes} onChange={(e) => set("notes", e.target.value)} />
+        </Field>
+      </FormSection>
     </FormPage>
   );
 }
