@@ -53,7 +53,6 @@ export function SalesInvoiceWorkspace() {
         draftSeed={(active?.state as Partial<SalesInvoice> | undefined) ?? null}
         onDraftChange={onDraftChange}
         onSaved={() => closeTab(activeId)}
-        keepOnSave
       />
     </div>
   );
