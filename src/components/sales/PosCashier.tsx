@@ -205,10 +205,12 @@ export function PosCashier({ draftSeed, onDraftChange, onSaved }: PosProps = {})
       toast.error("أضف صنفاً واحداً على الأقل");
       return;
     }
-    if (payMethod !== "credit" && payAmount < totals.total - 0.01) {
-      toast.error("المبلغ المدفوع أقل من الإجمالي");
+    const isCredit = customerKind === "registered" && !!customerId;
+    if (!isCredit && payMethod !== "credit" && payAmount < totals.total - 0.01) {
+      toast.error("المبلغ المدفوع أقل من الإجمالي — اختر عميلاً مسجلاً للبيع بالآجل");
       return;
     }
+
     const doc = payload("posted");
     const res = saveSalesInvoice(doc);
     if (!res.ok) {
