@@ -1,6 +1,6 @@
 import { useNavigate } from "@tanstack/react-router";
 import { ArrowLeft, Plus, Printer, Save, Trash2 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
 import { CustomerHistoryButton } from "@/components/sales/CustomerHistoryButton";
@@ -87,6 +87,32 @@ export function SalesInvoiceEditor({ invoice, draftSeed, onDraftChange, onSaved,
     payCard: Number(payCard || 0),
     codePercent,
   });
+
+  /** لقطة الفاتورة الحالية — تُحفظ فى التاب المفتوح أول بأول */
+  const snapshot = useMemo<Partial<SalesInvoice>>(
+    () => ({
+      view,
+      branchId,
+      warehouseId,
+      repId,
+      date,
+      dueDate,
+      customerId: customerKind === "registered" ? customerId : null,
+      customerName: customerKind === "registered" ? "" : customerName,
+      lines,
+      payMethod,
+      payCash: Number(payCash || 0),
+      payCard: Number(payCard || 0),
+      safeId,
+      discountCode,
+      note,
+    }),
+    [view, branchId, warehouseId, repId, date, dueDate, customerKind, customerId, customerName, lines, payMethod, payCash, payCard, safeId, discountCode, note],
+  );
+
+  useEffect(() => {
+    onDraftChange?.(snapshot);
+  }, [snapshot, onDraftChange]);
 
   const setLine = (id: string, patch: Partial<SalesLine>) =>
     setLines((rows) => rows.map((row) => (row.id === id ? { ...row, ...patch } : row)));
@@ -191,6 +217,10 @@ export function SalesInvoiceEditor({ invoice, draftSeed, onDraftChange, onSaved,
       if (notified.sent) toast.success("تم إرسال رسالة الفاتورة للعميل");
     }
     if (andPrint) doPrint();
+    if (onSaved) {
+      onSaved();
+      return;
+    }
     navigate({ to: "/sales/invoices" });
   };
 
@@ -215,10 +245,12 @@ export function SalesInvoiceEditor({ invoice, draftSeed, onDraftChange, onSaved,
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <Button type="button" variant="outline" onClick={() => navigate({ to: "/sales/invoices" })} className="gap-1.5">
-            <ArrowLeft className="size-4" />
-            رجوع
-          </Button>
+          {keepOnSave ? null : (
+            <Button type="button" variant="outline" onClick={() => navigate({ to: "/sales/invoices" })} className="gap-1.5">
+              <ArrowLeft className="size-4" />
+              رجوع
+            </Button>
+          )}
           <PaperSizeToggle value={paper} onChange={setPaper} />
           <Button type="button" variant="outline" onClick={doPrint} className="gap-1.5">
             <Printer className="size-4" />
