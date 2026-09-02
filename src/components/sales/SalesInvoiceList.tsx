@@ -16,6 +16,7 @@ import { deleteSalesInvoice, setSalesInvoiceStatus } from "@/lib/salesActions";
 export function SalesInvoiceList() {
   const data = useDb();
   const navigate = useNavigate();
+  const [paper, setPaper] = usePaperSize();
 
   const posted = data.salesInvoices.filter((i) => i.status === "posted");
   const totalSales = posted.reduce((sum, inv) => sum + invoiceTotalsOf(data, inv).total, 0);
