@@ -242,6 +242,11 @@ export const REPORTS_MODULE: NavModule = {
         { to: "/sales/reports/by-product", label: "المبيعات حسب الصنف", icon: <ScrollText className="size-4" /> },
         { to: "/sales/reports/by-rep", label: "المبيعات حسب المندوب", icon: <ScrollText className="size-4" /> },
         { to: "/sales/reports/by-customer", label: "المبيعات حسب العميل", icon: <ScrollText className="size-4" /> },
+        {
+          to: "/sales/reports/customer-products",
+          label: "تقرير أصناف العميل",
+          icon: <ScrollText className="size-4" />,
+        },
         { to: "/reports/customer-statement", label: "كشف حساب عميل", icon: <FileText className="size-4" /> },
       ],
     },
