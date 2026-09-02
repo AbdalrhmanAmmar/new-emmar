@@ -158,6 +158,11 @@ export function invoicePrintInput(
 /* ===================== الطباعة الاحترافية ===================== */
 
 /** يبنى مستند الفاتورة الاحترافى كنص HTML كامل (يُستخدم للطباعة والتنزيل) */
+function partyRow(label: string, value?: string): string {
+  if (!value || !value.trim()) return "";
+  return `<div class="row"><span>${label}</span><span>${value}</span></div>`;
+}
+
 export function salesInvoiceHtml(input: InvoicePrintInput): string {
   const rows = input.lines
     .map((line, index) => {
