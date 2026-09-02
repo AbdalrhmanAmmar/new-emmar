@@ -454,6 +454,13 @@ export interface SalesLine {
   taxRate: number;
 }
 
+/** بند إضافى على الفاتورة (تحميل / نقل / مصاريف) يُضاف على الإجمالى */
+export interface InvoiceCharge {
+  id: string;
+  label: string;
+  amount: number;
+}
+
 export interface SalesInvoice {
   id: string;
   no: string;
@@ -467,6 +474,8 @@ export interface SalesInvoice {
   customerId: string | null;
   customerName: string;
   lines: SalesLine[];
+  /** بنود إضافية تُضاف على قيمة الفاتورة */
+  charges?: InvoiceCharge[];
   payMethod: SalesPayMethod;
   payCash: number;
   payCard: number;
@@ -475,6 +484,7 @@ export interface SalesInvoice {
   note: string;
   status: DocStatus;
 }
+
 
 
 /* ===================== المرتجعات ===================== */
