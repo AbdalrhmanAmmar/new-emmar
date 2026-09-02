@@ -31,34 +31,43 @@ import { baseQty, lineUnitLabel, stockInUnit, unitOptions, unitPatch } from "@/l
 
 interface Props {
   invoice?: SalesInvoice;
+  /** لقطة محفوظة لفاتورة معلّقة (تاب مفتوح) */
+  draftSeed?: Partial<SalesInvoice> | null;
+  /** حفظ لقطة الفاتورة أثناء العمل حتى يمكن الرجوع لها */
+  onDraftChange?: (snapshot: Partial<SalesInvoice>) => void;
+  /** بعد الحفظ الفعلى — يُغلق التاب */
+  onSaved?: () => void;
+  /** إخفاء زر الرجوع/التنقل عند العمل داخل التابات */
+  keepOnSave?: boolean;
 }
 
 /** شاشة فاتورة المبيعات — الهيدر + جدول الأصناف + الأدوات السريعة + الملخص المالي */
-export function SalesInvoiceEditor({ invoice }: Props) {
+export function SalesInvoiceEditor({ invoice, draftSeed, onDraftChange, onSaved, keepOnSave }: Props) {
   const data = useDb();
   const navigate = useNavigate();
+  const seed = (invoice ?? draftSeed ?? undefined) as Partial<SalesInvoice> | undefined;
 
-  const [view, setView] = useState<SalesInvoice["view"]>(invoice?.view ?? "professional");
-  const [branchId, setBranchId] = useState(invoice?.branchId ?? data.branches[0]?.id ?? "");
-  const [warehouseId, setWarehouseId] = useState(invoice?.warehouseId ?? data.warehouses[0]?.id ?? "");
-  const [repId, setRepId] = useState<string | null>(invoice?.repId ?? data.reps[0]?.id ?? null);
-  const [date, setDate] = useState(invoice?.date ?? today());
+  const [view, setView] = useState<SalesInvoice["view"]>(seed?.view ?? "professional");
+  const [branchId, setBranchId] = useState(seed?.branchId ?? data.branches[0]?.id ?? "");
+  const [warehouseId, setWarehouseId] = useState(seed?.warehouseId ?? data.warehouses[0]?.id ?? "");
+  const [repId, setRepId] = useState<string | null>(seed?.repId ?? data.reps[0]?.id ?? null);
+  const [date, setDate] = useState(seed?.date ?? today());
   const [dueDate, setDueDate] = useState(
-    invoice?.dueDate ?? addDays(today(), data.settings.defaultPaymentDays),
+    seed?.dueDate ?? addDays(today(), data.settings.defaultPaymentDays),
   );
   const [customerKind, setCustomerKind] = useState<"cash" | "registered">(
-    invoice?.customerId ? "registered" : "cash",
+    seed?.customerId ? "registered" : "cash",
   );
-  const [customerId, setCustomerId] = useState<string | null>(invoice?.customerId ?? null);
-  const [customerName, setCustomerName] = useState(invoice?.customerId ? "" : invoice?.customerName ?? "عميل نقدي");
-  const [lines, setLines] = useState<SalesLine[]>(invoice?.lines ?? [emptyLine(uid("sl"))]);
-  const [payMethod, setPayMethod] = useState<SalesPayMethod>(invoice?.payMethod ?? "cash");
-  const [payCash, setPayCash] = useState(String(invoice?.payCash ?? 0));
-  const [payCard, setPayCard] = useState(String(invoice?.payCard ?? 0));
-  const [safeId, setSafeId] = useState<string | null>(invoice?.safeId ?? data.safes[0]?.id ?? null);
-  const [discountCode, setDiscountCode] = useState(invoice?.discountCode ?? "");
+  const [customerId, setCustomerId] = useState<string | null>(seed?.customerId ?? null);
+  const [customerName, setCustomerName] = useState(seed?.customerId ? "" : seed?.customerName ?? "عميل نقدي");
+  const [lines, setLines] = useState<SalesLine[]>(seed?.lines ?? [emptyLine(uid("sl"))]);
+  const [payMethod, setPayMethod] = useState<SalesPayMethod>(seed?.payMethod ?? "cash");
+  const [payCash, setPayCash] = useState(String(seed?.payCash ?? 0));
+  const [payCard, setPayCard] = useState(String(seed?.payCard ?? 0));
+  const [safeId, setSafeId] = useState<string | null>(seed?.safeId ?? data.safes[0]?.id ?? null);
+  const [discountCode, setDiscountCode] = useState(seed?.discountCode ?? "");
   const [paper, setPaper] = usePaperSize();
-  const [note, setNote] = useState(invoice?.note ?? "");
+  const [note, setNote] = useState(seed?.note ?? "");
 
   const invoiceNo = useMemo(
     () => invoice?.no ?? nextNo("SO", data.salesInvoices.map((i) => i.no)),
