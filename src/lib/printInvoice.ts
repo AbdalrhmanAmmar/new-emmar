@@ -20,6 +20,15 @@ export interface InvoicePrintInput {
   dueDate: string;
   customer: string;
   customerPhone?: string;
+  customerCode?: string;
+  customerAddress?: string;
+  customerCity?: string;
+  customerEmail?: string;
+  customerContact?: string;
+  customerCommercialNo?: string;
+  customerTaxNo?: string;
+  customerTaxOffice?: string;
+  customerActivity?: string;
   branch: string;
   warehouse: string;
   rep: string;
@@ -122,7 +131,16 @@ export function invoicePrintInput(
     date: inv.date,
     dueDate: inv.dueDate,
     customer: customer?.name ?? (inv.customerName || "عميل نقدي"),
-    customerPhone: customer?.phone,
+    customerPhone: [customer?.phone, customer?.phone2].filter(Boolean).join(" / ") || undefined,
+    customerCode: customer?.code,
+    customerAddress: customer?.address,
+    customerCity: customer?.city,
+    customerEmail: customer?.email,
+    customerContact: customer?.contactPerson,
+    customerCommercialNo: customer?.commercialNo,
+    customerTaxNo: customer?.taxNo,
+    customerTaxOffice: customer?.taxOffice,
+    customerActivity: customer?.activity,
     branch: data.branches.find((b) => b.id === inv.branchId)?.name ?? "-",
     warehouse: data.warehouses.find((w) => w.id === inv.warehouseId)?.name ?? "-",
     rep: data.reps.find((r) => r.id === inv.repId)?.name ?? "-",
