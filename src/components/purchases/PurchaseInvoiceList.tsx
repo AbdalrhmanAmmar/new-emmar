@@ -71,12 +71,15 @@ export function PurchaseInvoiceList() {
         title="فواتير المشتريات"
         description="تسجيل وتعديل وطباعة فواتير الشراء النقدية والآجلة بالجنيه المصري"
         actions={
-          <Button asChild className="gap-1.5">
-            <Link to="/purchases/invoices/new">
-              <Plus className="size-4" />
-              فاتورة مشتريات جديدة
-            </Link>
-          </Button>
+          <div className="flex flex-wrap items-center gap-2">
+            <PaperSizeToggle value={paper} onChange={setPaper} />
+            <Button asChild className="gap-1.5">
+              <Link to="/purchases/invoices/new">
+                <Plus className="size-4" />
+                فاتورة مشتريات جديدة
+              </Link>
+            </Button>
+          </div>
         }
       />
 
