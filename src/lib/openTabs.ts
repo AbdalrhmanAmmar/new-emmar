@@ -80,7 +80,9 @@ export function useOpenTabs(scope: string) {
     setActiveId(active);
     setReady(true);
     listeners.add(sync);
-    return () => listeners.delete(sync);
+    return () => {
+      listeners.delete(sync);
+    };
   }, [scope, sync]);
 
   const active = useMemo(() => tabs.find((t) => t.id === activeId) ?? null, [tabs, activeId]);
