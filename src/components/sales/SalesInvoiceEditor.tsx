@@ -1,6 +1,6 @@
 import { useNavigate } from "@tanstack/react-router";
 import { ArrowLeft, Plus, Printer, Save, Trash2 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
 import { CustomerHistoryButton } from "@/components/sales/CustomerHistoryButton";
@@ -31,34 +31,43 @@ import { baseQty, lineUnitLabel, stockInUnit, unitOptions, unitPatch } from "@/l
 
 interface Props {
   invoice?: SalesInvoice;
+  /** لقطة محفوظة لفاتورة معلّقة (تاب مفتوح) */
+  draftSeed?: Partial<SalesInvoice> | null;
+  /** حفظ لقطة الفاتورة أثناء العمل حتى يمكن الرجوع لها */
+  onDraftChange?: (snapshot: Partial<SalesInvoice>) => void;
+  /** بعد الحفظ الفعلى — يُغلق التاب */
+  onSaved?: () => void;
+  /** إخفاء زر الرجوع/التنقل عند العمل داخل التابات */
+  keepOnSave?: boolean;
 }
 
 /** شاشة فاتورة المبيعات — الهيدر + جدول الأصناف + الأدوات السريعة + الملخص المالي */
-export function SalesInvoiceEditor({ invoice }: Props) {
+export function SalesInvoiceEditor({ invoice, draftSeed, onDraftChange, onSaved, keepOnSave }: Props) {
   const data = useDb();
   const navigate = useNavigate();
+  const seed = (invoice ?? draftSeed ?? undefined) as Partial<SalesInvoice> | undefined;
 
-  const [view, setView] = useState<SalesInvoice["view"]>(invoice?.view ?? "professional");
-  const [branchId, setBranchId] = useState(invoice?.branchId ?? data.branches[0]?.id ?? "");
-  const [warehouseId, setWarehouseId] = useState(invoice?.warehouseId ?? data.warehouses[0]?.id ?? "");
-  const [repId, setRepId] = useState<string | null>(invoice?.repId ?? data.reps[0]?.id ?? null);
-  const [date, setDate] = useState(invoice?.date ?? today());
+  const [view, setView] = useState<SalesInvoice["view"]>(seed?.view ?? "professional");
+  const [branchId, setBranchId] = useState(seed?.branchId ?? data.branches[0]?.id ?? "");
+  const [warehouseId, setWarehouseId] = useState(seed?.warehouseId ?? data.warehouses[0]?.id ?? "");
+  const [repId, setRepId] = useState<string | null>(seed?.repId ?? data.reps[0]?.id ?? null);
+  const [date, setDate] = useState(seed?.date ?? today());
   const [dueDate, setDueDate] = useState(
-    invoice?.dueDate ?? addDays(today(), data.settings.defaultPaymentDays),
+    seed?.dueDate ?? addDays(today(), data.settings.defaultPaymentDays),
   );
   const [customerKind, setCustomerKind] = useState<"cash" | "registered">(
-    invoice?.customerId ? "registered" : "cash",
+    seed?.customerId ? "registered" : "cash",
   );
-  const [customerId, setCustomerId] = useState<string | null>(invoice?.customerId ?? null);
-  const [customerName, setCustomerName] = useState(invoice?.customerId ? "" : invoice?.customerName ?? "عميل نقدي");
-  const [lines, setLines] = useState<SalesLine[]>(invoice?.lines ?? [emptyLine(uid("sl"))]);
-  const [payMethod, setPayMethod] = useState<SalesPayMethod>(invoice?.payMethod ?? "cash");
-  const [payCash, setPayCash] = useState(String(invoice?.payCash ?? 0));
-  const [payCard, setPayCard] = useState(String(invoice?.payCard ?? 0));
-  const [safeId, setSafeId] = useState<string | null>(invoice?.safeId ?? data.safes[0]?.id ?? null);
-  const [discountCode, setDiscountCode] = useState(invoice?.discountCode ?? "");
+  const [customerId, setCustomerId] = useState<string | null>(seed?.customerId ?? null);
+  const [customerName, setCustomerName] = useState(seed?.customerId ? "" : seed?.customerName ?? "عميل نقدي");
+  const [lines, setLines] = useState<SalesLine[]>(seed?.lines ?? [emptyLine(uid("sl"))]);
+  const [payMethod, setPayMethod] = useState<SalesPayMethod>(seed?.payMethod ?? "cash");
+  const [payCash, setPayCash] = useState(String(seed?.payCash ?? 0));
+  const [payCard, setPayCard] = useState(String(seed?.payCard ?? 0));
+  const [safeId, setSafeId] = useState<string | null>(seed?.safeId ?? data.safes[0]?.id ?? null);
+  const [discountCode, setDiscountCode] = useState(seed?.discountCode ?? "");
   const [paper, setPaper] = usePaperSize();
-  const [note, setNote] = useState(invoice?.note ?? "");
+  const [note, setNote] = useState(seed?.note ?? "");
 
   const invoiceNo = useMemo(
     () => invoice?.no ?? nextNo("SO", data.salesInvoices.map((i) => i.no)),
@@ -78,6 +87,32 @@ export function SalesInvoiceEditor({ invoice }: Props) {
     payCard: Number(payCard || 0),
     codePercent,
   });
+
+  /** لقطة الفاتورة الحالية — تُحفظ فى التاب المفتوح أول بأول */
+  const snapshot = useMemo<Partial<SalesInvoice>>(
+    () => ({
+      view,
+      branchId,
+      warehouseId,
+      repId,
+      date,
+      dueDate,
+      customerId: customerKind === "registered" ? customerId : null,
+      customerName: customerKind === "registered" ? "" : customerName,
+      lines,
+      payMethod,
+      payCash: Number(payCash || 0),
+      payCard: Number(payCard || 0),
+      safeId,
+      discountCode,
+      note,
+    }),
+    [view, branchId, warehouseId, repId, date, dueDate, customerKind, customerId, customerName, lines, payMethod, payCash, payCard, safeId, discountCode, note],
+  );
+
+  useEffect(() => {
+    onDraftChange?.(snapshot);
+  }, [snapshot, onDraftChange]);
 
   const setLine = (id: string, patch: Partial<SalesLine>) =>
     setLines((rows) => rows.map((row) => (row.id === id ? { ...row, ...patch } : row)));
@@ -182,6 +217,10 @@ export function SalesInvoiceEditor({ invoice }: Props) {
       if (notified.sent) toast.success("تم إرسال رسالة الفاتورة للعميل");
     }
     if (andPrint) doPrint();
+    if (onSaved) {
+      onSaved();
+      return;
+    }
     navigate({ to: "/sales/invoices" });
   };
 
@@ -206,10 +245,12 @@ export function SalesInvoiceEditor({ invoice }: Props) {
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <Button type="button" variant="outline" onClick={() => navigate({ to: "/sales/invoices" })} className="gap-1.5">
-            <ArrowLeft className="size-4" />
-            رجوع
-          </Button>
+          {keepOnSave ? null : (
+            <Button type="button" variant="outline" onClick={() => navigate({ to: "/sales/invoices" })} className="gap-1.5">
+              <ArrowLeft className="size-4" />
+              رجوع
+            </Button>
+          )}
           <PaperSizeToggle value={paper} onChange={setPaper} />
           <Button type="button" variant="outline" onClick={doPrint} className="gap-1.5">
             <Printer className="size-4" />

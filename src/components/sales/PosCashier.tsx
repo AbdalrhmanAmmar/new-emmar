@@ -1,5 +1,5 @@
 import { Banknote, CreditCard, Minus, Plus, Printer, Search, Trash2, UserRound, X } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
 import { SearchSelect } from "@/components/treasury/SearchSelect";
@@ -16,21 +16,41 @@ import { autoNotifyOnPost } from "@/lib/notifyInvoice";
 import { saveSalesInvoice } from "@/lib/salesActions";
 import { cn } from "@/lib/utils";
 
+export interface PosDraft {
+  lines?: SalesLine[];
+  payMethod?: SalesPayMethod;
+  payInput?: string;
+  customerKind?: "cash" | "registered";
+  customerId?: string | null;
+  branchId?: string;
+  warehouseId?: string;
+  safeId?: string | null;
+  discountCode?: string;
+}
+
+interface PosProps {
+  /** لقطة فاتورة معلّقة داخل تاب مفتوح */
+  draftSeed?: PosDraft | null;
+  onDraftChange?: (snapshot: PosDraft) => void;
+  onSaved?: () => void;
+}
+
 /** شاشة الكاشير — بيع سريع بنمط نقاط البيع (مطاعم/محلات) */
-export function PosCashier() {
+export function PosCashier({ draftSeed, onDraftChange, onSaved }: PosProps = {}) {
   const data = useDb();
+  const seed = draftSeed ?? undefined;
 
   const [term, setTerm] = useState("");
   const [category, setCategory] = useState("all");
-  const [lines, setLines] = useState<SalesLine[]>([]);
-  const [payMethod, setPayMethod] = useState<SalesPayMethod>("cash");
-  const [payInput, setPayInput] = useState("");
-  const [customerKind, setCustomerKind] = useState<"cash" | "registered">("cash");
-  const [customerId, setCustomerId] = useState<string | null>(null);
-  const [branchId, setBranchId] = useState(data.branches[0]?.id ?? "");
-  const [warehouseId, setWarehouseId] = useState(data.warehouses[0]?.id ?? "");
-  const [safeId, setSafeId] = useState<string | null>(data.safes[0]?.id ?? null);
-  const [discountCode, setDiscountCode] = useState("");
+  const [lines, setLines] = useState<SalesLine[]>(seed?.lines ?? []);
+  const [payMethod, setPayMethod] = useState<SalesPayMethod>(seed?.payMethod ?? "cash");
+  const [payInput, setPayInput] = useState(seed?.payInput ?? "");
+  const [customerKind, setCustomerKind] = useState<"cash" | "registered">(seed?.customerKind ?? "cash");
+  const [customerId, setCustomerId] = useState<string | null>(seed?.customerId ?? null);
+  const [branchId, setBranchId] = useState(seed?.branchId ?? data.branches[0]?.id ?? "");
+  const [warehouseId, setWarehouseId] = useState(seed?.warehouseId ?? data.warehouses[0]?.id ?? "");
+  const [safeId, setSafeId] = useState<string | null>(seed?.safeId ?? data.safes[0]?.id ?? null);
+  const [discountCode, setDiscountCode] = useState(seed?.discountCode ?? "");
   const [paper, setPaper] = usePaperSize();
 
 
@@ -70,6 +90,15 @@ export function PosCashier() {
     () => nextNo("SO", data.salesInvoices.map((i) => i.no)),
     [data.salesInvoices],
   );
+
+  const snapshot = useMemo<PosDraft>(
+    () => ({ lines, payMethod, payInput, customerKind, customerId, branchId, warehouseId, safeId, discountCode }),
+    [lines, payMethod, payInput, customerKind, customerId, branchId, warehouseId, safeId, discountCode],
+  );
+
+  useEffect(() => {
+    onDraftChange?.(snapshot);
+  }, [snapshot, onDraftChange]);
 
   const addProduct = (product: Product) => {
     setLines((rows) => {
@@ -183,6 +212,10 @@ export function PosCashier() {
     const notified = autoNotifyOnPost({ ...doc, no: invoiceNo, status: "posted" }, totals);
     if (notified.sent) toast.success("تم إرسال رسالة الفاتورة للعميل");
     if (andPrint) doPrint();
+    if (onSaved) {
+      onSaved();
+      return;
+    }
     clearCart();
   };
 
