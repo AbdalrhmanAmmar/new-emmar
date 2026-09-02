@@ -433,6 +433,9 @@ export function salesInvoiceHtml(input: InvoicePrintInput): string {
     <tbody>${rows || `<tr><td colspan="9" class="c">لا توجد أصناف</td></tr>`}</tbody>
   </table>
 
+  ${chargesTable}
+
+
   <div class="bottom">
     <div class="words">
       <b>المبلغ كتابةً:</b> ${amountInWords(t.total)}
