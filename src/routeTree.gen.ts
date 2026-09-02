@@ -26,6 +26,7 @@ import { Route as HrIndexRouteImport } from './routes/hr/index'
 import { Route as InventoryIndexRouteImport } from './routes/inventory/index'
 import { Route as InventoryBalanceRouteImport } from './routes/inventory/balance'
 import { Route as InventoryStocktakeRouteImport } from './routes/inventory/stocktake'
+import { Route as InventoryStocktakeReportRouteImport } from './routes/inventory/stocktake-report'
 import { Route as PurchasesIndexRouteImport } from './routes/purchases/index'
 import { Route as ReportsIndexRouteImport } from './routes/reports/index'
 import { Route as ReportsCustomerStatementRouteImport } from './routes/reports/customer-statement'
@@ -190,6 +191,12 @@ const InventoryStocktakeRoute = InventoryStocktakeRouteImport.update({
   path: '/stocktake',
   getParentRoute: () => InventoryRouteRoute,
 } as any)
+const InventoryStocktakeReportRoute =
+  InventoryStocktakeReportRouteImport.update({
+    id: '/stocktake-report',
+    path: '/stocktake-report',
+    getParentRoute: () => InventoryRouteRoute,
+  } as any)
 const PurchasesIndexRoute = PurchasesIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -603,6 +610,7 @@ export interface FileRoutesByFullPath {
   '/expenses/new': typeof ExpensesNewRoute
   '/inventory/balance': typeof InventoryBalanceRoute
   '/inventory/stocktake': typeof InventoryStocktakeRoute
+  '/inventory/stocktake-report': typeof InventoryStocktakeReportRoute
   '/reports/customer-statement': typeof ReportsCustomerStatementRoute
   '/sales/pos': typeof SalesPosRoute
   '/users/$id': typeof UsersIdRoute
@@ -692,6 +700,7 @@ export interface FileRoutesByTo {
   '/expenses/new': typeof ExpensesNewRoute
   '/inventory/balance': typeof InventoryBalanceRoute
   '/inventory/stocktake': typeof InventoryStocktakeRoute
+  '/inventory/stocktake-report': typeof InventoryStocktakeReportRoute
   '/reports/customer-statement': typeof ReportsCustomerStatementRoute
   '/sales/pos': typeof SalesPosRoute
   '/users/$id': typeof UsersIdRoute
@@ -790,6 +799,7 @@ export interface FileRoutesById {
   '/expenses/new': typeof ExpensesNewRoute
   '/inventory/balance': typeof InventoryBalanceRoute
   '/inventory/stocktake': typeof InventoryStocktakeRoute
+  '/inventory/stocktake-report': typeof InventoryStocktakeReportRoute
   '/reports/customer-statement': typeof ReportsCustomerStatementRoute
   '/sales/pos': typeof SalesPosRoute
   '/users/$id': typeof UsersIdRoute
@@ -889,6 +899,7 @@ export interface FileRouteTypes {
     | '/expenses/new'
     | '/inventory/balance'
     | '/inventory/stocktake'
+    | '/inventory/stocktake-report'
     | '/reports/customer-statement'
     | '/sales/pos'
     | '/users/$id'
@@ -978,6 +989,7 @@ export interface FileRouteTypes {
     | '/expenses/new'
     | '/inventory/balance'
     | '/inventory/stocktake'
+    | '/inventory/stocktake-report'
     | '/reports/customer-statement'
     | '/sales/pos'
     | '/users/$id'
@@ -1075,6 +1087,7 @@ export interface FileRouteTypes {
     | '/expenses/new'
     | '/inventory/balance'
     | '/inventory/stocktake'
+    | '/inventory/stocktake-report'
     | '/reports/customer-statement'
     | '/sales/pos'
     | '/users/$id'
@@ -1290,6 +1303,13 @@ declare module '@tanstack/react-router' {
       path: '/stocktake'
       fullPath: '/inventory/stocktake'
       preLoaderRoute: typeof InventoryStocktakeRouteImport
+      parentRoute: typeof InventoryRouteRoute
+    }
+    '/inventory/stocktake-report': {
+      id: '/inventory/stocktake-report'
+      path: '/stocktake-report'
+      fullPath: '/inventory/stocktake-report'
+      preLoaderRoute: typeof InventoryStocktakeReportRouteImport
       parentRoute: typeof InventoryRouteRoute
     }
     '/purchases/': {
@@ -1891,6 +1911,7 @@ const HrRouteRouteWithChildren =
 interface InventoryRouteRouteChildren {
   InventoryBalanceRoute: typeof InventoryBalanceRoute
   InventoryStocktakeRoute: typeof InventoryStocktakeRoute
+  InventoryStocktakeReportRoute: typeof InventoryStocktakeReportRoute
   InventoryIndexRoute: typeof InventoryIndexRoute
   InventoryMovesIdRoute: typeof InventoryMovesIdRoute
   InventoryMovesIssuesRoute: typeof InventoryMovesIssuesRoute
@@ -1906,6 +1927,7 @@ interface InventoryRouteRouteChildren {
 const InventoryRouteRouteChildren: InventoryRouteRouteChildren = {
   InventoryBalanceRoute: InventoryBalanceRoute,
   InventoryStocktakeRoute: InventoryStocktakeRoute,
+  InventoryStocktakeReportRoute: InventoryStocktakeReportRoute,
   InventoryIndexRoute: InventoryIndexRoute,
   InventoryMovesIdRoute: InventoryMovesIdRoute,
   InventoryMovesIssuesRoute: InventoryMovesIssuesRoute,
