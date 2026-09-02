@@ -434,7 +434,7 @@ export function salesInvoiceHtml(input: InvoicePrintInput): string {
 export function printSalesInvoice(input: InvoicePrintInput, paper?: PaperSize) {
   if (typeof window === "undefined") return;
   const doc = { ...input, paper: paper ?? input.paper ?? "A4" };
-  const win = window.open("", "_blank", doc.paper === "A5" ? "width=760,height=920" : "width=980,height=1100");
+  const win = window.open("", "_blank", doc.paper === "A5" ? "width=460,height=880" : "width=980,height=1100");
   if (!win) return;
   win.document.write(salesInvoiceHtml(doc));
   win.document.close();
