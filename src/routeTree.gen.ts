@@ -90,6 +90,7 @@ import { Route as TreasuryReceiptsNewRouteImport } from './routes/treasury/recei
 import { Route as TreasuryReconcileIndexRouteImport } from './routes/treasury/reconcile/index'
 import { Route as TreasuryReportsAgingRouteImport } from './routes/treasury/reports/aging'
 import { Route as TreasuryReportsCashflowRouteImport } from './routes/treasury/reports/cashflow'
+import { Route as TreasuryReportsShiftClosingRouteImport } from './routes/treasury/reports/shift-closing'
 import { Route as TreasuryReportsShiftDiffRouteImport } from './routes/treasury/reports/shift-diff'
 import { Route as TreasuryReportsVouchersRouteImport } from './routes/treasury/reports/vouchers'
 import { Route as TreasurySafesIndexRouteImport } from './routes/treasury/safes/index'
@@ -513,6 +514,12 @@ const TreasuryReportsCashflowRoute = TreasuryReportsCashflowRouteImport.update({
   path: '/reports/cashflow',
   getParentRoute: () => TreasuryRouteRoute,
 } as any)
+const TreasuryReportsShiftClosingRoute =
+  TreasuryReportsShiftClosingRouteImport.update({
+    id: '/reports/shift-closing',
+    path: '/reports/shift-closing',
+    getParentRoute: () => TreasuryRouteRoute,
+  } as any)
 const TreasuryReportsShiftDiffRoute =
   TreasuryReportsShiftDiffRouteImport.update({
     id: '/reports/shift-diff',
@@ -636,6 +643,7 @@ export interface FileRoutesByFullPath {
   '/treasury/receipts/new': typeof TreasuryReceiptsNewRoute
   '/treasury/reports/aging': typeof TreasuryReportsAgingRoute
   '/treasury/reports/cashflow': typeof TreasuryReportsCashflowRoute
+  '/treasury/reports/shift-closing': typeof TreasuryReportsShiftClosingRoute
   '/treasury/reports/shift-diff': typeof TreasuryReportsShiftDiffRoute
   '/treasury/reports/vouchers': typeof TreasuryReportsVouchersRoute
   '/treasury/safes/$id': typeof TreasurySafesIdRoute
@@ -723,6 +731,7 @@ export interface FileRoutesByTo {
   '/treasury/receipts/new': typeof TreasuryReceiptsNewRoute
   '/treasury/reports/aging': typeof TreasuryReportsAgingRoute
   '/treasury/reports/cashflow': typeof TreasuryReportsCashflowRoute
+  '/treasury/reports/shift-closing': typeof TreasuryReportsShiftClosingRoute
   '/treasury/reports/shift-diff': typeof TreasuryReportsShiftDiffRoute
   '/treasury/reports/vouchers': typeof TreasuryReportsVouchersRoute
   '/treasury/safes/$id': typeof TreasurySafesIdRoute
@@ -819,6 +828,7 @@ export interface FileRoutesById {
   '/treasury/receipts/new': typeof TreasuryReceiptsNewRoute
   '/treasury/reports/aging': typeof TreasuryReportsAgingRoute
   '/treasury/reports/cashflow': typeof TreasuryReportsCashflowRoute
+  '/treasury/reports/shift-closing': typeof TreasuryReportsShiftClosingRoute
   '/treasury/reports/shift-diff': typeof TreasuryReportsShiftDiffRoute
   '/treasury/reports/vouchers': typeof TreasuryReportsVouchersRoute
   '/treasury/safes/$id': typeof TreasurySafesIdRoute
@@ -916,6 +926,7 @@ export interface FileRouteTypes {
     | '/treasury/receipts/new'
     | '/treasury/reports/aging'
     | '/treasury/reports/cashflow'
+    | '/treasury/reports/shift-closing'
     | '/treasury/reports/shift-diff'
     | '/treasury/reports/vouchers'
     | '/treasury/safes/$id'
@@ -1003,6 +1014,7 @@ export interface FileRouteTypes {
     | '/treasury/receipts/new'
     | '/treasury/reports/aging'
     | '/treasury/reports/cashflow'
+    | '/treasury/reports/shift-closing'
     | '/treasury/reports/shift-diff'
     | '/treasury/reports/vouchers'
     | '/treasury/safes/$id'
@@ -1098,6 +1110,7 @@ export interface FileRouteTypes {
     | '/treasury/receipts/new'
     | '/treasury/reports/aging'
     | '/treasury/reports/cashflow'
+    | '/treasury/reports/shift-closing'
     | '/treasury/reports/shift-diff'
     | '/treasury/reports/vouchers'
     | '/treasury/safes/$id'
@@ -1715,6 +1728,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TreasuryReportsCashflowRouteImport
       parentRoute: typeof TreasuryRouteRoute
     }
+    '/treasury/reports/shift-closing': {
+      id: '/treasury/reports/shift-closing'
+      path: '/reports/shift-closing'
+      fullPath: '/treasury/reports/shift-closing'
+      preLoaderRoute: typeof TreasuryReportsShiftClosingRouteImport
+      parentRoute: typeof TreasuryRouteRoute
+    }
     '/treasury/reports/shift-diff': {
       id: '/treasury/reports/shift-diff'
       path: '/reports/shift-diff'
@@ -1986,6 +2006,7 @@ interface TreasuryRouteRouteChildren {
   TreasuryReceiptsNewRoute: typeof TreasuryReceiptsNewRoute
   TreasuryReportsAgingRoute: typeof TreasuryReportsAgingRoute
   TreasuryReportsCashflowRoute: typeof TreasuryReportsCashflowRoute
+  TreasuryReportsShiftClosingRoute: typeof TreasuryReportsShiftClosingRoute
   TreasuryReportsShiftDiffRoute: typeof TreasuryReportsShiftDiffRoute
   TreasuryReportsVouchersRoute: typeof TreasuryReportsVouchersRoute
   TreasurySafesIdRoute: typeof TreasurySafesIdRoute
@@ -2010,6 +2031,7 @@ const TreasuryRouteRouteChildren: TreasuryRouteRouteChildren = {
   TreasuryReceiptsNewRoute: TreasuryReceiptsNewRoute,
   TreasuryReportsAgingRoute: TreasuryReportsAgingRoute,
   TreasuryReportsCashflowRoute: TreasuryReportsCashflowRoute,
+  TreasuryReportsShiftClosingRoute: TreasuryReportsShiftClosingRoute,
   TreasuryReportsShiftDiffRoute: TreasuryReportsShiftDiffRoute,
   TreasuryReportsVouchersRoute: TreasuryReportsVouchersRoute,
   TreasurySafesIdRoute: TreasurySafesIdRoute,

@@ -228,6 +228,7 @@ export const REPORTS_MODULE: NavModule = {
         { to: "/treasury/reports/cashflow", label: "التدفق النقدي", icon: <ScrollText className="size-4" /> },
         { to: "/treasury/reports/vouchers", label: "تحليل السندات", icon: <Receipt className="size-4" /> },
         { to: "/treasury/reports/aging", label: "أعمار الديون", icon: <FileText className="size-4" /> },
+        { to: "/treasury/reports/shift-closing", label: "تقفيل الورديات", icon: <ListChecks className="size-4" /> },
         { to: "/treasury/reports/shift-diff", label: "فروقات التقفيل", icon: <ListChecks className="size-4" /> },
       ],
     },
