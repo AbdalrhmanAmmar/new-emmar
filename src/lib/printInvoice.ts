@@ -43,7 +43,13 @@ export interface InvoicePrintInput {
   docTitle?: string;
   /** مسمى الطرف (العميل / المورد) */
   partyLabel?: string;
+  /** مقاس الورق للطباعة — A4 (افتراضى) أو A5 مضغوط */
+  paper?: PaperSize;
 }
+
+/** مقاسات الطباعة المدعومة */
+export type PaperSize = "A4" | "A5";
+
 
 
 /* ===================== تفقيط المبالغ بالعربي ===================== */
@@ -194,12 +200,16 @@ export function salesInvoiceHtml(input: InvoicePrintInput): string {
     ["المتبقي", money(t.remaining), true],
   ];
 
+  const paper: PaperSize = input.paper ?? "A4";
+  const a5 = paper === "A5";
+
   return `<!doctype html>
 <html lang="ar" dir="rtl"><head><meta charset="utf-8" />
-<title>${input.docTitle ?? "فاتورة مبيعات"} ${input.no}</title>
+<title>${input.docTitle ?? "فاتورة مبيعات"} ${input.no} — ${paper}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <style>
+  @page{size:${a5 ? "A5 portrait" : "A4 portrait"};margin:${a5 ? "7mm" : "12mm"}}
   *{box-sizing:border-box}
   body{font-family:'IBM Plex Sans Arabic',sans-serif;margin:0;padding:26px;color:#13251c;background:#fff}
   .doc{max-width:820px;margin:0 auto}
@@ -237,7 +247,31 @@ export function salesInvoiceHtml(input: InvoicePrintInput): string {
   .sig div{border-top:1px solid #9db0a4;padding-top:6px;width:29%;text-align:center;color:#4a5a50}
   .foot{margin-top:16px;border-top:1px dashed #cfd9d1;padding-top:8px;font-size:10.5px;color:#7c8a81;text-align:center}
   @media print{body{padding:0}.doc{max-width:none}}
-</style></head><body><div class="doc">
+  ${a5
+    ? `/* نسخة A5 مضغوطة بنفس الهوية الرسمية */
+  body{padding:14px;font-size:11px}
+  .doc{max-width:560px}
+  .top{padding-bottom:9px;border-bottom-width:2px}
+  .mark{width:40px;height:40px;font-size:18px}
+  .co{font-size:15px}
+  .sub{font-size:9.5px;line-height:1.55}
+  .doctag h1{font-size:15px}
+  .chip{font-size:9.5px;padding:2px 9px;margin-top:4px}
+  .grid{gap:8px;margin:10px 0}
+  .box h2{font-size:10.5px;padding:5px 8px}
+  .box .row{font-size:10px;padding:3.5px 8px}
+  table.items{font-size:9.5px}
+  table.items th{padding:5px 4px}
+  table.items td{padding:4px}
+  .bottom{grid-template-columns:1fr 230px;gap:9px;margin-top:9px}
+  .words{font-size:10px;line-height:1.7;padding:8px}
+  table.tot{font-size:10px}
+  table.tot td{padding:4.5px 7px}
+  table.tot tr.big td{font-size:11px}
+  .sig{margin-top:22px;font-size:9.5px}
+  .foot{margin-top:10px;font-size:9px;padding-top:6px}`
+    : ""}
+</style></head><body class="paper-${paper.toLowerCase()}"><div class="doc">
   <div class="top">
     <div class="brand">
       ${org.logoDataUrl
@@ -307,17 +341,19 @@ export function salesInvoiceHtml(input: InvoicePrintInput): string {
 </div></body></html>`;
 }
 
-export function printSalesInvoice(input: InvoicePrintInput) {
+export function printSalesInvoice(input: InvoicePrintInput, paper?: PaperSize) {
   if (typeof window === "undefined") return;
-  const win = window.open("", "_blank", "width=980,height=1100");
+  const doc = { ...input, paper: paper ?? input.paper ?? "A4" };
+  const win = window.open("", "_blank", doc.paper === "A5" ? "width=760,height=920" : "width=980,height=1100");
   if (!win) return;
-  win.document.write(salesInvoiceHtml(input));
+  win.document.write(salesInvoiceHtml(doc));
   win.document.close();
   win.focus();
   setTimeout(() => win.print(), 450);
 }
 
 /** تنزيل الفاتورة كملف على جهاز المستخدم (يمكن فتحه وطباعته أو حفظه PDF) */
-export function downloadSalesInvoice(input: InvoicePrintInput) {
-  downloadHtmlDoc(`${input.docTitle ?? "فاتورة"}-${input.no}`, salesInvoiceHtml(input));
+export function downloadSalesInvoice(input: InvoicePrintInput, paper?: PaperSize) {
+  const doc = { ...input, paper: paper ?? input.paper ?? "A4" };
+  downloadHtmlDoc(`${doc.docTitle ?? "فاتورة"}-${doc.no}-${doc.paper}`, salesInvoiceHtml(doc));
 }

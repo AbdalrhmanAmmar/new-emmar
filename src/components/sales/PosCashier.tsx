@@ -10,6 +10,7 @@ import { UNIT_LABEL, nextNo, uid, useDb, type Product, type SalesLine, type Sale
 import { lineUnitLabel, productUnits, unitPatch } from "@/lib/units";
 import { CustomerHistoryButton } from "@/components/sales/CustomerHistoryButton";
 import { invoicePrintInput, printSalesInvoice } from "@/lib/printInvoice";
+import { PaperSizeToggle, usePaperSize } from "@/components/sales/PaperSizeToggle";
 import { discountPercentOf, invoiceTotals, lineTotals } from "@/lib/sales";
 import { autoNotifyOnPost } from "@/lib/notifyInvoice";
 import { saveSalesInvoice } from "@/lib/salesActions";
@@ -30,6 +31,8 @@ export function PosCashier() {
   const [warehouseId, setWarehouseId] = useState(data.warehouses[0]?.id ?? "");
   const [safeId, setSafeId] = useState<string | null>(data.safes[0]?.id ?? null);
   const [discountCode, setDiscountCode] = useState("");
+  const [paper, setPaper] = usePaperSize();
+
 
   const categories = useMemo(() => {
     const names = data.productCategories.filter((c) => c.active).map((c) => c.name);
@@ -157,6 +160,7 @@ export function PosCashier() {
         },
         totals,
       ),
+      paper,
     );
   };
 
@@ -409,6 +413,8 @@ export function PosCashier() {
             البيع الآجل يتطلب اختيار عميل مسجل — سيُسجل الرصيد على حسابه.
           </p>
         )}
+
+        <PaperSizeToggle value={paper} onChange={setPaper} className="justify-between" />
 
         <div className="grid grid-cols-2 gap-2">
           <Button type="button" onClick={() => checkout(false)} className="h-10 font-bold">

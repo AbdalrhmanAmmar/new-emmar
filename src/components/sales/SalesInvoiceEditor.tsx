@@ -23,6 +23,7 @@ import {
   type SalesPayMethod,
 } from "@/lib/mockDb";
 import { invoicePrintInput, printSalesInvoice } from "@/lib/printInvoice";
+import { PaperSizeToggle, usePaperSize } from "@/components/sales/PaperSizeToggle";
 import { discountPercentOf, emptyLine, invoiceTotals, lineTotals, productOptions } from "@/lib/sales";
 import { autoNotifyOnPost } from "@/lib/notifyInvoice";
 import { saveSalesInvoice } from "@/lib/salesActions";
@@ -56,6 +57,7 @@ export function SalesInvoiceEditor({ invoice }: Props) {
   const [payCard, setPayCard] = useState(String(invoice?.payCard ?? 0));
   const [safeId, setSafeId] = useState<string | null>(invoice?.safeId ?? data.safes[0]?.id ?? null);
   const [discountCode, setDiscountCode] = useState(invoice?.discountCode ?? "");
+  const [paper, setPaper] = usePaperSize();
   const [note, setNote] = useState(invoice?.note ?? "");
 
   const invoiceNo = useMemo(
@@ -163,6 +165,7 @@ export function SalesInvoiceEditor({ invoice }: Props) {
         },
         totals,
       ),
+      paper,
     );
   };
 
@@ -207,6 +210,7 @@ export function SalesInvoiceEditor({ invoice }: Props) {
             <ArrowLeft className="size-4" />
             رجوع
           </Button>
+          <PaperSizeToggle value={paper} onChange={setPaper} />
           <Button type="button" variant="outline" onClick={doPrint} className="gap-1.5">
             <Printer className="size-4" />
             طباعة
