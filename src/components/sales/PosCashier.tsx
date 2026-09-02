@@ -414,6 +414,8 @@ export function PosCashier() {
           </p>
         )}
 
+        <PaperSizeToggle value={paper} onChange={setPaper} className="justify-between" />
+
         <div className="grid grid-cols-2 gap-2">
           <Button type="button" onClick={() => checkout(false)} className="h-10 font-bold">
             إتمام البيع
