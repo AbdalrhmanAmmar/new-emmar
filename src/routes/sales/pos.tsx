@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { PosCashier } from "@/components/sales/PosCashier";
+import { PosWorkspace } from "@/components/sales/PosWorkspace";
 
 export const Route = createFileRoute("/sales/pos")({
   head: () => ({
@@ -13,5 +13,5 @@ export const Route = createFileRoute("/sales/pos")({
       { name: "twitter:card", content: "summary" },
     ],
   }),
-  component: PosCashier,
+  component: PosWorkspace,
 });

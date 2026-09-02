@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { SalesInvoiceEditor } from "@/components/sales/SalesInvoiceEditor";
+import { SalesInvoiceWorkspace } from "@/components/sales/SalesInvoiceWorkspace";
 
 export const Route = createFileRoute("/sales/invoices/new")({
   head: () => ({
@@ -11,5 +11,5 @@ export const Route = createFileRoute("/sales/invoices/new")({
       { property: "og:description", content: "جدول أصناف ديناميكي وأدوات سريعة وملخص مالي فوري." },
     ],
   }),
-  component: () => <SalesInvoiceEditor />,
+  component: SalesInvoiceWorkspace,
 });
