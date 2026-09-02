@@ -262,6 +262,7 @@ export const REPORTS_MODULE: NavModule = {
       items: [
         { to: "/inventory/balance", label: "أرصدة وتقييم المخزون", icon: <ListChecks className="size-4" /> },
         { to: "/inventory/moves", label: "حركة الأذون المخزنية", icon: <Boxes className="size-4" /> },
+        { to: "/inventory/stocktake-report", label: "تقرير الجرد", icon: <ClipboardCheck className="size-4" /> },
       ],
     },
     {
