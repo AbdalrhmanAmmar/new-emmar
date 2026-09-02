@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { dateFmt, money } from "@/lib/format";
 import { SALES_PAY_LABEL, useDb, type SalesInvoice } from "@/lib/mockDb";
 import { sendInvoiceMessage } from "@/lib/notifyInvoice";
+import { PaperSizeToggle, usePaperSize } from "@/components/sales/PaperSizeToggle";
 import { downloadSalesInvoice, invoicePrintInput, printSalesInvoice } from "@/lib/printInvoice";
 import { invoiceTotalsOf } from "@/lib/sales";
 import { deleteSalesInvoice, setSalesInvoiceStatus } from "@/lib/salesActions";
@@ -16,6 +17,7 @@ import { deleteSalesInvoice, setSalesInvoiceStatus } from "@/lib/salesActions";
 export function SalesInvoiceList() {
   const data = useDb();
   const navigate = useNavigate();
+  const [paper, setPaper] = usePaperSize();
 
   const posted = data.salesInvoices.filter((i) => i.status === "posted");
   const totalSales = posted.reduce((sum, inv) => sum + invoiceTotalsOf(data, inv).total, 0);
@@ -26,12 +28,12 @@ export function SalesInvoiceList() {
     inv.customerId ? data.customers.find((c) => c.id === inv.customerId)?.name ?? "-" : inv.customerName || "عميل نقدي";
 
   const doPrint = (inv: SalesInvoice) => {
-    printSalesInvoice(invoicePrintInput(data, inv, invoiceTotalsOf(data, inv)));
+    printSalesInvoice(invoicePrintInput(data, inv, invoiceTotalsOf(data, inv)), paper);
   };
 
   const doDownload = (inv: SalesInvoice) => {
-    downloadSalesInvoice(invoicePrintInput(data, inv, invoiceTotalsOf(data, inv)));
-    toast.success(`تم تنزيل الفاتورة ${inv.no} على جهازك`);
+    downloadSalesInvoice(invoicePrintInput(data, inv, invoiceTotalsOf(data, inv)), paper);
+    toast.success(`تم تنزيل الفاتورة ${inv.no} بمقاس ${paper}`);
   };
 
   const doSend = (inv: SalesInvoice) => {
@@ -87,12 +89,15 @@ export function SalesInvoiceList() {
         title="فواتير المبيعات"
         description="إنشاء وتعديل وطباعة فواتير البيع النقدي والآجل بالجنيه المصري"
         actions={
-          <Button asChild className="gap-1.5">
-            <Link to="/sales/invoices/new">
-              <Plus className="size-4" />
-              فاتورة مبيعات جديدة
-            </Link>
-          </Button>
+          <div className="flex flex-wrap items-center gap-2">
+            <PaperSizeToggle value={paper} onChange={setPaper} />
+            <Button asChild className="gap-1.5">
+              <Link to="/sales/invoices/new">
+                <Plus className="size-4" />
+                فاتورة مبيعات جديدة
+              </Link>
+            </Button>
+          </div>
         }
       />
 
@@ -116,7 +121,7 @@ export function SalesInvoiceList() {
                 icon: <Pencil className="size-4" />,
                 onSelect: () => navigate({ to: "/sales/invoices/$id", params: { id: row.id } }),
               },
-              { label: "طباعة", icon: <Printer className="size-4" />, onSelect: () => doPrint(row) },
+              { label: `طباعة (${paper})`, icon: <Printer className="size-4" />, onSelect: () => doPrint(row) },
               { label: "تنزيل الفاتورة", icon: <Download className="size-4" />, onSelect: () => doDownload(row) },
               {
                 label: "إرسال رسالة للعميل",

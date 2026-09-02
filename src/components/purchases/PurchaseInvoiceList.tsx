@@ -8,6 +8,7 @@ import { RowActions } from "@/components/treasury/RowActions";
 import { Button } from "@/components/ui/button";
 import { dateFmt, money } from "@/lib/format";
 import { SALES_PAY_LABEL, useDb, type PurchaseInvoice } from "@/lib/mockDb";
+import { PaperSizeToggle, usePaperSize } from "@/components/sales/PaperSizeToggle";
 import { downloadSalesInvoice } from "@/lib/printInvoice";
 import { printPurchaseInvoice, purchasePrintInput } from "@/lib/printPurchase";
 import { deletePurchaseInvoice, setPurchaseInvoiceStatus } from "@/lib/purchaseActions";
@@ -16,6 +17,7 @@ import { purchaseTotalsOf } from "@/lib/purchases";
 export function PurchaseInvoiceList() {
   const data = useDb();
   const navigate = useNavigate();
+  const [paper, setPaper] = usePaperSize();
 
   const posted = data.purchaseInvoices.filter((i) => i.status === "posted");
   const totalPurchases = posted.reduce((sum, inv) => sum + purchaseTotalsOf(data, inv).total, 0);
@@ -69,12 +71,15 @@ export function PurchaseInvoiceList() {
         title="فواتير المشتريات"
         description="تسجيل وتعديل وطباعة فواتير الشراء النقدية والآجلة بالجنيه المصري"
         actions={
-          <Button asChild className="gap-1.5">
-            <Link to="/purchases/invoices/new">
-              <Plus className="size-4" />
-              فاتورة مشتريات جديدة
-            </Link>
-          </Button>
+          <div className="flex flex-wrap items-center gap-2">
+            <PaperSizeToggle value={paper} onChange={setPaper} />
+            <Button asChild className="gap-1.5">
+              <Link to="/purchases/invoices/new">
+                <Plus className="size-4" />
+                فاتورة مشتريات جديدة
+              </Link>
+            </Button>
+          </div>
         }
       />
 
@@ -98,13 +103,17 @@ export function PurchaseInvoiceList() {
                 icon: <Pencil className="size-4" />,
                 onSelect: () => navigate({ to: "/purchases/invoices/$id", params: { id: row.id } }),
               },
-              { label: "طباعة", icon: <Printer className="size-4" />, onSelect: () => printPurchaseInvoice(data, row) },
+              {
+                label: `طباعة (${paper})`,
+                icon: <Printer className="size-4" />,
+                onSelect: () => printPurchaseInvoice(data, row, paper),
+              },
               {
                 label: "تنزيل الفاتورة",
                 icon: <Download className="size-4" />,
                 onSelect: () => {
-                  downloadSalesInvoice(purchasePrintInput(data, row));
-                  toast.success(`تم تنزيل الفاتورة ${row.no} على جهازك`);
+                  downloadSalesInvoice(purchasePrintInput(data, row), paper);
+                  toast.success(`تم تنزيل الفاتورة ${row.no} بمقاس ${paper}`);
                 },
               },
               row.status === "draft"
