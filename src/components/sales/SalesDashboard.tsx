@@ -9,6 +9,7 @@ import {
   TrendLineChart,
 } from "@/components/analytics/ChartCard";
 import { KpiCard } from "@/components/analytics/KpiCard";
+import { PeriodFilter, periodText, usePeriodDb } from "@/components/analytics/PeriodFilter";
 import { DataTable, type Column } from "@/components/treasury/DataTable";
 import { PageHeader, StatCard } from "@/components/treasury/PageHeader";
 import { Button } from "@/components/ui/button";
@@ -18,7 +19,8 @@ import { UNIT_LABEL, useDb } from "@/lib/mockDb";
 import { invoiceTotalsOf, salesByCustomer, salesByProduct, salesByRep, type SalesByKeyRow } from "@/lib/sales";
 
 export function SalesDashboard() {
-  const data = useDb();
+  const rawDb = useDb();
+  const { range, setRange, scoped: data } = usePeriodDb(rawDb, "period:sales");
   const posted = data.salesInvoices.filter((i) => i.status === "posted");
   const kpis = salesKpis(data);
   const trend = salesTrendSeries(data, 14);
@@ -53,6 +55,11 @@ export function SalesDashboard() {
           </>
         }
       />
+
+      <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-border/70 bg-card/60 px-3 py-2">
+        <PeriodFilter value={range} onChange={setRange} />
+        <span className="text-xs font-semibold text-muted-foreground">{periodText(range)}</span>
+      </div>
 
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <KpiCard

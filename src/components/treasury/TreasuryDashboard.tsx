@@ -11,6 +11,7 @@ import {
 
 import { ChartCard, DonutChart, FlowAreaChart, GroupedBarChart, TrendLineChart } from "@/components/analytics/ChartCard";
 import { KpiCard } from "@/components/analytics/KpiCard";
+import { PeriodFilter, periodText, usePeriodDb } from "@/components/analytics/PeriodFilter";
 import { PageHeader } from "@/components/treasury/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -20,7 +21,8 @@ import { SAFE_TYPE_LABEL, useDb } from "@/lib/mockDb";
 import { aging, safeBalance, safeMovements, totalsByType } from "@/lib/treasury";
 
 export function TreasuryDashboard() {
-  const data = useDb();
+  const rawDb = useDb();
+  const { range, setRange, scoped: data } = usePeriodDb(rawDb, "period:treasury");
   const totals = totalsByType(data);
   const movements = [...safeMovements(data)].reverse();
   const monthly = cashFlowSeries(data, 6);
@@ -77,6 +79,11 @@ export function TreasuryDashboard() {
           </>
         }
       />
+
+      <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-border/70 bg-card/60 px-3 py-2">
+        <PeriodFilter value={range} onChange={setRange} />
+        <span className="text-xs font-semibold text-muted-foreground">{periodText(range)}</span>
+      </div>
 
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <KpiCard
