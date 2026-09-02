@@ -43,7 +43,13 @@ export interface InvoicePrintInput {
   docTitle?: string;
   /** مسمى الطرف (العميل / المورد) */
   partyLabel?: string;
+  /** مقاس الورق للطباعة — A4 (افتراضى) أو A5 مضغوط */
+  paper?: PaperSize;
 }
+
+/** مقاسات الطباعة المدعومة */
+export type PaperSize = "A4" | "A5";
+
 
 
 /* ===================== تفقيط المبالغ بالعربي ===================== */
