@@ -103,13 +103,17 @@ export function PurchaseInvoiceList() {
                 icon: <Pencil className="size-4" />,
                 onSelect: () => navigate({ to: "/purchases/invoices/$id", params: { id: row.id } }),
               },
-              { label: "طباعة", icon: <Printer className="size-4" />, onSelect: () => printPurchaseInvoice(data, row) },
+              {
+                label: `طباعة (${paper})`,
+                icon: <Printer className="size-4" />,
+                onSelect: () => printPurchaseInvoice(data, row, paper),
+              },
               {
                 label: "تنزيل الفاتورة",
                 icon: <Download className="size-4" />,
                 onSelect: () => {
-                  downloadSalesInvoice(purchasePrintInput(data, row));
-                  toast.success(`تم تنزيل الفاتورة ${row.no} على جهازك`);
+                  downloadSalesInvoice(purchasePrintInput(data, row), paper);
+                  toast.success(`تم تنزيل الفاتورة ${row.no} بمقاس ${paper}`);
                 },
               },
               row.status === "draft"
