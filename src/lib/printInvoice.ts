@@ -1,7 +1,7 @@
 import { downloadHtmlDoc } from "@/lib/exportExcel";
 import { dateFmt, money, num } from "@/lib/format";
 import { lineUnitLabel } from "@/lib/units";
-import { SALES_PAY_LABEL, type DbShape, type OrgSettings, type SalesInvoice, type SalesLine } from "@/lib/mockDb";
+import { SALES_PAY_LABEL, type DbShape, type InvoiceCharge, type OrgSettings, type SalesInvoice, type SalesLine } from "@/lib/mockDb";
 import { lineTotals } from "@/lib/sales";
 
 export interface InvoicePrintTotals {
@@ -12,6 +12,8 @@ export interface InvoicePrintTotals {
   total: number;
   paid: number;
   remaining: number;
+  /** إجمالى البنود الإضافية */
+  charges?: number;
 }
 
 export interface InvoicePrintInput {
@@ -37,6 +39,8 @@ export interface InvoicePrintInput {
   note?: string;
   status?: string;
   lines: SalesLine[];
+  /** بنود إضافية على الفاتورة */
+  charges?: InvoiceCharge[];
   totals: InvoicePrintTotals;
   org: OrgSettings;
   /** عنوان المستند (افتراضياً فاتورة مبيعات) */
@@ -127,7 +131,7 @@ export function invoicePrintInput(
   data: DbShape,
   inv: Pick<
     SalesInvoice,
-    "no" | "date" | "dueDate" | "branchId" | "warehouseId" | "repId" | "customerId" | "customerName" | "lines" | "payMethod" | "discountCode" | "note" | "status"
+    "no" | "date" | "dueDate" | "branchId" | "warehouseId" | "repId" | "customerId" | "customerName" | "lines" | "charges" | "payMethod" | "discountCode" | "note" | "status"
   >,
   totals: InvoicePrintTotals,
 ): InvoicePrintInput {
@@ -155,6 +159,7 @@ export function invoicePrintInput(
     note: inv.note,
     status: inv.status === "posted" ? "مرحّلة" : inv.status === "draft" ? "مسودة" : "ملغاة",
     lines: inv.lines,
+    charges: inv.charges,
     totals,
     org: data.settings,
   };
@@ -244,6 +249,7 @@ function receiptHtml(input: InvoicePrintInput): string {
   ${t.discount ? totLine("الخصم", money(t.discount)) : ""}
   ${totLine("الصافي", money(t.net))}
   ${totLine(`ض.ق.م ${num(org.vatRate)}%`, money(t.tax))}
+  ${(input.charges ?? []).map((c) => totLine(c.label || "بند إضافى", money(c.amount))).join("")}
   ${totLine("المستحق", money(t.total), "big")}
   ${totLine("المدفوع", money(t.paid))}
   ${totLine("المتبقي", money(t.remaining))}
@@ -284,6 +290,7 @@ export function salesInvoiceHtml(input: InvoicePrintInput): string {
     ["إجمالي الخصم", money(t.discount), false],
     ["الصافي بعد الخصم", money(t.net), false],
     [`ضريبة القيمة المضافة (${num(org.vatRate)}%)`, money(t.tax), false],
+    ...(input.charges ?? []).map((c) => [c.label || "بند إضافى", money(c.amount), false] as [string, string, boolean]),
 
     ["الإجمالي المستحق", money(t.total), true],
     ["المدفوع", money(t.paid), false],
