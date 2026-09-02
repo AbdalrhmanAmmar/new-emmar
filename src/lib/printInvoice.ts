@@ -351,6 +351,9 @@ export function salesInvoiceHtml(input: InvoicePrintInput): string {
   table.tot{width:100%;border-collapse:collapse;font-size:12px}
   table.tot td{border:1px solid #d7e2da;padding:7px 9px}
   table.tot td:first-child{background:#f4f8f5;color:#4a5a50}
+  table.items.charges{margin-top:10px}
+  table.items.charges tr.sumrow td{background:#f4f8f5;font-weight:700;color:#1d5c3f}
+
   table.tot td:last-child{text-align:left;font-weight:600;font-variant-numeric:tabular-nums}
   table.tot tr.big td{background:#1d5c3f;color:#fff;font-size:13px;font-weight:700}
   .sig{margin-top:38px;display:flex;justify-content:space-between;font-size:11.5px}
