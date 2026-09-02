@@ -90,19 +90,32 @@ export function useOpenTabs(scope: string) {
   const addTab = useCallback(() => {
     const rows = read(scope);
     const tab = newTab(rows.length + 1);
-    write(scope, [...rows, tab]);
+    const next = [...rows, tab];
+    write(scope, next);
     writeActive(scope, tab.id);
+    setTabs(next);
+    setActiveId(tab.id);
     return tab.id;
   }, [scope]);
 
-  const activate = useCallback((id: string) => writeActive(scope, id), [scope]);
+  const activate = useCallback(
+    (id: string) => {
+      writeActive(scope, id);
+      setActiveId(id);
+    },
+    [scope],
+  );
 
   const closeTab = useCallback(
     (id: string) => {
       const rows = read(scope).filter((t) => t.id !== id);
       const next = rows.length > 0 ? rows : [newTab(1)];
       write(scope, next);
-      if (readActive(scope) === id) writeActive(scope, next[0].id);
+      setTabs(next);
+      if (readActive(scope) === id) {
+        writeActive(scope, next[0].id);
+        setActiveId(next[0].id);
+      }
     },
     [scope],
   );
@@ -118,10 +131,11 @@ export function useOpenTabs(scope: string) {
         found.label === (label ?? found.label) &&
         found.hint === (hint ?? found.hint);
       if (same) return;
-      write(
-        scope,
-        rows.map((t) => (t.id === id ? { ...t, state, label: label ?? t.label, hint: hint ?? t.hint } : t)),
+      const next = rows.map((t) =>
+        t.id === id ? { ...t, state, label: label ?? t.label, hint: hint ?? t.hint } : t,
       );
+      write(scope, next);
+      setTabs(next);
     },
     [scope],
   );
