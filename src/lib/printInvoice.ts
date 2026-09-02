@@ -169,7 +169,97 @@ function partyRow(label: string, value?: string): string {
   return `<div class="row"><span>${label}</span><span>${value}</span></div>`;
 }
 
+/** إيصال كاشير (Receipt) على مقاس A5 — شبيه بمخرجات ماكينات الكاشير الحرارية */
+function receiptHtml(input: InvoicePrintInput): string {
+  const t = input.totals;
+  const org = input.org;
+  const items = input.lines
+    .map((line, i) => {
+      const lt = lineTotals(line);
+      return `<div class="it">
+        <div class="nm"><span>${i + 1}. ${line.name}</span><span class="v">${num(lt.total)}</span></div>
+        <div class="mt">${num(line.qty)} ${lineUnitLabel(line)} × ${num(line.price)}${
+          lt.discount ? ` — خصم ${num(lt.discount)}` : ""
+        }${line.code ? ` — كود ${line.code}` : ""}</div>
+      </div>`;
+    })
+    .join("");
+
+  const totLine = (k: string, v: string, cls = "") => `<div class="tr ${cls}"><span>${k}</span><span>${v}</span></div>`;
+
+  return `<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8" />
+<title>${input.docTitle ?? "فاتورة مبيعات"} ${input.no} — A5</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  @page{size:A5 portrait;margin:6mm}
+  *{box-sizing:border-box}
+  body{font-family:'IBM Plex Sans Arabic',sans-serif;margin:0;padding:10px;background:#fff;color:#111}
+  .rc{width:76mm;margin:0 auto;font-size:11px;line-height:1.65}
+  .ctr{text-align:center}
+  .logo{width:44px;height:44px;border-radius:50%;object-fit:cover;margin:0 auto 4px;display:block}
+  .mark{width:44px;height:44px;border-radius:50%;background:#111;color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;margin:0 auto 4px}
+  .co{font-size:14px;font-weight:700;letter-spacing:.2px}
+  .tiny{font-size:9.5px;color:#444}
+  .hr{border-top:1px dashed #999;margin:6px 0}
+  .doct{font-size:12px;font-weight:700;margin:2px 0}
+  .kv{display:flex;justify-content:space-between;gap:6px;font-size:10px}
+  .kv span:first-child{color:#555}
+  .it{padding:3px 0;border-bottom:1px dotted #ccc}
+  .it:last-child{border-bottom:0}
+  .nm{display:flex;justify-content:space-between;gap:6px;font-weight:600}
+  .nm .v{font-variant-numeric:tabular-nums;white-space:nowrap}
+  .mt{font-size:9.5px;color:#555}
+  .tr{display:flex;justify-content:space-between;gap:6px;font-size:10.5px;padding:1.5px 0}
+  .tr span:last-child{font-variant-numeric:tabular-nums;font-weight:600}
+  .tr.big{font-size:13px;font-weight:700;border-top:1px solid #111;border-bottom:1px solid #111;padding:4px 0;margin:3px 0}
+  .words{font-size:9.5px;color:#333;text-align:center;margin-top:4px}
+  .thx{text-align:center;font-size:10.5px;font-weight:600;margin-top:6px}
+  .bars{margin:7px auto 0;height:32px;width:64mm;background:repeating-linear-gradient(90deg,#111 0 1px,#fff 1px 3px,#111 3px 5px,#fff 5px 8px)}
+  @media print{body{padding:0}}
+</style></head><body><div class="rc">
+  <div class="ctr">
+    ${org.logoDataUrl
+      ? `<img class="logo" src="${org.logoDataUrl}" alt="" />`
+      : `<div class="mark">${org.logoLetter || "إ"}</div>`}
+    <div class="co">${org.companyName}</div>
+    <div class="tiny">${org.activity || ""}</div>
+    <div class="tiny">${org.address || ""}</div>
+    <div class="tiny">ت: ${[org.phone, org.phone2].filter(Boolean).join(" / ") || "—"}</div>
+    <div class="tiny">س.ت: ${org.commercialNo || "—"} • ض: ${org.taxNo || "—"}</div>
+    <div class="hr"></div>
+    <div class="doct">${input.docTitle ?? "فاتورة مبيعات"}</div>
+  </div>
+  <div class="kv"><span>رقم</span><span>${input.no}</span></div>
+  <div class="kv"><span>التاريخ</span><span>${dateFmt(input.date)} ${new Date().toLocaleTimeString("en-GB")}</span></div>
+  <div class="kv"><span>${input.partyLabel ?? "العميل"}</span><span>${input.customer}</span></div>
+  ${input.customerPhone ? `<div class="kv"><span>الهاتف</span><span>${input.customerPhone}</span></div>` : ""}
+  <div class="kv"><span>${input.partyLabel === "المورد" ? "المستلم" : "المندوب"}</span><span>${input.rep}</span></div>
+  <div class="kv"><span>الدفع</span><span>${SALES_PAY_LABEL[input.payMethod]}</span></div>
+  <div class="hr"></div>
+  ${items || `<div class="ctr tiny">لا توجد أصناف</div>`}
+  <div class="hr"></div>
+  ${totLine("الإجمالي", money(t.gross))}
+  ${t.discount ? totLine("الخصم", money(t.discount)) : ""}
+  ${totLine("الصافي", money(t.net))}
+  ${totLine(`ض.ق.م ${num(org.vatRate)}%`, money(t.tax))}
+  ${totLine("المستحق", money(t.total), "big")}
+  ${totLine("المدفوع", money(t.paid))}
+  ${totLine("المتبقي", money(t.remaining))}
+  <div class="words">${amountInWords(t.total)}</div>
+  ${input.note ? `<div class="words">ملاحظات: ${input.note}</div>` : ""}
+  ${org.invoiceTerms ? `<div class="words">${org.invoiceTerms}</div>` : ""}
+  <div class="hr"></div>
+  <div class="thx">${org.printFooter || "شكرًا لتعاملكم معنا"}</div>
+  ${org.website ? `<div class="tiny ctr">${org.website}</div>` : ""}
+  <div class="bars"></div>
+  <div class="tiny ctr">${input.no}</div>
+</div></body></html>`;
+}
+
 export function salesInvoiceHtml(input: InvoicePrintInput): string {
+  if ((input.paper ?? "A4") === "A5") return receiptHtml(input);
   const rows = input.lines
     .map((line, index) => {
       const t = lineTotals(line);
