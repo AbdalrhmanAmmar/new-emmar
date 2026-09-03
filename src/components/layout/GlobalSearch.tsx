@@ -51,6 +51,7 @@ export function GlobalSearch() {
       if (allowed(h.to)) out.push(h);
     };
     const out: Hit[] = [];
+    const expenseItemName = (id: string) => (data.expenseItems ?? []).find((i) => i.id === id)?.name ?? "";
     const match = (...parts: (string | number | null | undefined)[]) =>
       parts
         .map((p) => String(p ?? ""))
@@ -134,7 +135,7 @@ export function GlobalSearch() {
         });
     }
     for (const move of data.stockMoves ?? []) {
-      if (match(move.no, move.reference, move.note))
+      if (match(move.no, move.refNo, move.refCode, move.partyName, move.note))
         hit({
           to: "/inventory/moves",
           title: move.no,
@@ -154,26 +155,26 @@ export function GlobalSearch() {
 
     // 6) المصروفات والموظفين والمستخدمين
     for (const expense of data.expenses ?? []) {
-      if (match(expense.no, expense.note, expense.itemName, expense.beneficiary))
+      if (match(expense.no, expense.note, expense.beneficiary, expenseItemName(expense.itemId)))
         hit({
           to: "/expenses/list",
           title: `${expense.no} — ${money(expense.amount)}`,
-          sub: `مصروف — ${expense.itemName ?? ""} — ${dateFmt(expense.date)}`,
+          sub: `مصروف — ${expenseItemName(expense.itemId)} — ${dateFmt(expense.date)}`,
           group: "المصروفات والموظفين",
         });
     }
     for (const employee of data.employees ?? []) {
-      if (match(employee.code, employee.name, employee.job, employee.phone))
+      if (match(employee.code, employee.name, employee.jobTitle, employee.department, employee.phone))
         hit({
           to: "/hr/employees",
           title: `${employee.code} — ${employee.name}`,
-          sub: employee.job ?? "موظف",
+          sub: employee.jobTitle || "موظف",
           group: "المصروفات والموظفين",
         });
     }
     for (const user of data.users ?? []) {
-      if (match(user.username, user.fullName))
-        hit({ to: "/users/list", title: user.fullName || user.username, sub: "مستخدم", group: "المصروفات والموظفين" });
+      if (match(user.username, user.name, user.code))
+        hit({ to: "/users/list", title: user.name || user.username || "", sub: "مستخدم", group: "المصروفات والموظفين" });
     }
 
     return out.slice(0, 24);
