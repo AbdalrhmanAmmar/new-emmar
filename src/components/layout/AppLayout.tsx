@@ -9,6 +9,7 @@ import { MobileTabBar } from "@/components/layout/MobileTabBar";
 import { MODULES, matchModule, matchNavItem } from "@/components/layout/navConfig";
 import { SidebarDock } from "@/components/layout/SidebarDock";
 import { useOnline } from "@/components/layout/useOnline";
+import { initFontScale } from "@/lib/uiPrefs";
 import { cn } from "@/lib/utils";
 
 /** الهيكل العام: سايد بار مقسّم بالموديولات + هيدر + محتوى الصفحة */
@@ -23,6 +24,8 @@ export function AppLayout() {
     if (typeof window === "undefined") return;
     window.localStorage.setItem("ui:sidebar-collapsed", collapsed ? "1" : "0");
   }, [collapsed]);
+
+  useEffect(() => initFontScale(), []);
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const online = useOnline();
