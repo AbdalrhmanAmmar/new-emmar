@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { Search } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 
@@ -185,7 +185,7 @@ export function GlobalSearch() {
   const go = (to: string) => {
     setQuery("");
     setOpen(false);
-    navigate({ to });
+    void navigate({ to });
   };
 
   return (
@@ -230,20 +230,20 @@ export function GlobalSearch() {
                   {prev?.group !== result.group ? (
                     <p className="bg-muted/60 px-3 py-1 text-[11px] font-bold text-muted-foreground">{result.group}</p>
                   ) : null}
-                  <Link
-                    to={result.to}
-                    onMouseEnter={() => setCursor(index)}
-                    onClick={() => {
-                      setQuery("");
-                      setOpen(false);
+                  <button
+                    type="button"
+                    onMouseDown={(event) => {
+                      event.preventDefault();
+                      go(result.to);
                     }}
-                    className={`flex items-center justify-between gap-3 border-b border-border/60 px-3 py-2 text-right text-sm last:border-0 ${
+                    onMouseEnter={() => setCursor(index)}
+                    className={`flex w-full items-center justify-between gap-3 border-b border-border/60 px-3 py-2 text-right text-sm last:border-0 ${
                       index === cursor ? "bg-primary/10" : "hover:bg-primary/5"
                     }`}
                   >
                     <span className="truncate font-medium">{result.title}</span>
                     <span className="shrink-0 text-xs text-muted-foreground">{result.sub}</span>
-                  </Link>
+                  </button>
                 </div>
               );
             })
