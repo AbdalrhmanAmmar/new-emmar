@@ -6,7 +6,7 @@ import { PeriodFilter, periodText, usePeriod } from "@/components/analytics/Peri
 import { PageHeader, StatCard } from "@/components/treasury/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { dateFmt, money, num } from "@/lib/format";
+import { dateFmt, money } from "@/lib/format";
 import { useDb } from "@/lib/mockDb";
 import { profitAndLoss } from "@/lib/pnl";
 import { printHtml } from "@/lib/printDoc";
@@ -44,7 +44,7 @@ export function ProfitLossReport() {
       label: g.label,
       value: g.amount,
       tone: "sub",
-      hint: `${num(g.count)} مستند`,
+      hint: `${g.count} مستند`,
     })),
     { label: "رسوم التحويلات البنكية", value: pnl.transferFees, tone: "sub" },
     { label: "إجمالى المصروفات", value: pnl.expenses + pnl.transferFees, tone: "total" },
@@ -77,8 +77,8 @@ export function ProfitLossReport() {
     printHtml(
       "تقرير الأرباح والخسائر",
       `<table class="kv"><tbody><tr><td>الفترة</td><td>${dateFmt(range.from)} — ${dateFmt(range.to)}</td>
-        <td>عدد فواتير البيع</td><td>${num(pnl.salesCount)}</td>
-        <td>عدد فواتير الشراء</td><td>${num(pnl.purchasesCount)}</td></tr></tbody></table>
+        <td>عدد فواتير البيع</td><td>${pnl.salesCount}</td>
+        <td>عدد فواتير الشراء</td><td>${pnl.purchasesCount}</td></tr></tbody></table>
       ${table("الإيرادات", revenueRows)}
       ${table("تكلفة المبيعات", cogsRows)}
       ${table("المصروفات", expenseRows)}
@@ -113,7 +113,7 @@ export function ProfitLossReport() {
         <StatCard
           label="صافى الإيرادات"
           value={money(pnl.revenue)}
-          hint={`${num(pnl.salesCount)} فاتورة — ضريبة مبيعات: ${money(pnl.salesTax)}`}
+          hint={`${pnl.salesCount} فاتورة — ضريبة مبيعات: ${money(pnl.salesTax)}`}
           icon={<Receipt className="size-4" />}
         />
         <StatCard
