@@ -35,6 +35,7 @@ import { Route as ReportsGeneralLedgerRouteImport } from './routes/reports/gener
 import { Route as ReportsJournalRouteImport } from './routes/reports/journal'
 import { Route as ReportsProfitLossRouteImport } from './routes/reports/profit-loss'
 import { Route as ReportsTrialBalanceRouteImport } from './routes/reports/trial-balance'
+import { Route as ReportsVatRouteImport } from './routes/reports/vat'
 import { Route as SalesIndexRouteImport } from './routes/sales/index'
 import { Route as SalesPosRouteImport } from './routes/sales/pos'
 import { Route as TreasuryIndexRouteImport } from './routes/treasury/index'
@@ -243,6 +244,11 @@ const ReportsProfitLossRoute = ReportsProfitLossRouteImport.update({
 const ReportsTrialBalanceRoute = ReportsTrialBalanceRouteImport.update({
   id: '/trial-balance',
   path: '/trial-balance',
+  getParentRoute: () => ReportsRouteRoute,
+} as any)
+const ReportsVatRoute = ReportsVatRouteImport.update({
+  id: '/vat',
+  path: '/vat',
   getParentRoute: () => ReportsRouteRoute,
 } as any)
 const SalesIndexRoute = SalesIndexRouteImport.update({
@@ -661,6 +667,7 @@ export interface FileRoutesByFullPath {
   '/reports/journal': typeof ReportsJournalRoute
   '/reports/profit-loss': typeof ReportsProfitLossRoute
   '/reports/trial-balance': typeof ReportsTrialBalanceRoute
+  '/reports/vat': typeof ReportsVatRoute
   '/sales/pos': typeof SalesPosRoute
   '/users/$id': typeof UsersIdRoute
   '/users/new': typeof UsersNewRoute
@@ -758,6 +765,7 @@ export interface FileRoutesByTo {
   '/reports/journal': typeof ReportsJournalRoute
   '/reports/profit-loss': typeof ReportsProfitLossRoute
   '/reports/trial-balance': typeof ReportsTrialBalanceRoute
+  '/reports/vat': typeof ReportsVatRoute
   '/sales/pos': typeof SalesPosRoute
   '/users/$id': typeof UsersIdRoute
   '/users/new': typeof UsersNewRoute
@@ -864,6 +872,7 @@ export interface FileRoutesById {
   '/reports/journal': typeof ReportsJournalRoute
   '/reports/profit-loss': typeof ReportsProfitLossRoute
   '/reports/trial-balance': typeof ReportsTrialBalanceRoute
+  '/reports/vat': typeof ReportsVatRoute
   '/sales/pos': typeof SalesPosRoute
   '/users/$id': typeof UsersIdRoute
   '/users/new': typeof UsersNewRoute
@@ -971,6 +980,7 @@ export interface FileRouteTypes {
     | '/reports/journal'
     | '/reports/profit-loss'
     | '/reports/trial-balance'
+    | '/reports/vat'
     | '/sales/pos'
     | '/users/$id'
     | '/users/new'
@@ -1068,6 +1078,7 @@ export interface FileRouteTypes {
     | '/reports/journal'
     | '/reports/profit-loss'
     | '/reports/trial-balance'
+    | '/reports/vat'
     | '/sales/pos'
     | '/users/$id'
     | '/users/new'
@@ -1173,6 +1184,7 @@ export interface FileRouteTypes {
     | '/reports/journal'
     | '/reports/profit-loss'
     | '/reports/trial-balance'
+    | '/reports/vat'
     | '/sales/pos'
     | '/users/$id'
     | '/users/new'
@@ -1452,6 +1464,13 @@ declare module '@tanstack/react-router' {
       path: '/trial-balance'
       fullPath: '/reports/trial-balance'
       preLoaderRoute: typeof ReportsTrialBalanceRouteImport
+      parentRoute: typeof ReportsRouteRoute
+    }
+    '/reports/vat': {
+      id: '/reports/vat'
+      path: '/vat'
+      fullPath: '/reports/vat'
+      preLoaderRoute: typeof ReportsVatRouteImport
       parentRoute: typeof ReportsRouteRoute
     }
     '/sales/': {
@@ -2125,6 +2144,7 @@ interface ReportsRouteRouteChildren {
   ReportsJournalRoute: typeof ReportsJournalRoute
   ReportsProfitLossRoute: typeof ReportsProfitLossRoute
   ReportsTrialBalanceRoute: typeof ReportsTrialBalanceRoute
+  ReportsVatRoute: typeof ReportsVatRoute
   ReportsIndexRoute: typeof ReportsIndexRoute
 }
 
@@ -2135,6 +2155,7 @@ const ReportsRouteRouteChildren: ReportsRouteRouteChildren = {
   ReportsJournalRoute: ReportsJournalRoute,
   ReportsProfitLossRoute: ReportsProfitLossRoute,
   ReportsTrialBalanceRoute: ReportsTrialBalanceRoute,
+  ReportsVatRoute: ReportsVatRoute,
   ReportsIndexRoute: ReportsIndexRoute,
 }
 
