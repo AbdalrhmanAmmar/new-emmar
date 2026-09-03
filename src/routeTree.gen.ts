@@ -29,6 +29,7 @@ import { Route as InventoryStocktakeRouteImport } from './routes/inventory/stock
 import { Route as InventoryStocktakeReportRouteImport } from './routes/inventory/stocktake-report'
 import { Route as PurchasesIndexRouteImport } from './routes/purchases/index'
 import { Route as ReportsIndexRouteImport } from './routes/reports/index'
+import { Route as ReportsBalanceSheetRouteImport } from './routes/reports/balance-sheet'
 import { Route as ReportsCustomerStatementRouteImport } from './routes/reports/customer-statement'
 import { Route as ReportsGeneralLedgerRouteImport } from './routes/reports/general-ledger'
 import { Route as ReportsJournalRouteImport } from './routes/reports/journal'
@@ -211,6 +212,11 @@ const PurchasesIndexRoute = PurchasesIndexRouteImport.update({
 const ReportsIndexRoute = ReportsIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => ReportsRouteRoute,
+} as any)
+const ReportsBalanceSheetRoute = ReportsBalanceSheetRouteImport.update({
+  id: '/balance-sheet',
+  path: '/balance-sheet',
   getParentRoute: () => ReportsRouteRoute,
 } as any)
 const ReportsCustomerStatementRoute =
@@ -649,6 +655,7 @@ export interface FileRoutesByFullPath {
   '/inventory/balance': typeof InventoryBalanceRoute
   '/inventory/stocktake': typeof InventoryStocktakeRoute
   '/inventory/stocktake-report': typeof InventoryStocktakeReportRoute
+  '/reports/balance-sheet': typeof ReportsBalanceSheetRoute
   '/reports/customer-statement': typeof ReportsCustomerStatementRoute
   '/reports/general-ledger': typeof ReportsGeneralLedgerRoute
   '/reports/journal': typeof ReportsJournalRoute
@@ -745,6 +752,7 @@ export interface FileRoutesByTo {
   '/inventory/balance': typeof InventoryBalanceRoute
   '/inventory/stocktake': typeof InventoryStocktakeRoute
   '/inventory/stocktake-report': typeof InventoryStocktakeReportRoute
+  '/reports/balance-sheet': typeof ReportsBalanceSheetRoute
   '/reports/customer-statement': typeof ReportsCustomerStatementRoute
   '/reports/general-ledger': typeof ReportsGeneralLedgerRoute
   '/reports/journal': typeof ReportsJournalRoute
@@ -850,6 +858,7 @@ export interface FileRoutesById {
   '/inventory/balance': typeof InventoryBalanceRoute
   '/inventory/stocktake': typeof InventoryStocktakeRoute
   '/inventory/stocktake-report': typeof InventoryStocktakeReportRoute
+  '/reports/balance-sheet': typeof ReportsBalanceSheetRoute
   '/reports/customer-statement': typeof ReportsCustomerStatementRoute
   '/reports/general-ledger': typeof ReportsGeneralLedgerRoute
   '/reports/journal': typeof ReportsJournalRoute
@@ -956,6 +965,7 @@ export interface FileRouteTypes {
     | '/inventory/balance'
     | '/inventory/stocktake'
     | '/inventory/stocktake-report'
+    | '/reports/balance-sheet'
     | '/reports/customer-statement'
     | '/reports/general-ledger'
     | '/reports/journal'
@@ -1052,6 +1062,7 @@ export interface FileRouteTypes {
     | '/inventory/balance'
     | '/inventory/stocktake'
     | '/inventory/stocktake-report'
+    | '/reports/balance-sheet'
     | '/reports/customer-statement'
     | '/reports/general-ledger'
     | '/reports/journal'
@@ -1156,6 +1167,7 @@ export interface FileRouteTypes {
     | '/inventory/balance'
     | '/inventory/stocktake'
     | '/inventory/stocktake-report'
+    | '/reports/balance-sheet'
     | '/reports/customer-statement'
     | '/reports/general-ledger'
     | '/reports/journal'
@@ -1398,6 +1410,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/reports/'
       preLoaderRoute: typeof ReportsIndexRouteImport
+      parentRoute: typeof ReportsRouteRoute
+    }
+    '/reports/balance-sheet': {
+      id: '/reports/balance-sheet'
+      path: '/balance-sheet'
+      fullPath: '/reports/balance-sheet'
+      preLoaderRoute: typeof ReportsBalanceSheetRouteImport
       parentRoute: typeof ReportsRouteRoute
     }
     '/reports/customer-statement': {
@@ -2100,6 +2119,7 @@ const PurchasesRouteRouteWithChildren = PurchasesRouteRoute._addFileChildren(
 )
 
 interface ReportsRouteRouteChildren {
+  ReportsBalanceSheetRoute: typeof ReportsBalanceSheetRoute
   ReportsCustomerStatementRoute: typeof ReportsCustomerStatementRoute
   ReportsGeneralLedgerRoute: typeof ReportsGeneralLedgerRoute
   ReportsJournalRoute: typeof ReportsJournalRoute
@@ -2109,6 +2129,7 @@ interface ReportsRouteRouteChildren {
 }
 
 const ReportsRouteRouteChildren: ReportsRouteRouteChildren = {
+  ReportsBalanceSheetRoute: ReportsBalanceSheetRoute,
   ReportsCustomerStatementRoute: ReportsCustomerStatementRoute,
   ReportsGeneralLedgerRoute: ReportsGeneralLedgerRoute,
   ReportsJournalRoute: ReportsJournalRoute,
