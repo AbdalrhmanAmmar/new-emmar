@@ -29,8 +29,18 @@ import { Route as InventoryStocktakeRouteImport } from './routes/inventory/stock
 import { Route as InventoryStocktakeReportRouteImport } from './routes/inventory/stocktake-report'
 import { Route as PurchasesIndexRouteImport } from './routes/purchases/index'
 import { Route as ReportsIndexRouteImport } from './routes/reports/index'
+import { Route as ReportsBalanceSheetRouteImport } from './routes/reports/balance-sheet'
 import { Route as ReportsCustomerStatementRouteImport } from './routes/reports/customer-statement'
+import { Route as ReportsExpensesAnalysisRouteImport } from './routes/reports/expenses-analysis'
+import { Route as ReportsGeneralLedgerRouteImport } from './routes/reports/general-ledger'
+import { Route as ReportsJournalRouteImport } from './routes/reports/journal'
+import { Route as ReportsPayablesRouteImport } from './routes/reports/payables'
+import { Route as ReportsProductProfitRouteImport } from './routes/reports/product-profit'
 import { Route as ReportsProfitLossRouteImport } from './routes/reports/profit-loss'
+import { Route as ReportsReceivablesRouteImport } from './routes/reports/receivables'
+import { Route as ReportsSafeBalancesRouteImport } from './routes/reports/safe-balances'
+import { Route as ReportsTrialBalanceRouteImport } from './routes/reports/trial-balance'
+import { Route as ReportsVatRouteImport } from './routes/reports/vat'
 import { Route as SalesIndexRouteImport } from './routes/sales/index'
 import { Route as SalesPosRouteImport } from './routes/sales/pos'
 import { Route as TreasuryIndexRouteImport } from './routes/treasury/index'
@@ -210,15 +220,65 @@ const ReportsIndexRoute = ReportsIndexRouteImport.update({
   path: '/',
   getParentRoute: () => ReportsRouteRoute,
 } as any)
+const ReportsBalanceSheetRoute = ReportsBalanceSheetRouteImport.update({
+  id: '/balance-sheet',
+  path: '/balance-sheet',
+  getParentRoute: () => ReportsRouteRoute,
+} as any)
 const ReportsCustomerStatementRoute =
   ReportsCustomerStatementRouteImport.update({
     id: '/customer-statement',
     path: '/customer-statement',
     getParentRoute: () => ReportsRouteRoute,
   } as any)
+const ReportsExpensesAnalysisRoute = ReportsExpensesAnalysisRouteImport.update({
+  id: '/expenses-analysis',
+  path: '/expenses-analysis',
+  getParentRoute: () => ReportsRouteRoute,
+} as any)
+const ReportsGeneralLedgerRoute = ReportsGeneralLedgerRouteImport.update({
+  id: '/general-ledger',
+  path: '/general-ledger',
+  getParentRoute: () => ReportsRouteRoute,
+} as any)
+const ReportsJournalRoute = ReportsJournalRouteImport.update({
+  id: '/journal',
+  path: '/journal',
+  getParentRoute: () => ReportsRouteRoute,
+} as any)
+const ReportsPayablesRoute = ReportsPayablesRouteImport.update({
+  id: '/payables',
+  path: '/payables',
+  getParentRoute: () => ReportsRouteRoute,
+} as any)
+const ReportsProductProfitRoute = ReportsProductProfitRouteImport.update({
+  id: '/product-profit',
+  path: '/product-profit',
+  getParentRoute: () => ReportsRouteRoute,
+} as any)
 const ReportsProfitLossRoute = ReportsProfitLossRouteImport.update({
   id: '/profit-loss',
   path: '/profit-loss',
+  getParentRoute: () => ReportsRouteRoute,
+} as any)
+const ReportsReceivablesRoute = ReportsReceivablesRouteImport.update({
+  id: '/receivables',
+  path: '/receivables',
+  getParentRoute: () => ReportsRouteRoute,
+} as any)
+const ReportsSafeBalancesRoute = ReportsSafeBalancesRouteImport.update({
+  id: '/safe-balances',
+  path: '/safe-balances',
+  getParentRoute: () => ReportsRouteRoute,
+} as any)
+const ReportsTrialBalanceRoute = ReportsTrialBalanceRouteImport.update({
+  id: '/trial-balance',
+  path: '/trial-balance',
+  getParentRoute: () => ReportsRouteRoute,
+} as any)
+const ReportsVatRoute = ReportsVatRouteImport.update({
+  id: '/vat',
+  path: '/vat',
   getParentRoute: () => ReportsRouteRoute,
 } as any)
 const SalesIndexRoute = SalesIndexRouteImport.update({
@@ -631,8 +691,18 @@ export interface FileRoutesByFullPath {
   '/inventory/balance': typeof InventoryBalanceRoute
   '/inventory/stocktake': typeof InventoryStocktakeRoute
   '/inventory/stocktake-report': typeof InventoryStocktakeReportRoute
+  '/reports/balance-sheet': typeof ReportsBalanceSheetRoute
   '/reports/customer-statement': typeof ReportsCustomerStatementRoute
+  '/reports/expenses-analysis': typeof ReportsExpensesAnalysisRoute
+  '/reports/general-ledger': typeof ReportsGeneralLedgerRoute
+  '/reports/journal': typeof ReportsJournalRoute
+  '/reports/payables': typeof ReportsPayablesRoute
+  '/reports/product-profit': typeof ReportsProductProfitRoute
   '/reports/profit-loss': typeof ReportsProfitLossRoute
+  '/reports/receivables': typeof ReportsReceivablesRoute
+  '/reports/safe-balances': typeof ReportsSafeBalancesRoute
+  '/reports/trial-balance': typeof ReportsTrialBalanceRoute
+  '/reports/vat': typeof ReportsVatRoute
   '/sales/pos': typeof SalesPosRoute
   '/users/$id': typeof UsersIdRoute
   '/users/new': typeof UsersNewRoute
@@ -724,8 +794,18 @@ export interface FileRoutesByTo {
   '/inventory/balance': typeof InventoryBalanceRoute
   '/inventory/stocktake': typeof InventoryStocktakeRoute
   '/inventory/stocktake-report': typeof InventoryStocktakeReportRoute
+  '/reports/balance-sheet': typeof ReportsBalanceSheetRoute
   '/reports/customer-statement': typeof ReportsCustomerStatementRoute
+  '/reports/expenses-analysis': typeof ReportsExpensesAnalysisRoute
+  '/reports/general-ledger': typeof ReportsGeneralLedgerRoute
+  '/reports/journal': typeof ReportsJournalRoute
+  '/reports/payables': typeof ReportsPayablesRoute
+  '/reports/product-profit': typeof ReportsProductProfitRoute
   '/reports/profit-loss': typeof ReportsProfitLossRoute
+  '/reports/receivables': typeof ReportsReceivablesRoute
+  '/reports/safe-balances': typeof ReportsSafeBalancesRoute
+  '/reports/trial-balance': typeof ReportsTrialBalanceRoute
+  '/reports/vat': typeof ReportsVatRoute
   '/sales/pos': typeof SalesPosRoute
   '/users/$id': typeof UsersIdRoute
   '/users/new': typeof UsersNewRoute
@@ -826,8 +906,18 @@ export interface FileRoutesById {
   '/inventory/balance': typeof InventoryBalanceRoute
   '/inventory/stocktake': typeof InventoryStocktakeRoute
   '/inventory/stocktake-report': typeof InventoryStocktakeReportRoute
+  '/reports/balance-sheet': typeof ReportsBalanceSheetRoute
   '/reports/customer-statement': typeof ReportsCustomerStatementRoute
+  '/reports/expenses-analysis': typeof ReportsExpensesAnalysisRoute
+  '/reports/general-ledger': typeof ReportsGeneralLedgerRoute
+  '/reports/journal': typeof ReportsJournalRoute
+  '/reports/payables': typeof ReportsPayablesRoute
+  '/reports/product-profit': typeof ReportsProductProfitRoute
   '/reports/profit-loss': typeof ReportsProfitLossRoute
+  '/reports/receivables': typeof ReportsReceivablesRoute
+  '/reports/safe-balances': typeof ReportsSafeBalancesRoute
+  '/reports/trial-balance': typeof ReportsTrialBalanceRoute
+  '/reports/vat': typeof ReportsVatRoute
   '/sales/pos': typeof SalesPosRoute
   '/users/$id': typeof UsersIdRoute
   '/users/new': typeof UsersNewRoute
@@ -929,8 +1019,18 @@ export interface FileRouteTypes {
     | '/inventory/balance'
     | '/inventory/stocktake'
     | '/inventory/stocktake-report'
+    | '/reports/balance-sheet'
     | '/reports/customer-statement'
+    | '/reports/expenses-analysis'
+    | '/reports/general-ledger'
+    | '/reports/journal'
+    | '/reports/payables'
+    | '/reports/product-profit'
     | '/reports/profit-loss'
+    | '/reports/receivables'
+    | '/reports/safe-balances'
+    | '/reports/trial-balance'
+    | '/reports/vat'
     | '/sales/pos'
     | '/users/$id'
     | '/users/new'
@@ -1022,8 +1122,18 @@ export interface FileRouteTypes {
     | '/inventory/balance'
     | '/inventory/stocktake'
     | '/inventory/stocktake-report'
+    | '/reports/balance-sheet'
     | '/reports/customer-statement'
+    | '/reports/expenses-analysis'
+    | '/reports/general-ledger'
+    | '/reports/journal'
+    | '/reports/payables'
+    | '/reports/product-profit'
     | '/reports/profit-loss'
+    | '/reports/receivables'
+    | '/reports/safe-balances'
+    | '/reports/trial-balance'
+    | '/reports/vat'
     | '/sales/pos'
     | '/users/$id'
     | '/users/new'
@@ -1123,8 +1233,18 @@ export interface FileRouteTypes {
     | '/inventory/balance'
     | '/inventory/stocktake'
     | '/inventory/stocktake-report'
+    | '/reports/balance-sheet'
     | '/reports/customer-statement'
+    | '/reports/expenses-analysis'
+    | '/reports/general-ledger'
+    | '/reports/journal'
+    | '/reports/payables'
+    | '/reports/product-profit'
     | '/reports/profit-loss'
+    | '/reports/receivables'
+    | '/reports/safe-balances'
+    | '/reports/trial-balance'
+    | '/reports/vat'
     | '/sales/pos'
     | '/users/$id'
     | '/users/new'
@@ -1364,6 +1484,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReportsIndexRouteImport
       parentRoute: typeof ReportsRouteRoute
     }
+    '/reports/balance-sheet': {
+      id: '/reports/balance-sheet'
+      path: '/balance-sheet'
+      fullPath: '/reports/balance-sheet'
+      preLoaderRoute: typeof ReportsBalanceSheetRouteImport
+      parentRoute: typeof ReportsRouteRoute
+    }
     '/reports/customer-statement': {
       id: '/reports/customer-statement'
       path: '/customer-statement'
@@ -1371,11 +1498,74 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReportsCustomerStatementRouteImport
       parentRoute: typeof ReportsRouteRoute
     }
+    '/reports/expenses-analysis': {
+      id: '/reports/expenses-analysis'
+      path: '/expenses-analysis'
+      fullPath: '/reports/expenses-analysis'
+      preLoaderRoute: typeof ReportsExpensesAnalysisRouteImport
+      parentRoute: typeof ReportsRouteRoute
+    }
+    '/reports/general-ledger': {
+      id: '/reports/general-ledger'
+      path: '/general-ledger'
+      fullPath: '/reports/general-ledger'
+      preLoaderRoute: typeof ReportsGeneralLedgerRouteImport
+      parentRoute: typeof ReportsRouteRoute
+    }
+    '/reports/journal': {
+      id: '/reports/journal'
+      path: '/journal'
+      fullPath: '/reports/journal'
+      preLoaderRoute: typeof ReportsJournalRouteImport
+      parentRoute: typeof ReportsRouteRoute
+    }
+    '/reports/payables': {
+      id: '/reports/payables'
+      path: '/payables'
+      fullPath: '/reports/payables'
+      preLoaderRoute: typeof ReportsPayablesRouteImport
+      parentRoute: typeof ReportsRouteRoute
+    }
+    '/reports/product-profit': {
+      id: '/reports/product-profit'
+      path: '/product-profit'
+      fullPath: '/reports/product-profit'
+      preLoaderRoute: typeof ReportsProductProfitRouteImport
+      parentRoute: typeof ReportsRouteRoute
+    }
     '/reports/profit-loss': {
       id: '/reports/profit-loss'
       path: '/profit-loss'
       fullPath: '/reports/profit-loss'
       preLoaderRoute: typeof ReportsProfitLossRouteImport
+      parentRoute: typeof ReportsRouteRoute
+    }
+    '/reports/receivables': {
+      id: '/reports/receivables'
+      path: '/receivables'
+      fullPath: '/reports/receivables'
+      preLoaderRoute: typeof ReportsReceivablesRouteImport
+      parentRoute: typeof ReportsRouteRoute
+    }
+    '/reports/safe-balances': {
+      id: '/reports/safe-balances'
+      path: '/safe-balances'
+      fullPath: '/reports/safe-balances'
+      preLoaderRoute: typeof ReportsSafeBalancesRouteImport
+      parentRoute: typeof ReportsRouteRoute
+    }
+    '/reports/trial-balance': {
+      id: '/reports/trial-balance'
+      path: '/trial-balance'
+      fullPath: '/reports/trial-balance'
+      preLoaderRoute: typeof ReportsTrialBalanceRouteImport
+      parentRoute: typeof ReportsRouteRoute
+    }
+    '/reports/vat': {
+      id: '/reports/vat'
+      path: '/vat'
+      fullPath: '/reports/vat'
+      preLoaderRoute: typeof ReportsVatRouteImport
       parentRoute: typeof ReportsRouteRoute
     }
     '/sales/': {
@@ -2043,14 +2233,34 @@ const PurchasesRouteRouteWithChildren = PurchasesRouteRoute._addFileChildren(
 )
 
 interface ReportsRouteRouteChildren {
+  ReportsBalanceSheetRoute: typeof ReportsBalanceSheetRoute
   ReportsCustomerStatementRoute: typeof ReportsCustomerStatementRoute
+  ReportsExpensesAnalysisRoute: typeof ReportsExpensesAnalysisRoute
+  ReportsGeneralLedgerRoute: typeof ReportsGeneralLedgerRoute
+  ReportsJournalRoute: typeof ReportsJournalRoute
+  ReportsPayablesRoute: typeof ReportsPayablesRoute
+  ReportsProductProfitRoute: typeof ReportsProductProfitRoute
   ReportsProfitLossRoute: typeof ReportsProfitLossRoute
+  ReportsReceivablesRoute: typeof ReportsReceivablesRoute
+  ReportsSafeBalancesRoute: typeof ReportsSafeBalancesRoute
+  ReportsTrialBalanceRoute: typeof ReportsTrialBalanceRoute
+  ReportsVatRoute: typeof ReportsVatRoute
   ReportsIndexRoute: typeof ReportsIndexRoute
 }
 
 const ReportsRouteRouteChildren: ReportsRouteRouteChildren = {
+  ReportsBalanceSheetRoute: ReportsBalanceSheetRoute,
   ReportsCustomerStatementRoute: ReportsCustomerStatementRoute,
+  ReportsExpensesAnalysisRoute: ReportsExpensesAnalysisRoute,
+  ReportsGeneralLedgerRoute: ReportsGeneralLedgerRoute,
+  ReportsJournalRoute: ReportsJournalRoute,
+  ReportsPayablesRoute: ReportsPayablesRoute,
+  ReportsProductProfitRoute: ReportsProductProfitRoute,
   ReportsProfitLossRoute: ReportsProfitLossRoute,
+  ReportsReceivablesRoute: ReportsReceivablesRoute,
+  ReportsSafeBalancesRoute: ReportsSafeBalancesRoute,
+  ReportsTrialBalanceRoute: ReportsTrialBalanceRoute,
+  ReportsVatRoute: ReportsVatRoute,
   ReportsIndexRoute: ReportsIndexRoute,
 }
 
