@@ -26,7 +26,7 @@ import { purchasePrintInput } from "@/lib/printPurchase";
 import { savePurchaseInvoice } from "@/lib/purchaseActions";
 import { baseQty, lineUnitLabel, unitOptions, unitPatch } from "@/lib/units";
 import { purchaseTotals } from "@/lib/purchases";
-import { emptyLine, lineTotals, productOptions } from "@/lib/sales";
+import { effectiveTaxRate, emptyLine, lineTotals, productOptions } from "@/lib/sales";
 
 interface Props {
   invoice?: PurchaseInvoice;
@@ -89,7 +89,7 @@ export function PurchaseInvoiceEditor({ invoice }: Props) {
       unitName: UNIT_LABEL[product.unit],
       unitFactor: 1,
       price: product.cost,
-      taxRate: product.taxRate,
+      taxRate: effectiveTaxRate(product.taxRate),
     });
   };
 
