@@ -280,3 +280,42 @@ body,
 .table-scroll-x::-webkit-scrollbar-thumb:hover {
   background: color-mix(in oklab, var(--muted-foreground) 55%, transparent);
 }
+
+/* ===== شريط الموديولات السفلي (Dock) ===== */
+@keyframes dock-enter {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 26px, 0) scale(0.94);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes dock-menu-enter {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0) scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+.dock-enter {
+  animation: dock-enter 0.34s cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+
+.dock-menu-enter {
+  animation: dock-menu-enter 0.2s cubic-bezier(0.32, 0.72, 0, 1) both;
+  transform-origin: bottom center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dock-enter,
+  .dock-menu-enter {
+    animation: none;
+  }
+}

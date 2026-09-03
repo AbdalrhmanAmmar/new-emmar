@@ -14,7 +14,16 @@ import { cn } from "@/lib/utils";
 /** الهيكل العام: سايد بار مقسّم بالموديولات + هيدر + محتوى الصفحة */
 export function AppLayout() {
   const pathname = useRouterState({ select: (state) => state.location.pathname });
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return window.localStorage.getItem("ui:sidebar-collapsed") === "1";
+  });
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    window.localStorage.setItem("ui:sidebar-collapsed", collapsed ? "1" : "0");
+  }, [collapsed]);
+
   const [mobileOpen, setMobileOpen] = useState(false);
   const online = useOnline();
 
@@ -88,6 +97,7 @@ export function AppLayout() {
           canGoBack={pathname.split("/").filter(Boolean).length > 1}
         />
         <main
+          key={pathname}
           className={cn(
             "page-transition mx-auto w-full max-w-[1400px] flex-1 p-3 pb-24 sm:p-5",
             collapsed ? "lg:pb-28" : "lg:pb-5",
