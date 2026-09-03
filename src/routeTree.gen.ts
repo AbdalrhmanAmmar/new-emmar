@@ -30,6 +30,7 @@ import { Route as InventoryStocktakeReportRouteImport } from './routes/inventory
 import { Route as PurchasesIndexRouteImport } from './routes/purchases/index'
 import { Route as ReportsIndexRouteImport } from './routes/reports/index'
 import { Route as ReportsCustomerStatementRouteImport } from './routes/reports/customer-statement'
+import { Route as ReportsJournalRouteImport } from './routes/reports/journal'
 import { Route as ReportsProfitLossRouteImport } from './routes/reports/profit-loss'
 import { Route as SalesIndexRouteImport } from './routes/sales/index'
 import { Route as SalesPosRouteImport } from './routes/sales/pos'
@@ -216,6 +217,11 @@ const ReportsCustomerStatementRoute =
     path: '/customer-statement',
     getParentRoute: () => ReportsRouteRoute,
   } as any)
+const ReportsJournalRoute = ReportsJournalRouteImport.update({
+  id: '/journal',
+  path: '/journal',
+  getParentRoute: () => ReportsRouteRoute,
+} as any)
 const ReportsProfitLossRoute = ReportsProfitLossRouteImport.update({
   id: '/profit-loss',
   path: '/profit-loss',
@@ -632,6 +638,7 @@ export interface FileRoutesByFullPath {
   '/inventory/stocktake': typeof InventoryStocktakeRoute
   '/inventory/stocktake-report': typeof InventoryStocktakeReportRoute
   '/reports/customer-statement': typeof ReportsCustomerStatementRoute
+  '/reports/journal': typeof ReportsJournalRoute
   '/reports/profit-loss': typeof ReportsProfitLossRoute
   '/sales/pos': typeof SalesPosRoute
   '/users/$id': typeof UsersIdRoute
@@ -725,6 +732,7 @@ export interface FileRoutesByTo {
   '/inventory/stocktake': typeof InventoryStocktakeRoute
   '/inventory/stocktake-report': typeof InventoryStocktakeReportRoute
   '/reports/customer-statement': typeof ReportsCustomerStatementRoute
+  '/reports/journal': typeof ReportsJournalRoute
   '/reports/profit-loss': typeof ReportsProfitLossRoute
   '/sales/pos': typeof SalesPosRoute
   '/users/$id': typeof UsersIdRoute
@@ -827,6 +835,7 @@ export interface FileRoutesById {
   '/inventory/stocktake': typeof InventoryStocktakeRoute
   '/inventory/stocktake-report': typeof InventoryStocktakeReportRoute
   '/reports/customer-statement': typeof ReportsCustomerStatementRoute
+  '/reports/journal': typeof ReportsJournalRoute
   '/reports/profit-loss': typeof ReportsProfitLossRoute
   '/sales/pos': typeof SalesPosRoute
   '/users/$id': typeof UsersIdRoute
@@ -930,6 +939,7 @@ export interface FileRouteTypes {
     | '/inventory/stocktake'
     | '/inventory/stocktake-report'
     | '/reports/customer-statement'
+    | '/reports/journal'
     | '/reports/profit-loss'
     | '/sales/pos'
     | '/users/$id'
@@ -1023,6 +1033,7 @@ export interface FileRouteTypes {
     | '/inventory/stocktake'
     | '/inventory/stocktake-report'
     | '/reports/customer-statement'
+    | '/reports/journal'
     | '/reports/profit-loss'
     | '/sales/pos'
     | '/users/$id'
@@ -1124,6 +1135,7 @@ export interface FileRouteTypes {
     | '/inventory/stocktake'
     | '/inventory/stocktake-report'
     | '/reports/customer-statement'
+    | '/reports/journal'
     | '/reports/profit-loss'
     | '/sales/pos'
     | '/users/$id'
@@ -1369,6 +1381,13 @@ declare module '@tanstack/react-router' {
       path: '/customer-statement'
       fullPath: '/reports/customer-statement'
       preLoaderRoute: typeof ReportsCustomerStatementRouteImport
+      parentRoute: typeof ReportsRouteRoute
+    }
+    '/reports/journal': {
+      id: '/reports/journal'
+      path: '/journal'
+      fullPath: '/reports/journal'
+      preLoaderRoute: typeof ReportsJournalRouteImport
       parentRoute: typeof ReportsRouteRoute
     }
     '/reports/profit-loss': {
@@ -2044,12 +2063,14 @@ const PurchasesRouteRouteWithChildren = PurchasesRouteRoute._addFileChildren(
 
 interface ReportsRouteRouteChildren {
   ReportsCustomerStatementRoute: typeof ReportsCustomerStatementRoute
+  ReportsJournalRoute: typeof ReportsJournalRoute
   ReportsProfitLossRoute: typeof ReportsProfitLossRoute
   ReportsIndexRoute: typeof ReportsIndexRoute
 }
 
 const ReportsRouteRouteChildren: ReportsRouteRouteChildren = {
   ReportsCustomerStatementRoute: ReportsCustomerStatementRoute,
+  ReportsJournalRoute: ReportsJournalRoute,
   ReportsProfitLossRoute: ReportsProfitLossRoute,
   ReportsIndexRoute: ReportsIndexRoute,
 }
