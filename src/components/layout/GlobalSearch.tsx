@@ -77,20 +77,21 @@ export function GlobalSearch() {
     // 2) الخزينة
     for (const safe of data.safes) {
       if (match(safe.code, safe.name))
-        hit({ to: "/treasury/safes", title: `${safe.code} — ${safe.name}`, sub: "خزينة / حساب", group: "الخزينة" });
+        hit({ to: "/treasury/safes", hl: safe.name, title: `${safe.code} — ${safe.name}`, sub: "خزينة / حساب", group: "الخزينة" });
     }
     for (const voucher of data.vouchers) {
       if (match(voucher.no, voucher.note, voucher.reference, voucher.amount))
         hit({
           to: voucher.kind === "receipt" ? "/treasury/receipts" : "/treasury/payments",
           title: `${voucher.no} — ${money(voucher.amount)}`,
+          hl: voucher.no,
           sub: `${voucher.kind === "receipt" ? "سند قبض" : "سند صرف"} — ${dateFmt(voucher.date)}`,
           group: "الخزينة",
         });
     }
     for (const transfer of data.transfers) {
       if (match(transfer.no, transfer.note))
-        hit({ to: "/treasury/transfers", title: transfer.no, sub: "تحويل بين الخزن", group: "الخزينة" });
+        hit({ to: "/treasury/transfers", hl: transfer.no, title: transfer.no, sub: "تحويل بين الخزن", group: "الخزينة" });
     }
 
     // 3) المبيعات
@@ -99,13 +100,14 @@ export function GlobalSearch() {
         hit({
           to: "/sales/invoices",
           title: `${so.no} — ${money(invoiceTotalsOf(data, so).total)}`,
+          hl: so.no,
           sub: `فاتورة مبيعات — ${so.customerName} — ${dateFmt(so.date)}`,
           group: "المبيعات",
         });
     }
     for (const customer of data.customers) {
       if (match(customer.code, customer.name, customer.phone))
-        hit({ to: "/sales/customers", title: customer.name, sub: `${customer.code} — عميل`, group: "المبيعات" });
+        hit({ to: "/sales/customers", hl: customer.name, title: customer.name, sub: `${customer.code} — عميل`, group: "المبيعات" });
     }
 
     // 4) المشتريات
@@ -114,25 +116,27 @@ export function GlobalSearch() {
         hit({
           to: "/purchases/invoices",
           title: pi.no,
+          hl: pi.no,
           sub: `فاتورة مشتريات — ${pi.supplierName} — ${dateFmt(pi.date)}`,
           group: "المشتريات",
         });
     }
     for (const supplier of data.suppliers) {
       if (match(supplier.code, supplier.name, supplier.phone))
-        hit({ to: "/purchases/suppliers", title: supplier.name, sub: `${supplier.code} — مورد`, group: "المشتريات" });
+        hit({ to: "/purchases/suppliers", hl: supplier.name, title: supplier.name, sub: `${supplier.code} — مورد`, group: "المشتريات" });
     }
 
     // 5) الأصناف والمخازن
     for (const product of data.products ?? []) {
       if (match(product.code, product.name, product.barcode, product.serial, product.category))
-        hit({ to: "/sales/products", title: `${product.code} — ${product.name}`, sub: "صنف", group: "الأصناف والمخازن" });
+        hit({ to: "/sales/products", hl: product.name, title: `${product.code} — ${product.name}`, sub: "صنف", group: "الأصناف والمخازن" });
     }
     for (const warehouse of data.warehouses ?? []) {
       if (match(warehouse.code, warehouse.name))
         hit({
           to: "/inventory/warehouses",
           title: `${warehouse.code} — ${warehouse.name}`,
+          hl: warehouse.name,
           sub: "مخزن",
           group: "الأصناف والمخازن",
         });
@@ -142,6 +146,7 @@ export function GlobalSearch() {
         hit({
           to: "/inventory/moves",
           title: move.no,
+          hl: move.no,
           sub: `حركة مخزنية — ${dateFmt(move.date)}`,
           group: "الأصناف والمخازن",
         });
@@ -151,6 +156,7 @@ export function GlobalSearch() {
         hit({
           to: doc.kind === "purchase" ? "/purchases/returns" : "/sales/returns",
           title: doc.no,
+          hl: doc.no,
           sub: `مرتجع — ${doc.partyName ?? ""} — ${dateFmt(doc.date)}`,
           group: "الأصناف والمخازن",
         });
@@ -162,6 +168,7 @@ export function GlobalSearch() {
         hit({
           to: "/expenses/list",
           title: `${expense.no} — ${money(expense.amount)}`,
+          hl: expense.no,
           sub: `مصروف — ${expenseItemName(expense.itemId)} — ${dateFmt(expense.date)}`,
           group: "المصروفات والموظفين",
         });
@@ -171,13 +178,14 @@ export function GlobalSearch() {
         hit({
           to: "/hr/employees",
           title: `${employee.code} — ${employee.name}`,
+          hl: employee.name,
           sub: employee.jobTitle || "موظف",
           group: "المصروفات والموظفين",
         });
     }
     for (const user of data.users ?? []) {
       if (match(user.username, user.name, user.code))
-        hit({ to: "/users/list", title: user.name || user.username || "", sub: "مستخدم", group: "المصروفات والموظفين" });
+        hit({ to: "/users/list", hl: user.name || user.username || "", title: user.name || user.username || "", sub: "مستخدم", group: "المصروفات والموظفين" });
     }
 
     return out.slice(0, 24);
