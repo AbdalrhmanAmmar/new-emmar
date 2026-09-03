@@ -25,6 +25,7 @@ import {
   ArrowUpFromLine,
   Boxes,
   Package,
+  TrendingUp,
   Undo2,
   Users,
   Wallet,
