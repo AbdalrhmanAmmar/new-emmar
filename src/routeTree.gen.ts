@@ -38,6 +38,7 @@ import { Route as ReportsPayablesRouteImport } from './routes/reports/payables'
 import { Route as ReportsProductProfitRouteImport } from './routes/reports/product-profit'
 import { Route as ReportsProfitLossRouteImport } from './routes/reports/profit-loss'
 import { Route as ReportsReceivablesRouteImport } from './routes/reports/receivables'
+import { Route as ReportsSafeBalancesRouteImport } from './routes/reports/safe-balances'
 import { Route as ReportsTrialBalanceRouteImport } from './routes/reports/trial-balance'
 import { Route as ReportsVatRouteImport } from './routes/reports/vat'
 import { Route as SalesIndexRouteImport } from './routes/sales/index'
@@ -263,6 +264,11 @@ const ReportsProfitLossRoute = ReportsProfitLossRouteImport.update({
 const ReportsReceivablesRoute = ReportsReceivablesRouteImport.update({
   id: '/receivables',
   path: '/receivables',
+  getParentRoute: () => ReportsRouteRoute,
+} as any)
+const ReportsSafeBalancesRoute = ReportsSafeBalancesRouteImport.update({
+  id: '/safe-balances',
+  path: '/safe-balances',
   getParentRoute: () => ReportsRouteRoute,
 } as any)
 const ReportsTrialBalanceRoute = ReportsTrialBalanceRouteImport.update({
@@ -694,6 +700,7 @@ export interface FileRoutesByFullPath {
   '/reports/product-profit': typeof ReportsProductProfitRoute
   '/reports/profit-loss': typeof ReportsProfitLossRoute
   '/reports/receivables': typeof ReportsReceivablesRoute
+  '/reports/safe-balances': typeof ReportsSafeBalancesRoute
   '/reports/trial-balance': typeof ReportsTrialBalanceRoute
   '/reports/vat': typeof ReportsVatRoute
   '/sales/pos': typeof SalesPosRoute
@@ -796,6 +803,7 @@ export interface FileRoutesByTo {
   '/reports/product-profit': typeof ReportsProductProfitRoute
   '/reports/profit-loss': typeof ReportsProfitLossRoute
   '/reports/receivables': typeof ReportsReceivablesRoute
+  '/reports/safe-balances': typeof ReportsSafeBalancesRoute
   '/reports/trial-balance': typeof ReportsTrialBalanceRoute
   '/reports/vat': typeof ReportsVatRoute
   '/sales/pos': typeof SalesPosRoute
@@ -907,6 +915,7 @@ export interface FileRoutesById {
   '/reports/product-profit': typeof ReportsProductProfitRoute
   '/reports/profit-loss': typeof ReportsProfitLossRoute
   '/reports/receivables': typeof ReportsReceivablesRoute
+  '/reports/safe-balances': typeof ReportsSafeBalancesRoute
   '/reports/trial-balance': typeof ReportsTrialBalanceRoute
   '/reports/vat': typeof ReportsVatRoute
   '/sales/pos': typeof SalesPosRoute
@@ -1019,6 +1028,7 @@ export interface FileRouteTypes {
     | '/reports/product-profit'
     | '/reports/profit-loss'
     | '/reports/receivables'
+    | '/reports/safe-balances'
     | '/reports/trial-balance'
     | '/reports/vat'
     | '/sales/pos'
@@ -1121,6 +1131,7 @@ export interface FileRouteTypes {
     | '/reports/product-profit'
     | '/reports/profit-loss'
     | '/reports/receivables'
+    | '/reports/safe-balances'
     | '/reports/trial-balance'
     | '/reports/vat'
     | '/sales/pos'
@@ -1231,6 +1242,7 @@ export interface FileRouteTypes {
     | '/reports/product-profit'
     | '/reports/profit-loss'
     | '/reports/receivables'
+    | '/reports/safe-balances'
     | '/reports/trial-balance'
     | '/reports/vat'
     | '/sales/pos'
@@ -1533,6 +1545,13 @@ declare module '@tanstack/react-router' {
       path: '/receivables'
       fullPath: '/reports/receivables'
       preLoaderRoute: typeof ReportsReceivablesRouteImport
+      parentRoute: typeof ReportsRouteRoute
+    }
+    '/reports/safe-balances': {
+      id: '/reports/safe-balances'
+      path: '/safe-balances'
+      fullPath: '/reports/safe-balances'
+      preLoaderRoute: typeof ReportsSafeBalancesRouteImport
       parentRoute: typeof ReportsRouteRoute
     }
     '/reports/trial-balance': {
@@ -2223,6 +2242,7 @@ interface ReportsRouteRouteChildren {
   ReportsProductProfitRoute: typeof ReportsProductProfitRoute
   ReportsProfitLossRoute: typeof ReportsProfitLossRoute
   ReportsReceivablesRoute: typeof ReportsReceivablesRoute
+  ReportsSafeBalancesRoute: typeof ReportsSafeBalancesRoute
   ReportsTrialBalanceRoute: typeof ReportsTrialBalanceRoute
   ReportsVatRoute: typeof ReportsVatRoute
   ReportsIndexRoute: typeof ReportsIndexRoute
@@ -2238,6 +2258,7 @@ const ReportsRouteRouteChildren: ReportsRouteRouteChildren = {
   ReportsProductProfitRoute: ReportsProductProfitRoute,
   ReportsProfitLossRoute: ReportsProfitLossRoute,
   ReportsReceivablesRoute: ReportsReceivablesRoute,
+  ReportsSafeBalancesRoute: ReportsSafeBalancesRoute,
   ReportsTrialBalanceRoute: ReportsTrialBalanceRoute,
   ReportsVatRoute: ReportsVatRoute,
   ReportsIndexRoute: ReportsIndexRoute,

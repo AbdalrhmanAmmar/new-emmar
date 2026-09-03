@@ -229,6 +229,16 @@ export const REPORTS_MODULE: NavModule = {
       icon: <TrendingUp className="size-4" />,
       items: [
         { to: "/reports/profit-loss", label: "الأرباح والخسائر", icon: <TrendingUp className="size-4" /> },
+        { to: "/reports/balance-sheet", label: "المركز المالى (الميزانية)", icon: <FileText className="size-4" /> },
+        { to: "/reports/trial-balance", label: "ميزان المراجعة", icon: <ListChecks className="size-4" /> },
+        { to: "/reports/journal", label: "دفتر اليومية العامة", icon: <ScrollText className="size-4" /> },
+        { to: "/reports/general-ledger", label: "دفتر الأستاذ العام", icon: <ScrollText className="size-4" /> },
+        { to: "/reports/vat", label: "الإقرار الضريبى", icon: <Receipt className="size-4" /> },
+        { to: "/reports/receivables", label: "أرصدة ومديونيات العملاء", icon: <Wallet className="size-4" /> },
+        { to: "/reports/payables", label: "أرصدة ومستحقات الموردين", icon: <Wallet className="size-4" /> },
+        { to: "/reports/product-profit", label: "ربحية الأصناف", icon: <Boxes className="size-4" /> },
+        { to: "/reports/expenses-analysis", label: "تحليل المصروفات", icon: <Receipt className="size-4" /> },
+        { to: "/reports/safe-balances", label: "أرصدة الخزائن والبنوك", icon: <Wallet className="size-4" /> },
       ],
     },
     {
