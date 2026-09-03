@@ -7,6 +7,7 @@ import { AppHeader } from "@/components/layout/AppHeader";
 import { AppSidebar } from "@/components/layout/AppSidebar";
 import { MobileTabBar } from "@/components/layout/MobileTabBar";
 import { MODULES, matchModule, matchNavItem } from "@/components/layout/navConfig";
+import { SidebarDock } from "@/components/layout/SidebarDock";
 import { useOnline } from "@/components/layout/useOnline";
 import { cn } from "@/lib/utils";
 
