@@ -224,6 +224,14 @@ export const REPORTS_MODULE: NavModule = {
   home: { to: "/reports", label: "مركز التقارير", icon: <LayoutDashboard className="size-4" /> },
   groups: [
     {
+      id: "reports-financial",
+      label: "التقارير المالية",
+      icon: <TrendingUp className="size-4" />,
+      items: [
+        { to: "/reports/profit-loss", label: "الأرباح والخسائر", icon: <TrendingUp className="size-4" /> },
+      ],
+    },
+    {
       id: "reports-treasury",
       label: "تقارير الخزينة",
       icon: <Wallet className="size-4" />,
