@@ -14,7 +14,16 @@ import { cn } from "@/lib/utils";
 /** الهيكل العام: سايد بار مقسّم بالموديولات + هيدر + محتوى الصفحة */
 export function AppLayout() {
   const pathname = useRouterState({ select: (state) => state.location.pathname });
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return window.localStorage.getItem("ui:sidebar-collapsed") === "1";
+  });
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    window.localStorage.setItem("ui:sidebar-collapsed", collapsed ? "1" : "0");
+  }, [collapsed]);
+
   const [mobileOpen, setMobileOpen] = useState(false);
   const online = useOnline();
 
