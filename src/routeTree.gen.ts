@@ -33,6 +33,7 @@ import { Route as ReportsBalanceSheetRouteImport } from './routes/reports/balanc
 import { Route as ReportsCustomerStatementRouteImport } from './routes/reports/customer-statement'
 import { Route as ReportsGeneralLedgerRouteImport } from './routes/reports/general-ledger'
 import { Route as ReportsJournalRouteImport } from './routes/reports/journal'
+import { Route as ReportsPayablesRouteImport } from './routes/reports/payables'
 import { Route as ReportsProfitLossRouteImport } from './routes/reports/profit-loss'
 import { Route as ReportsReceivablesRouteImport } from './routes/reports/receivables'
 import { Route as ReportsTrialBalanceRouteImport } from './routes/reports/trial-balance'
@@ -235,6 +236,11 @@ const ReportsGeneralLedgerRoute = ReportsGeneralLedgerRouteImport.update({
 const ReportsJournalRoute = ReportsJournalRouteImport.update({
   id: '/journal',
   path: '/journal',
+  getParentRoute: () => ReportsRouteRoute,
+} as any)
+const ReportsPayablesRoute = ReportsPayablesRouteImport.update({
+  id: '/payables',
+  path: '/payables',
   getParentRoute: () => ReportsRouteRoute,
 } as any)
 const ReportsProfitLossRoute = ReportsProfitLossRouteImport.update({
@@ -671,6 +677,7 @@ export interface FileRoutesByFullPath {
   '/reports/customer-statement': typeof ReportsCustomerStatementRoute
   '/reports/general-ledger': typeof ReportsGeneralLedgerRoute
   '/reports/journal': typeof ReportsJournalRoute
+  '/reports/payables': typeof ReportsPayablesRoute
   '/reports/profit-loss': typeof ReportsProfitLossRoute
   '/reports/receivables': typeof ReportsReceivablesRoute
   '/reports/trial-balance': typeof ReportsTrialBalanceRoute
@@ -770,6 +777,7 @@ export interface FileRoutesByTo {
   '/reports/customer-statement': typeof ReportsCustomerStatementRoute
   '/reports/general-ledger': typeof ReportsGeneralLedgerRoute
   '/reports/journal': typeof ReportsJournalRoute
+  '/reports/payables': typeof ReportsPayablesRoute
   '/reports/profit-loss': typeof ReportsProfitLossRoute
   '/reports/receivables': typeof ReportsReceivablesRoute
   '/reports/trial-balance': typeof ReportsTrialBalanceRoute
@@ -878,6 +886,7 @@ export interface FileRoutesById {
   '/reports/customer-statement': typeof ReportsCustomerStatementRoute
   '/reports/general-ledger': typeof ReportsGeneralLedgerRoute
   '/reports/journal': typeof ReportsJournalRoute
+  '/reports/payables': typeof ReportsPayablesRoute
   '/reports/profit-loss': typeof ReportsProfitLossRoute
   '/reports/receivables': typeof ReportsReceivablesRoute
   '/reports/trial-balance': typeof ReportsTrialBalanceRoute
@@ -987,6 +996,7 @@ export interface FileRouteTypes {
     | '/reports/customer-statement'
     | '/reports/general-ledger'
     | '/reports/journal'
+    | '/reports/payables'
     | '/reports/profit-loss'
     | '/reports/receivables'
     | '/reports/trial-balance'
@@ -1086,6 +1096,7 @@ export interface FileRouteTypes {
     | '/reports/customer-statement'
     | '/reports/general-ledger'
     | '/reports/journal'
+    | '/reports/payables'
     | '/reports/profit-loss'
     | '/reports/receivables'
     | '/reports/trial-balance'
@@ -1193,6 +1204,7 @@ export interface FileRouteTypes {
     | '/reports/customer-statement'
     | '/reports/general-ledger'
     | '/reports/journal'
+    | '/reports/payables'
     | '/reports/profit-loss'
     | '/reports/receivables'
     | '/reports/trial-balance'
@@ -1462,6 +1474,13 @@ declare module '@tanstack/react-router' {
       path: '/journal'
       fullPath: '/reports/journal'
       preLoaderRoute: typeof ReportsJournalRouteImport
+      parentRoute: typeof ReportsRouteRoute
+    }
+    '/reports/payables': {
+      id: '/reports/payables'
+      path: '/payables'
+      fullPath: '/reports/payables'
+      preLoaderRoute: typeof ReportsPayablesRouteImport
       parentRoute: typeof ReportsRouteRoute
     }
     '/reports/profit-loss': {
@@ -2161,6 +2180,7 @@ interface ReportsRouteRouteChildren {
   ReportsCustomerStatementRoute: typeof ReportsCustomerStatementRoute
   ReportsGeneralLedgerRoute: typeof ReportsGeneralLedgerRoute
   ReportsJournalRoute: typeof ReportsJournalRoute
+  ReportsPayablesRoute: typeof ReportsPayablesRoute
   ReportsProfitLossRoute: typeof ReportsProfitLossRoute
   ReportsReceivablesRoute: typeof ReportsReceivablesRoute
   ReportsTrialBalanceRoute: typeof ReportsTrialBalanceRoute
@@ -2173,6 +2193,7 @@ const ReportsRouteRouteChildren: ReportsRouteRouteChildren = {
   ReportsCustomerStatementRoute: ReportsCustomerStatementRoute,
   ReportsGeneralLedgerRoute: ReportsGeneralLedgerRoute,
   ReportsJournalRoute: ReportsJournalRoute,
+  ReportsPayablesRoute: ReportsPayablesRoute,
   ReportsProfitLossRoute: ReportsProfitLossRoute,
   ReportsReceivablesRoute: ReportsReceivablesRoute,
   ReportsTrialBalanceRoute: ReportsTrialBalanceRoute,
