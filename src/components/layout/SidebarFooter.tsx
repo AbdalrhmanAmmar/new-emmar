@@ -1,9 +1,10 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { LogOut, Settings2, Wifi, WifiOff } from "lucide-react";
+import { LogOut, Minus, Plus, Settings2, Type, Wifi, WifiOff } from "lucide-react";
 
 import { SETTINGS_GROUPS } from "@/components/layout/navConfig";
 import { Button } from "@/components/ui/button";
 import { hasPerm, signOut, useCurrentUser } from "@/lib/session";
+import { FONT_SCALES, FONT_SCALE_LABEL, setFontScale, useFontScale } from "@/lib/uiPrefs";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,6 +21,7 @@ interface Props {
 
 export function SidebarFooter({ collapsed, online }: Props) {
   const current = useCurrentUser();
+  const fontScale = useFontScale();
   const navigate = useNavigate();
   const name = current?.user.name ?? "مستخدم";
   const roleName = current?.role?.name ?? "";
@@ -82,6 +84,59 @@ export function SidebarFooter({ collapsed, online }: Props) {
                 ))}
               </div>
             ))}
+            <DropdownMenuSeparator />
+            <DropdownMenuLabel className="text-xs text-muted-foreground">حجم الخط فى البرنامج</DropdownMenuLabel>
+            <div className="px-2 pb-2" onKeyDown={(e) => e.stopPropagation()}>
+              <div className="flex items-center gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon"
+                  className="size-7"
+                  aria-label="تصغير الخط"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setFontScale(fontScale - 5);
+                  }}
+                >
+                  <Minus className="size-3.5" />
+                </Button>
+                <div className="flex-1 text-center text-xs font-semibold">
+                  <Type className="ms-1 inline size-3.5 align-[-2px]" />
+                  {fontScale}% — {FONT_SCALE_LABEL[fontScale] ?? "مخصص"}
+                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon"
+                  className="size-7"
+                  aria-label="تكبير الخط"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setFontScale(fontScale + 5);
+                  }}
+                >
+                  <Plus className="size-3.5" />
+                </Button>
+              </div>
+              <div className="mt-2 flex flex-wrap gap-1">
+                {FONT_SCALES.map((scale) => (
+                  <button
+                    key={scale}
+                    type="button"
+                    onClick={() => setFontScale(scale)}
+                    className={
+                      "rounded-md border px-2 py-1 text-[11px] " +
+                      (fontScale === scale
+                        ? "border-primary bg-primary text-primary-foreground"
+                        : "border-border hover:bg-muted")
+                    }
+                  >
+                    {FONT_SCALE_LABEL[scale]}
+                  </button>
+                ))}
+              </div>
+            </div>
             <DropdownMenuSeparator />
             <DropdownMenuItem onSelect={handleSignOut} className="gap-2 text-sm text-destructive">
               <LogOut className="size-4" />
