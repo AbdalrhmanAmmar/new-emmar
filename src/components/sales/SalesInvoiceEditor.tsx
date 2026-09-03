@@ -26,7 +26,7 @@ import {
 } from "@/lib/mockDb";
 import { invoicePrintInput, printSalesInvoice } from "@/lib/printInvoice";
 import { PaperSizeToggle, usePaperSize } from "@/components/sales/PaperSizeToggle";
-import { discountPercentOf, emptyLine, invoiceTotals, lineTotals, productOptions } from "@/lib/sales";
+import { effectiveTaxRate, discountPercentOf, emptyLine, invoiceTotals, lineTotals, productOptions } from "@/lib/sales";
 import { autoNotifyOnPost } from "@/lib/notifyInvoice";
 import { saveSalesInvoice } from "@/lib/salesActions";
 import { baseQty, lineUnitLabel, stockInUnit, unitOptions, unitPatch } from "@/lib/units";
@@ -134,7 +134,7 @@ export function SalesInvoiceEditor({ invoice, draftSeed, onDraftChange, onSaved,
       code: product.code,
       name: product.name,
       unit: product.unit,
-      taxRate: product.taxRate,
+      taxRate: effectiveTaxRate(product.taxRate),
       ...unitPatch(product),
     });
   };
@@ -158,7 +158,7 @@ export function SalesInvoiceEditor({ invoice, draftSeed, onDraftChange, onSaved,
       ...unitPatch(product),
       discountPct: 0,
       discountAmt: 0,
-      taxRate: product.taxRate,
+      taxRate: effectiveTaxRate(product.taxRate),
     };
     setLines((rows) => (blank ? rows.map((r) => (r.id === blank.id ? line : r)) : [...rows, line]));
   };

@@ -210,6 +210,6 @@ export function emptyLine(id: string): SalesLine {
     price: 0,
     discountPct: 0,
     discountAmt: 0,
-    taxRate: 14,
+    taxRate: Number(orgSettings().vatRate || 0),
   };
 }
