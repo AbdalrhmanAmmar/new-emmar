@@ -53,14 +53,14 @@ export function AppLayout() {
   return (
     <AuthGate>
     <div className="flex min-h-screen bg-background">
-      <aside
-        className={cn(
-          "sticky top-0 hidden h-screen shrink-0 bg-sidebar transition-[width] duration-200 lg:block",
-          collapsed ? "w-[76px]" : "w-[268px]",
-        )}
-      >
-        {sidebar}
-      </aside>
+      {!collapsed ? (
+        <aside className="sticky top-0 hidden h-screen w-[268px] shrink-0 bg-sidebar lg:block">
+          {sidebar}
+        </aside>
+      ) : (
+        <SidebarDock pathname={pathname} onExpand={() => setCollapsed(false)} />
+      )}
+
 
       {mobileOpen ? (
         <div className="fixed inset-0 z-50 lg:hidden">
