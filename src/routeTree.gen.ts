@@ -33,6 +33,7 @@ import { Route as ReportsCustomerStatementRouteImport } from './routes/reports/c
 import { Route as ReportsGeneralLedgerRouteImport } from './routes/reports/general-ledger'
 import { Route as ReportsJournalRouteImport } from './routes/reports/journal'
 import { Route as ReportsProfitLossRouteImport } from './routes/reports/profit-loss'
+import { Route as ReportsTrialBalanceRouteImport } from './routes/reports/trial-balance'
 import { Route as SalesIndexRouteImport } from './routes/sales/index'
 import { Route as SalesPosRouteImport } from './routes/sales/pos'
 import { Route as TreasuryIndexRouteImport } from './routes/treasury/index'
@@ -231,6 +232,11 @@ const ReportsJournalRoute = ReportsJournalRouteImport.update({
 const ReportsProfitLossRoute = ReportsProfitLossRouteImport.update({
   id: '/profit-loss',
   path: '/profit-loss',
+  getParentRoute: () => ReportsRouteRoute,
+} as any)
+const ReportsTrialBalanceRoute = ReportsTrialBalanceRouteImport.update({
+  id: '/trial-balance',
+  path: '/trial-balance',
   getParentRoute: () => ReportsRouteRoute,
 } as any)
 const SalesIndexRoute = SalesIndexRouteImport.update({
@@ -647,6 +653,7 @@ export interface FileRoutesByFullPath {
   '/reports/general-ledger': typeof ReportsGeneralLedgerRoute
   '/reports/journal': typeof ReportsJournalRoute
   '/reports/profit-loss': typeof ReportsProfitLossRoute
+  '/reports/trial-balance': typeof ReportsTrialBalanceRoute
   '/sales/pos': typeof SalesPosRoute
   '/users/$id': typeof UsersIdRoute
   '/users/new': typeof UsersNewRoute
@@ -742,6 +749,7 @@ export interface FileRoutesByTo {
   '/reports/general-ledger': typeof ReportsGeneralLedgerRoute
   '/reports/journal': typeof ReportsJournalRoute
   '/reports/profit-loss': typeof ReportsProfitLossRoute
+  '/reports/trial-balance': typeof ReportsTrialBalanceRoute
   '/sales/pos': typeof SalesPosRoute
   '/users/$id': typeof UsersIdRoute
   '/users/new': typeof UsersNewRoute
@@ -846,6 +854,7 @@ export interface FileRoutesById {
   '/reports/general-ledger': typeof ReportsGeneralLedgerRoute
   '/reports/journal': typeof ReportsJournalRoute
   '/reports/profit-loss': typeof ReportsProfitLossRoute
+  '/reports/trial-balance': typeof ReportsTrialBalanceRoute
   '/sales/pos': typeof SalesPosRoute
   '/users/$id': typeof UsersIdRoute
   '/users/new': typeof UsersNewRoute
@@ -951,6 +960,7 @@ export interface FileRouteTypes {
     | '/reports/general-ledger'
     | '/reports/journal'
     | '/reports/profit-loss'
+    | '/reports/trial-balance'
     | '/sales/pos'
     | '/users/$id'
     | '/users/new'
@@ -1046,6 +1056,7 @@ export interface FileRouteTypes {
     | '/reports/general-ledger'
     | '/reports/journal'
     | '/reports/profit-loss'
+    | '/reports/trial-balance'
     | '/sales/pos'
     | '/users/$id'
     | '/users/new'
@@ -1149,6 +1160,7 @@ export interface FileRouteTypes {
     | '/reports/general-ledger'
     | '/reports/journal'
     | '/reports/profit-loss'
+    | '/reports/trial-balance'
     | '/sales/pos'
     | '/users/$id'
     | '/users/new'
@@ -1414,6 +1426,13 @@ declare module '@tanstack/react-router' {
       path: '/profit-loss'
       fullPath: '/reports/profit-loss'
       preLoaderRoute: typeof ReportsProfitLossRouteImport
+      parentRoute: typeof ReportsRouteRoute
+    }
+    '/reports/trial-balance': {
+      id: '/reports/trial-balance'
+      path: '/trial-balance'
+      fullPath: '/reports/trial-balance'
+      preLoaderRoute: typeof ReportsTrialBalanceRouteImport
       parentRoute: typeof ReportsRouteRoute
     }
     '/sales/': {
@@ -2085,6 +2104,7 @@ interface ReportsRouteRouteChildren {
   ReportsGeneralLedgerRoute: typeof ReportsGeneralLedgerRoute
   ReportsJournalRoute: typeof ReportsJournalRoute
   ReportsProfitLossRoute: typeof ReportsProfitLossRoute
+  ReportsTrialBalanceRoute: typeof ReportsTrialBalanceRoute
   ReportsIndexRoute: typeof ReportsIndexRoute
 }
 
@@ -2093,6 +2113,7 @@ const ReportsRouteRouteChildren: ReportsRouteRouteChildren = {
   ReportsGeneralLedgerRoute: ReportsGeneralLedgerRoute,
   ReportsJournalRoute: ReportsJournalRoute,
   ReportsProfitLossRoute: ReportsProfitLossRoute,
+  ReportsTrialBalanceRoute: ReportsTrialBalanceRoute,
   ReportsIndexRoute: ReportsIndexRoute,
 }
 
