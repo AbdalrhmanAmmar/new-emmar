@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { dateFmt, money } from "@/lib/format";
 import { useDb } from "@/lib/mockDb";
 import { invoiceTotalsOf } from "@/lib/sales";
+import { requestHighlight, runPendingHighlight } from "@/lib/searchHighlight";
 import { hasPerm, screenForPath, useCurrentUser } from "@/lib/session";
 
 interface Hit {
@@ -14,6 +15,8 @@ interface Hit {
   title: string;
   sub: string;
   group: string;
+  /** النص المستخدم لتمييز السطر داخل الصفحة بعد فتحها */
+  hl?: string;
 }
 
 /** بحث شامل: صفحات البرنامج + كل السجلات (خزينة، مبيعات، مشتريات، مخازن، موظفين، مصروفات، مستخدمين) */
@@ -182,10 +185,11 @@ export function GlobalSearch() {
 
   useEffect(() => setCursor(0), [query]);
 
-  const go = (to: string) => {
+  const go = (to: string, term?: string) => {
     setQuery("");
     setOpen(false);
-    void navigate({ to });
+    if (term) requestHighlight(term);
+    void navigate({ to }).then(() => runPendingHighlight());
   };
 
   return (
@@ -212,7 +216,7 @@ export function GlobalSearch() {
           } else if (event.key === "Enter") {
             event.preventDefault();
             const target = results[cursor];
-            if (target) go(target.to);
+            if (target) go(target.to, target.hl ?? target.title);
           }
         }}
         placeholder="بحث شامل (Ctrl+K): صفحة، سند، فاتورة، صنف، مخزن، عميل، مورد، موظف..."
@@ -234,7 +238,7 @@ export function GlobalSearch() {
                     type="button"
                     onMouseDown={(event) => {
                       event.preventDefault();
-                      go(result.to);
+                      go(result.to, result.hl ?? result.title);
                     }}
                     onMouseEnter={() => setCursor(index)}
                     className={`flex w-full items-center justify-between gap-3 border-b border-border/60 px-3 py-2 text-right text-sm last:border-0 ${
