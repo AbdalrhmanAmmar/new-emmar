@@ -97,6 +97,7 @@ export function AppLayout() {
           canGoBack={pathname.split("/").filter(Boolean).length > 1}
         />
         <main
+          key={pathname}
           className={cn(
             "page-transition mx-auto w-full max-w-[1400px] flex-1 p-3 pb-24 sm:p-5",
             collapsed ? "lg:pb-28" : "lg:pb-5",
