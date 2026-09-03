@@ -7,6 +7,7 @@ import { AppHeader } from "@/components/layout/AppHeader";
 import { AppSidebar } from "@/components/layout/AppSidebar";
 import { MobileTabBar } from "@/components/layout/MobileTabBar";
 import { MODULES, matchModule, matchNavItem } from "@/components/layout/navConfig";
+import { SidebarDock } from "@/components/layout/SidebarDock";
 import { useOnline } from "@/components/layout/useOnline";
 import { cn } from "@/lib/utils";
 
@@ -53,14 +54,14 @@ export function AppLayout() {
   return (
     <AuthGate>
     <div className="flex min-h-screen bg-background">
-      <aside
-        className={cn(
-          "sticky top-0 hidden h-screen shrink-0 bg-sidebar transition-[width] duration-200 lg:block",
-          collapsed ? "w-[76px]" : "w-[268px]",
-        )}
-      >
-        {sidebar}
-      </aside>
+      {!collapsed ? (
+        <aside className="sticky top-0 hidden h-screen w-[268px] shrink-0 bg-sidebar lg:block">
+          {sidebar}
+        </aside>
+      ) : (
+        <SidebarDock pathname={pathname} onExpand={() => setCollapsed(false)} />
+      )}
+
 
       {mobileOpen ? (
         <div className="fixed inset-0 z-50 lg:hidden">
@@ -86,7 +87,12 @@ export function AppLayout() {
           onOpenMobile={() => setMobileOpen(true)}
           canGoBack={pathname.split("/").filter(Boolean).length > 1}
         />
-        <main className="page-transition mx-auto w-full max-w-[1400px] flex-1 p-3 pb-24 sm:p-5 lg:pb-5">
+        <main
+          className={cn(
+            "page-transition mx-auto w-full max-w-[1400px] flex-1 p-3 pb-24 sm:p-5",
+            collapsed ? "lg:pb-28" : "lg:pb-5",
+          )}
+        >
           <Outlet />
         </main>
         <MobileTabBar pathname={pathname} onOpenMenu={() => setMobileOpen(true)} />
