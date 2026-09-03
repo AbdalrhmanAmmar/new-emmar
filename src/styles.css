@@ -319,3 +319,24 @@ body,
     animation: none;
   }
 }
+
+/* تمييز نتيجة البحث الشامل بعد فتح صفحتها */
+@keyframes search-flash-pulse {
+  0%,
+  100% {
+    background-color: color-mix(in oklab, var(--primary) 12%, transparent);
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--primary) 35%, transparent);
+  }
+  50% {
+    background-color: color-mix(in oklab, var(--primary) 26%, transparent);
+    box-shadow: 0 0 0 6px color-mix(in oklab, var(--primary) 12%, transparent);
+  }
+}
+
+.search-flash {
+  position: relative;
+  z-index: 1;
+  border-radius: 0.5rem;
+  outline: 2px solid color-mix(in oklab, var(--primary) 60%, transparent);
+  animation: search-flash-pulse 1.2s ease-in-out 3;
+}
