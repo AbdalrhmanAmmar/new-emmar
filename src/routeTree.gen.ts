@@ -30,6 +30,7 @@ import { Route as InventoryStocktakeReportRouteImport } from './routes/inventory
 import { Route as PurchasesIndexRouteImport } from './routes/purchases/index'
 import { Route as ReportsIndexRouteImport } from './routes/reports/index'
 import { Route as ReportsCustomerStatementRouteImport } from './routes/reports/customer-statement'
+import { Route as ReportsProfitLossRouteImport } from './routes/reports/profit-loss'
 import { Route as SalesIndexRouteImport } from './routes/sales/index'
 import { Route as SalesPosRouteImport } from './routes/sales/pos'
 import { Route as TreasuryIndexRouteImport } from './routes/treasury/index'
@@ -215,6 +216,11 @@ const ReportsCustomerStatementRoute =
     path: '/customer-statement',
     getParentRoute: () => ReportsRouteRoute,
   } as any)
+const ReportsProfitLossRoute = ReportsProfitLossRouteImport.update({
+  id: '/profit-loss',
+  path: '/profit-loss',
+  getParentRoute: () => ReportsRouteRoute,
+} as any)
 const SalesIndexRoute = SalesIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -626,6 +632,7 @@ export interface FileRoutesByFullPath {
   '/inventory/stocktake': typeof InventoryStocktakeRoute
   '/inventory/stocktake-report': typeof InventoryStocktakeReportRoute
   '/reports/customer-statement': typeof ReportsCustomerStatementRoute
+  '/reports/profit-loss': typeof ReportsProfitLossRoute
   '/sales/pos': typeof SalesPosRoute
   '/users/$id': typeof UsersIdRoute
   '/users/new': typeof UsersNewRoute
@@ -718,6 +725,7 @@ export interface FileRoutesByTo {
   '/inventory/stocktake': typeof InventoryStocktakeRoute
   '/inventory/stocktake-report': typeof InventoryStocktakeReportRoute
   '/reports/customer-statement': typeof ReportsCustomerStatementRoute
+  '/reports/profit-loss': typeof ReportsProfitLossRoute
   '/sales/pos': typeof SalesPosRoute
   '/users/$id': typeof UsersIdRoute
   '/users/new': typeof UsersNewRoute
@@ -819,6 +827,7 @@ export interface FileRoutesById {
   '/inventory/stocktake': typeof InventoryStocktakeRoute
   '/inventory/stocktake-report': typeof InventoryStocktakeReportRoute
   '/reports/customer-statement': typeof ReportsCustomerStatementRoute
+  '/reports/profit-loss': typeof ReportsProfitLossRoute
   '/sales/pos': typeof SalesPosRoute
   '/users/$id': typeof UsersIdRoute
   '/users/new': typeof UsersNewRoute
@@ -921,6 +930,7 @@ export interface FileRouteTypes {
     | '/inventory/stocktake'
     | '/inventory/stocktake-report'
     | '/reports/customer-statement'
+    | '/reports/profit-loss'
     | '/sales/pos'
     | '/users/$id'
     | '/users/new'
@@ -1013,6 +1023,7 @@ export interface FileRouteTypes {
     | '/inventory/stocktake'
     | '/inventory/stocktake-report'
     | '/reports/customer-statement'
+    | '/reports/profit-loss'
     | '/sales/pos'
     | '/users/$id'
     | '/users/new'
@@ -1113,6 +1124,7 @@ export interface FileRouteTypes {
     | '/inventory/stocktake'
     | '/inventory/stocktake-report'
     | '/reports/customer-statement'
+    | '/reports/profit-loss'
     | '/sales/pos'
     | '/users/$id'
     | '/users/new'
@@ -1357,6 +1369,13 @@ declare module '@tanstack/react-router' {
       path: '/customer-statement'
       fullPath: '/reports/customer-statement'
       preLoaderRoute: typeof ReportsCustomerStatementRouteImport
+      parentRoute: typeof ReportsRouteRoute
+    }
+    '/reports/profit-loss': {
+      id: '/reports/profit-loss'
+      path: '/profit-loss'
+      fullPath: '/reports/profit-loss'
+      preLoaderRoute: typeof ReportsProfitLossRouteImport
       parentRoute: typeof ReportsRouteRoute
     }
     '/sales/': {
@@ -2025,11 +2044,13 @@ const PurchasesRouteRouteWithChildren = PurchasesRouteRoute._addFileChildren(
 
 interface ReportsRouteRouteChildren {
   ReportsCustomerStatementRoute: typeof ReportsCustomerStatementRoute
+  ReportsProfitLossRoute: typeof ReportsProfitLossRoute
   ReportsIndexRoute: typeof ReportsIndexRoute
 }
 
 const ReportsRouteRouteChildren: ReportsRouteRouteChildren = {
   ReportsCustomerStatementRoute: ReportsCustomerStatementRoute,
+  ReportsProfitLossRoute: ReportsProfitLossRoute,
   ReportsIndexRoute: ReportsIndexRoute,
 }
 
