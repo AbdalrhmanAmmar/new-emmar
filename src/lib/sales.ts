@@ -1,4 +1,15 @@
+import { orgSettings } from "@/lib/mockDb";
 import type { DbShape, InvoiceCharge, Product, SalesInvoice, SalesLine } from "@/lib/mockDb";
+
+/** نسبة الضريبة الفعلية للسطر: لو الضريبة ملغية من الإعدادات (0) لا تُحسب على أى فاتورة */
+export function effectiveTaxRate(lineRate?: number | null): number {
+  try {
+    if (Number(orgSettings().vatRate || 0) <= 0) return 0;
+  } catch {
+    /* الإعدادات غير متاحة — استخدم نسبة السطر */
+  }
+  return Number(lineRate || 0);
+}
 
 export interface LineTotals {
   gross: number;
@@ -12,7 +23,7 @@ export function lineTotals(line: SalesLine): LineTotals {
   const gross = Number(line.qty || 0) * Number(line.price || 0);
   const discount = Math.min(gross, (gross * Number(line.discountPct || 0)) / 100 + Number(line.discountAmt || 0));
   const net = gross - discount;
-  const tax = (net * Number(line.taxRate || 0)) / 100;
+  const tax = (net * effectiveTaxRate(line.taxRate)) / 100;
   return { gross, discount, net, tax, total: net + tax };
 }
 
