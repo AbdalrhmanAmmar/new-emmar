@@ -11,6 +11,8 @@ No environment variables are required by the current demo app. Do not add a catc
 
 ## Verify locally
 
+Use Node.js 22 and npm 10 (check with `node --version` and `npm --version`). Regenerate `package-lock.json` with npm 10 when changing dependencies, then verify with a clean `npm ci` before pushing. Vercel uses the committed npm lockfile.
+
 ```bash
 npm ci
 npm run build
